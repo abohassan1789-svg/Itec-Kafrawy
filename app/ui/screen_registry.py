@@ -37,6 +37,12 @@ def _customer_groups() -> QWidget:
     return CustomerGroupsScreen()
 
 
+def _customers() -> QWidget:
+    from app.ui.screens.customers_screen import CustomersScreen
+
+    return CustomersScreen()
+
+
 def _company() -> QWidget:
     from app.ui.screens.company_screen import CompanyScreen
 
@@ -91,6 +97,7 @@ SCREEN_FACTORIES: dict[str, ScreenFactory] = {
     "default_accounts": _default_accounts,
     "cost_centers": _cost_centers,
     "customer_groups": _customer_groups,
+    "customers": _customers,
     "company": _company,
     "fiscal_years": _fiscal_years,
     "currencies": _currencies,

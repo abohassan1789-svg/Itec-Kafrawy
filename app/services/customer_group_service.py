@@ -156,8 +156,11 @@ class CustomerGroupService:
             if before["is_system"]:
                 raise BusinessError(f"المجموعة «{before['name_ar']}» نظامية (الافتراضية لأي عميل جديد) — "
                                     "مابتتمسحش.")
-            # TODO (شاشة العملاء): المجموعة اللي فيها عملاء مابتتمسحش — FK RESTRICT من party.customers
-            # (رسالة عربي «فيها N عميل — انقلهم أو وقّف المجموعة»).
+            # المجموعة اللي فيها عملاء مابتتمسحش (والقاعدة بتمنع برضه — سكريبت 0015 + FK RESTRICT).
+            customers = self.repository.customer_count(int(group_id), ex=tx)
+            if customers:
+                raise BusinessError(f"المجموعة «{before['name_ar']}» فيها {customers} عميل — انقلهم لمجموعة تانية "
+                                    "أو وقّف المجموعة بدل ما تمسحها.")
             deleted = self.repository.delete_group(int(group_id), ex=tx, expected_version=expected_version)
             self.guard.ensure(tx, deleted, expected_version, entity=ENTITY, entity_id=group_id)
             self.audit.record(tx, action="delete", entity=ENTITY, entity_id=group_id, entity_label=ENTITY_LABEL,

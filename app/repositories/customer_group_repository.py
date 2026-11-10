@@ -84,6 +84,10 @@ class CustomerGroupRepository:
         cond, extra = version_clause(expected_version)
         return self._x(ex).execute("DELETE FROM party.customer_groups WHERE id = %s" + cond, [group_id, *extra])
 
+    def customer_count(self, group_id: int, ex: Executor | None = None) -> int:
+        """عدد عملاء المجموعة (party.customers — سكريبت 0015)."""
+        return int(self._x(ex).fetch_value("SELECT count(*) FROM party.customers WHERE group_id = %s", [group_id]))
+
     # ---- الاختيارات --------------------------------------------------------
     def account_choices(self, ex: Executor | None = None) -> list[dict]:
         """حسابات الرقابة المسموحة: فرعي نشط من الأصول بدور «العملاء» (1103 أو فرعي منه بعد التفريع)."""

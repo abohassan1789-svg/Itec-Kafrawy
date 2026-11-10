@@ -67,7 +67,7 @@ def test_menu_tree_admin_sees_everything():
     acc = tree[0]
     assert not acc["coming_soon"] and acc["count"] == 3                 # «الحسابات» ← شجرة الحسابات + الحسابات الافتراضية + مراكز التكلفة
     sales = tree[1]
-    assert not sales["coming_soon"] and sales["count"] == 1             # «المبيعات» ← مجموعات العملاء
+    assert not sales["coming_soon"] and sales["count"] == 2             # «المبيعات» ← مجموعات العملاء + العملاء
     assert all(s["coming_soon"] for s in tree[2:-1])
 
 

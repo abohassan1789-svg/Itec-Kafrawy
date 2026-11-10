@@ -342,5 +342,5 @@ def test_menu_and_registry():
     target = reg.find_target("sales", "customer_groups")
     assert target.name_ar == "مجموعات العملاء"
     group = reg.section("sales").groups[0]
-    assert group.title == "العملاء" and [t.code for t in group.targets] == ["customer_groups"]
+    assert group.title == "العملاء" and [t.code for t in group.targets] == ["customer_groups", "customers"]
     assert "customer_groups" in SCREEN_FACTORIES
