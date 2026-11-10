@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج العملات وأسعار الصرف — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.tabs{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.tabs button{border:0;border-radius:6px;padding:7px 14px;font:inherit;font-weight:800;cursor:pointer;background:rgba(255,255,255,.15);color:#fff}
+.tabs button.on{background:#fff;color:var(--green)}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;font-size:10px;position:relative}
+.rail{width:62px;background:var(--green-dark);color:#fff;display:flex;flex-direction:column;align-items:center;padding:6px 4px;gap:4px;flex-shrink:0}
+.rail .brand{font-weight:900;font-size:9px;text-align:center;margin-bottom:4px;line-height:1.1}
+.rail .it{width:52px;border-radius:6px;padding:4px 2px;text-align:center;font-size:8.5px;line-height:1.2}
+.rail .it b{display:block;font-size:14px}
+.rail .it.on{background:#fff;color:var(--green)}
+.rail .sp{flex:1}
+.rail .out{background:rgba(220,38,38,.25)}
+.rail.wide{width:118px;align-items:stretch}
+.rail.wide .it{width:auto;display:flex;align-items:center;gap:5px;text-align:right;font-size:9.5px;padding:5px 6px}
+.rail.wide .it b{display:inline;font-size:12px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.hdr{height:40px;background:#fff;border-bottom:1px solid var(--card-border);display:flex;align-items:center;padding:0 8px;gap:8px;flex-shrink:0}
+.av{width:26px;height:26px;border-radius:50%;border:2px solid var(--green);background:#E2E8F0;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.hdr .nm{font-weight:900;font-size:10px;line-height:1.2}
+.hdr .nm small{display:block;color:var(--muted);font-weight:600;font-size:8.5px}
+.hdr .clk{margin-right:auto;text-align:center;font-weight:900;font-size:10px;line-height:1.2}
+.hdr .clk small{display:block;color:var(--muted);font-weight:600;font-size:8px}
+.bell{font-size:13px}
+.content{flex:1;padding:8px;position:relative;overflow:hidden}
+.hero{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--green)}
+.hero b{font-size:26px;font-weight:900}
+.hero small{color:var(--muted);font-size:10px;font-weight:700}
+.popup{position:absolute;top:42px;right:64px;width:170px;background:#fff;border:1px solid var(--card-border);border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.18);padding:8px;z-index:3}
+.popup h4{margin:0 0 4px;color:var(--green);font-size:11px;font-weight:900;border-bottom:2px solid var(--green);padding-bottom:3px}
+.popup .sub{color:var(--muted);font-weight:800;font-size:8.5px;margin:5px 0 2px}
+.popup .ln{padding:3px 4px;border-radius:4px;font-size:9.5px}
+.popup .ln.on{background:var(--first);color:var(--green);font-weight:800}
+.stat{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:6px}
+.stat small{color:var(--muted);font-weight:700;font-size:8.5px;display:block}
+.stat b{font-size:15px;font-weight:900}
+.tile{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:8px;text-align:center;font-weight:800;font-size:9.5px}
+.tile b{display:block;font-size:18px;margin-bottom:2px}
+
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-log{background:#0F766E}.b-prev{background:#6D28D9}.b-exp{background:#0E7490}
+.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:58px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.chk{font-size:8.5px;font-weight:700;margin-left:6px}
+.chk:before{content:"☑ ";color:var(--green)}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.srch{display:flex;gap:4px;margin-bottom:4px}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.photo{width:48px;height:56px;border:1px dashed var(--input);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#F8FAFC;flex-shrink:0}
+.ck{color:var(--green);font-weight:900;text-align:center}
+.x{color:#CBD5E1;text-align:center}
+.key{font-size:8px}
+.chip{display:inline-block;border-radius:10px;padding:1px 6px;font-size:8px;font-weight:800;margin:1px;border:1px solid var(--badge-bd);background:var(--badge-bg);color:var(--badge-tx)}
+.chip.off{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0}
+.chip.deny{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+
+
+/* ===== العملات ===== */
+.f label{width:66px}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tabs2{display:flex;gap:2px}
+.tabs2 span{padding:4px 9px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569}
+.tabs2 span.on{background:var(--green);color:#fff}
+.bdg{display:inline-block;border-radius:9px;padding:1px 7px;font-size:8px;font-weight:900;border:1px solid}
+.bdg.b{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.o{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.b-rate{background:#0F766E}.b-web{background:#6D28D9}
+.up{color:#B91C1C;font-weight:900}.dn{color:#087443;font-weight:900}.eq{color:#64748B;font-weight:900}
+.ccard{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:7px;padding:3px 7px;font-size:8px}
+.ccard.base{border-right-color:#D97706;background:#FFFBEB}
+.ccard.sel{outline:1.5px solid var(--green);background:var(--first)}
+.ccard.off{opacity:.55}
+.ccard .r{display:flex;justify-content:space-between;align-items:center}
+.ccard b{font-size:11px;font-weight:900}
+.ccard .rate{font-size:12px;font-weight:900;color:var(--green);direction:ltr;text-align:right;line-height:1.2}
+.ccard small{color:var(--muted);font-weight:700;display:block}
+.dlg{background:#fff;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.25);width:320px;overflow:hidden;font-size:9px}
+.dlg .h{background:var(--green-dark);color:#fff;font-weight:900;padding:7px 10px;font-size:10.5px}
+.dlg .b{padding:10px}
+.hint{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:4px 0}
+.warnb{background:#FFF7ED;border:1px solid #FED7AA;color:#9A3412;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:4px 0}
+.okb{background:#ECFDF3;border:1px solid #B7E4C7;color:#087443;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:3px 0}
+.inp{display:inline-block;border:1px solid var(--input);border-radius:3px;background:#fff;padding:0 4px;min-width:42px;font-weight:800;direction:ltr}
+.inp.new{border-color:#2563EB;background:#F5F9FF}
+.big{background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.big b{font-size:20px;font-weight:900;direction:ltr;display:inline-block}
+.big small{display:block;font-size:8.5px;opacity:.92;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج العملات وأسعار الصرف (المرحلة 1ب · الشاشة 3)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD — الفرق بس في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). البيانات اللي في النماذج أمثلة.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+function win(inner){return `<div class="win" style="flex-direction:column"><div style="height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0"><span>💱 العملات وأسعار الصرف — A-H CODE</span><span style="margin-right:auto;color:var(--muted)">_ ▢ ✕</span></div><div class="main" style="display:flex;flex-direction:column;flex:1;min-height:0">${inner}</div></div>`;}
+function tb(mode="عرض",web=false){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">عملة جديدة</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt b-ref">تحديث</span><span class="bt ${ed?'b-dis':'b-rate'}">💲 تسجيل سعر</span>${web?'<span class="bt b-web">⤓ أسعار البنك الأهلي</span>':''}<span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode" style="${ed?'background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE':''}">${mode}</span></div>`;}
+const TB=tb(), TBN=tb("جديد");
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+
+// الكود، الاسم، بالإنجليزي، الرمز، الكسور، اسم الكسر، أساسية، نشطة، آخر سعر، تاريخه، التغيير
+const CUR=[
+ ["EGP","جنيه مصري","Egyptian Pound","ج.م",2,"قرش",1,1,"1.0000","—",""],
+ ["USD","دولار أمريكي","US Dollar","$",2,"سنت",0,1,"48.6500","08/11/2026","+0.25"],
+ ["EUR","يورو","Euro","€",2,"سنت",0,1,"56.3000","08/11/2026","-0.10"],
+ ["SAR","ريال سعودي","Saudi Riyal","ر.س",2,"هللة",0,1,"12.9700","01/11/2026","+0.04"],
+ ["AED","درهم إماراتي","UAE Dirham","د.إ",2,"فلس",0,0,"13.2500","15/10/2026","0.00"],
+];
+const RATES=[["08/11/2026","48.6500","+0.25","user"],["01/11/2026","48.4000","+0.30","user"],["25/10/2026","48.1000","+0.15","user"],["18/10/2026","47.9500","+0.05","user"],["11/10/2026","47.9000","+0.10","user"],["01/10/2026","47.8000","—","user"]];
+const N=c=>`<span class="ltr">${c}</span>`;
+const chg=c=>!c||c==="—"?'<span class="eq">—</span>':c.startsWith("+")?`<span class="up">▲ ${N(c)}</span>`:c.startsWith("-")?`<span class="dn">▼ ${N(c)}</span>`:`<span class="eq">= ${N(c)}</span>`;
+const st=r=>r[6]?'<span class="bdg b">⭐ أساسية</span>':r[7]?'<span class="bdg o">نشطة</span>':'<span class="bdg x">موقوفة</span>';
+function ctable(cols=["code","name","rate","date","st"],sel=1,rows=CUR){
+  const T={code:"الكود",name:"العملة",sym:"الرمز",dec:"الكسور",rate:"آخر سعر",date:"بتاريخ",chg:"التغيير",st:"الحالة"};
+  const V=r=>({code:`<b>${r[0]}</b>`,name:r[1],sym:r[3],dec:r[4],rate:`<span class="ltr">${r[8]}</span>`,date:r[9],chg:chg(r[10]),st:st(r)});
+  return `<table class="tbl"><tr>${cols.map(c=>`<th>${T[c]}</th>`).join("")}</tr>${rows.map((r,i)=>`<tr class="${i===sel?'sel':''}">${cols.map(c=>`<td>${V(r)[c]}</td>`).join("")}</tr>`).join("")}</table>`;
+}
+function rtable(n=6,cols=["date","rate","chg","by"],sel=0){
+  const T={date:"التاريخ",rate:"السعر بالجنيه",chg:"التغيير",by:"سجّله"};
+  const V=r=>({date:r[0],rate:`<b class="ltr">${r[1]}</b>`,chg:chg(r[2]),by:r[3]});
+  return `<table class="tbl"><tr>${cols.map(c=>`<th>${T[c]}</th>`).join("")}</tr>${RATES.slice(0,n).map((r,i)=>`<tr class="${i===sel?'sel':''}">${cols.map(c=>`<td>${V(r)[c]}</td>`).join("")}</tr>`).join("")}</table>`;
+}
+const FORM=f("الكود *","USD")+f("الاسم *","دولار أمريكي")+f("بالإنجليزي","US Dollar")+f("الرمز","$")+f("الكسور","2")+f("اسم الكسر","سنت")+`<div class="f"><label>الحالة</label><span class="chk">نشطة</span><span style="font-size:8.5px;color:#94A3B8;font-weight:700">☐ عملة أساسية 🔒</span></div>`;
+const FORM2=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div>${f("الكود *","USD")+f("الاسم *","دولار أمريكي")+f("بالإنجليزي","US Dollar")}</div><div>${f("الرمز","$")+f("الكسور","2")+f("اسم الكسر","سنت")}</div></div>`;
+const srch=`<div class="srch"><i>🔍 بحث بالكود / الاسم…</i></div>`;
+const cnt=`<div class="cnt">عدد العملات: 5 · نشطة 4 · الأساسية: EGP</div>`;
+function spark(w=260,h=70){const p=[47.8,47.9,47.95,48.1,48.4,48.65];const mn=47.7,mx=48.75;const pts=p.map((v,i)=>`${w-(i*(w-20)/(p.length-1)+10)},${h-8-((v-mn)/(mx-mn))*(h-16)}`).join(" ");
+ return `<div style="font-size:8px;color:#64748B;font-weight:700;margin-bottom:2px">USD بالجنيه — آخر 6 أسعار (الأحدث شمال بالأزرق)</div><svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="background:#fff;border:1px solid var(--card-border);border-radius:6px;display:block"><polyline points="${pts}" fill="none" stroke="#137A38" stroke-width="2"/>${p.map((v,i)=>`<circle cx="${w-(i*(w-20)/(p.length-1)+10)}" cy="${h-8-((v-mn)/(mx-mn))*(h-16)}" r="2.6" fill="${i===p.length-1?'#2563EB':'#137A38'}"/>`).join("")}</svg>`;}
+
+const CU=[
+ ["زي Hr GAD: الفورم يمين + أسعار العملة تحت الفورم + العملات شمال","نفس ترتيب «السنة المالية» اللي اخترته: يمين بيانات العملة وتحتها جدول أسعارها بالتاريخ (الأحدث فوق، والتغيير ▲▼) · شمال «البحث والتسجيل» بالعملات وآخر سعر لكل واحدة. «💲 تسجيل سعر» بيفتح سطر سعر جديد للعملة المختارة.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1.1fr 1fr;gap:8px"><div>${gb("بيانات العملة",FORM)}${gb("أسعار الصرف (1 USD = ؟ جنيه)",rtable(5),"margin-top:10px")}</div>${gb("البحث والتسجيل",srch+ctable()+cnt)}</div>`)],
+ ["تبويبات: «العملات» و«أسعار الصرف»","شاشة واحدة فيها تبويبين: «العملات» (الفورم + القائمة) و«أسعار الصرف» (فلتر بالعملة والفترة + جدول كل الأسعار لكل العملات) — مناسب لو الأسعار بتتسجل كتير.",
+  win(TB+`<div class="content"><div class="tabs2"><span>العملات</span><span class="on">أسعار الصرف</span></div><div style="background:#fff;border:1px solid var(--card-border);border-radius:0 7px 7px 7px;padding:8px"><div style="display:flex;gap:6px;margin-bottom:6px">${f("العملة","الكل ▾")}${f("من","01/10/2026 📅")}${f("إلى","08/11/2026 📅")}</div><table class="tbl"><tr><th>التاريخ</th><th>العملة</th><th>السعر بالجنيه</th><th>التغيير</th><th>سجّله</th></tr>${[["08/11/2026","USD","48.6500","+0.25"],["08/11/2026","EUR","56.3000","-0.10"],["01/11/2026","USD","48.4000","+0.30"],["01/11/2026","SAR","12.9700","+0.04"],["01/11/2026","EUR","56.4000","+0.20"],["25/10/2026","USD","48.1000","+0.15"],["15/10/2026","AED","13.2500","0.00"]].map((r,i)=>`<tr class="${i===0?'sel':''}"><td>${r[0]}</td><td><b>${r[1]}</b></td><td><b class="ltr">${r[2]}</b></td><td>${chg(r[3])}</td><td>user</td></tr>`).join("")}</table><div class="cnt">عدد الأسعار المعروضة: 7</div></div></div>`)],
+ ["العملات فوق + أسعار المختارة تحت (رئيسي / تفصيلي)","فوق جدول العملات بعرض الشاشة · تحته أسعار العملة المختارة بالتاريخ، وتسجيل سعر جديد في أول سطر على طول (تاريخ + سعر + Enter) · الفورم بيفتح في نافذة مع «عملة جديدة / تعديل».",
+  win(TB+`<div class="content">${srch}${ctable(["code","name","sym","dec","rate","date","chg","st"])}<div style="margin-top:6px;font-weight:900;color:var(--green);font-size:9.5px">أسعار USD — دولار أمريكي</div><table class="tbl"><tr><th>التاريخ</th><th>السعر بالجنيه</th><th>التغيير</th><th>سجّله</th></tr><tr><td><span class="inp new">09/11/2026</span></td><td><span class="inp new">48.70__</span></td><td class="muted">↵ Enter للحفظ</td><td></td></tr>${RATES.slice(0,3).map(r=>`<tr><td>${r[0]}</td><td><b class="ltr">${r[1]}</b></td><td>${chg(r[2])}</td><td>${r[3]}</td></tr>`).join("")}</table></div>`)],
+ ["كروت العملات + تاريخ أسعار المختارة","يمين كارت لكل عملة فيه آخر سعر والتغيير (الأساسية بلون دهبي) · شمال بيانات العملة المختارة وجدول أسعارها · زرار اختياري «⤓ أسعار البنك الأهلي» لو حبيت تجيب أسعار النهارده أونلاين (مش لازم).",
+  win(tb("عرض",true)+`<div class="content" style="display:grid;grid-template-columns:150px 1fr;gap:8px"><div style="display:flex;flex-direction:column;gap:4px">${CUR.map((c,i)=>`<div class="ccard ${c[6]?'base':''} ${i===1?'sel':''} ${c[7]?'':'off'}"><div class="r"><b>${c[0]}</b>${c[6]?'<span class="bdg b">⭐ أساسية</span>':chg(c[10])}</div><div class="rate">${c[6]?'1':c[8]}</div><small>${c[1]} · ${c[6]?'الأساسية':c[9]}</small></div>`).join("")}</div><div>${gb("بيانات العملة",FORM2)}${gb("أسعار الصرف",rtable(4),"margin-top:10px")}</div></div>`)],
+ ["«نشرة أسعار» يوم واحد لكل العملات","يمين قائمة العملات · شمال «نشرة أسعار النهارده»: تختار التاريخ وتكتب سعر كل العملات مرة واحدة (السعر اللي قبله جنبه للمقارنة) ← «حفظ النشرة».",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 1.2fr;gap:8px">${gb("العملات",srch+ctable(["code","name","rate"],1))}${gb("نشرة أسعار يوم 09/11/2026 📅",`<table class="tbl"><tr><th>العملة</th><th>السعر اللي قبله</th><th>السعر الجديد</th><th>التغيير</th></tr>${CUR.slice(1).map((c,i)=>`<tr><td><b>${c[0]}</b> ${c[1]}</td><td class="ltr">${c[8]}</td><td><span class="inp new">${["48.7000","56.2500","12.9800",""][i]}</span></td><td>${[chg("+0.05"),chg("-0.05"),chg("+0.01"),'<span class="muted">مش هيتسجل</span>'][i]}</td></tr>`).join("")}</table><div class="hint">العملة اللي سعرها فاضي مش هيتسجلها سعر — هيفضل آخر سعر ليها.</div><div style="margin-top:6px"><span class="bt" style="background:var(--green);padding:4px 12px;font-size:9px">حفظ النشرة</span></div>`)}</div>`)],
+ ["الفورم + رسم بياني للسعر","يمين بيانات العملة · شمال رسم صغير لحركة السعر (آخر 6 أسعار، الأخير بالأزرق) وتحته جدول الأسعار · تحت العملات في شريط رفيع.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 1.1fr;gap:8px"><div>${gb("بيانات العملة",FORM)}<div style="display:flex;gap:4px;margin-top:8px;flex-wrap:wrap">${CUR.map((c,i)=>`<span class="chip ${i===1?'':'off'}" style="${i===1?'':'color:#475569'}">${c[0]} ${c[6]?'⭐':c[8]}</span>`).join("")}</div></div><div>${gb("حركة السعر",spark())}${gb("أسعار الصرف",rtable(4),"margin-top:8px")}</div></div>`)],
+ ["لوحة «أسعار النهارده» + العملات","فوق كروت صغيرة بسعر كل عملة النهارده (وأيه منها سعره قديم أكتر من أسبوع ⚠) · تحت الـ Base Screen العادي: الفورم يمين والعملات شمال.",
+  win(TB+`<div class="content"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:6px">${CUR.slice(1).map(c=>`<div class="kpi" style="background:#fff;border:1px solid var(--card-border);border-right:4px solid ${c[9]==="15/10/2026"?'#D97706':'var(--green)'};border-radius:6px;padding:4px 6px"><small style="display:block;color:var(--muted);font-weight:700;font-size:8px">${c[0]} · ${c[1]}</small><b style="font-size:13px;font-weight:900" class="ltr">${c[8]}</b> ${chg(c[10])}<small style="display:block;font-size:7.5px;color:${c[9]==="15/10/2026"?'#B45309':'var(--muted)'};font-weight:700">${c[9]==="15/10/2026"?'⚠ آخر سعر من 24 يوم':'بتاريخ '+c[9]}</small></div>`).join("")}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${gb("بيانات العملة",FORM)}${gb("البحث والتسجيل",srch+ctable(["code","name","rate","st"])+cnt)}</div></div>`)],
+ ["«💲 تسجيل سعر» بنافذة صغيرة","الـ Base Screen العادي (الفورم يمين والعملات شمال) · «تسجيل سعر» بيفتح نافذة: العملة، التاريخ (النهارده)، السعر، وبتوريك آخر سعر ونسبة التغيير قبل الحفظ، وبتنبّه لو التغيير كبير (أكتر من 5%).",
+  win(TB+`<div class="content" style="display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.25)"><div class="dlg"><div class="h">💲 تسجيل سعر صرف</div><div class="b">${f("العملة","USD — دولار أمريكي ▾")}${f("التاريخ *","09/11/2026 📅")}${f("السعر *","48.7000")}<div class="hint">آخر سعر: 48.6500 بتاريخ 08/11/2026 ← التغيير ▲ 0.05 (0.10%)</div><div class="warnb">⚠ لو التغيير أكتر من 5% البرنامج هيسألك تتأكد (عشان غلط الكتابة)</div><div class="muted" style="font-weight:700">لو فيه سعر لنفس اليوم هيتسأل: تستبدله؟</div><div style="display:flex;gap:6px;margin-top:6px"><span class="bt" style="background:var(--green);padding:5px 14px;font-size:9.5px">حفظ</span><span class="bt b-can" style="padding:5px 14px;font-size:9.5px">إلغاء</span></div></div></div></div>`)],
+ ["الفورم + لوحة القواعد","يمين العملات · في النص الفورم · شمال لوحة بتراجع القواعد وانت بتكتب: الكود 3 حروف إنجليزي كابيتال، مش متكرر، الكسور من 0 لـ 6، عملة أساسية واحدة بس (EGP 🔒)، السعر أكبر من صفر، والعملة اللي عليها حركة مابتتمسحش (بتتوقف بس).",
+  win(TBN+`<div class="content" style="display:grid;grid-template-columns:1fr 1fr 150px;gap:8px"><div>${srch}${ctable(["code","name"],-1)}</div>${gb("عملة جديدة",f("الكود *","GBP")+f("الاسم *","جنيه إسترليني")+f("بالإنجليزي","Pound Sterling")+f("الرمز","£")+f("الكسور","2")+f("اسم الكسر","بنس")+f("أول سعر","61.2000"))}${gb("المراجعة",`<div class="okb">✔ الكود 3 حروف (GBP)</div><div class="okb">✔ مش متكرر</div><div class="okb">✔ الكسور 2 (من 0 لـ 6)</div><div class="okb">✔ السعر أكبر من صفر</div><div class="warnb">⭐ الأساسية EGP بس — ثابتة</div><div class="warnb">🛈 العملة اللي عليها حركة: إيقاف بس، مش حذف</div>`)}</div>`)],
+ ["الفورم + «محوّل» بالتاريخ","الـ Base Screen العادي + مربع «محوّل» تحت الفورم: تكتب مبلغ وتاريخ ← يطلّعلك المبلغ بالجنيه والسعر اللي اتاخد (آخر سعر في اليوم ده أو قبله) — نفس الطريقة اللي المستندات هتاخد بيها السعر.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1.1fr 1fr;gap:8px"><div>${gb("بيانات العملة",FORM)}${gb("محوّل",`<div style="display:flex;gap:6px">${f("المبلغ","1,250.00 USD")}${f("بتاريخ","30/10/2026 📅")}</div><div class="big"><small>= بالجنيه المصري</small><b>60,125.00 EGP</b><small>السعر المستخدم: 48.1000 بتاريخ 25/10/2026 (آخر سعر قبل 30/10)</small></div>`,"margin-top:10px")}</div>${gb("البحث والتسجيل",srch+ctable()+cnt+`<div style="margin-top:8px;font-weight:900;color:var(--green);font-size:9px">آخر أسعار USD</div>`+rtable(3,["date","rate","chg"]))}</div>`)],
+];
+
+const SETS=[
+ ["💱 العملات وأسعار الصرف",CU,"شاشة «العملات وأسعار الصرف» (الشاشة التالتة في 1ب). قرارك: **تعدد عملات كامل** والجنيه المصري **EGP عملة أساسية واحدة بس** (ثابتة دلوقتي). العملة: الكود (3 حروف زي USD)، الاسم عربي/إنجليزي، الرمز، عدد الكسور (0–6)، اسم الكسر (قرش، سنت — للتفقيط في الفواتير)، نشطة/موقوفة. **أسعار الصرف بالتاريخ** (مش سعر واحد حالي): كل سطر = عملة + تاريخ + سعرها بالجنيه، والسعر أكبر من صفر، وسعر واحد بس لكل عملة في اليوم. المستند بياخد **آخر سعر في تاريخه أو قبله**، والقيد هيشيل العملة والسعر والمبلغ بالعملة (المرحلة 4)، وفروق العملة المحققة في المرحلة 5 وإعادة التقييم في 10ب. العملة اللي عليها حركة مابتتمسحش (بتتوقف بس). «💲 تسجيل سعر» بصلاحية «إضافة» على الشاشة، وكل تسجيل/تعديل بيتسجل في سجل التعديلات. مكانها: «النظام والصلاحيات» ← «الإعدادات العامة» بعد «السنة المالية والفترات»."],
+];
+let cur=0;
+function render(){
+  document.getElementById("note").innerHTML=SETS[cur][2].replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+  document.getElementById("grid").innerHTML=SETS[cur][1].map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]}</div></div>`).join("");
+  window.scrollTo(0,0);
+}
+render();
+</script>
+</body>
+</html>

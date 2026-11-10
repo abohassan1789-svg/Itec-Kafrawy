@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج أوامر التوريد — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات أوامر التوريد ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج المشاريع / أوامر التوريد (المرحلة 2 · الشاشة 4 — آخر شاشة في المرحلة)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD — الفرق في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). الأوامر <b>أمثلة حقيقية من جدول TBAMR في الأكسس</b> (IC26-…)، و<b>الخانات الزرقا والشجرة والتبويبات شغالين</b>: دوس على أي أمر أو مركز، غيّر الفلاتر، وجرّب «أمر جديد» في النموذج 8.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== مراكز التكلفة (من السكريبت 0013): [الكود، الاسم، الأب، النوع، المسؤول، نشط] =====
+const TYP={admin:"إداري",ops:"تشغيلي (فني)",sales:"بيعي",serv:"خدمي"};
+const CC=[
+ ["1","الإدارة العامة","","admin","م. أحمد حسن",true],
+ ["11","الإدارة العليا","1","admin","م. أحمد حسن",true],
+ ["12","الحسابات والمالية","1","admin","أ. محمود سامي",true],
+ ["13","الموارد البشرية","1","admin","أ. منى فؤاد",true],
+ ["14","المكتب (Office)","1","admin","أ. منى فؤاد",true],
+ ["2","الأنشطة الفنية","","ops","م. خالد عبد الله",true],
+ ["21","BMS — أنظمة إدارة المباني","2","ops","م. خالد عبد الله",true],
+ ["2101","BMS — مشروعات","21","ops","م. عمرو نبيل",true],
+ ["2102","BMS — عقود صيانة","21","ops","م. عمرو نبيل",true],
+ ["22","MCC — لوحات التحكم","2","ops","م. ياسر كمال",true],
+ ["2201","MCC — ورشة التصنيع","22","ops","م. ياسر كمال",true],
+ ["2202","MCC — توريد","22","ops","م. ياسر كمال",true],
+ ["23","التركيبات (Installation)","2","ops","م. شريف عادل",true],
+ ["24","الصيانة وخدمة ما بعد البيع","2","ops","م. شريف عادل",true],
+ ["3","المبيعات والتسويق","","sales","أ. هاني رزق",true],
+ ["31","مبيعات القاهرة والجيزة","3","sales","أ. هاني رزق",true],
+ ["32","مبيعات الإسكندرية والدلتا","3","sales","أ. وليد فتحي",true],
+ ["33","المناقصات والعطاءات","3","sales","أ. هاني رزق",true],
+ ["4","المخازن والنقل","","serv","أ. سعيد مرسي",true],
+ ["41","المخزن الرئيسي","4","serv","أ. سعيد مرسي",true],
+ ["42","النقل والتوزيع","4","serv","أ. سعيد مرسي",true],
+];
+const CM=Object.fromEntries(CC.map(c=>[c[0],c]));
+const kids=p=>CC.filter(c=>c[2]===p);
+const isLeaf=c=>kids(c).length===0;
+const desc=c=>[c,...kids(c).flatMap(k=>desc(k[0]))];
+const lvl=c=>CM[c][2]?lvl(CM[c][2])+1:1;
+const path=c=>CM[c][2]?[...path(CM[c][2]),c]:[c];
+const N=c=>`<span class="ltr">${c}</span>`;
+const nm=c=>`${N(c)} ${CM[c][1]}`;
+const m0=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
+
+// ===== أوامر التوريد (أمثلة وهمية على شكل TBAMR): [0 الرقم، 1 المشروع، 2 العميل، 3 المركز، 4 القيمة، 5 العملة، 6 الضريبة، 7 فاتورة/بيان، 8 الحالة، 9 التاريخ، 10 [عدد الفواتير، المفوتر]، 11 تكلفة البضاعة، 12 مصروفات مباشرة، 13 ملاحظات] =====
+const P=[
+ ["IC26-325","University Spare Parts","Delta Dynamics","2202",55000,"EGP","شامل","فاتورة","run","2026-11-04",[0,0],0,0,""],
+ ["IC26-324","MSD for Logistics Co","الريادة للتكييف والتجارة","2101",256500,"EGP","شامل","فاتورة","run","2026-11-02",[1,128250],96400,8200,""],
+ ["IC26-321","Room Thermostats for Techno","تكنو للحلول الهندسية والتجارة","2202",7050,"EGP","غير شامل","بيان","run","2026-10-29",[1,7050],5100,0,""],
+ ["IC26-319","Sensor For ACX","الريادة للتكييف والتجارة","2202",0,"EGP","غير شامل","بيان","run","2026-10-27",[0,0],0,0,"القيمة لسه ماتحددتش"],
+ ["IC26-318","BTU Meter for Alnour","شركة النور","2202",44000,"EGP","غير شامل","بيان","run","2026-10-26",[1,44000],31800,1500,""],
+ ["IC26-317","Gate way for Green Park","شركة تنمية وإدارة الحدائق","2101",30000,"EGP","شامل","فاتورة","run","2026-10-25",[0,0],0,0,""],
+ ["IC26-316","Valve Actuators for Inova","إنوفا","2202",52500,"EGP","غير شامل","بيان","done","2026-10-22",[2,52500],38900,2100,""],
+ ["IC26-312","Private University","الأفق للمقاولات العمومية والتوريدات","23",22800,"EGP","شامل","فاتورة","run","2026-10-15",[1,11400],0,9800,"تركيبات فقط"],
+ ["IC26-310","Medical Simulation Building","العاصمة للمقاولات","2101",1121076,"EGP","شامل","فاتورة","run","2026-10-12",[3,672600],455000,61300,""],
+ ["IC26-294","Valves & Thermostats — Central Hospital","الصفوة للمقاولات والتوريدات","2202",47627.4,"EGP","شامل","فاتورة","done","2026-09-20",[1,47627.4],34200,1200,""],
+ ["IC26-288","MCC Panels — Delta Textile","مصنع الدلتا للنسيج","2201",38000,"USD","غير شامل","فاتورة","run","2026-09-14",[1,19000],610000,35000,""],
+ ["IC26-276","BMS Upgrade — Nile Pharma","مجمع النيل للأدوية","2101",21500,"EUR","غير شامل","فاتورة","run","2026-08-30",[0,0],0,4200,""],
+ ["IC26-260","عقد صيانة BMS سنوي — مول المدينة","مول المدينة","2102",420000,"EGP","شامل","فاتورة","run","2026-07-01",[4,140000],22000,18500,"فاتورة كل 3 شهور"],
+ ["IC26-248","FUTURE CAMPUS","المستقبل للخدمات التعليمية","2101",4560000,"EGP","شامل","فاتورة","run","2026-06-18",[5,3192000],2214000,286000,""],
+ ["IC26-201","تصنيع لوحات MCC — محطة مياه الشرب","شركة مياه الدلتا","2201",1860000,"EGP","شامل","فاتورة","done","2026-04-05",[3,1860000],1340000,96000,""],
+ ["IC26-129","صيانة طارئة — فندق الوادي","فندق الوادي الكبير","24",85000,"EGP","غير شامل","بيان","done","2026-02-11",[1,85000],41000,20000,""],
+];
+const PM=Object.fromEntries(P.map(p=>[p[0],p]));
+const RATE={EGP:1,USD:48.5,EUR:52.9};
+const CUSTS=[...new Set(P.map(p=>p[2]))];
+const ordersOf=(c,inc=true)=>P.filter(p=>inc?desc(c).includes(p[3]):p[3]===c);
+const pct=p=>p[4]?Math.min(100,Math.round(p[10][1]/p[4]*100)):0;
+const prog=p=>`<span class="pg"><span style="width:${pct(p)}%"></span></span> ${pct(p)}%`;
+const stB=p=>p[8]==="run"?'<span class="bdg ok">جاري</span>':'<span class="bdg x">مقفول</span>';
+const ccB=c=>`<span class="bdg cc">${N(c)} ${CM[c][1]}</span>`;
+const val=p=>`${m0(p[4])} <small>${p[5]}</small>`;
+function profit(p){const rev=Math.round(p[10][1]*RATE[p[5]]), cogs=p[11], ex=p[12], al=Math.round(rev*0.015), pr=rev-cogs-ex-al;return {rev,cogs,ex,al,pr,mg:rev?pr/rev*100:0};}
+function invRows(p){const n=p[10][0],t=p[10][1],out=[];let s=0;const base=Number(p[0].slice(5));
+  for(let i=0;i<n;i++){const a=i<n-1?Math.round(t/n):Math.round((t-s)*100)/100;s+=a;out.push([`2026/${String(1700-base*3+i*11).padStart(4,"0")}`,p[9].slice(0,8)+String(Math.min(28,Number(p[9].slice(8))+i*9)).padStart(2,"0"),a]);}return out;}
+
+const ST={s1:"IC26-310",f1:"all", t2:"2",c2:"2101",s2:"IC26-310", c3:"2",inc3:true,s3:"IC26-248", f4:"all",per4:"y",cur4:"",cc4:"",s4:"IC26-324", s5:"IC26-248",f5:"all", s6:"IC26-310",t6:"data", cu7:"الريادة للتكييف والتجارة",s7:"IC26-324",
+  n8code:"IC26-326",n8name:"BMS Controllers for City Tower",n8cu:"شركة تنمية وإدارة الحدائق",n8cc:"21",n8cur:"USD",n8v:"64000",n8vat:"غير شامل",n8kind:"فاتورة", s9:"IC26-248", i10:8};
+const COL={}; const colOf=n=>COL[n]||(COL[n]=new Set());
+
+// ===== أدوات =====
+function win(inner,title="📋 أوامر التوريد (المشاريع) — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+function tb(mode="عرض"){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">أمر جديد</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-dis':'b-tog'}">قفل / فتح الأمر</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ${ed?'ed':''}">${mode}</span></div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+const cnt=()=>`<div class="cnt">${P.length} أمر (أمثلة) · ${P.filter(p=>p[8]==="run").length} جاري · ${P.filter(p=>p[8]==="done").length} مقفول — في الأكسس 933 أمر</div>`;
+const expBtns=n=>`<span class="mini" data-exp="${n}">عرض الكل</span><span class="mini" data-colall="${n}">طي الكل</span>`;
+function chipsF(key,F){return Object.keys(F).map(x=>`<span class="chipf ${ST[key]===x?'on':''}" data-set="${key}" data-v="${x}">${F[x]}</span>`).join("");}
+const FS={all:"الكل",run:"جاري",done:"مقفول"};
+const byStatus=(ps,k)=>ps.filter(p=>ST[k]==="all"||p[8]===ST[k]);
+function keepSel(key,ps){if(ps.length&&!ps.find(p=>p[0]===ST[key])) ST[key]=ps[0][0];return ps.length?PM[ST[key]]:null;}
+
+function tree(n,{root,key,hl}={}){
+  const k=key||("c"+n), col=colOf(n), sel=ST[k], out=[];
+  const walk=(list,d)=>{for(const c of list){const has=kids(c[0]).length>0, open=!col.has(c[0]), no=ordersOf(c[0]).length;
+    out.push(`<div class="${c[0]===sel?'sel':''} ${hl&&hl.has(c[0])?'hl':''}" data-set="${k}" data-v="${c[0]}" style="padding-right:${3+d*11}px">${has?`<b class="tg" data-tog="${n}:${c[0]}">${open?'▾':'▸'}</b>`:'<b class="tg"></b>'}${has?'📁':'📄'} ${nm(c[0])}${no?` <span class="bdg pj">📋 ${no}</span>`:''}</div>`);
+    if(has&&open) walk(kids(c[0]),d+1);}};
+  walk(root?[CM[root]]:kids(""),0);
+  return `<div class="scroll tree">${out.join("")}</div>`;
+}
+function ccSelect(key,val,{empty="",cls=""}={}){
+  return `<select class="lv ${cls}" data-st="${key}">${empty!==false?`<option value="">${empty||'—'}</option>`:''}${CC.map(c=>`<option value="${c[0]}" ${c[0]===val?'selected':''}>${'  '.repeat(lvl(c[0])-1)}${c[0]} ${c[1]}${isLeaf(c[0])?'':' (رئيسي)'}</option>`).join("")}</select>`;}
+function sel(key,val,opts){return `<select class="lv" data-st="${key}">${opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return `<option value="${v}" ${v===val?'selected':''}>${t}</option>`;}).join("")}</select>`;}
+function linked(p){return gb("مربوط بيه",`<div style="display:flex;gap:3px;flex-wrap:wrap;align-items:center"><span class="bdg pj">🧾 ${p[10][0]} فاتورة بيع</span><span class="bdg x">المصروفات: المرحلة 9</span><span class="bdg x">القيود: المرحلة 4</span></div><div class="hint">المفوتر ${m0(p[10][1])} من ${m0(p[4])} ${p[5]} ${prog(p)}</div>`);}
+function viewForm(p,small=false){
+  if(!p) return '<div class="hint">مفيش أوامر هنا</div>';
+  const core=f("رقم الأمر",N(p[0]),"lock")+f("اسم المشروع",p[1])+f("العميل",p[2])+f("مركز التكلفة",nm(p[3]))+f("القيمة",`${m0(p[4])} ${p[5]}`);
+  if(small) return gb("أمر التوريد",core+f("شامل / فاتورة",`${p[6]} · ${p[7]}`)+f("الحالة",p[8]==="run"?"جاري":"مقفول","lock"))+`<div class="hint">🧾 ${p[10][0]} فاتورة · المفوتر ${prog(p)}</div>`;
+  return gb("بيانات أمر التوريد",core+f("الضريبة",p[6])+f("فاتورة / بيان",p[7])+f("تاريخ الأمر",p[9])+f("الحالة",p[8]==="run"?"جاري":"مقفول","lock")+f("ملاحظات",p[13]))+linked(p);}
+function ordTable(ps,key,cols="full"){
+  const rows=ps.map(p=>`<tr class="${p[0]===ST[key]?'sel':''} ${p[8]==='done'?'off':''}" data-set="${key}" data-v="${p[0]}" style="cursor:pointer"><td>${N(p[0])}</td><td><b>${p[1]}</b>${cols==="full"?`<div style="color:var(--muted);font-size:7.5px">${p[2]}</div>`:''}</td>${cols==="full"?`<td>${N(p[3])}</td>`:''}<td class="n">${val(p)}</td><td>${stB(p)}</td></tr>`).join("")||`<tr><td colspan="5" class="hint">مفيش أوامر توريد هنا</td></tr>`;
+  return `<div class="scroll"><table class="tbl"><tr><th>الأمر</th><th>${cols==="full"?'المشروع / العميل':'المشروع'}</th>${cols==="full"?'<th>المركز</th>':''}<th class="n">القيمة</th><th>الحالة</th></tr>${rows}</table></div>`;}
+
+// ===== النماذج =====
+function m1(){
+  const ps=byStatus(P,"f1"), p=keepSel("s1",ps);
+  return win(tb()+`<div class="content"><div class="col" style="width:44%;overflow:auto">${viewForm(p)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 رقم الأمر أو المشروع أو العميل… (F1)</i>${chipsF("f1",FS)}</div>${ordTable(ps,"s1")}${cnt()}</div></div>`);}
+
+function m2(){
+  const roots=kids("");
+  const tabs=roots.map(r=>`<span class="${ST.t2===r[0]?'on':''}" data-set="t2" data-v="${r[0]}">${r[0]} ${r[1]}<em>${ordersOf(r[0]).length}</em></span>`).join("");
+  if(!desc(ST.t2).includes(ST.c2)) ST.c2=ST.t2;
+  const ps=ordersOf(ST.c2), p=keepSel("s2",ps);
+  return win(tb()+`<div class="content" style="flex-direction:column;gap:0"><div class="tabs2">${tabs}</div><div style="display:flex;gap:7px;flex:1;min-height:0;border-top:2px solid var(--green);padding-top:4px"><div class="col" style="width:44%;overflow:auto">${viewForm(p,true)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i>${expBtns(2)}</div><div class="col" style="max-height:42%">${tree(2,{root:ST.t2})}</div><div class="hint" style="margin:3px 0 2px">أوامر «${CM[ST.c2][1]}» وكل اللي تحته:</div>${ordTable(ps,"s2","short")}</div></div></div>`);}
+
+function m3(){
+  const c=ST.c3, ps=ordersOf(c,ST.inc3), p=keepSel("s3",ps);
+  const det=p?gb("الأمر المختار",`<div class="g2">${f("الأمر",`${N(p[0])} ${p[1]}`,"lock")+f("العميل",p[2],"lock")+f("القيمة",`${m0(p[4])} ${p[5]}`,"lock")+f("شامل / فاتورة",`${p[6]} · ${p[7]}`,"lock")}</div><div class="hint">🧾 ${p[10][0]} فاتورة · المفوتر ${prog(p)} · دبل كليك ← فورم التعديل</div>`,"flex-shrink:0"):'';
+  return win(tb()+`<div class="content"><div class="col" style="width:38%"><div class="srch"><i>🔍 بحث…</i>${expBtns(3)}</div>${tree(3)}</div><div class="col" style="flex:1"><div class="hdr"><b>${nm(c)}</b> <span class="bdg ty">${TYP[CM[c][3]]}</span> ${isLeaf(c)?'<span class="bdg ok">فرعي</span>':'<span class="bdg cc">رئيسي</span>'}<div class="p">${path(c).map(nm).join(" ◂ ")}</div></div><div class="srch" style="margin-top:4px"><label style="font-size:8.5px;font-weight:700;display:flex;gap:4px;align-items:center;cursor:pointer"><input type="checkbox" class="cb" data-inc="3" ${ST.inc3?'checked':''}> يشمل الفروع</label><span class="hint" style="margin:0 auto 0 0">${ps.length} أمر</span></div>${ordTable(ps,"s3","short")}${det}</div></div>`);}
+
+function m4(){
+  const PER={m:["الشهر ده (نوفمبر 2026)","2026-11-01"],q:["آخر 3 شهور","2026-08-10"],y:["سنة 2026","2026-01-01"],all:["الكل (كل السنين)","0000"]};
+  let ps=byStatus(P,"f4").filter(p=>p[9]>=PER[ST.per4][1]&&(!ST.cur4||p[5]===ST.cur4)&&(!ST.cc4||desc(ST.cc4).includes(p[3])));
+  keepSel("s4",ps);
+  const rows=ps.map(p=>`<tr class="${p[0]===ST.s4?'sel':''} ${p[8]==='done'?'off':''}" data-set="s4" data-v="${p[0]}" style="cursor:pointer"><td>${N(p[0])}</td><td class="ltr">${p[9]}</td><td><b>${p[1]}</b></td><td>${p[2]}</td><td>${N(p[3])}</td><td class="n">${val(p)}</td><td>${prog(p)}</td><td>${stB(p)}</td></tr>`).join("")||'<tr><td colspan="8" class="hint">مفيش أوامر في الفلتر ده</td></tr>';
+  const tot={};ps.forEach(p=>tot[p[5]]=(tot[p[5]]||0)+p[4]);
+  const totTxt=Object.keys(tot).map(k=>`${m0(tot[k])} ${k}`).join(" · ")||"—";
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch" style="flex-wrap:wrap"><label style="font-size:8.5px;font-weight:800">الفترة</label><div style="width:120px;display:flex">${sel("per4",ST.per4,Object.keys(PER).map(k=>[k,PER[k][0]]))}</div><label style="font-size:8.5px;font-weight:800">العملة</label><div style="width:62px;display:flex">${sel("cur4",ST.cur4,[["","الكل"],"EGP","USD","EUR"])}</div><label style="font-size:8.5px;font-weight:800">المركز</label><div style="width:130px;display:flex">${ccSelect("cc4",ST.cc4,{empty:"كل المراكز"})}</div><span style="margin-right:auto"></span>${chipsF("f4",FS)}</div><div class="srch"><i>🔍 رقم الأمر أو المشروع أو العميل…</i></div><div class="scroll"><table class="tbl"><tr><th>الأمر</th><th>التاريخ</th><th>المشروع</th><th>العميل</th><th>المركز</th><th class="n">القيمة</th><th>المفوتر</th><th>الحالة</th></tr>${rows}<tr class="tot"><td colspan="5">الإجمالي (${ps.length} أمر)</td><td colspan="3" class="n">${totTxt}</td></tr></table></div><div style="display:flex;gap:4px;align-items:center;margin-top:3px"><span class="bt b-dis">◀</span><span class="hint" style="margin:0">صفحة 1 من 1</span><span class="bt b-dis">▶</span><span class="hint" style="margin:0 auto 0 0">مع الـ 933 أمر: 50 سطر في الصفحة ← 19 صفحة · الفلتر الافتراضي = السنة الحالية</span></div></div>`);}
+
+function m5(){
+  const ps=byStatus(P,"f5"), p=keepSel("s5",ps);
+  const cards=ps.map(x=>`<div class="pc ${x[8]} ${x[0]===ST.s5?'sel':''}" data-set="s5" data-v="${x[0]}"><div class="r">${N(x[0])}${stB(x)}</div><b>${x[1]}</b><div class="m">👤 ${x[2]}</div><div class="r"><span class="bdg cc">${N(x[3])}</span><span class="ltr" style="font-weight:900">${m0(x[4])} ${x[5]}</span></div><div>${prog(x)}</div></div>`).join("");
+  const bar=p?`<div class="hdr" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><b>${N(p[0])} ${p[1]}</b>${stB(p)}${ccB(p[3])}<span class="hint" style="margin:0">${p[2]} · ${p[6]} · ${p[7]} · 🧾 ${p[10][0]} فاتورة</span><span class="btn-s" style="margin-right:auto">فتح الفورم</span></div>`:'';
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch"><i>🔍 بحث…</i>${chipsF("f5",FS)}</div><div class="scroll"><div class="cards">${cards}</div></div>${bar}</div>`,"📋 أوامر التوريد — كروت — A-H CODE");}
+
+function m6(){
+  const p=PM[ST.s6];
+  const T={data:"البيانات",inv:`فواتير البيع (${p[10][0]})`,exp:"المصروفات",prf:"الربحية"};
+  const itabs=Object.keys(T).map(t=>`<span class="${ST.t6===t?'on':''}" data-set="t6" data-v="${t}">${T[t]}</span>`).join("");
+  let body="";
+  if(ST.t6==="data") body=`<div class="g2" style="margin-top:5px">${f("رقم الأمر",N(p[0]),"lock")+f("التاريخ",p[9])+f("اسم المشروع",p[1])+f("العميل",p[2])+f("مركز التكلفة",nm(p[3]))+f("القيمة",`${m0(p[4])} ${p[5]}`)+f("الضريبة",p[6])+f("فاتورة / بيان",p[7])+f("الحالة",p[8]==="run"?"جاري":"مقفول","lock")+f("ملاحظات",p[13])}</div>`;
+  if(ST.t6==="inv"){const r=invRows(p);body=`<div class="scroll" style="margin-top:4px"><table class="tbl"><tr><th>الفاتورة</th><th>التاريخ</th><th class="n">المبلغ</th></tr>${r.map(x=>`<tr><td>${N(x[0])}</td><td class="ltr">${x[1]}</td><td class="n">${m0(x[2])} ${p[5]}</td></tr>`).join("")||'<tr><td colspan="3" class="hint">لسه مفيش فواتير على الأمر</td></tr>'}<tr class="tot"><td colspan="2">المفوتر ${prog(p)}</td><td class="n">${m0(p[10][1])} ${p[5]}</td></tr><tr><td colspan="2">الباقي من قيمة الأمر</td><td class="n">${m0(Math.max(0,p[4]-p[10][1]))} ${p[5]}</td></tr></table></div><div class="hint">أمثلة — الفواتير الحقيقية بتتربط في المرحلة 8 (في الأكسس 1657 فاتورة مربوطة بأوامر)</div>`;}
+  if(ST.t6==="exp") body=`<div class="scroll" style="margin-top:4px"><table class="tbl"><tr><th>المصروف</th><th>التوزيع</th><th class="n">على الأمر ده</th></tr><tr><td>نقل ومشال للموقع</td><td><span class="bdg ok">مباشر</span></td><td class="n">${m0(Math.round(p[12]*0.6))}</td></tr><tr><td>بدل سفر فنيين</td><td><span class="bdg ok">مباشر</span></td><td class="n">${m0(Math.round(p[12]*0.4))}</td></tr><tr><td>إيجار عربية نقل (على 3 أوامر)</td><td><span class="bdg ty">موزّع بالتساوي</span></td><td class="n">${m0(profit(p).al)}</td></tr></table></div><div class="hint">مع المرحلة 9: المصروف يتحمّل على أمر واحد أو <b>يتوزّع على أكتر من أمر</b> (بالتساوي / يدوي، والمجموع = المصروف بالظبط)</div>`;
+  if(ST.t6==="prf"){const x=profit(p);body=`<div class="scroll" style="margin-top:4px"><table class="tbl"><tr><th>البند</th><th class="n">بالجنيه</th></tr><tr><td>إيراد الفواتير المربوطة</td><td class="n">${m0(x.rev)}</td></tr><tr><td>− تكلفة البضاعة المباعة</td><td class="n">${m0(x.cogs)}</td></tr><tr><td>− مصروفات مباشرة</td><td class="n">${m0(x.ex)}</td></tr><tr><td>− مصروفات موزّعة</td><td class="n">${m0(x.al)}</td></tr><tr class="tot"><td>= صافي الربح (الهامش ${x.mg.toFixed(1)}%)</td><td class="n" style="color:${x.pr<0?'#B91C1C':'#087443'}">${m0(x.pr)}</td></tr></table></div><div class="hint">أرقام توضيحية — الحقيقي من القيود ببُعد المشروع (المرحلة 9)</div>`;}
+  return win(tb()+`<div class="content"><div class="col" style="width:36%"><div class="srch"><i>🔍 بحث…</i></div>${ordTable(P,"s6","short")}</div><div class="col" style="flex:1"><div class="hdr"><b>${N(p[0])} ${p[1]}</b> ${stB(p)} ${ccB(p[3])}<div class="p">👤 ${p[2]} · ${m0(p[4])} ${p[5]} · ${p[6]} · ${p[7]}</div></div><div class="itabs">${itabs}</div><div class="col" style="flex:1;background:#fff;border:1px solid var(--card-border);border-top:none;padding:4px">${body}</div></div></div>`);}
+
+function m7(){
+  const side=CUSTS.map(c=>`<div class="it ${ST.cu7===c?'on':''}" data-set="cu7" data-v="${c}"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c}</span><small>${P.filter(p=>p[2]===c).length}</small></div>`).join("");
+  const ps=P.filter(p=>p[2]===ST.cu7), p=keepSel("s7",ps);
+  const sum={};ps.forEach(x=>sum[x[5]]=(sum[x[5]]||0)+x[4]);
+  const det=p?gb("الأمر المختار",`<div class="g2">${f("الأمر",`${N(p[0])} ${p[1]}`,"lock")+f("المركز",nm(p[3]),"lock")+f("القيمة",`${m0(p[4])} ${p[5]}`,"lock")+f("شامل / فاتورة",`${p[6]} · ${p[7]}`,"lock")}</div><div class="hint">🧾 ${p[10][0]} فاتورة · المفوتر ${prog(p)}</div>`,"flex-shrink:0"):'';
+  return win(tb()+`<div class="content"><div class="side" style="width:150px"><div style="color:var(--green);font-weight:900;font-size:9px;border-bottom:2px solid var(--green);padding-bottom:2px;margin-bottom:2px">العملاء</div><div class="scroll" style="display:flex;flex-direction:column;gap:2px">${side}</div><div class="cnt">${CUSTS.length} عميل</div></div><div class="col" style="flex:1"><div class="hdr"><b>👤 ${ST.cu7}</b><div class="p">${ps.length} أمر · إجمالي القيمة ${Object.keys(sum).map(k=>`${m0(sum[k])} ${k}`).join(" · ")} · كشف حساب العميل بالأوامر: مع المرحلة 8</div></div>${ordTable(ps,"s7","short")}${det}</div></div>`,"📋 أوامر التوريد حسب العميل — A-H CODE");}
+
+function m8(){
+  const code=ST.n8code.trim(), cc=ST.n8cc, v=Number(ST.n8v), cur=ST.n8cur, chk=[];
+  const codeBad=!/^IC\d{2}-\d{3,4}$/.test(code)||!!PM[code];
+  chk.push(!code?["bad","رقم الأمر مطلوب"]:PM[code]?["bad",`الرقم ${code} موجود قبل كده («${PM[code][1]}») — الرقم مايتكررش`]:!/^IC\d{2}-\d{3,4}$/.test(code)?["bad","الشكل لازم يبقى IC + السنة + - + مسلسل (IC26-326)"]:["ok",`رقم الأمر ${code} متاح`]);
+  chk.push(ST.n8name.trim()?["ok","اسم المشروع مكتوب"]:["bad","اسم المشروع مطلوب"]);
+  chk.push(ST.n8cu?["ok","العميل: "+ST.n8cu]:["bad","من غير عميل — (سؤال 1 فوق: مسموح ولا لأ؟)"]);
+  const ccBad=!cc||!isLeaf(cc);
+  chk.push(!cc?["bad","مركز التكلفة مطلوب"]:!isLeaf(cc)?["bad",`«${CM[cc][1]}» مركز رئيسي — اختار مركز فرعي (${kids(cc).map(k=>k[0]).join(" / ")})`]:["ok",`المركز ${cc} ${CM[cc][1]} — فرعي نشط`]);
+  chk.push(isNaN(v)||v<0?["bad","القيمة لازم رقم ≥ 0"]:v===0?["ok","القيمة صفر — مسموح (تتحدد بعدين)"]:["ok",`القيمة ${m0(v)} ${cur}${cur!=="EGP"?` ≈ ${m0(Math.round(v*RATE[cur]))} ج.م بسعر النهارده (${RATE[cur]})`:''}`]);
+  const ok=chk.every(c=>c[0]==="ok");
+  const recent=cc&&isLeaf(cc)?ordersOf(cc,false):[];
+  const form=gb("أمر توريد جديد",`<div class="f"><label>رقم الأمر</label><input class="lv ${codeBad?'bad':''}" data-st="n8code" value="${code}"></div><div class="hint" style="margin:-2px 74px 4px 0">مقترح IC26-326 (بيتولّد لوحده · وتقدر تغيّره) — جرّب IC26-317</div><div class="f"><label>اسم المشروع</label><input class="lv" data-st="n8name" value="${ST.n8name}"></div><div class="f"><label>العميل</label>${sel("n8cu",ST.n8cu,[["","— من غير عميل —"],...CUSTS])}</div><div class="f"><label>مركز التكلفة</label>${ccSelect("n8cc",cc,{empty:"— اختار —",cls:ccBad?'bad':''})}</div><div class="f"><label>القيمة</label><input class="lv" data-st="n8v" value="${ST.n8v}" style="direction:ltr;text-align:left"><div style="width:58px;display:flex">${sel("n8cur",cur,["EGP","USD","EUR"])}</div></div><div class="f"><label>الضريبة</label>${sel("n8vat",ST.n8vat,["شامل","غير شامل"])}</div><div class="f"><label>فاتورة / بيان</label>${sel("n8kind",ST.n8kind,["فاتورة","بيان"])}</div>${f("تاريخ الأمر","2026-11-10")}${f("الحالة","جاري (أوتوماتيك)","lock")}`);
+  const res=`<div style="margin-top:4px">${chk.map(c=>`<div class="${c[0]==='ok'?'ok-line':'bad-line'}">${c[0]==='ok'?'✔':'⛔'} ${c[1]}</div>`).join("")}</div><div style="margin-top:4px">${ok?'<span class="btn-s">حفظ ✔</span>':'<span class="btn-s d">حفظ (فيه أخطاء)</span>'}</div>`;
+  return win(tb("جديد")+`<div class="content"><div class="col" style="width:56%;overflow:auto">${form}</div><div class="col" style="flex:1;overflow:auto">${gb("التحقق قبل الحفظ",res)}${gb(cc&&isLeaf(cc)?`آخر أوامر على ${cc}`:"أوامر المركز",recent.length?`<table class="tbl">${recent.slice(0,5).map(p=>`<tr><td>${N(p[0])}</td><td>${p[1]}</td></tr>`).join("")}</table>`:'<div class="hint">مفيش أوامر قبل كده</div>')}<div class="hint" style="margin-top:4px">في الفاتورة والمصروف: لما تختار الأمر ← العميل والمركز وشامل/غير شامل وفاتورة/بيان بيتكتبوا لوحدهم.</div></div></div>`);}
+
+function m9(){
+  const ranked=P.map(p=>[p,profit(p)]).filter(x=>x[1].rev>0).sort((a,b)=>b[1].mg-a[1].mg);
+  const p=PM[ST.s9], x=profit(p);
+  const rows=ranked.map(([q,y])=>`<tr class="${q[0]===ST.s9?'sel':''}" data-set="s9" data-v="${q[0]}" style="cursor:pointer"><td>${N(q[0])}</td><td class="n">${m0(y.rev)}</td><td class="n" style="color:${y.pr<0?'#B91C1C':'#087443'}">${y.mg.toFixed(1)}%</td></tr>`).join("");
+  const kp=(t,v,c="")=>`<div class="kp ${c}"><small>${t}</small><b>${v}</b></div>`;
+  const mx=Math.max(1,x.rev);
+  const bars=[["الإيراد",x.rev,""],["تكلفة البضاعة",x.cogs,"e"],["مصروفات مباشرة",x.ex,"e"],["موزّعة",x.al,"e"],["صافي الربح",Math.max(0,x.pr),""]].map(b=>`<tr><td style="width:28%">${b[0]}</td><td><span class="bar ${b[2]}" style="width:${Math.round(b[1]/mx*100)}%"></span></td><td class="n">${m0(b[1])}</td></tr>`).join("");
+  return win(`<div class="tb"><div style="width:240px;display:flex">${sel("s9",ST.s9,P.map(q=>[q[0],`${q[0]} — ${q[1]}`]))}</div><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode">تقرير</span></div><div class="content"><div class="col" style="width:30%"><div class="hint" style="margin:0 0 3px">الأوامر بالهامش (الأعلى الأول)</div><div class="scroll"><table class="tbl"><tr><th>الأمر</th><th class="n">الإيراد</th><th class="n">الهامش</th></tr>${rows}</table></div></div><div class="col" style="flex:1;gap:5px"><div class="hdr"><b>${N(p[0])} ${p[1]}</b> ${stB(p)} ${ccB(p[3])}<div class="p">👤 ${p[2]} · قيمة الأمر ${m0(p[4])} ${p[5]}${p[5]!=="EGP"?` (بسعر ${RATE[p[5]]})`:''}</div></div><div class="kpis">${kp("قيمة الأمر (ج.م)",m0(Math.round(p[4]*RATE[p[5]])),"b")+kp("المفوتر",`${m0(x.rev)}`,"b")+kp("التكلفة كلها",m0(x.cogs+x.ex+x.al),"r")+kp(`صافي الربح · ${x.mg.toFixed(1)}%`,m0(x.pr),x.pr<0?"r":"g")}</div><div class="scroll" style="background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px"><table class="tbl">${bars}</table></div><div class="hint">بدل «تكلفة أمر التوريد» (CostAmr) في الأكسس — أرقام توضيحية، والحقيقي من القيود ببُعد المشروع (المرحلة 9).</div></div></div>`,"📋 تكلفة وربحية أمر التوريد — A-H CODE");}
+
+function m10(){
+  const i=Math.max(0,Math.min(P.length-1,ST.i10)), p=P[i];
+  const r=invRows(p);
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="nav"><span class="mini" data-nav="first">الأول</span><span class="mini" data-nav="prev">السابق</span><b style="font-size:9px;margin:0 6px">أمر ${i+1} من ${P.length}</b><span class="mini" data-nav="next">التالي</span><span class="mini" data-nav="last">الأخير</span><span class="hint" style="margin:0 8px 0 0">(زي شاشة FAMRTAW في الأكسس)</span></div>${gb("أمر التوريد",`<div class="g2">${f("رقم الأمر",N(p[0]),"lock")+f("العميل",p[2])+f("اسم المشروع",p[1])+f("مركز التكلفة",nm(p[3]))+f("القيمة",m0(p[4]))+f("العملة",p[5]==="EGP"?"مصري":p[5]==="USD"?"دولار":"يورو")+f("شامل / غير شامل",p[6])+f("فاتورة / بيان",p[7])+f("الحالة",p[8]==="run"?"جاري":"مقفول","lock")+f("ملاحظات",p[13])}</div>`,"flex-shrink:0")}<div class="hint" style="margin:4px 0 2px">فواتير البيع على الأمر ده:</div><div class="scroll"><table class="tbl"><tr><th>الفاتورة</th><th>التاريخ</th><th class="n">المبلغ</th></tr>${r.map(x=>`<tr><td>${N(x[0])}</td><td class="ltr">${x[1]}</td><td class="n">${m0(x[2])} ${p[5]}</td></tr>`).join("")||'<tr><td colspan="3" class="hint">لسه مفيش فواتير</td></tr>'}<tr class="tot"><td colspan="2">المفوتر ${prog(p)}</td><td class="n">${m0(p[10][1])} ${p[5]}</td></tr></table></div></div>`);}
+
+const M=[
+ ["Base Screen: فورم يمين + قائمة شمال","زي شاشة المستخدمين بالظبط: قائمة الأوامر (الرقم، المشروع والعميل، المركز، القيمة، الحالة) بفلتر جاري / مقفول، والفورم يمين وتحته «مربوط بيه» (الفواتير ونسبة المفوتر).",m1],
+ ["تبويب لكل مركز رئيسي + شجرة + فورم (زي مراكز التكلفة)","نفس شكل «مراكز التكلفة» (النموذج 1): تبويب لكل مركز رئيسي بعدد أوامره، والشجرة شمال ودوس على أي مركز ← أوامره وأوامر اللي تحته تحت الشجرة، والفورم يمين.",m2],
+ ["شجرة المراكز + أوامر المركز (زي شجرة الحسابات)","الشجرة كلها شمال بعدد الأوامر قصاد كل مركز، ويمين المركز المختار ومساره وأوامره (علّم «يشمل الفروع» عشان الأب يجيب الأبناء) وتحت تفاصيل الأمر المختار.",m3],
+ ["قائمة كبيرة بفلاتر + صفحات","مناسبة لـ 933 أمر: فلتر الفترة (الافتراضي السنة الحالية) والعملة والمركز (الأب بيجيب الأبناء) والحالة، وعمود «المفوتر %» وإجمالي القيمة لكل عملة، وصفحات 50 سطر. الفورم بيفتح بدبل كليك.",m4],
+ ["كروت","كل أمر كارت: الرقم والحالة والمشروع والعميل والمركز والقيمة وشريط المفوتر. المقفول رمادي. تحت شريط الأمر المختار و«فتح الفورم».",m5],
+ ["قائمة + تفاصيل بتبويبات","القائمة شمال، ويمين الأمر المختار وتحته تبويبات: البيانات · فواتير البيع (والباقي من قيمة الأمر) · المصروفات (مباشر / موزّع) · الربحية. دوس على التبويبات.",m6],
+ ["حسب العميل (زي الحسابات الافتراضية)","نفس شكل «الحسابات الافتراضية» (النموذج 9): العملاء في شريط جانبي بعدد أوامر كل واحد، وأوامر العميل في الجدول، وتحت تفاصيل الأمر المختار.",m7],
+ ["فورم «أمر جديد» بالتحقق","الفورم في وضع «جديد»، والخانات الزرقا شغالة: غيّر الرقم (جرّب IC26-317 ← مكرر)، اختار مركز رئيسي (21 ← بيرفض)، غيّر العملة (بيحسب بالجنيه)، شيل العميل. شمال «التحقق قبل الحفظ» بيتحدّث.",m8],
+ ["تقرير تكلفة وربحية الأمر","بدل CostAmr في الأكسس: اختار الأمر (الخانة الزرقا) أو من الترتيب بالهامش شمال ← الإيراد − تكلفة البضاعة − المصروفات المباشرة − الموزّعة = الربح والهامش. ده تقرير المرحلة 9 — هنا عشان تشوف الفكرة.",m9],
+ ["سجل واحد بأزرار تنقّل (زي الأكسس)","شبه شاشة أمر التوريد القديمة (FAMRTAW): سجل واحد في النص بأزرار الأول / السابق / التالي / الأخير، وتحت فواتير البيع على الأمر. أقرب حاجة للي متعودين عليه.",m10],
+];
+
+const NOTE=`<b>المشاريع / أوامر التوريد</b> = جدول <span class="ltr">acc.projects</span> بدل <span class="ltr">TBAMR</span> في الأكسس: كل أمر توريد = مشروع لعميل، و<b>بُعد</b> على الفواتير والمصروفات وسطور القيود عشان نطلع <b>تكلفة وربحية كل أمر</b> (بدل تقرير CostAmr). الحساب بيقول «إيه»، والمركز «لمين جوه الشركة»، والأمر «لأنهي مشروع / عميل».
+<ul>
+<li><b>الخانات:</b> رقم الأمر (<span class="ltr">IC26-326</span> — بيتقترح لوحده: IC + السنة + مسلسل، وunique) · اسم المشروع · العميل · <b>مركز التكلفة (فرعي نشط بس)</b> · القيمة (≥ 0، والصفر مسموح لحد ما تتحدد) · العملة (من شاشة العملات: EGP / USD / EUR) · <b>شامل / غير شامل</b> · <b>فاتورة / بيان</b> · تاريخ الأمر · الحالة (جاري / مقفول) · ملاحظات.</li>
+<li><b>الربط:</b> الفاتورة والمصروف بيختاروا الأمر ← العميل والمركز وشامل/غير شامل وفاتورة/بيان بيتكتبوا لوحدهم · المصروف ممكن يتوزّع على أكتر من أمر (المرحلة 9) · لو مركز التكلفة اتفرّع، أوامره بتنتقل لـ «— عام» (النقطة الـ TODO في <span class="ltr">acc.split_cost_center</span> بتتقفل هنا).</li>
+<li><b>الحماية:</b> FK <b>ON DELETE RESTRICT</b> من الفواتير والمصروفات وسطور القيود ← الأمر اللي عليه حركة <b>مايتمسحش، يتقفل بس</b> · المقفول مايتختارش في مستند جديد (ويتفتح تاني بصلاحية «قفل / فتح») · المركز اللي عليه أوامر مايتمسحش.</li>
+<li><b>الشبكة:</b> <span class="ltr">row_version</span> (جهازين على نفس الأمر) + سجل التعديلات · رقم الأمر المقترح بيتحسب جوه قفل (جهازين بيضيفوا في نفس اللحظة مياخدوش نفس الرقم) · index على المركز والعميل والحالة والتاريخ · القائمة بفلتر فترة وصفحات.</li>
+<li><b>من الأكسس (933 أمر — للمرحلة 11):</b> 19 من غير رقم · 56 رقم متكرر (غالباً إدخال مرتين لنفس العميل) · 27 من غير عميل · 120 قيمتهم صفر · ~55 من غير شامل/فاتورة · 897 مصري و5 دولار و13 يورو (و«مصرى/مصري» مكتوبين بطريقتين) · 1657 فاتورة بيع مربوطة (213 أمر عليه أكتر من فاتورة) · المصروفات المربوطة صفر. مركز التكلفة مش موجود في الأكسس ← هيتحدد وقت النقل (افتراضي + تعديل).</li>
+<li><b>مكانها:</b> «الحسابات» ← «دليل الحسابات» ← «المشاريع / أوامر التوريد» بعد «مراكز التكلفة». الصلاحيات: عرض · جديد · تعديل · حذف · قفل/فتح · تصدير.</li>
+</ul>`;
+
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>العميل لازم؟</b> اقتراحي: <b>لازم</b> — بس شاشة العملاء في المرحلة 3، فدلوقتي الخانة بتبقى اختيارية وتتقفل «لازم» أول ما العملاء يتعملوا (والـ 27 اللي في الأكسس من غير عميل يتحطوا على عميل «متنوع» وقت النقل).</li>
+<li><b>الحالة:</b> «جاري / مقفول» بس؟ ولا نزوّد «ملغي»؟ (المقفول ماياخدش فواتير ولا مصروفات جديدة، ويتفتح تاني بصلاحية.)</li>
+<li><b>رقم الأمر:</b> بيتولّد لوحده <span class="ltr">IC26-326</span> ويبدأ من 001 كل سنة (زي قرار الترقيم) وتقدر تعدّله، ومايتكررش؟ ولا تكتبه بإيدك دايماً زي الأكسس؟</li>
+<li><b>شامل / غير شامل · فاتورة / بيان:</b> على الأمر دول <b>افتراضي</b> بيتنقل للفاتورة وتقدر تغيّره فيها؟ ولا <b>إجباري</b> (كل فواتير الأمر لازم بنفس النوع)؟</li>
+<li><b>العملة:</b> القيمة بعملة الأمر بس (والفاتورة بسعرها يوم الفاتورة)؟ ولا محتاج سعر صرف ثابت متسجل على الأمر نفسه؟</li>
+<li><b>تاريخ بداية / نهاية</b> للأمر (زي E3marEG) — محتاجينهم ولا تاريخ الأمر كفاية؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+const HOOK={t2:v=>{ST.c2=v;}};
+document.addEventListener("change",e=>{
+  const t=e.target, k=t.dataset.st;
+  if(t.dataset.inc){ST["inc"+t.dataset.inc]=t.checked;render();return;}
+  if(!k) return;
+  ST[k]=t.value; if(HOOK[k]) HOOK[k](t.value);
+  render();
+});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const tg=e.target.closest("[data-tog]");
+  if(tg){const [n,c]=tg.dataset.tog.split(":");const s=colOf(n);s.has(c)?s.delete(c):s.add(c);render();return;}
+  const ex=e.target.closest("[data-exp]"); if(ex){colOf(ex.dataset.exp).clear();render();return;}
+  const ca=e.target.closest("[data-colall]"); if(ca){const s=colOf(ca.dataset.colall);CC.forEach(c=>{if(kids(c[0]).length)s.add(c[0]);});render();return;}
+  const nv=e.target.closest("[data-nav]"); if(nv){const a=nv.dataset.nav;ST.i10=a==="first"?0:a==="last"?P.length-1:a==="prev"?Math.max(0,ST.i10-1):Math.min(P.length-1,ST.i10+1);render();return;}
+  const s=e.target.closest("[data-set]");
+  if(s){ST[s.dataset.set]=s.dataset.v; if(HOOK[s.dataset.set]) HOOK[s.dataset.set](s.dataset.v); render();}
+});
+render();
+</script>
+</body>
+</html>

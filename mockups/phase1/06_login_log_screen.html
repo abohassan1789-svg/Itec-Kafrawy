@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج سجل الدخول — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.tabs{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.tabs button{border:0;border-radius:6px;padding:7px 14px;font:inherit;font-weight:800;cursor:pointer;background:rgba(255,255,255,.15);color:#fff}
+.tabs button.on{background:#fff;color:var(--green)}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;font-size:10px;position:relative}
+.rail{width:62px;background:var(--green-dark);color:#fff;display:flex;flex-direction:column;align-items:center;padding:6px 4px;gap:4px;flex-shrink:0}
+.rail .brand{font-weight:900;font-size:9px;text-align:center;margin-bottom:4px;line-height:1.1}
+.rail .it{width:52px;border-radius:6px;padding:4px 2px;text-align:center;font-size:8.5px;line-height:1.2}
+.rail .it b{display:block;font-size:14px}
+.rail .it.on{background:#fff;color:var(--green)}
+.rail .sp{flex:1}
+.rail .out{background:rgba(220,38,38,.25)}
+.rail.wide{width:118px;align-items:stretch}
+.rail.wide .it{width:auto;display:flex;align-items:center;gap:5px;text-align:right;font-size:9.5px;padding:5px 6px}
+.rail.wide .it b{display:inline;font-size:12px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.hdr{height:40px;background:#fff;border-bottom:1px solid var(--card-border);display:flex;align-items:center;padding:0 8px;gap:8px;flex-shrink:0}
+.av{width:26px;height:26px;border-radius:50%;border:2px solid var(--green);background:#E2E8F0;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.hdr .nm{font-weight:900;font-size:10px;line-height:1.2}
+.hdr .nm small{display:block;color:var(--muted);font-weight:600;font-size:8.5px}
+.hdr .clk{margin-right:auto;text-align:center;font-weight:900;font-size:10px;line-height:1.2}
+.hdr .clk small{display:block;color:var(--muted);font-weight:600;font-size:8px}
+.bell{font-size:13px}
+.content{flex:1;padding:8px;position:relative;overflow:hidden}
+.hero{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--green)}
+.hero b{font-size:26px;font-weight:900}
+.hero small{color:var(--muted);font-size:10px;font-weight:700}
+.popup{position:absolute;top:42px;right:64px;width:170px;background:#fff;border:1px solid var(--card-border);border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.18);padding:8px;z-index:3}
+.popup h4{margin:0 0 4px;color:var(--green);font-size:11px;font-weight:900;border-bottom:2px solid var(--green);padding-bottom:3px}
+.popup .sub{color:var(--muted);font-weight:800;font-size:8.5px;margin:5px 0 2px}
+.popup .ln{padding:3px 4px;border-radius:4px;font-size:9.5px}
+.popup .ln.on{background:var(--first);color:var(--green);font-weight:800}
+.stat{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:6px}
+.stat small{color:var(--muted);font-weight:700;font-size:8.5px;display:block}
+.stat b{font-size:15px;font-weight:900}
+.tile{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:8px;text-align:center;font-weight:800;font-size:9.5px}
+.tile b{display:block;font-size:18px;margin-bottom:2px}
+
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-log{background:#0F766E}.b-prev{background:#6D28D9}.b-exp{background:#0E7490}
+.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:58px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.chk{font-size:8.5px;font-weight:700;margin-left:6px}
+.chk:before{content:"☑ ";color:var(--green)}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.srch{display:flex;gap:4px;margin-bottom:4px}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.photo{width:48px;height:56px;border:1px dashed var(--input);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#F8FAFC;flex-shrink:0}
+.ck{color:var(--green);font-weight:900;text-align:center}
+.x{color:#CBD5E1;text-align:center}
+.key{font-size:8px}
+.chip{display:inline-block;border-radius:10px;padding:1px 6px;font-size:8px;font-weight:800;margin:1px;border:1px solid var(--badge-bd);background:var(--badge-bg);color:var(--badge-tx)}
+.chip.off{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0}
+.chip.deny{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+
+/* ===== شاشة الدخول ===== */
+.lg{width:300px;height:340px;background:#fff;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.2);overflow:hidden;display:flex;flex-direction:column;font-size:11px}
+.lg .hd{background:var(--green-dark);color:#fff;text-align:center;padding:22px 10px}
+.lg .hd b{display:block;font-size:22px;font-weight:900}
+.lg .hd small{font-weight:700;font-size:12px;opacity:.95}
+.lg .bd{padding:16px 22px;display:flex;flex-direction:column;gap:8px;flex:1}
+.lg label{font-weight:800;font-size:10.5px}
+.in{height:30px;border:1.5px solid var(--green);border-radius:6px;padding:0 8px;display:flex;align-items:center;color:#475569;font-size:10.5px;gap:6px;background:#fff}
+.in.g{border-color:var(--input)}
+.err{color:var(--red);font-weight:800;font-size:10px;min-height:14px}
+.bigbtn{height:32px;border-radius:6px;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:12px}
+.bigbtn.ok{background:var(--green);color:#fff}
+.bigbtn.no{background:#fff;color:#374151;border:1px solid var(--input)}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.muted{color:var(--muted);font-weight:700;font-size:9.5px}
+</style>
+<style>
+.ok{color:#087443;font-weight:900}.bad{color:#DC2626;font-weight:900}.open{color:#2563EB;font-weight:900}
+.cardx{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px}
+.cardx small{display:block;color:var(--muted);font-weight:700;font-size:8px}
+.cardx b{font-size:15px;font-weight:900}
+.tabs2{display:flex;gap:2px;margin-bottom:4px}
+.tabs2 span{padding:3px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tl{border-right:2px solid var(--card-border);margin-right:6px;padding-right:8px}
+.tl .ev{position:relative;font-size:8.5px;margin-bottom:5px;background:#fff;border:1px solid var(--card-border);border-radius:5px;padding:3px 5px}
+.tl .ev:before{content:"";position:absolute;right:-13px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--green)}
+.tl .ev.f:before{background:#DC2626}
+.tl .day{font-weight:900;color:var(--green);font-size:9px;margin:4px 0}
+.alert{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:800;margin-bottom:4px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-size:7.5px;text-align:center}
+.cal span{padding:3px 0;border-radius:3px;background:#F1F5F9}
+.cal span.h1{background:#DCFCE7}.cal span.h2{background:#86EFAC}.cal span.h3{background:#22C55E;color:#fff}
+.cal span.f{outline:1.5px solid #DC2626}.cal span.sel{background:var(--green);color:#fff;font-weight:900}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج سجل الدخول (المرحلة 1 · الشاشة 6)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD — الفرق بس في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج).</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+function win(inner){return `<div class="win" style="flex-direction:column"><div style="height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0"><span>🕘 سجل الدخول — A-H CODE</span><span style="margin-right:auto;color:var(--muted)">_ ▢ ✕</span></div><div class="main" style="display:flex;flex-direction:column;flex:1;min-height:0">${inner}</div></div>`;}
+const TB=`<div class="tb"><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode">عرض</span></div>`;
+function f(l,v=""){return `<div class="f"><label>${l}</label><i>${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+const LOG=[
+ ["ahmed","أحمد حسن","07/11 09:12 ص","—","مفتوحة","s","PC-ACC-01","192.168.1.20",""],
+ ["mona","منى علي","07/11 08:55 ص","07/11 12:40 م","3:45","s","PC-SALES","192.168.1.31",""],
+ ["karim","—","07/11 08:51 ص","","","f","PC-STORE","192.168.1.44","كلمة السر غلط"],
+ ["karim","كريم سامي","07/11 08:52 ص","07/11 04:10 م","7:18","s","PC-STORE","192.168.1.44",""],
+ ["sara","سارة محمد","06/11 03:20 م","","","f","PC-ACC-02","192.168.1.21","المستخدم موقوف"],
+ ["user","مدير النظام","06/11 10:02 ص","06/11 06:30 م","8:28","s","SERVER","192.168.1.2",""],
+ ["omar","عمر فؤاد","06/11 09:40 ص","06/11 05:05 م","7:25","s","PC-CASH","192.168.1.50",""],
+];
+function st(r){return r[5]==="f"?'<span class="bad">✖ فشل</span>':r[4]==="مفتوحة"?'<span class="open">● مفتوحة</span>':'<span class="ok">✔ ناجح</span>';}
+function table(cols=["user","name","in","out","dur","st","dev","ip","why"],rows=LOG,sel=1){
+  const T={user:"المستخدم",name:"الاسم",in:"وقت الدخول",out:"وقت الخروج",dur:"المدة",st:"الحالة",dev:"الجهاز",ip:"IP",why:"السبب"};
+  const V=r=>({user:r[0],name:r[1],in:r[2],out:r[3]||"—",dur:r[4]||"—",st:st(r),dev:r[6],ip:r[7],why:r[8]?`<span class="bad">${r[8]}</span>`:""});
+  return `<table class="tbl"><tr>${cols.map(c=>`<th>${T[c]}</th>`).join("")}</tr>${rows.map((r,i)=>`<tr class="${i===sel?'sel':''}">${cols.map(c=>`<td>${V(r)[c]}</td>`).join("")}</tr>`).join("")}</table>`;
+}
+const filters=`<div style="display:flex;gap:6px;flex-wrap:wrap">${f("المستخدم","الكل ▾")}${f("الحالة","الكل ▾")}${f("من","01/11/2026 📅")}${f("إلى","07/11/2026 📅")}</div><div class="srch"><i>🔍 بحث بالمستخدم / الاسم / الجهاز…</i></div>`;
+const filtersCol=f("المستخدم","الكل ▾")+f("الحالة","الكل ▾")+f("من","01/11/2026 📅")+f("إلى","07/11/2026 📅")+f("بحث","")+`<div class="muted" style="font-size:8px">سريع: <span class="chip">النهارده</span><span class="chip off">الأسبوع</span><span class="chip off">الشهر</span></div>`;
+const cnt=`<div class="cnt">عدد السجلات المعروضة: 7 · ناجح 5 · فاشل 2 · مفتوحة دلوقتي 1</div>`;
+const cards=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:5px"><div class="cardx"><small>دخول ناجح النهارده</small><b class="ok">12</b></div><div class="cardx" style="border-right-color:#DC2626"><small>محاولات فاشلة النهارده</small><b class="bad">3</b></div><div class="cardx" style="border-right-color:#2563EB"><small>جلسات مفتوحة دلوقتي</small><b class="open">4</b></div><div class="cardx" style="border-right-color:#B45309"><small>آخر محاولة فاشلة</small><b style="font-size:10px">karim 08:51 ص</b></div></div>`;
+
+const LG=[
+ ["زي Hr GAD: فلاتر فوق + جدول","فلاتر في سطر فوق (المستخدم، الحالة، من/إلى، بحث) والجدول واخد الشاشة كلها، والفاشل بالأحمر وسببه جنبه.",
+  win(TB+`<div class="content">${filters}${table()}${cnt}</div>`)],
+ ["فلاتر يمين + جدول شمال (زي ترتيب الـ Base)","يمين لوحة «البحث» فيها كل الفلاتر واختصارات (النهارده / الأسبوع / الشهر) · شمال الجدول.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:150px 1fr;gap:8px">${gb("البحث",filtersCol)}<div>${table(["user","in","out","dur","st","dev","why"])}${cnt}</div></div>`)],
+ ["كروت ملخص + جدول","4 كروت فوق (ناجح النهارده، فاشل النهارده، الجلسات المفتوحة، آخر محاولة فاشلة) وتحتها الفلاتر والجدول.",
+  win(TB+`<div class="content">${cards}${filters}${table(["user","name","in","out","st","dev","why"])}</div>`)],
+ ["المستخدمين يمين + سجل المختار","يمين: المستخدمين وجنب كل واحد آخر دخول وعدد المحاولات الفاشلة · شمال: سجل المستخدم المختار بس.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:170px 1fr;gap:8px"><div><div class="srch"><i>🔍 مستخدم…</i></div><table class="tbl"><tr><th>المستخدم</th><th>آخر دخول</th><th>فاشل</th></tr><tr><td>ahmed</td><td>09:12 ص</td><td>—</td></tr><tr class="sel"><td>karim</td><td>08:52 ص</td><td class="bad">1</td></tr><tr><td>mona</td><td>08:55 ص</td><td>—</td></tr><tr><td>sara</td><td>أمس</td><td class="bad">1</td></tr><tr><td>user</td><td>أمس</td><td>—</td></tr></table></div><div>${f("الفترة","الشهر ده ▾")}${table(["in","out","dur","st","dev","ip","why"],LOG.filter(r=>r[0]==="karim"),0)}</div></div>`)],
+ ["متجمّع باليوم","نفس الجدول بس كل يوم ليه عنوان (السبت 07/11 — 4 دخول · 1 فاشل) زي عناوين الأقسام في المصفوفة.",
+  win(TB+`<div class="content">${filters}<table class="tbl"><tr><th>المستخدم</th><th>الدخول</th><th>الخروج</th><th>المدة</th><th>الحالة</th><th>الجهاز</th><th>السبب</th></tr><tr class="sec"><td colspan="7">📅 السبت 07/11/2026 — 4 دخول · 1 فاشل</td></tr>${LOG.slice(0,4).map(r=>`<tr><td>${r[0]}</td><td>${r[2].split(" ")[1]}</td><td>${r[3]&&r[3]!=="—"?r[3].split(" ")[1]:"—"}</td><td>${r[4]||"—"}</td><td>${st(r)}</td><td>${r[6]}</td><td class="bad">${r[8]}</td></tr>`).join("")}<tr class="sec"><td colspan="7">📅 الجمعة 06/11/2026 — 3 دخول · 1 فاشل</td></tr>${LOG.slice(4).map(r=>`<tr><td>${r[0]}</td><td>${r[2].split(" ")[1]}</td><td>${r[3]&&r[3]!=="—"?r[3].split(" ")[1]:"—"}</td><td>${r[4]||"—"}</td><td>${st(r)}</td><td>${r[6]}</td><td class="bad">${r[8]}</td></tr>`).join("")}</table></div>`)],
+ ["تبويبات: الكل / الناجح / الفاشل / المفتوحة","تبويبات فوق الجدول بعدد كل نوع — «المفتوحة دلوقتي» بتوريك مين شغّال على البرنامج حالاً.",
+  win(TB+`<div class="content"><div class="tabs2"><span>الكل (7)</span><span>الناجح (5)</span><span class="on">الفاشل (2)</span><span>المفتوحة دلوقتي (1)</span></div>${filters}${table(["user","name","in","st","dev","ip","why"],LOG.filter(r=>r[5]==="f"),0)}</div>`)],
+ ["خط زمني","بدل الجدول: خط زمني لكل يوم، كل دخول نقطة خضرا والفاشل نقطة حمرا وجنبها الجهاز والسبب.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:150px 1fr;gap:8px">${gb("البحث",filtersCol)}<div class="tl"><div class="day">السبت 07/11</div><div class="ev">09:12 ص · <b>ahmed</b> دخل من PC-ACC-01 · <span class="open">لسه شغّال</span></div><div class="ev">08:55 ص · <b>mona</b> دخلت · خرجت 12:40 م (3:45)</div><div class="ev">08:52 ص · <b>karim</b> دخل · خرج 04:10 م</div><div class="ev f">08:51 ص · <b>karim</b> <span class="bad">فشل — كلمة السر غلط</span></div><div class="day">الجمعة 06/11</div><div class="ev f">03:20 م · <b>sara</b> <span class="bad">فشل — المستخدم موقوف</span></div><div class="ev">10:02 ص · <b>user</b> دخل من SERVER (8:28)</div></div></div>`)],
+ ["جدول + تفاصيل الحركة المختارة","الجدول مختصر، ولما تختار سطر بتظهر تفاصيله شمال (الجهاز، IP، المدة، السبب، وكل حركات اليوم ده للمستخدم).",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 170px;gap:8px"><div>${filters}${table(["user","in","st","why"])}</div>${gb("تفاصيل الحركة",f("المستخدم","mona — منى علي")+f("الدخول","07/11 08:55 ص")+f("الخروج","07/11 12:40 م")+f("المدة","3 ساعات 45 دقيقة")+f("الجهاز","PC-SALES")+f("IP","192.168.1.31")+f("الحالة","✔ ناجح")+`<div class="muted" style="margin-top:4px">حركاتها النهارده: 1 دخول · 0 فاشل</div>`)}</div>`)],
+ ["تقويم الشهر + جدول اليوم","يمين تقويم صغير للشهر (اللون = عدد مرات الدخول، والإطار الأحمر = فيه فشل) · شمال سجل اليوم المختار.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:160px 1fr;gap:8px"><div>${gb("نوفمبر 2026",`<div class="cal">${["س","ح","ن","ث","ر","خ","ج"].map(d=>`<b>${d}</b>`).join("")}${Array.from({length:30},(_,i)=>{const d=i+1;const c=d===7?"sel":d===6?"h3 f":d%7===5?"":d%3===0?"h3":d%2?"h2":"h1";return `<span class="${c}">${d}</span>`;}).join("")}</div><div class="muted" style="margin-top:4px">فاتح = قليل · غامق = كتير · 🟥 إطار = فيه فشل</div>`)}${f("المستخدم","الكل ▾")}${f("الحالة","الكل ▾")}</div><div><b style="color:var(--green);font-size:10px">السبت 07/11/2026</b>${table(["user","name","in","out","dur","st","why"],LOG.slice(0,4),1)}</div></div>`)],
+ ["تنبيه المحاولات الفاشلة + الجدول","فوق: تنبيه أحمر لو مستخدم فشل 3 مرات أو أكتر في يوم (ممكن حد بيحاول يخمّن كلمة السر) · تحته الفلاتر والجدول العادي.",
+  win(TB+`<div class="content"><div class="alert">⚠ (مثال) karim: 3 محاولات فاشلة النهارده (آخرها 08:51 ص من PC-STORE) · sara: محاولة دخول وهي موقوفة (أمس 03:20 م)</div>${filters}${table()}${cnt}</div>`)],
+];
+
+const SETS=[
+ ["🕘 سجل الدخول",LG,"شاشة «سجل الدخول»: كل دخول وخروج للبرنامج (الناجح، والفاشل بسببه: كلمة سر غلط / مستخدم موقوف / مش موجود)، بوقت الدخول والخروج والمدة والجهاز. الشاشة للقراءة بس (القاعدة نفسها مابتسمحش بتعديل السجل) — فيها فلاتر (المستخدم، الحالة، من/إلى، بحث) وتصدير إكسل. الجلسة اللي لسه مفتوحة بتظهر «مفتوحة». شريط الأدوات فوق زي باقي الشاشات (تحديث / تصدير إكسل / خروج)، والشاشة بتفتح في شباك لوحدها."],
+];
+let cur=0;
+function render(){
+  document.getElementById("note").textContent=SETS[cur][2];
+  document.getElementById("grid").innerHTML=SETS[cur][1].map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]}</div></div>`).join("");
+  window.scrollTo(0,0);
+}
+render();
+</script>
+</body>
+</html>

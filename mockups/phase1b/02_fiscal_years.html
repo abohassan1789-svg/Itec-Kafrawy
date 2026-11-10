@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج السنة المالية — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.tabs{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.tabs button{border:0;border-radius:6px;padding:7px 14px;font:inherit;font-weight:800;cursor:pointer;background:rgba(255,255,255,.15);color:#fff}
+.tabs button.on{background:#fff;color:var(--green)}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;font-size:10px;position:relative}
+.rail{width:62px;background:var(--green-dark);color:#fff;display:flex;flex-direction:column;align-items:center;padding:6px 4px;gap:4px;flex-shrink:0}
+.rail .brand{font-weight:900;font-size:9px;text-align:center;margin-bottom:4px;line-height:1.1}
+.rail .it{width:52px;border-radius:6px;padding:4px 2px;text-align:center;font-size:8.5px;line-height:1.2}
+.rail .it b{display:block;font-size:14px}
+.rail .it.on{background:#fff;color:var(--green)}
+.rail .sp{flex:1}
+.rail .out{background:rgba(220,38,38,.25)}
+.rail.wide{width:118px;align-items:stretch}
+.rail.wide .it{width:auto;display:flex;align-items:center;gap:5px;text-align:right;font-size:9.5px;padding:5px 6px}
+.rail.wide .it b{display:inline;font-size:12px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.hdr{height:40px;background:#fff;border-bottom:1px solid var(--card-border);display:flex;align-items:center;padding:0 8px;gap:8px;flex-shrink:0}
+.av{width:26px;height:26px;border-radius:50%;border:2px solid var(--green);background:#E2E8F0;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.hdr .nm{font-weight:900;font-size:10px;line-height:1.2}
+.hdr .nm small{display:block;color:var(--muted);font-weight:600;font-size:8.5px}
+.hdr .clk{margin-right:auto;text-align:center;font-weight:900;font-size:10px;line-height:1.2}
+.hdr .clk small{display:block;color:var(--muted);font-weight:600;font-size:8px}
+.bell{font-size:13px}
+.content{flex:1;padding:8px;position:relative;overflow:hidden}
+.hero{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--green)}
+.hero b{font-size:26px;font-weight:900}
+.hero small{color:var(--muted);font-size:10px;font-weight:700}
+.popup{position:absolute;top:42px;right:64px;width:170px;background:#fff;border:1px solid var(--card-border);border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.18);padding:8px;z-index:3}
+.popup h4{margin:0 0 4px;color:var(--green);font-size:11px;font-weight:900;border-bottom:2px solid var(--green);padding-bottom:3px}
+.popup .sub{color:var(--muted);font-weight:800;font-size:8.5px;margin:5px 0 2px}
+.popup .ln{padding:3px 4px;border-radius:4px;font-size:9.5px}
+.popup .ln.on{background:var(--first);color:var(--green);font-weight:800}
+.stat{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:6px}
+.stat small{color:var(--muted);font-weight:700;font-size:8.5px;display:block}
+.stat b{font-size:15px;font-weight:900}
+.tile{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:8px;text-align:center;font-weight:800;font-size:9.5px}
+.tile b{display:block;font-size:18px;margin-bottom:2px}
+
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-log{background:#0F766E}.b-prev{background:#6D28D9}.b-exp{background:#0E7490}
+.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:58px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.chk{font-size:8.5px;font-weight:700;margin-left:6px}
+.chk:before{content:"☑ ";color:var(--green)}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.srch{display:flex;gap:4px;margin-bottom:4px}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.photo{width:48px;height:56px;border:1px dashed var(--input);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#F8FAFC;flex-shrink:0}
+.ck{color:var(--green);font-weight:900;text-align:center}
+.x{color:#CBD5E1;text-align:center}
+.key{font-size:8px}
+.chip{display:inline-block;border-radius:10px;padding:1px 6px;font-size:8px;font-weight:800;margin:1px;border:1px solid var(--badge-bd);background:var(--badge-bg);color:var(--badge-tx)}
+.chip.off{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0}
+.chip.deny{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+
+
+/* ===== السنة المالية ===== */
+.f label{width:66px}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tabs2{display:flex;gap:2px}
+.tabs2 span{padding:4px 9px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569}
+.tabs2 span.on{background:var(--green);color:#fff}
+.st-open{color:#087443;font-weight:900}.st-closed{color:#B91C1C;font-weight:900}.st-cur{color:#1D4ED8;font-weight:900}
+.bdg{display:inline-block;border-radius:9px;padding:1px 7px;font-size:8px;font-weight:900;border:1px solid}
+.bdg.o{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.c{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.n{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.b-lock{background:#B45309}.b-new2{background:#1A7A3C}
+.months{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.mo{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 5px;font-size:8px}
+.mo b{display:block;font-size:9.5px;color:var(--green);font-weight:900}
+.mo small{color:var(--muted);font-weight:700}
+.mo.now{border:1.5px solid #2563EB;background:#F5F9FF}.mo.now b{color:#1D4ED8}
+.mo.past{background:#F8FAFC}
+.ycard{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:7px;padding:6px 8px;margin-bottom:5px;font-size:8.5px}
+.ycard b{font-size:12px;font-weight:900}
+.ycard.c{border-right-color:#DC2626;opacity:.85}
+.ycard.sel{background:var(--first);outline:1.5px solid var(--green)}
+.ycard .r{display:flex;justify-content:space-between;align-items:center}
+.ycard small{color:var(--muted);font-weight:700;display:block;margin-top:2px}
+.tline{position:relative;height:46px;margin:6px 0 10px;border-bottom:2px solid var(--card-border)}
+.tline .seg{position:absolute;top:8px;height:24px;border-radius:6px;color:#fff;font-weight:900;font-size:9px;display:flex;align-items:center;justify-content:center}
+.tline .now{position:absolute;top:0;bottom:-4px;width:2px;background:#2563EB}
+.tline .now:after{content:"النهارده";position:absolute;top:-2px;right:4px;font-size:7.5px;color:#1D4ED8;font-weight:900;white-space:nowrap}
+.big{background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.big b{font-size:18px;font-weight:900}
+.big small{display:block;font-size:8.5px;opacity:.92;font-weight:700}
+.prog{height:7px;background:rgba(255,255,255,.3);border-radius:5px;overflow:hidden;margin:5px 0 3px}
+.prog div{height:100%;background:#fff}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:6px}
+.kpi{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:4px 6px}
+.kpi small{display:block;color:var(--muted);font-weight:700;font-size:8px}
+.kpi b{font-size:13px;font-weight:900}
+.tree{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px;font-size:8.5px}
+.tree div{padding:2px 4px;border-radius:4px}
+.tree .y{font-weight:900}
+.tree .m{padding-right:16px;color:#334155}
+.tree .sel{background:var(--sel)}
+.dlg{background:#fff;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.25);width:330px;overflow:hidden;font-size:9px}
+.dlg .h{background:var(--green-dark);color:#fff;font-weight:900;padding:7px 10px;font-size:10.5px}
+.dlg .b{padding:10px}
+.hint{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:4px 0}
+.warnb{background:#FFF7ED;border:1px solid #FED7AA;color:#9A3412;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:4px 0}
+.hist{font-size:8.5px}
+.hist div{border-right:2px solid var(--card-border);padding:2px 6px;margin-bottom:3px}
+.hist div.c{border-right-color:#DC2626}.hist div.o{border-right-color:var(--green)}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج السنة المالية والفترات (المرحلة 1ب · الشاشة 2)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD — الفرق بس في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). البيانات اللي في النماذج أمثلة.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+function win(inner){return `<div class="win" style="flex-direction:column"><div style="height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0"><span>📅 السنة المالية والفترات — A-H CODE</span><span style="margin-right:auto;color:var(--muted)">_ ▢ ✕</span></div><div class="main" style="display:flex;flex-direction:column;flex:1;min-height:0">${inner}</div></div>`;}
+function tb(mode="عرض"){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">سنة جديدة</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt b-ref">تحديث</span><span class="bt b-lock">🔒 قفل / فتح السنة</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode" style="${ed?'background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE':''}">${mode}</span></div>`;}
+const TB=tb(), TBN=tb("جديد");
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+
+const YEARS=[
+ ["2026","السنة المالية 2026","01/01/2026","31/12/2026","n","مفتوحة — الحالية","—"],
+ ["2025","السنة المالية 2025","01/01/2025","31/12/2025","o","مفتوحة","—"],
+ ["2024","السنة المالية 2024","01/01/2024","31/12/2024","c","مقفولة","user · 15/02/2025"],
+];
+const B=s=>s==="c"?'<span class="bdg c">🔒 مقفولة</span>':s==="n"?'<span class="bdg n">● مفتوحة — الحالية</span>':'<span class="bdg o">مفتوحة</span>';
+function ytable(cols=["code","name","from","to","st"],sel=0,rows=YEARS){
+  const T={code:"السنة",name:"الاسم",from:"من",to:"إلى",st:"الحالة",by:"اتقفلت بواسطة"};
+  const V=r=>({code:`<b>${r[0]}</b>`,name:r[1],from:r[2],to:r[3],st:B(r[4]),by:r[6]});
+  return `<table class="tbl"><tr>${cols.map(c=>`<th>${T[c]}</th>`).join("")}</tr>${rows.map((r,i)=>`<tr class="${i===sel?'sel':''}">${cols.map(c=>`<td>${V(r)[c]}</td>`).join("")}</tr>`).join("")}</table>`;
+}
+const MN=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const DAYS=[31,28,31,30,31,30,31,31,30,31,30,31];
+const NOW=10; // نوفمبر
+function months(cls=""){return `<div class="months ${cls}">${MN.map((m,i)=>`<div class="mo ${i===NOW?'now':i<NOW?'past':''}"><b>${i+1}. ${m}</b><small>01/${String(i+1).padStart(2,"0")} ← ${DAYS[i]}/${String(i+1).padStart(2,"0")}</small></div>`).join("")}</div>`;}
+function ptable(n=12,cols=3){return `<table class="tbl"><tr><th>#</th><th>الفترة</th><th>من</th><th>إلى</th>${cols>3?'<th>القيود</th>':''}</tr>${MN.slice(0,n).map((m,i)=>`<tr class="${i===NOW?'sel':''}"><td>${i+1}</td><td>${m} 2026</td><td>01/${String(i+1).padStart(2,"0")}/2026</td><td>${DAYS[i]}/${String(i+1).padStart(2,"0")}/2026</td>${cols>3?`<td>${i<=NOW?[42,38,51,47,40,39,55,61,44,49,12][i]:"—"}</td>`:''}</tr>`).join("")}</table>`;}
+const FORM=f("السنة *","2026")+f("الاسم","السنة المالية 2026")+f("من *","01/01/2026 📅")+f("إلى *","31/12/2026 📅")+f("الحالة","● مفتوحة","lock")+f("ملاحظات","");
+const srch=`<div class="srch"><i>🔍 بحث بالسنة / الاسم…</i></div>`;
+const cnt=`<div class="cnt">عدد السنين: 3 · مفتوحة 2 · مقفولة 1</div>`;
+
+const FY=[
+ ["زي Hr GAD: الفورم يمين + السنين شمال + الفترات تحت الفورم","الـ Base Screen العادي: يمين بيانات السنة وتحتها جدول الـ 12 شهر (بيتعملوا لوحدهم) · شمال «البحث والتسجيل» بجدول السنين وحالتها.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1.1fr 1fr;gap:8px"><div>${gb("بيانات السنة",FORM)}${gb("الفترات (12 شهر — للتقارير بس، من غير قفل)",ptable(7),"margin-top:10px")}</div>${gb("البحث والتسجيل",srch+ytable()+cnt)}</div>`)],
+ ["كروت السنين يمين + التفاصيل شمال","يمين كارت لكل سنة (الأحدث فوق) بلون حالتها · شمال بيانات السنة المختارة وشبكة شهورها (الشهر الحالي بالأزرق).",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:160px 1fr;gap:8px"><div>${YEARS.map((y,i)=>`<div class="ycard ${y[4]==="c"?"c":""} ${i===0?"sel":""}"><div class="r"><b>${y[0]}</b>${B(y[4])}</div><small>${y[2]} ← ${y[3]}</small>${y[4]==="c"?`<small>اتقفلت: ${y[6]}</small>`:""}</div>`).join("")}</div><div>${gb("بيانات السنة",`<div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div>${f("السنة *","2026")+f("الاسم","السنة المالية 2026")}</div><div>${f("من *","01/01/2026 📅")+f("إلى *","31/12/2026 📅")}</div></div>`)}${gb("الشهور",months(),"margin-top:10px")}</div></div>`)],
+ ["خط زمني للسنين + شهور المختارة","فوق: خط زمني أفقي فيه كل سنة شريط بلون حالتها وخط أزرق «النهارده» · تحته بيانات السنة المختارة وشهورها.",
+  win(TB+`<div class="content"><div class="tline"><div class="seg" style="right:2%;width:30%;background:#DC2626">2024 🔒</div><div class="seg" style="right:34%;width:30%;background:#16A34A">2025</div><div class="seg" style="right:66%;width:30%;background:#1D4ED8;outline:2px solid #93C5FD">2026 ●</div><div class="now" style="right:93%"></div></div><div style="display:grid;grid-template-columns:200px 1fr;gap:8px">${gb("السنة 2026",FORM)}${gb("الشهور",months())}</div></div>`)],
+ ["جدول السنين فوق + الشهور تحت (رئيسي / تفصيلي)","فوق جدول السنين بعرض الشاشة · تحته جدول شهور السنة المختارة بعدد القيود في كل شهر (لما القيود تتعمل) · الفورم في نافذة بتفتح مع «سنة جديدة / تعديل».",
+  win(TB+`<div class="content">${srch}${ytable(["code","name","from","to","st","by"])}<div style="margin-top:6px;font-weight:900;color:var(--green);font-size:9.5px">شهور 2026</div>${ptable(6,4)}</div>`)],
+ ["تبويبات: بيانات السنة / الفترات / سجل القفل","يمين جدول السنين · شمال تبويبات للسنة المختارة: «بيانات السنة»، «الفترات»، «سجل القفل والفتح» (مين قفل/فتح وإمتى وليه).",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 1.1fr;gap:8px"><div>${srch}${ytable(["code","from","to","st"],2)}</div><div><div class="tabs2"><span>بيانات السنة</span><span>الفترات</span><span class="on">سجل القفل والفتح</span></div><div style="background:#fff;border:1px solid var(--card-border);border-radius:0 7px 7px 7px;padding:8px"><div class="hist"><div class="c"><b>🔒 قفل</b> · 15/02/2025 10:20 ص · user<br><span class="muted">بعد مراجعة الميزانية وقيد الإقفال</span></div><div class="o"><b>🔓 فتح</b> · 10/02/2025 09:05 ص · user<br><span class="muted">تسوية جرد متأخرة (كلمة سر الإجراء)</span></div><div class="c"><b>🔒 قفل</b> · 31/01/2025 04:40 م · user</div></div></div></div></div>`)],
+ ["شجرة: السنة ← شهورها","يمين شجرة: كل سنة وتحتها شهورها (تفتح وتقفل) · شمال تفاصيل اللي اخترته — سنة (بياناتها) أو شهر (من/إلى وعدد القيود).",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:170px 1fr;gap:8px"><div class="tree"><div class="y sel">▾ 📅 2026 <span class="bdg n">الحالية</span></div>${MN.slice(0,5).map((m,i)=>`<div class="m">• ${m}</div>`).join("")}<div class="m muted">… 7 شهور كمان</div><div class="y">▸ 📅 2025 <span class="bdg o">مفتوحة</span></div><div class="y">▸ 🔒 2024 <span class="bdg c">مقفولة</span></div></div><div>${gb("بيانات السنة",FORM)}<div class="hint">ℹ الشهور بتتعمل لوحدها من «من/إلى» — للتقارير بس، ومفيش قفل شهري.</div></div></div>`)],
+ ["لوحة السنة الحالية + السنين","فوق كارت أخضر للسنة الحالية (فاضل كام يوم، ونسبة اللي عدّى) + 3 أرقام (السنين المفتوحة، المقفولة، آخر قفل) · تحتها جدول السنين.",
+  win(TB+`<div class="content"><div class="big"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>السنة المالية 2026</b><small>01/01/2026 ← 31/12/2026 · مفتوحة</small></div><div style="text-align:left;font-weight:900;font-size:10px">فاضل 54 يوم<br><small>عدّى 85%</small></div></div><div class="prog"><div style="width:85%"></div></div></div><div class="kpis"><div class="kpi"><small>سنين مفتوحة</small><b class="st-open">2</b></div><div class="kpi" style="border-right-color:#DC2626"><small>سنين مقفولة</small><b class="st-closed">1</b></div><div class="kpi" style="border-right-color:#B45309"><small>آخر قفل</small><b style="font-size:10px">2024 · 15/02/2025</b></div></div>${ytable(["code","name","from","to","st","by"])}</div>`)],
+ ["«سنة جديدة» بنافذة ذكية","«سنة جديدة» بتفتح نافذة بتقترح السنة اللي بعد آخر سنة (من/إلى جاهزين من «أول شهر في السنة» في بيانات الشركة) وبتوريك الـ 12 شهر قبل الحفظ.",
+  win(TB+`<div class="content" style="display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.25)"><div class="dlg"><div class="h">📅 سنة مالية جديدة</div><div class="b">${f("السنة *","2027")}${f("الاسم","السنة المالية 2027")}${f("من *","01/01/2027 📅")}${f("إلى *","31/12/2027 📅")}<div class="hint">مقترحة: بعد 2026 على طول · أول شهر = يناير (من بيانات الشركة)</div><div class="muted" style="margin:4px 0 2px">هيتعمل 12 فترة: يناير ← ديسمبر 2027</div><div style="display:flex;gap:6px;justify-content:flex-start;margin-top:6px"><span class="bt" style="background:var(--green);padding:5px 14px;font-size:9.5px">حفظ</span><span class="bt b-can" style="padding:5px 14px;font-size:9.5px">إلغاء</span></div></div></div></div>`)],
+ ["الفورم + لوحة قواعد السنة","يمين جدول السنين · في النص الفورم · شمال لوحة بتراجع القواعد وانت بتكتب (مفيش تداخل مع سنة تانية، مفيش فجوة، أقصى 24 شهر، السنة المقفولة مابتتعدّلش).",
+  win(TBN+`<div class="content" style="display:grid;grid-template-columns:1fr 1fr 150px;gap:8px"><div>${srch}${ytable(["code","st"],-1)}</div>${gb("سنة جديدة",f("السنة *","2027")+f("الاسم","السنة المالية 2027")+f("من *","01/01/2027 📅")+f("إلى *","31/12/2027 📅")+f("ملاحظات",""))}${gb("المراجعة",`<div class="todo" style="font-size:8.5px;margin:3px 0"><span class="st-open">✔</span> مفيش تداخل مع 2026</div><div style="font-size:8.5px;margin:3px 0"><span class="st-open">✔</span> بعد 2026 على طول (مفيش فجوة)</div><div style="font-size:8.5px;margin:3px 0"><span class="st-open">✔</span> المدة 12 شهر</div><div style="font-size:8.5px;margin:3px 0"><span class="st-open">✔</span> الكود مش متكرر</div><div class="warnb">⚠ لو فيه فجوة بين سنتين البرنامج هيرفض</div>`)}</div>`)],
+ ["تقويم السنة (12 شهر) + السنين","يمين جدول السنين · شمال تقويم صغير للسنة المختارة: 12 مربع، كل مربع شهر بأيامه، والنهارده متعلّم — للعرض بس.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:200px 1fr;gap:8px"><div>${gb("بيانات السنة",FORM)}</div><div>${gb("تقويم 2026",`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px">${MN.map((m,i)=>`<div class="mo ${i===NOW?'now':i<NOW?'past':''}" style="padding:3px"><b style="font-size:8.5px">${m}</b><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;font-size:5.5px;color:#64748B">${Array.from({length:DAYS[i]},(_,d)=>`<span style="${i===NOW&&d===6?'background:#2563EB;color:#fff;border-radius:2px':''}">${d+1}</span>`).join("")}</div></div>`).join("")}</div>`)}${ytable(["code","from","to","st"])}</div></div>`)],
+];
+
+const SETS=[
+ ["📅 السنة المالية والفترات",FY,"شاشة «السنة المالية والفترات» (الشاشة التانية في 1ب): تعريف السنين المالية — الكود (2026)، الاسم، من، إلى، الحالة (مفتوحة / مقفولة)، ملاحظات. **القفل سنوي بس** (قرار المستخدم): لما السنة تتقفل مفيش ترحيل فيها، والتصحيح بقيد عكسي في سنة مفتوحة. الشهور (12 فترة) بتتعمل لوحدها من «من/إلى» وهي للتقارير بس، من غير قفل. القواعد: مفيش تداخل بين سنتين، ومفيش فجوة، والمدة لحد 24 شهر، والسنة اللي عليها قيود مابتتمسحش، والمقفولة مابتتعدّلش. زرار «قفل / فتح السنة» بصلاحية لوحده (وممكن كلمة سر إجراء) وبيتسجل في سجل التعديلات — بيشتغل فعلاً لما القيود تتعمل (المرحلة 4)، وقيد الإقفال نفسه في المرحلة 10. مكانها: «النظام والصلاحيات» ← «الإعدادات العامة»."],
+];
+let cur=0;
+function render(){
+  document.getElementById("note").innerHTML=SETS[cur][2].replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+  document.getElementById("grid").innerHTML=SETS[cur][1].map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]}</div></div>`).join("");
+  window.scrollTo(0,0);
+}
+render();
+</script>
+</body>
+</html>

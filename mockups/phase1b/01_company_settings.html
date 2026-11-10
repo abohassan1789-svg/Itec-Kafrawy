@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج بيانات الشركة — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.tabs{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.tabs button{border:0;border-radius:6px;padding:7px 14px;font:inherit;font-weight:800;cursor:pointer;background:rgba(255,255,255,.15);color:#fff}
+.tabs button.on{background:#fff;color:var(--green)}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;font-size:10px;position:relative}
+.rail{width:62px;background:var(--green-dark);color:#fff;display:flex;flex-direction:column;align-items:center;padding:6px 4px;gap:4px;flex-shrink:0}
+.rail .brand{font-weight:900;font-size:9px;text-align:center;margin-bottom:4px;line-height:1.1}
+.rail .it{width:52px;border-radius:6px;padding:4px 2px;text-align:center;font-size:8.5px;line-height:1.2}
+.rail .it b{display:block;font-size:14px}
+.rail .it.on{background:#fff;color:var(--green)}
+.rail .sp{flex:1}
+.rail .out{background:rgba(220,38,38,.25)}
+.rail.wide{width:118px;align-items:stretch}
+.rail.wide .it{width:auto;display:flex;align-items:center;gap:5px;text-align:right;font-size:9.5px;padding:5px 6px}
+.rail.wide .it b{display:inline;font-size:12px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.hdr{height:40px;background:#fff;border-bottom:1px solid var(--card-border);display:flex;align-items:center;padding:0 8px;gap:8px;flex-shrink:0}
+.av{width:26px;height:26px;border-radius:50%;border:2px solid var(--green);background:#E2E8F0;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.hdr .nm{font-weight:900;font-size:10px;line-height:1.2}
+.hdr .nm small{display:block;color:var(--muted);font-weight:600;font-size:8.5px}
+.hdr .clk{margin-right:auto;text-align:center;font-weight:900;font-size:10px;line-height:1.2}
+.hdr .clk small{display:block;color:var(--muted);font-weight:600;font-size:8px}
+.bell{font-size:13px}
+.content{flex:1;padding:8px;position:relative;overflow:hidden}
+.hero{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--green)}
+.hero b{font-size:26px;font-weight:900}
+.hero small{color:var(--muted);font-size:10px;font-weight:700}
+.popup{position:absolute;top:42px;right:64px;width:170px;background:#fff;border:1px solid var(--card-border);border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.18);padding:8px;z-index:3}
+.popup h4{margin:0 0 4px;color:var(--green);font-size:11px;font-weight:900;border-bottom:2px solid var(--green);padding-bottom:3px}
+.popup .sub{color:var(--muted);font-weight:800;font-size:8.5px;margin:5px 0 2px}
+.popup .ln{padding:3px 4px;border-radius:4px;font-size:9.5px}
+.popup .ln.on{background:var(--first);color:var(--green);font-weight:800}
+.stat{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:6px}
+.stat small{color:var(--muted);font-weight:700;font-size:8.5px;display:block}
+.stat b{font-size:15px;font-weight:900}
+.tile{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:8px;text-align:center;font-weight:800;font-size:9.5px}
+.tile b{display:block;font-size:18px;margin-bottom:2px}
+
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-log{background:#0F766E}.b-prev{background:#6D28D9}.b-exp{background:#0E7490}
+.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:58px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.chk{font-size:8.5px;font-weight:700;margin-left:6px}
+.chk:before{content:"☑ ";color:var(--green)}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.srch{display:flex;gap:4px;margin-bottom:4px}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.photo{width:48px;height:56px;border:1px dashed var(--input);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#F8FAFC;flex-shrink:0}
+.ck{color:var(--green);font-weight:900;text-align:center}
+.x{color:#CBD5E1;text-align:center}
+.key{font-size:8px}
+.chip{display:inline-block;border-radius:10px;padding:1px 6px;font-size:8px;font-weight:800;margin:1px;border:1px solid var(--badge-bd);background:var(--badge-bg);color:var(--badge-tx)}
+.chip.off{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0}
+.chip.deny{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+
+
+/* ===== بيانات الشركة ===== */
+.f label{width:74px}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.f i.req{border-color:var(--green)}
+.logo{width:74px;height:74px;border:1px dashed var(--input);border-radius:8px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;gap:2px}
+.logo b{font-size:17px;font-weight:900;color:var(--green);letter-spacing:1px}
+.logo small{font-size:7px;color:var(--muted);font-weight:700}
+.lbtn{display:flex;gap:3px;margin-top:3px;justify-content:center}
+.lbtn span{font-size:7.5px;font-weight:800;border:1px solid var(--input);border-radius:4px;padding:1px 4px;background:#fff}
+.lk{font-size:7.5px;color:#9A3412;font-weight:700;margin:-2px 78px 4px 0}
+.chk2{font-size:8.5px;font-weight:700;display:block;margin:3px 0}
+.chk2:before{content:"☑ ";color:var(--green)}
+.paper{background:#fff;border:1px solid #CBD5E1;border-radius:4px;box-shadow:0 3px 10px rgba(0,0,0,.12);padding:8px;font-size:8px}
+.ph{display:flex;align-items:center;gap:6px;border-bottom:2px solid var(--green);padding-bottom:5px}
+.ph .nm{flex:1}
+.ph .nm b{display:block;font-size:11px;color:var(--green);font-weight:900}
+.ph .nm small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.ph .lg2{width:34px;height:34px;border:1px solid var(--card-border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--green);font-size:9px}
+.ph .en{direction:ltr;text-align:left;font-size:7px;color:var(--muted);font-weight:700}
+.ph .en b{display:block;font-size:9px;color:var(--text)}
+.ln2{height:5px;background:#EEF2F6;border-radius:3px;margin:4px 0}
+.pf{border-top:1px solid var(--card-border);margin-top:6px;padding-top:3px;text-align:center;color:var(--muted);font-size:7px;font-weight:700}
+.side{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px}
+.side .s{padding:5px 7px;border-radius:5px;font-weight:800;font-size:9px;margin-bottom:2px;display:flex;gap:5px;align-items:center}
+.side .s.on{background:var(--first);color:var(--green);border-right:3px solid var(--green)}
+.side .s em{margin-right:auto;font-style:normal;font-size:8px}
+.idc{background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;border-radius:8px;padding:8px 10px;display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.idc .logo{background:#fff;border:none;width:56px;height:56px}
+.idc .logo b{font-size:13px}
+.idc .t b{display:block;font-size:14px;font-weight:900}
+.idc .t small{display:block;font-size:8.5px;opacity:.92;font-weight:700}
+.idc .cnt2{margin-right:auto;text-align:left;font-size:8px;font-weight:700;opacity:.95;direction:ltr}
+.prog{height:7px;background:#E2E8F0;border-radius:5px;overflow:hidden;margin:3px 0 5px}
+.prog div{height:100%;background:var(--green)}
+.todo{font-size:8.5px;margin:2px 0;font-weight:700}
+.todo.y:before{content:"✔ ";color:var(--green);font-weight:900}
+.todo.n{color:#9A3412}.todo.n:before{content:"✖ ";color:#DC2626;font-weight:900}
+.kv{display:grid;grid-template-columns:78px 1fr;gap:3px 6px;font-size:8.5px}
+.kv span{color:var(--muted);font-weight:700}
+.kv b{font-weight:800}
+.steps{display:flex;gap:4px;margin-bottom:6px}
+.steps span{flex:1;text-align:center;font-size:8px;font-weight:800;padding:4px 2px;border-radius:5px;background:#E2E8F0;color:#475569}
+.steps span.d{background:var(--first);color:var(--green)}
+.steps span.on{background:var(--green);color:#fff}
+.acc{background:#fff;border:1px solid var(--card-border);border-radius:6px;margin-bottom:4px}
+.acc .h{padding:4px 7px;font-weight:900;font-size:9px;color:var(--green);display:flex;gap:6px;align-items:center}
+.acc .h em{margin-right:auto;font-style:normal;color:var(--muted);font-size:8px;font-weight:700}
+.acc .b{padding:2px 7px 5px;border-top:1px solid #EEF2F6}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tabs2{display:flex;gap:2px}
+.tabs2 span{padding:4px 9px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569}
+.tabs2 span.on{background:var(--green);color:#fff}
+.colh{font-weight:900;font-size:9px;text-align:center;padding:3px;border-radius:5px;background:var(--first);color:var(--green);margin-bottom:3px}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج بيانات الشركة (المرحلة 1ب · الشاشة 1)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD — الفرق بس في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). البيانات اللي في النماذج أمثلة.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+function win(inner){return `<div class="win" style="flex-direction:column"><div style="height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0"><span>🏢 بيانات الشركة — A-H CODE</span><span style="margin-right:auto;color:var(--muted)">_ ▢ ✕</span></div><div class="main" style="display:flex;flex-direction:column;flex:1;min-height:0">${inner}</div></div>`;}
+function tb(mode="عرض",extra=""){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt b-ref">تحديث</span>${extra}<span class="bt b-exit">خروج</span><span class="mode" style="${ed?'background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE':''}">${mode}</span></div>`;}
+const TB=tb(), TBE=tb("تعديل"), TBP=tb("عرض",'<span class="bt b-prev">معاينة الطباعة</span>');
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+const chk=t=>`<span class="chk2">${t}</span>`;
+const LOGO=(btn=true)=>`<div><div class="logo"><b>ITEC</b><small>اللوجو</small></div>${btn?'<div class="lbtn"><span>رفع</span><span>إزالة</span></div>':''}</div>`;
+
+// الحقول (أمثلة)
+const F_basic=f("الاسم بالعربي *","شركة آي تك","req")+f("الاسم بالإنجليزي","ITEC")+f("النشاط","توريد وتركيب أنظمة BMS والتيار الخفيف");
+const F_addr=f("العنوان","12 ش (مثال) — مدينة نصر")+f("المدينة","القاهرة");
+const F_contact=f("التليفون","02 2xxx xxxx")+f("الموبايل","01xx xxx xxxx")+f("البريد","info@example.com")+f("الموقع","www.example.com");
+const F_legal=f("السجل التجاري","123456 — القاهرة")+f("رقم التسجيل الضريبي","xxx-xxx-xxx")+f("مأمورية الضرايب","(مثال) الشركات المساهمة");
+const F_fin=f("العملة الأساسية","EGP — جنيه مصري 🔒","lock")+`<div class="lk">بتتقفل بعد أول قيد</div>`+f("ض.ق.م الافتراضية","14 %")+f("أول شهر في السنة","يناير ▾");
+const F_print=f("سطر تحت الفواتير","شكراً لتعاملكم معنا")+chk("اللوجو في الطباعة")+chk("الاسم بالإنجليزي في الهيدر");
+const G_basic=gb("البيانات الأساسية",F_basic);
+const G_contact=gb("العنوان والاتصال",F_addr+F_contact);
+const G_legal=gb("السجل والضرايب",F_legal);
+const G_fin=gb("الإعدادات المالية",F_fin);
+const G_print=gb("الطباعة",F_print);
+const paper=(full=false)=>`<div class="paper"><div class="ph"><div class="nm"><b>شركة آي تك</b><small>توريد وتركيب أنظمة BMS والتيار الخفيف</small><small>س.ت 123456 · ت.ض xxx-xxx-xxx</small></div><div class="en"><b>ITEC</b>Cairo · 02 2xxx xxxx</div><div class="lg2">ITEC</div></div>${full?'<div style="text-align:center;font-weight:900;font-size:10px;margin:6px 0">فاتورة مبيعات رقم INV-2026-00001</div><div class="ln2"></div><div class="ln2" style="width:80%"></div><div class="ln2"></div><div class="ln2" style="width:60%"></div><div class="ln2"></div><div class="ln2" style="width:70%"></div>':'<div class="ln2" style="margin-top:6px"></div><div class="ln2" style="width:75%"></div><div class="ln2"></div>'}<div class="pf">شكراً لتعاملكم معنا · 12 ش (مثال) — مدينة نصر، القاهرة · www.example.com</div></div>`;
+
+const CS=[
+ ["زي Hr GAD: الفورم مجموعات في عمودين","شريط الأدوات فوق (تعديل / حفظ / إلغاء / تحديث / خروج — مفيش جديد ولا حذف لأنها شركة واحدة) · يمين: اللوجو والبيانات الأساسية والاتصال · شمال: السجل والضرايب والإعدادات المالية والطباعة.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><div style="display:flex;gap:6px;align-items:flex-start">${LOGO()}<div style="flex:1">${G_basic}</div></div>${G_contact}</div><div>${G_legal}${G_fin}${G_print}</div></div>`)],
+ ["الفورم يمين + معاينة هيدر الطباعة شمال","يمين الفورم كله · شمال «معاينة الطباعة»: هيدر الفاتورة والتقارير بيتحدّث وانت بتكتب (الاسم، اللوجو، السجل، السطر اللي تحت) عشان تشوف الشكل قبل ما تحفظ.",
+  win(TBE+`<div class="content" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;overflow:hidden"><div>${G_basic}${gb("السجل والضرايب",F_legal)}${G_fin}</div><div>${gb("معاينة الطباعة (بتتحدّث وانت بتكتب)",paper(true))}<div class="muted" style="margin-top:4px">اللوجو: <span class="chip">رفع</span><span class="chip off">إزالة</span> · سطر تحت الفواتير: «شكراً لتعاملكم معنا»</div></div></div>`)],
+ ["تبويبات","تبويبات فوق: البيانات الأساسية / العنوان والاتصال / السجل والضرايب / الإعدادات المالية / الطباعة — كل تبويب فورم قصير ومريح.",
+  win(TB+`<div class="content"><div class="tabs2"><span class="on">البيانات الأساسية</span><span>العنوان والاتصال</span><span>السجل والضرايب</span><span>الإعدادات المالية</span><span>الطباعة</span></div><div style="background:#fff;border:1px solid var(--card-border);border-radius:0 7px 7px 7px;padding:10px;display:flex;gap:12px;align-items:flex-start">${LOGO()}<div style="flex:1">${F_basic}${f("ملاحظات","")}</div></div></div>`)],
+ ["كارت هوية الشركة فوق + كروت تحت","كارت أخضر عريض فوق (اللوجو + الاسم + النشاط + التليفون والبريد) · تحته 3 كروت: الاتصال، السجل والضرايب، الإعدادات المالية.",
+  win(TB+`<div class="content"><div class="idc"><div class="logo"><b>ITEC</b></div><div class="t"><b>شركة آي تك</b><small>ITEC · توريد وتركيب أنظمة BMS والتيار الخفيف</small></div><div class="cnt2">02 2xxx xxxx<br>info@example.com<br>www.example.com</div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${G_contact}${G_legal}<div>${G_fin}${G_print}</div></div></div>`)],
+ ["قايمة أقسام يمين + القسم شمال (زي الإعدادات)","يمين قايمة صغيرة بالأقسام (وجنب كل قسم ✔ لو كامل أو ⚠ لو ناقص) · شمال حقول القسم المختار بس.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:150px 1fr;gap:8px"><div class="side"><div class="s on">🏢 البيانات الأساسية<em>✔</em></div><div class="s">📍 العنوان والاتصال<em>✔</em></div><div class="s">📄 السجل والضرايب<em>⚠</em></div><div class="s">💰 الإعدادات المالية<em>✔</em></div><div class="s">🖨 الطباعة<em>✔</em></div></div><div>${gb("🏢 البيانات الأساسية",`<div style="display:flex;gap:8px;align-items:flex-start">${LOGO()}<div style="flex:1">${F_basic}${f("ملاحظات","")}</div></div>`)}</div></div>`)],
+ ["صفحة واحدة بعناوين (scroll)","كل الحقول في عمود واحد عريض بعناوين أقسام خضرا، وانت بتنزل لتحت — أبسط شكل، واللوجو فوق على اليمين.",
+  win(TB+`<div class="content" style="overflow:hidden"><div style="max-width:420px;margin:auto">${gb("البيانات الأساسية",`<div style="display:flex;gap:8px;align-items:flex-start">${LOGO()}<div style="flex:1">${F_basic}</div></div>`)}${gb("العنوان والاتصال",`<div class="two"><div>${F_addr}${f("التليفون","02 2xxx xxxx")}</div><div>${f("الموبايل","01xx xxx xxxx")}${f("البريد","info@example.com")}${f("الموقع","www.example.com")}</div></div>`)}${G_legal}${G_fin}<div class="muted" style="text-align:center">⬇ الطباعة تحت</div></div></div>`)],
+ ["عربي يمين / إنجليزي شمال","عمودين قصاد بعض: كل حقل له نسخة عربي ونسخة إنجليزي (الاسم، النشاط، العنوان، المدينة) عشان الطباعة بالاتنين · وتحتهم الحاجات المشتركة.",
+  win(TB+`<div class="content"><div style="display:flex;gap:8px;align-items:flex-start">${LOGO()}<div class="two" style="flex:1"><div><div class="colh">عربي</div>${f("الاسم *","شركة آي تك","req")}${f("النشاط","توريد وتركيب أنظمة BMS")}${f("العنوان","12 ش (مثال) — مدينة نصر")}${f("المدينة","القاهرة")}</div><div dir="ltr"><div class="colh">English</div>${f("Name","ITEC")}${f("Activity","BMS & Low Current Systems")}${f("Address","12 (example) St. — Nasr City")}${f("City","Cairo")}</div></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${gb("الاتصال",F_contact)}${G_legal}${G_fin}</div></div>`)],
+ ["الفورم + لوحة «اكتمال البيانات»","يمين الفورم في عمودين · شمال لوحة بتقول ناقص إيه عشان الطباعة والفواتير تطلع كاملة (السجل، الرقم الضريبي، اللوجو…) بشريط نسبة.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 1fr 150px;gap:8px"><div>${G_basic}${G_contact}</div><div>${G_legal}${G_fin}</div>${gb("اكتمال البيانات",`<b style="font-size:16px;color:var(--green)">80%</b><div class="prog"><div style="width:80%"></div></div><div class="todo y">الاسم بالعربي</div><div class="todo y">اللوجو</div><div class="todo y">العنوان والتليفون</div><div class="todo y">السجل التجاري</div><div class="todo n">الرقم الضريبي ناقص</div><div class="todo n">المأمورية ناقصة</div><div class="todo y">العملة والضريبة</div><div class="muted" style="margin-top:4px;font-size:7.5px">الناقص مش بيمنع الحفظ — بس بيظهر في الطباعة فاضي</div>`)}</div>`)],
+ ["وضع العرض «بطاقة» + التعديل فورم","في العرض الشاشة بطاقة نضيفة للقراءة (من غير خانات) وجنبها معاينة الطباعة · لما تدوس «تعديل» بتتحول للفورم العادي (زي نموذج 1).",
+  win(TBP+`<div class="content" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><div class="idc" style="margin-bottom:6px"><div class="logo"><b>ITEC</b></div><div class="t"><b>شركة آي تك</b><small>ITEC · توريد وتركيب أنظمة BMS</small></div></div>${gb("البيانات",`<div class="kv"><span>العنوان</span><b>12 ش (مثال) — مدينة نصر، القاهرة</b><span>التليفون</span><b>02 2xxx xxxx · 01xx xxx xxxx</b><span>البريد / الموقع</span><b>info@example.com · www.example.com</b><span>السجل التجاري</span><b>123456 — القاهرة</b><span>التسجيل الضريبي</span><b>xxx-xxx-xxx</b><span>العملة الأساسية</span><b>EGP 🔒</b><span>ض.ق.م</span><b>14 %</b><span>أول شهر</span><b>يناير</b></div>`)}</div><div>${gb("شكل الطباعة",paper(true))}</div></div>`)],
+ ["معالج أول مرة (خطوات) + بعدها شاشة عادية","أول مرة البرنامج يفتح: معالج 4 خطوات (الأساسية ← الاتصال ← السجل والضرايب ← المالية والطباعة) بزراير «السابق / التالي / إنهاء» · بعد كده الشاشة بتفتح فورم عادي زي نموذج 1.",
+  win(`<div class="content"><div class="steps"><span class="d">✔ 1. الأساسية</span><span class="d">✔ 2. الاتصال</span><span class="on">3. السجل والضرايب</span><span>4. المالية والطباعة</span></div><div style="max-width:430px;margin:auto">${gb("الخطوة 3 من 4: السجل والضرايب",F_legal+`<div class="muted" style="margin-top:4px">الحاجات دي بتظهر في هيدر الفواتير والتقارير — ممكن تسيبها وتكمّلها بعدين.</div>`)}<div style="display:flex;gap:6px;margin-top:8px;justify-content:space-between"><span class="bt b-ref" style="padding:5px 14px;font-size:9.5px">→ السابق</span><span style="display:flex;gap:6px"><span class="bt b-can" style="padding:5px 14px;font-size:9.5px">بعدين</span><span class="bt" style="background:var(--green);padding:5px 14px;font-size:9.5px">التالي ←</span></span></div></div></div>`)],
+];
+
+const SETS=[
+ ["🏢 بيانات الشركة",CS,"شاشة «بيانات الشركة» (أول شاشة في المرحلة 1ب): سجل واحد بس للشركة — الاسم عربي/إنجليزي، النشاط، العنوان والاتصال، السجل التجاري والتسجيل الضريبي، اللوجو، والإعدادات المالية (العملة الأساسية EGP وبتتقفل بعد أول قيد، ض.ق.م الافتراضية 14%، أول شهر في السنة المالية) وسطر تحت الفواتير. البيانات دي هي اللي هتطلع في هيدر كل فاتورة وتقرير. شريط الأدوات زي باقي الشاشات بس من غير «جديد» و«حذف» (تعديل / حفظ / إلغاء / تحديث / خروج)، والحفظ بيسأل «هل تريد الحفظ؟» وبيتسجل في سجل التعديلات. مكانها في القايمة تحت «النظام والصلاحيات» ← «الإعدادات العامة»."],
+];
+let cur=0;
+function render(){
+  document.getElementById("note").textContent=SETS[cur][2];
+  document.getElementById("grid").innerHTML=SETS[cur][1].map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]}</div></div>`).join("");
+  window.scrollTo(0,0);
+}
+render();
+</script>
+</body>
+</html>

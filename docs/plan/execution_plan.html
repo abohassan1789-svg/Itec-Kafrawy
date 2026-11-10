@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>خطة التنفيذ — برنامج حسابات ITEC</title>
+<style>
+  @page {
+    size: A4;
+    margin: 12mm 11mm 14mm 11mm;
+    @bottom-center {
+      content: "A-H CODE  ·  صفحة " counter(page) " من " counter(pages);
+      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+      font-size: 8.5pt; color: #64748B;
+    }
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; background: #FFFFFF; }
+  body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; color: #111827; font-size: 10pt; line-height: 1.55; }
+
+  .cover { background: linear-gradient(135deg, #0F6B30, #137A38); color: #fff;
+           border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; }
+  .cover .ttl { flex: 1; }
+  .cover h1 { margin: 0; font-size: 20pt; font-weight: 800; }
+  .cover .sub { opacity: .92; font-size: 9.5pt; margin-top: 4px; }
+  .cover .brand { text-align: center; border-right: 1px solid rgba(255,255,255,.35); padding-right: 16px; }
+  .cover .brand b { display: block; font-size: 15pt; letter-spacing: 1px; direction: ltr; }
+  .cover .brand span { font-size: 8.5pt; opacity: .9; }
+
+  .summary { display: flex; gap: 12px; margin-top: 12px; align-items: stretch; }
+  .ring { width: 128px; height: 128px; border-radius: 50%; flex: none; align-self: center;
+          background: conic-gradient(#137A38 0 30.2%, #E2E8F0 30.2% 100%);
+          display: flex; align-items: center; justify-content: center; }
+  .ring-in { width: 96px; height: 96px; border-radius: 50%; background: #fff; text-align: center;
+             display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring-in b { font-size: 21pt; color: #137A38; line-height: 1; direction: ltr; }
+  .ring-in span { font-size: 8pt; color: #64748B; margin-top: 4px; }
+  .tiles { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .tile { border: 1px solid #D9E2EC; border-radius: 10px; padding: 8px 10px; background: #fff; }
+  .tile .k { font-size: 8.5pt; color: #64748B; }
+  .tile .v { font-size: 17pt; font-weight: 800; line-height: 1.2; }
+  .next { grid-column: 1 / -1; border: 1px solid #FED7AA; background: #FFF7ED; color: #9A3412;
+          border-radius: 10px; padding: 8px 12px; font-size: 10pt; }
+
+  h2 { font-size: 12.5pt; color: #0F6B30; margin: 16px 0 6px; padding-bottom: 4px;
+       border-bottom: 2px solid #137A38; }
+  .legend { font-size: 9pt; color: #64748B; margin: 2px 0 8px; }
+  .legend .chip { margin-left: 4px; }
+
+  table { width: 100%; border-collapse: collapse; }
+  .overview td { padding: 4px 6px; border-bottom: 1px solid #EEF2F6; vertical-align: middle; font-size: 9.5pt; }
+  .overview tr:nth-child(even) td { background: #F8FAFC; }
+  .overview tr { break-inside: avoid; }
+  .ph-badge { display: inline-block; min-width: 34px; text-align: center; color: #fff; font-weight: 800;
+              border-radius: 6px; padding: 1px 6px; font-size: 9.5pt; }
+  .ph-name { font-weight: 700; }
+  .num { white-space: nowrap; color: #64748B; text-align: center; direction: ltr; }
+  .bar-cell { width: 30%; }
+  .bar { height: 9px; border-radius: 6px; background: #E2E8F0; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; }
+
+  .chip { display: inline-block; border: 1px solid; border-radius: 999px; padding: 1px 9px;
+          font-size: 8.5pt; font-weight: 700; white-space: nowrap; }
+  .chip-date { font-weight: 600; margin-right: 6px; direction: ltr; unicode-bidi: isolate; }
+
+  .phase { margin-top: 14px; border: 1px solid var(--c); border-radius: 12px; overflow: hidden;
+           background: #fff; }
+  .phase-head { color: #fff; display: flex; align-items: center; gap: 12px; padding: 9px 14px;
+                break-after: avoid; }
+  .phase-num { background: rgba(255,255,255,.2); border: 1.5px solid rgba(255,255,255,.7);
+               border-radius: 9px; min-width: 44px; height: 40px; display: flex; align-items: center;
+               justify-content: center; font-size: 15pt; font-weight: 800; padding: 0 6px; }
+  .phase-title { flex: 1; }
+  .phase-title .t { font-size: 13pt; font-weight: 800; }
+  .phase-title .g { font-size: 9pt; opacity: .93; }
+  .phase-prog { width: 120px; text-align: center; }
+  .pp-num { font-size: 10pt; font-weight: 800; direction: ltr; }
+  .pp-bar { height: 7px; border-radius: 5px; background: rgba(255,255,255,.3); overflow: hidden; margin-top: 3px; }
+  .pp-bar div { height: 100%; background: #fff; border-radius: 5px; }
+  .phase-state { padding: 6px 14px; font-size: 9pt; color: #64748B;
+                 background: color-mix(in srgb, var(--c) 7%, #fff); border-bottom: 1px solid #EEF2F6; }
+
+  .items .head-cell { padding: 0; border: none; text-align: right; font-weight: normal; }
+  .nw { white-space: nowrap; }
+  h2.details { break-before: page; }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+  .items .cols th { text-align: right; font-size: 8.5pt; color: #64748B; font-weight: 700;
+              padding: 4px 8px; border-bottom: 1px solid #D9E2EC; }
+  .items td { padding: 6px 8px; border-bottom: 1px solid #EEF2F6; vertical-align: top; }
+  .items tr { break-inside: avoid; }
+  .items tbody tr:last-child td { border-bottom: none; }
+  .items .idx { font-weight: 800; text-align: center; }
+  .items .st { text-align: center; }
+  .item-name { font-weight: 700; font-size: 10pt; }
+  .detail { font-size: 8.8pt; color: #64748B; }
+  .note { font-size: 8.8pt; color: #9A3412; margin-top: 2px; }
+  .row-done td { background: #F6FDF8; }
+  .row-next td { background: #FFFBF5; }
+  .row-doing td { background: #F5F9FF; }
+
+  .foot { margin-top: 14px; font-size: 8.5pt; color: #64748B; border-top: 1px solid #D9E2EC;
+          padding-top: 6px; }
+  code { direction: ltr; unicode-bidi: isolate; font-family: Consolas, monospace; font-size: 8.5pt;
+         background: #F1F5F9; padding: 0 4px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="ttl">
+    <h1>خطة التنفيذ — برنامج حسابات ITEC</h1>
+    <div class="sub">برنامج حسابات <span class="ltr nw">desktop</span> بقيد مزدوج بدل برنامج الأكسس القديم (<span class="ltr nw">Python 3.11</span> · <span class="ltr nw">PySide6</span> · <span class="ltr nw">PostgreSQL 18</span>). الدراسات الـ 3 وكل القرارات خلصت ✅. قبل أي شاشة: 10 نماذج <span class="ltr nw">Mockup</span> بنفس ديزاين <span class="ltr nw">Hr GAD</span> يختار منهم، شاشة شاشة. البرنامج بيشتغل على شبكة داخلية: 10–20 جهاز، و2–3 أجهزة ممكن يفتحوا نفس الشاشة في نفس الوقت (قرار المستخدم 2026-11-08) — المرحلة 1ج. الترتيب بالتسلسل (قرار المستخدم 2026-11-10): أي شاشة بتيجي بعد كل اللي بتعتمد عليه — المجموعات قبل العملاء، والموردين قبل المشتريات، والخزائن والبنوك قبل السندات، وأنواع المصروفات قبل المصروفات، ودفتر المخزون قبل الفواتير — ومكتوب في هدف كل مرحلة «يعتمد على».</div>
+    <div class="sub">آخر تحديث: <b style="direction:ltr;unicode-bidi:isolate">2026-11-10</b></div>
+  </div>
+  <div class="brand"><b>A-H CODE</b><span>للحلول البرمجية</span></div>
+</div>
+
+<div class="summary">
+  <div class="ring"><div class="ring-in"><b>30%</b><span>نسبة التقدّم</span></div></div>
+  <div class="tiles">
+    <div class="tile"><div class="k">البنود اللي خلصت</div><div class="v" style="color:#087443">32 <small style="font-size:10pt;color:#64748B">من 106</small></div></div>
+    <div class="tile"><div class="k">المراحل اللي خلصت</div><div class="v" style="color:#137A38">4 <small style="font-size:10pt;color:#64748B">من 19</small></div></div>
+    <div class="tile"><div class="k">شغالين فيه / الجاية</div><div class="v" style="color:#9A3412">1</div></div>
+    <div class="tile"><div class="k">لسه</div><div class="v" style="color:#64748B">73</div></div>
+    <div class="next">👉 <b>الخطوة الجاية:</b> المرحلة <b>3أ</b> (العملاء وأوامر التوريد) ← <b>العملاء</b> — الـ 10 نماذج جاهزة 2026-11-10 (<span class="ltr">mockups/phase3/02_customers.html</span>) — الاختيار والأسئلة الستة بعد شاشة المجموعات</div>
+  </div>
+</div>
+
+<h2>نظرة سريعة على المراحل</h2>
+<div class="legend">الحالات: <span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅</span> <span class="chip" style="color:#1D4ED8;background:#EFF6FF;border-color:#BFDBFE">شغالين فيه 🔧</span> <span class="chip" style="color:#9A3412;background:#FFF7ED;border-color:#FED7AA">الخطوة الجاية 👉</span> <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+<table class="overview"><tbody><tr><td><span class="ph-badge" style="background:#0F6B30">0</span></td><td class="ph-name">التجهيز</td><td class="num">7 / 7</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:100.0%;background:#0F6B30"></div></div></td><td><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr><td><span class="ph-badge" style="background:#137A38">1</span></td><td class="ph-name">الأمان والواجهة الرئيسية</td><td class="num">10 / 10</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:100.0%;background:#137A38"></div></div></td><td><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr><td><span class="ph-badge" style="background:#0E7490">1ب</span></td><td class="ph-name">الإعدادات العامة</td><td class="num">6 / 6</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:100.0%;background:#0E7490"></div></div></td><td><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></td></tr><tr><td><span class="ph-badge" style="background:#0369A1">1ج</span></td><td class="ph-name">التشغيل على الشبكة (أكتر من جهاز)</td><td class="num">2 / 7</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:28.6%;background:#0369A1"></div></div></td><td><span class="chip" style="color:#1D4ED8;background:#EFF6FF;border-color:#BFDBFE">شغالين فيه 🔧</span></td></tr><tr><td><span class="ph-badge" style="background:#2563EB">2</span></td><td class="ph-name">دليل الحسابات</td><td class="num">6 / 6</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:100.0%;background:#2563EB"></div></div></td><td><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-09</span></span></td></tr><tr><td><span class="ph-badge" style="background:#7C3AED">3أ</span></td><td class="ph-name">العملاء وأوامر التوريد</td><td class="num">1 / 3</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:33.3%;background:#7C3AED"></div></div></td><td><span class="chip" style="color:#1D4ED8;background:#EFF6FF;border-color:#BFDBFE">شغالين فيه 🔧</span></td></tr><tr><td><span class="ph-badge" style="background:#9333EA">3ب</span></td><td class="ph-name">الموردين والأشخاص</td><td class="num">0 / 5</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#9333EA"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#0E7490">3ج</span></td><td class="ph-name">الخزائن والبنوك وأنواع المصروفات</td><td class="num">0 / 3</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#0E7490"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#6D28D9">3د</span></td><td class="ph-name">المخازن والأصناف</td><td class="num">0 / 4</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#6D28D9"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#B45309">4</span></td><td class="ph-name">القيود اليومية</td><td class="num">0 / 8</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#B45309"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#0F766E">5</span></td><td class="ph-name">الخزينة والبنوك</td><td class="num">0 / 5</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#0F766E"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#4338CA">6</span></td><td class="ph-name">المخازن</td><td class="num">0 / 8</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#4338CA"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#C2410C">7</span></td><td class="ph-name">المشتريات</td><td class="num">0 / 5</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#C2410C"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#BE185D">8</span></td><td class="ph-name">المبيعات</td><td class="num">0 / 8</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#BE185D"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#A16207">9</span></td><td class="ph-name">المصروفات</td><td class="num">0 / 3</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#A16207"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#334155">10</span></td><td class="ph-name">القوائم المالية والإقفال</td><td class="num">0 / 8</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#334155"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#4D7C0F">10ب</span></td><td class="ph-name">الأصول الثابتة وإعادة التقييم</td><td class="num">0 / 3</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#4D7C0F"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#78350F">11</span></td><td class="ph-name">نقل بيانات الأكسس</td><td class="num">0 / 4</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#78350F"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr><td><span class="ph-badge" style="background:#111827">12</span></td><td class="ph-name">التسليم</td><td class="num">0 / 3</td><td class="bar-cell"><div class="bar"><div class="bar-fill" style="width:0.0%;background:#111827"></div></div></td><td><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody></table>
+
+<h2 class="details">المراحل بالتفصيل</h2>
+
+<section class="phase" style="--c:#0F6B30">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#0F6B30">
+    <div class="phase-num">0</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 0: التجهيز</div>
+      <div class="g">🎯 البرنامج بيفتح ويتصل بالقاعدة</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">7 / 7</div>
+      <div class="pp-bar"><div style="width:100.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-done"><td class="idx" style="color:#0F6B30">1</td><td><div class="item-name">هيكل المشروع بنفس طبقات <span class="ltr nw">Hr GAD</span></div><div class="detail">الشاشة ← <span class="ltr nw">Service</span> ← <span class="ltr nw">Repository</span> · <span class="ltr">app/config, database, services, ui</span></div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0F6B30">2</td><td><div class="item-name">ملف الإعدادات واللوج</div><div class="detail">لوج دوّار في <span class="ltr nw">%LOCALAPPDATA%\ITEC\logs</span></div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0F6B30">3</td><td><div class="item-name">ملف اتصال مشفّر + شاشة إعداد الاتصال أول مرة</div><div class="detail"><span class="ltr nw">connection.json</span> بكلمة سر <span class="ltr nw">DPAPI</span> · اختبار الاتصال + حفظ · <span class="ltr nw">.env.example</span> للتطوير</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0F6B30">4</td><td><div class="item-name"><span class="ltr nw">Database helper</span></div><div class="detail"><span class="ltr nw">psycopg 3</span> · مهلة 5 ثواني · إعادة اتصال · <span class="ltr nw">transaction()</span></div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0F6B30">5</td><td><div class="item-name">رسائل أخطاء القاعدة بالعربي</div><div class="detail">اتصال · تكرار · ارتباط · شروط · رسائل الـ <span class="ltr nw">Triggers</span></div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0F6B30">6</td><td><div class="item-name">مشغّل الـ <span class="ltr">migrations + 0001_schemas</span></div><div class="detail"><span class="ltr nw">checksum</span> يمنع تعديل سكريبت اتنفذ · <span class="ltr nw">advisory lock</span> · <span class="ltr">schemas: sec, core, acc, party, inv, sales, purch, cash, exp</span></div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0F6B30">7</td><td><div class="item-name">ملف الثيم</div><div class="detail">كل الألوان والخطوط وأزرار شريط الأدوات من <span class="ltr nw">Hr GAD</span></div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#137A38">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#137A38">
+    <div class="phase-num">1</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 1: الأمان والواجهة الرئيسية</div>
+      <div class="g">🎯 دخول + واجهة رئيسية + إدارة مستخدمين وصلاحيات شغالة</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">10 / 10</div>
+      <div class="pp-bar"><div style="width:100.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-done"><td class="idx" style="color:#137A38">1</td><td><div class="item-name">جداول الأمان (<span class="ltr nw">0002_security</span>)</div><div class="detail"><span class="ltr">sec: roles, app_users, permissions, role_permissions, user_permissions, user_login_logs, audit_log</span> · <span class="ltr nw">Trigger</span> آخر مدير · <span class="ltr nw">audit_log</span> للإضافة بس</div><div class="note">📌 اتجرّب على قواعد الاختبار — هيتنفذ على <span class="ltr nw">DBITEC</span> لوحده أول ما البرنامج يفتح</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#137A38">2</td><td><div class="item-name">سجل الشاشات ومزامنة الصلاحيات</div><div class="detail"><span class="ltr nw">permission_registry</span>: القائمة والمصفوفة من مكان واحد · المزامنة بتعطّل بس</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#137A38">3</td><td><div class="item-name">الصلاحية الفعلية + كلمة سر الإجراء + <span class="ltr nw">SESSION</span></div><div class="detail">الأدق يكسب · وراثة/سماح/منع · 🔑 حذف الكل وإظهار الإجماليات · كل تعديل في <span class="ltr nw">audit_log</span></div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#137A38">4</td><td><div class="item-name">شاشة الدخول + <span class="ltr nw">Splash</span></div><div class="detail">النموذج 2 «مقسومة نصين»</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#137A38">5</td><td><div class="item-name">الواجهة الرئيسية</div><div class="detail">النموذج 4 «شريط عريض» + لوجو <span class="ltr nw">ITEC</span> · القائمة حسب الصلاحيات · الخروج من «تسجيل الخروج» بس</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#137A38">6</td><td><div class="item-name"><span class="ltr nw">Base Screen</span></div><div class="detail">النموذج 1 «زي <span class="ltr nw">Hr GAD</span>»: شريط أدوات + فورم يمين + بحث شمال + <span class="ltr nw">F1</span> + أوضاع عرض/جديد/تعديل + تصدير إكسل</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#137A38">7</td><td><div class="item-name">شاشة المستخدمين</div><div class="detail">الصورة · إيقاف/تفعيل · سجل الدخول للمستخدم · معاينة الصلاحيات · محاذاة الفورم يمين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#137A38">8</td><td><div class="item-name">مجموعات الصلاحيات</div><div class="detail">النموذج 3 «شجرة + خانات الشاشة المختارة»</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#137A38">9</td><td><div class="item-name">صلاحيات المستخدم</div><div class="detail">النموذج 1 «مصفوفة الصلاحية الفعلية بالألوان»</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#137A38">10</td><td><div class="item-name">سجل الدخول</div><div class="detail">النموذج 1 «فلاتر فوق + جدول» · 88 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#0E7490">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#0E7490">
+    <div class="phase-num">1ب</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 1ب: الإعدادات العامة</div>
+      <div class="g">🎯 الشركة والسنة المالية والعملات والترقيم والضرايب جاهزين قبل الدليل</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">6 / 6</div>
+      <div class="pp-bar"><div style="width:100.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-done"><td class="idx" style="color:#0E7490">1</td><td><div class="item-name">بيانات الشركة</div><div class="detail"><span class="ltr nw">core.company_settings</span> · العملة الأساسية <span class="ltr nw">EGP</span> · نسبة ض.ق.م الافتراضية 14%</div><div class="note">📌 النموذج 1 «مجموعات في عمودين» · سكريبت 0003 · 95 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0E7490">2</td><td><div class="item-name">السنة المالية والفترات</div><div class="detail"><span class="ltr">core.fiscal_years, fiscal_periods</span> · مفتوحة / مقفولة · القفل سنوي بس · الشهور للتقارير بس</div><div class="note">📌 النموذج 1 «الفورم يمين + الفترات تحته + السنين شمال» · سكريبت 0004 (مفيش تداخل ولا فجوة، لحد 24 شهر، المقفولة محمية) · «قفل / فتح السنة» بصلاحية وكلمة سر · 106 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-07</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0E7490">3</td><td><div class="item-name">العملات</div><div class="detail"><span class="ltr nw">core.currencies</span> · عملة أساسية واحدة (<span class="ltr nw">Partial Unique Index</span>) · تعدد عملات كامل</div><div class="note">📌 النموذج 10 «الفورم + محوّل بالتاريخ» · سكريبت 0005 (<span class="ltr nw">EGP</span> أساسية ثابتة · الكود ثابت · الكسور 0–6 · اسم الكسر للتفقيط) · 114 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0E7490">4</td><td><div class="item-name">أسعار الصرف بالتاريخ</div><div class="detail"><span class="ltr nw">core.exchange_rates</span> (عملة، تاريخ، سعر) · السعر لازم يكون أكبر من صفر</div><div class="note">📌 في نفس الشاشة: «💲 تسجيل سعر» (بتنبّه لو التغيير &gt; 5% وبتسأل قبل استبدال سعر اليوم) · سعر واحد في اليوم · <span class="ltr nw">core.rate_on</span> = آخر سعر في التاريخ أو قبله</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0E7490">5</td><td><div class="item-name">ترقيم المستندات</div><div class="detail"><span class="ltr nw">core.document_sequences</span> لكل (نوع مستند، سنة) · يبدأ من 1 كل سنة (<span class="ltr nw">INV-2026-00001</span>) · <span class="ltr nw">FOR UPDATE</span></div><div class="note">📌 أوتوماتيك من غير شاشة (قرار المستخدم) · سكريبت 0006: 10 أنواع + العدّاد بيتعمل لوحده كل سنة · <span class="ltr nw">core.next_document_no</span> وقت الحفظ بقفل الصف · 123 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0E7490">6</td><td><div class="item-name">أكواد الضريبة</div><div class="detail"><span class="ltr nw">acc.tax_codes</span> · 14% / 0% / معفي · شامل وغير شامل (حسابات المدخلات والمخرجات بتتربط بعد الدليل)</div><div class="note">📌 النموذج 1 «الفورم يمين + القائمة شمال» · سكريبت 0007: إضافة / خصم، النسبة، بتتحسب على (الصافي / + اللي قبلها)، الترتيب، معفي · 6 أكواد جاهزة (<span class="ltr">VAT14, VAT0, EXEMPT, WHT1/3/5</span>) · الحسابات بعد الدليل · 129 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#0369A1">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#0369A1">
+    <div class="phase-num">1ج</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 1ج: التشغيل على الشبكة (أكتر من جهاز)</div>
+      <div class="g">🎯 البرنامج يشتغل على 10–20 جهاز على الشبكة الداخلية، و2–3 أجهزة على نفس الشاشة في نفس الوقت، من غير ما حد يمسح شغل التاني ولا يتكرر رقم ولا رصيد يبوظ</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">2 / 7</div>
+      <div class="pp-bar"><div style="width:28.6%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#1D4ED8;background:#EFF6FF;border-color:#BFDBFE">شغالين فيه 🔧</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-done"><td class="idx" style="color:#0369A1">1</td><td><div class="item-name">حماية التعديل في نفس الوقت (<span class="ltr nw">Optimistic Locking</span>)</div><div class="detail">عمود <span class="ltr nw">row_version</span> على كل جدول بيتعدّل من شاشة · الحفظ والمسح بشرط الإصدار اللي اتفتح بيه · لو جهاز تاني حفظ قبلك: «السجل ده اتعدّل من جهاز تاني (المستخدم والوقت) — اعمل تحديث» بدل ما يمسح شغله · في الـ <span class="ltr nw">Base Screen</span> عشان كل شاشة جاية تاخده لوحدها + ترجيعه على الشاشات اللي اتعملت (المستخدمين، المجموعات، الصلاحيات، الشركة، السنة المالية، العملات، أكواد الضريبة)</div><div class="note">📌 سكريبت <span class="ltr">0008: row_version + trigger</span> بيزوّده بواحد مع أي تعديل حقيقي (آخر دخول مابيعدّش) · <span class="ltr nw">permissions_version</span> لصلاحيات المستخدم · الـ <span class="ltr nw">Base Screen</span> بيحفظ الإصدار، و«تعديل» بيجيب آخر نسخة، والتعارض بيسيب الفورم باللي اتكتب + «تحديث / رجوع للتعديل» · الرسالة فيها المستخدم والوقت والجهاز من سجل التعديلات · 147 اختبار ناجحين (18 «جهازين»)</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#0369A1">2</td><td><div class="item-name">مهلة القفل والاتصال</div><div class="detail"><span class="ltr nw">lock_timeout</span> (حوالي 5 ثواني) برسالة عربي «السجل ده مستخدم من جهاز تاني — جرّب كمان شوية» بدل ما الشاشة تهنّج · <span class="ltr">idle_in_transaction_session_timeout</span> · <span class="ltr nw">statement_timeout</span> للتقارير · <span class="ltr nw">TCP keepalive</span> + إعادة الاتصال لوحدها لو الشبكة قطعت</div><div class="note">📌 مع كل اتصال: <span class="ltr nw">lock_timeout 5</span> ثواني («السجل ده مستخدم من جهاز تاني دلوقتي — جرّب كمان شوية» والفورم بيفضل) · <span class="ltr nw">statement_timeout 30</span> ثانية · <span class="ltr nw">idle_in_transaction</span> دقيقة (بيفك الأقفال) · <span class="ltr nw">keepalive</span> · القراية بتتعاد لوحدها لو الاتصال وقع (الكتابة لأ) · التحديث وقت الفتح من غير مهلة · 155 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></td></tr><tr class="row-todo"><td class="idx" style="color:#0369A1">3</td><td><div class="item-name">الأرقام والأرصدة مع أكتر من جهاز</div><div class="detail">ترقيم المستندات بقفل الصف ✅ (اتعمل في 1ب) · الترحيل وإلغاؤه بـ <span class="ltr nw">FOR UPDATE</span> على المستند · رصيد الصنف والمتوسط المرجّح بقفل صف الصنف · منع الرصيد السالب (خزينة / مخزن) جوه نفس القفل · ترتيب ثابت للأقفال عشان مفيش <span class="ltr nw">deadlock</span> + إعادة محاولة لوحدها لو حصل · اختبار بجهازين لكل عملية حساسة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#0369A1">4</td><td><div class="item-name">الفهارس (<span class="ltr nw">Indexes</span>) وسرعة الاستعلامات</div><div class="detail"><span class="ltr nw">index</span> على كل <span class="ltr nw">FK</span> · سطور القيود (الحساب، التاريخ) <span class="ltr nw">INCLUDE</span> (مدين، دائن) للأرصدة وكشف الحساب · (الطرف، التاريخ) · (التاريخ، الرقم) للمستندات · <span class="ltr nw">Partial Index</span> للمرحّل · <span class="ltr nw">EXPLAIN ANALYZE</span> على بيانات قد بيانات الأكسس × 5 · القوائم الكبيرة (فواتير، قيود، حركات) بفلتر فترة + صفحات بدل تحميل الكل</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#0369A1">5</td><td><div class="item-name">تحديث الشاشات بشغل الأجهزة التانية</div><div class="detail">زرار «تحديث» موجود في كل شاشة · اختياري: <span class="ltr nw">LISTEN/NOTIFY</span> عشان القائمة تتحدّث لوحدها لما جهاز تاني يحفظ</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#0369A1">6</td><td><div class="item-name">تجهيز السيرفر والشبكة</div><div class="detail"><span class="ltr nw">PostgreSQL</span> على جهاز ثابت (سيرفر) · <span class="ltr">listen_addresses + pg_hba</span> للشبكة الداخلية بس · فتح بورت 5432 في الفايروول على السيرفر بس · <span class="ltr nw">max_connections</span> يكفي 20 جهاز (كل جهاز اتصال أو اتنين) · شاشة إعداد الاتصال على كل جهاز · نسخة احتياطية أوتوماتيك يومي على السيرفر</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#0369A1">7</td><td><div class="item-name">اختبار حِمل: 20 جهاز في نفس الوقت</div><div class="detail">سكريبت بيشغّل 20 جهاز وهمي بيحفظوا ويرحّلوا ويصرفوا من المخزن في نفس اللحظة ← مفيش رقم متكرر، ولا رصيد غلط، ولا تعليق · وقت فتح الشاشات والتقارير على الشبكة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#2563EB">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#2563EB">
+    <div class="phase-num">2</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 2: دليل الحسابات</div>
+      <div class="g">🎯 دليل حسابات كامل + كل الحسابات الافتراضية متعرّفة</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">6 / 6</div>
+      <div class="pp-bar"><div style="width:100.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-09</span></span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-done"><td class="idx" style="color:#2563EB">1</td><td><div class="item-name">شجرة الحسابات</div><div class="detail"><span class="ltr nw">acc.accounts</span>: المستوى · رئيسي/فرعي · النوع · الطبيعة · القائمة · التصنيف · بند التدفقات · الدور · إلزام مركز تكلفة/طرف · نظامي</div><div class="note">📌 النموذج 6 (تبويب لكل نوع: الشجرة يمين والفورم شمال) + «عرض الكل / طي الكل» · سكريبت <span class="ltr nw">0009: acc.account_roles</span> (23 دور) + <span class="ltr nw">acc.accounts</span> بحماية القاعدة (الكود بيبدأ بكود الأب، 5 مستويات، الأب رئيسي ونشط، النظامي ثابت ومايتمسحش، اللي تحته حسابات مايتغيّرش كوده ولا يتحوّل فرعي) + <span class="ltr nw">row_version</span> · الكود الجاي بيتقترح لوحده والجديد بيورث من أبوه · <span class="ltr nw">F1</span> بينقل للتبويب الصح · 166 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#2563EB">2</td><td><div class="item-name">دليل مصري افتراضي جاهز</div><div class="detail">بيتحمّل أول مرة ويتعدّل</div><div class="note">📌 51 حساب مع سكريبت 0009 (الخزاين والبنوك والعملاء والموردين وأوراق القبض/الدفع وض.ق.م والعهد ورأس المال وجاري الشركاء والمبيعات والتكلفة والمصروفات) — النظامي = الجذور + اللي ليها دور</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#2563EB">3</td><td><div class="item-name">ربط حسابات أكواد الضريبة</div><div class="detail">حساب المبيعات / المشتريات لكل كود ضريبة (<span class="ltr nw">acc.tax_codes</span>) من الدليل — بسكريبت جديد + الخانات في شاشة أكواد الضريبة</div><div class="note">📌 سكريبت 0010: عمودين <span class="ltr nw">FK</span> على الدليل (فرعي نشط في الميزانية) + الربط الجاهز بالدور (ض.ق.م مخرجات/مدخلات · خصم المنبع لينا/علينا) · الحساب المربوط مايتمسحش ولا يتوقف ولا يتحوّل رئيسي · في الشاشة: اختيار الحساب، و«جديد» وتغيير النوع بيحطوا حساب الدور، والناحية اللي مش بتتطبق بتتقفل · 169 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#2563EB">4</td><td><div class="item-name">تفريع أي حساب فرعي</div><div class="detail">زرار «+ فرعي تحت المحدد»: الفرعي يتحوّل رئيسي والجديد تحته في عملية واحدة (لحد 5 مستويات) — طلب المستخدم</div><div class="note">📌 سكريبت 0011: دالة <span class="ltr nw">acc.split_account</span> (قفل <span class="ltr nw">FOR UPDATE</span> + استثناء مضبوط للنظامي جوه الدالة بس) · مع كل تفريع البرنامج بيعمل «&lt;الاسم&gt; — عام» لوحده بالدور والنظامي وربط الضريبة (5402 ← 540201 عام + 540202…) · نقل القيود للعام = <span class="ltr nw">TODO</span> المرحلة 4 · <span class="ltr nw">row_version + audit</span> في نفس الـ <span class="ltr nw">Tx</span> + اختبار جهازين · 174 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-08</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#2563EB">5</td><td><div class="item-name">الحسابات الافتراضية</div><div class="detail"><span class="ltr nw">acc.default_accounts</span>: مفتاح ← حساب (مخزون، تكلفة مباعة، مبيعات، ض.ق.م، فروق عملة، أرصدة افتتاحية، أرباح محتجزة…) — من غير بحث بالاسم</div><div class="note">📌 النموذج 9 (شريط الأقسام + الجدول + تفاصيل الحساب المختار) · سكريبت <span class="ltr">0012: acc.default_accounts</span> (29 مفتاح ثابت في 7 أقسام، الحساب فرعي نشط من النوع المسموح) + 5 حسابات وأدوار جديدة في الدليل (خصم مسموح به/مكتسب، تسوية الجرد، فروق التكلفة، فروق التقريب) فكله متحدد من أول يوم · الحساب الافتراضي مايتمسحش ولا يتوقف ولا يتحوّل رئيسي، والتفريع بينقله للعام · «اقترح من الدور» · <span class="ltr nw">account_for</span>(<span class="ltr nw">key</span>) للمستندات · <span class="ltr nw">row_version + audit</span> + اختبار جهازين · 184 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-09</span></span></td></tr><tr class="row-done"><td class="idx" style="color:#2563EB">6</td><td><div class="item-name">مراكز التكلفة</div><div class="detail"><span class="ltr nw">acc.cost_centers</span> شجرة · فلتر الأب يجيب الأبناء</div><div class="note">📌 النموذج 1 (تبويب لكل مركز رئيسي + الشجرة يمين والفورم شمال + «عرض الكل / طي الكل») · سكريبت <span class="ltr nw">0013: acc.cost_centers</span> (كود بيبدأ بكود الأب لحد 5 مستويات، رئيسي/فرعي، النوع إداري/تشغيلي/بيعي/خدمي، المسؤول، <span class="ltr nw">row_version + index</span> على الأب والاسم) + 21 مركز مبدئي لـ <span class="ltr nw">ITEC</span> (الإدارة · الأنشطة الفنية <span class="ltr nw">BMS/MCC</span>/التركيبات/الصيانة · المبيعات · المخازن) · فلتر الأب: <span class="ltr nw">acc.cost_center_subtree</span> (<span class="ltr nw">Recursive CTE</span>) · «+ فرعي تحت المحدد» زي الدليل (<span class="ltr nw">acc.split_cost_center</span> + «— عام») · <span class="ltr nw">audit</span> + اختبار جهازين · المركز الافتراضي/المسموح لكل حساب = اختياري مع القيود</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-09</span></span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#7C3AED">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#7C3AED">
+    <div class="phase-num">3أ</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 3أ: العملاء وأوامر التوريد</div>
+      <div class="g">🎯 يعتمد على: دليل الحسابات + مراكز التكلفة (المرحلة 2) · الترتيب: المجموعات ← العملاء ← أوامر التوريد</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">1 / 3</div>
+      <div class="pp-bar"><div style="width:33.3%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#1D4ED8;background:#EFF6FF;border-color:#BFDBFE">شغالين فيه 🔧</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-done"><td class="idx" style="color:#7C3AED">1</td><td><div class="item-name">مجموعات العملاء</div><div class="detail"><span class="ltr nw">party.customer_groups</span>: حساب الرقابة (1103 العملاء أو فرعي منه) + مدة السداد وحد الائتمان والعملة وض.ق.م وخصم المنبع الافتراضيين للعميل الجديد</div><div class="note">📌 النموذج 1 (الفورم يمين + القائمة شمال) · سكريبت <span class="ltr">0014: party.customer_groups</span> (الكود بيتولّد لوحده جوه قفل، الاسم مايتكررش، حساب الرقابة فرعي نشط بدور «العملاء»، ض.ق.م «إضافة» وخصم المنبع «خصم» للمبيعات، العملة نشطة) + «عملاء — عام» نظامية · الحساب وكود الضريبة المربوطين بمجموعة محميين · التفريع بينقل المجموعة لـ «— عام» · <span class="ltr nw">row_version + audit</span> + اختبار جهازين · 207 اختبار ناجحين</div></td><td class="st"><span class="chip" style="color:#087443;background:#ECFDF3;border-color:#B7E4C7">تم التنفيذ ✅<span class="chip-date">2026-11-10</span></span></td></tr><tr class="row-next"><td class="idx" style="color:#7C3AED">2</td><td><div class="item-name">العملاء</div><div class="detail">المجموعة · حساب رقابة + بُعد الطرف · الرقم الضريبي · حد ائتمان · مدة سداد · رصيد أول المدة</div><div class="note">📌 الـ 10 نماذج جاهزة 2026-11-10 (<span class="ltr">mockups/phase3/02_customers.html</span>) — الاختيار والأسئلة الستة بعد شاشة المجموعات</div></td><td class="st"><span class="chip" style="color:#9A3412;background:#FFF7ED;border-color:#FED7AA">الخطوة الجاية 👉</span></td></tr><tr class="row-todo"><td class="idx" style="color:#7C3AED">3</td><td><div class="item-name">المشاريع / أوامر التوريد</div><div class="detail"><span class="ltr nw">acc.projects</span> مربوطة بالعميل + مركز تكلفة فرعي · <span class="ltr nw">ON DELETE RESTRICT</span> (اتنقلت من المرحلة 2 — قرار المستخدم 2026-11-10)</div><div class="note">📌 الـ 10 نماذج جاهزة 2026-11-10 (<span class="ltr">mockups/phase2/04_projects.html</span>) — الاختيار والأسئلة الستة بعد شاشة العملاء</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#9333EA">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#9333EA">
+    <div class="phase-num">3ب</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 3ب: الموردين والأشخاص</div>
+      <div class="g">🎯 يعتمد على: دليل الحسابات · الترتيب: مجموعات الموردين ← الموردين ← الموظفين ← الشركاء ← أصحاب العمولات</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 5</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#9333EA">1</td><td><div class="item-name">مجموعات الموردين</div><div class="detail"><span class="ltr nw">party.supplier_groups</span>: حساب الرقابة (الموردين أو فرعي منه) + مدة السداد والعملة الافتراضيين</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#9333EA">2</td><td><div class="item-name">الموردين</div><div class="detail">نفس فكرة العملاء: المجموعة · حساب رقابة + بُعد الطرف · الرقم الضريبي · مدة سداد · رصيد أول المدة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#9333EA">3</td><td><div class="item-name">الموظفين</div><div class="detail"><span class="ltr nw">party.employees</span> — بيتستخدموا في العهد وأمين الخزينة وأمين المخزن والمندوب</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#9333EA">4</td><td><div class="item-name">الشركاء</div><div class="detail"><span class="ltr nw">party.partners</span> — جاري الشريك ورأس المال</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#9333EA">5</td><td><div class="item-name">أصحاب العمولات</div><div class="detail"><span class="ltr nw">party.commission_agents</span> — بيتحمّل عليهم مصروفات العمولة (<span class="ltr nw">TbCommation</span> في الأكسس)</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#0E7490">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#0E7490">
+    <div class="phase-num">3ج</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 3ج: الخزائن والبنوك وأنواع المصروفات</div>
+      <div class="g">🎯 يعتمد على: دليل الحسابات + العملات + الموظفين · لازم يخلصوا قبل السندات والمصروفات</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 3</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#0E7490">1</td><td><div class="item-name">الخزائن</div><div class="detail"><span class="ltr nw">cash.treasuries</span>: كل خزينة مربوطة بحساب فرعي تحت «النقدية» + أمين الخزينة (موظف) + العملة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#0E7490">2</td><td><div class="item-name">البنوك والحسابات البنكية</div><div class="detail"><span class="ltr">cash.banks + bank_accounts</span>: كل حساب بنكي مربوط بحساب فرعي تحت «البنوك» + العملة + رقم الحساب</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#0E7490">3</td><td><div class="item-name">أنواع المصروفات</div><div class="detail"><span class="ltr nw">exp.expense_types</span>: كل نوع مربوط بحساب مصروف في الدليل + لازم مركز تكلفة / أمر توريد؟</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#6D28D9">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#6D28D9">
+    <div class="phase-num">3د</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 3د: المخازن والأصناف</div>
+      <div class="g">🎯 يعتمد على: دليل الحسابات + أكواد الضريبة + الموظفين · الترتيب: المخازن ← الوحدات والماركات ← أنواع الأصناف ← الأصناف</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 4</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#6D28D9">1</td><td><div class="item-name">المخازن المتعددة</div><div class="detail"><span class="ltr nw">inv.warehouses</span>: الكود، الاسم، العنوان، أمين المخزن · حساب مخزون واحد + بُعد المخزن · كل المخازن لكل المستخدمين</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#6D28D9">2</td><td><div class="item-name">الوحدات والماركات</div><div class="detail"><span class="ltr nw">inv.units, item_brands</span></div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#6D28D9">3</td><td><div class="item-name">أنواع الأصناف (الأقسام)</div><div class="detail"><span class="ltr">BMS, MCC, Installation, Office</span>… · <span class="ltr nw">inv.item_categories</span> بحساباتها (مخزون/تكلفة/إيراد)</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#6D28D9">4</td><td><div class="item-name">الأصناف</div><div class="detail">النوع · الوحدة · الماركة · صنف خدمي · المخزن الافتراضي · كود الضريبة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#B45309">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#B45309">
+    <div class="phase-num">4</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 4: القيود اليومية</div>
+      <div class="g">🎯 محاسبة يدوية كاملة شغالة + القاعدة بتمنع أي قيد غلط · يعتمد على: الدليل ومراكز التكلفة وكل الأطراف (عشان الأبعاد والأرصدة الافتتاحية)</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 8</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#B45309">1</td><td><div class="item-name">القيد اليدوي</div><div class="detail">مسودة ← ترحيل · إلغاء ترحيل في السنة المفتوحة · عكس بقيد جديد بعد القفل</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#B45309">2</td><td><div class="item-name">محرك الترحيل المركزي</div><div class="detail"><span class="ltr nw">posting_rules</span> (الصنف ← النوع ← المخزن ← الافتراضي) · تقريب على سطر واحد · رفض بخطأ عربي واضح</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#B45309">3</td><td><div class="item-name">حماية القاعدة نفسها</div><div class="detail"><span class="ltr nw">Trigger</span> توازن مؤجل · منع تعديل المرحّل · منع الترحيل في سنة مقفولة أو على حساب رئيسي/موقوف · <span class="ltr nw">Partial Unique Index</span> على المصدر</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#B45309">4</td><td><div class="item-name">سجل التعديلات قبل/بعد بسطور المستند</div><div class="detail">توسيع محتوى <span class="ltr nw">sec.audit_log</span> في نفس الـ <span class="ltr nw">transaction</span></div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#B45309">5</td><td><div class="item-name">مستند الأرصدة الافتتاحية</div><div class="detail">مستند مركزي + حساب أرصدة افتتاحية وسيط · خانة رصيد أول المدة في شاشة الطرف بتعدّل نفس المستند</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#B45309">6</td><td><div class="item-name">كشف الحساب ودفتر الأستاذ</div><div class="detail">برصيد سابق · كله من سطور القيود</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#B45309">7</td><td><div class="item-name">ميزان المراجعة</div><div class="detail">بالأرصدة وبالمجاميع (8 أعمدة) · اختيار المستوى · فلتر مركز تكلفة/مشروع</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#B45309">8</td><td><div class="item-name">قفل / فتح السنة المالية</div><div class="detail">قفل سنوي بس</div><div class="note">📌 زرار القفل والحالة اتعملوا في 1ب — الباقي: منع الترحيل في السنة المقفولة ومنع مسح سنة عليها قيود (<span class="ltr nw">Trigger</span> على القيود)</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#0F766E">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#0F766E">
+    <div class="phase-num">5</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 5: الخزينة والبنوك</div>
+      <div class="g">🎯 كل حركة فلوس بتعمل قيد أوتوماتيك · يعتمد على: القيود + العملاء والموردين والموظفين والشركاء + الخزائن والبنوك</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 5</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#0F766E">1</td><td><div class="item-name">سندات القبض والصرف</div><div class="detail">لأي طرف (عميل/مورد/موظف/شريك) من خزينة أو بنك ← قيد أوتوماتيك · على الحساب (الربط بالفواتير بييجي مع المشتريات والمبيعات)</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#0F766E">2</td><td><div class="item-name">حركات البنوك والخزائن</div><div class="detail"><span class="ltr nw">cash.bank_transactions</span> · أرصدة الخزائن</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#0F766E">3</td><td><div class="item-name">الشيكات</div><div class="detail">أوراق قبض/دفع · في الحافظة ← تحت التحصيل ← محصّل/مرتجع · كل انتقال بقيد · تنبيهات استحقاق</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#0F766E">4</td><td><div class="item-name">العهد</div><div class="detail">حساب رقابة ببُعد الموظف · «عهدة قيد التسوية» · تسوية <span class="ltr nw">FIFO</span></div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#0F766E">5</td><td><div class="item-name">الشركاء ورأس المال</div><div class="detail">سحب/إيداع الشركاء · رأس المال</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#4338CA">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#4338CA">
+    <div class="phase-num">6</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 6: المخازن</div>
+      <div class="g">🎯 دفتر مخزون مضبوط ومطابق للدفتر · لازم قبل المشتريات والمبيعات (الفاتورة بتعمل حركة مخزن) · يعتمد على: المخازن والأصناف + القيود</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 8</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#4338CA">1</td><td><div class="item-name">دفتر المخزون</div><div class="detail"><span class="ltr nw">inv.stock_movements</span> · متوسط مرجّح مستمر على مستوى الشركة لكل (صنف + فاتورة/بيان) · المتوسط بعد كل حركة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#4338CA">2</td><td><div class="item-name">بضاعة أول المدة</div><div class="detail">رصيد افتتاحي لكل (صنف + مخزن + فاتورة/بيان) بالتكلفة ← حركة مخزن + سطر في الأرصدة الافتتاحية</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#4338CA">3</td><td><div class="item-name">التحويل بين المخازن</div><div class="detail">خطوة واحدة · من مخزن/إلى مخزن · من نوع/إلى نوع (فاتورة ↔ بيان) · منع الرصيد السالب</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#4338CA">4</td><td><div class="item-name">مخزن على مستوى السطر + الكمية المتاحة</div><div class="detail">افتراضي من الرأس · المتاح جنب الصنف وقت الإدخال</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#4338CA">5</td><td><div class="item-name">الجرد والتسويات</div><div class="detail">لكل مخزن (دوري/سنوي/جزئي) · عجز/زيادة على حساب تسوية الجرد</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#4338CA">6</td><td><div class="item-name">فروق التكلفة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#4338CA">7</td><td><div class="item-name">تقارير المخازن</div><div class="detail">رصيد صنف في كل المخازن · أرصدة مخزن · حركة صنف · حركة تحويلات · تقييم المخزون</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#4338CA">8</td><td><div class="item-name">مطابقة المخزون مع الدفتر</div><div class="detail">رصيد المخزون = حساب المخزون</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#C2410C">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#C2410C">
+    <div class="phase-num">7</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 7: المشتريات</div>
+      <div class="g">🎯 الفاتورة بتدخّل البضاعة وتعمل القيد · يعتمد على: الموردين + الأصناف + دفتر المخزون + السندات</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 5</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#C2410C">1</td><td><div class="item-name">فاتورة الشراء</div><div class="detail">فاتورة/بيان · شامل/غير شامل · عملات · رقم إلكتروني ← حركة مخزن + قيد (مفيش إذن استلام لوحده)</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#C2410C">2</td><td><div class="item-name">ض.ق.م مدخلات</div><div class="detail">من كود الضريبة على السطر</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#C2410C">3</td><td><div class="item-name">مصاريف الشراء الإضافية</div><div class="detail">على تكلفة الأصناف موزّعة بالقيمة · من الخزينة أو على مورد تاني (شحن)</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#C2410C">4</td><td><div class="item-name">مرتجع المشتريات</div><div class="detail">مربوط بالفاتورة الأصلية ويعكس الضريبة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#C2410C">5</td><td><div class="item-name">سداد الموردين</div><div class="detail">ربط سند الصرف بفواتير الشراء (<span class="ltr nw">cash.voucher_allocations</span>) + الدفعات المقدمة للموردين</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#BE185D">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#BE185D">
+    <div class="phase-num">8</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 8: المبيعات</div>
+      <div class="g">🎯 البيع بقيد واحد كامل وبتكلفته · يعتمد على: العملاء + أوامر التوريد + الأصناف + دفتر المخزون (المتوسط) + السندات</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 8</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#BE185D">1</td><td><div class="item-name">إذن الصرف (فاتورة البيع)</div><div class="detail">قيد واحد: إيراد + ض.ق.م مخرجات + تكلفة البضاعة المباعة (إجباري) بتاريخ الفاتورة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#BE185D">2</td><td><div class="item-name">رصيد الصنف وقت البيع</div><div class="detail">المتاح في المخزن + النوع · الرصيد السالب ممنوع</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#BE185D">3</td><td><div class="item-name">مرتجع المبيعات</div><div class="detail">مربوط بالأصل · بالتكلفة الأصلية · يعكس الضريبة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#BE185D">4</td><td><div class="item-name">الصرف الوهمي</div><div class="detail">مستند متابعة بس: لا قيد ولا حركة مخزون</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#BE185D">5</td><td><div class="item-name">أمر التوريد وتاريخ الاستحقاق</div><div class="detail">ربط بالمشروع · الاستحقاق للأعمار</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#BE185D">6</td><td><div class="item-name">الفاتورة الإلكترونية والطباعة</div><div class="detail">تسجيل الرقم بس + تقرير بالناقصها الرقم · طباعة الفاتورة (<span class="ltr nw">reportlab</span>)</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#BE185D">7</td><td><div class="item-name">تحصيل العملاء + الدفعات المقدمة</div><div class="detail">ربط سند القبض بالفواتير · دفعة على فاتورة معيّنة أو دفعة عامة تتوزّع بعدين</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#BE185D">8</td><td><div class="item-name">فروق العملة المحققة</div><div class="detail">الطرف يتقفل بسعر الفاتورة والنقدية بسعر الدفع</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#A16207">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#A16207">
+    <div class="phase-num">9</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 9: المصروفات</div>
+      <div class="g">🎯 المصروف بيتحمّل على المشروع ويطلع ربحيته · يعتمد على: أنواع المصروفات + الخزائن والبنوك + أوامر التوريد + المبيعات والمشتريات (للربحية)</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 3</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#A16207">1</td><td><div class="item-name">المصروفات</div><div class="detail">تحميل على مشروع/مركز تكلفة ← قيد</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#A16207">2</td><td><div class="item-name">توزيع المصروف على أكتر من أمر توريد</div><div class="detail">بالتساوي أو يدوي، والمجموع = المصروف بالظبط</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#A16207">3</td><td><div class="item-name">تكلفة وربحية أمر التوريد</div><div class="detail">إيراد − تكلفة مباعة − مشتريات − مصروف مباشر − موزّع = ربح + هامش (من القيود ببُعد المشروع)</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#334155">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#334155">
+    <div class="phase-num">10</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 10: القوائم المالية والإقفال</div>
+      <div class="g">🎯 كل القوائم من القيود بس</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 8</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#334155">1</td><td><div class="item-name">قائمة الدخل</div><div class="detail">إيراد − تكلفة مباعة = مجمل الربح − مصروفات = صافي</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#334155">2</td><td><div class="item-name">الميزانية العمومية</div><div class="detail">متجمّعة لفوق · صافي ربح الفترة تحت حقوق الملكية · متداول/غير متداول + نسب مالية</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#334155">3</td><td><div class="item-name">قائمة التدفقات النقدية</div><div class="detail">من حسابات النقدية مصنّفة ببند التدفقات</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#334155">4</td><td><div class="item-name">قائمة حقوق الملكية وكشف الخزينة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#334155">5</td><td><div class="item-name">أعمار الديون</div><div class="detail">0–30 / 31–60 / 61–90 / +90 من الاستحقاق (أو من تاريخ الفاتورة)</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#334155">6</td><td><div class="item-name">إقرار ض.ق.م</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#334155">7</td><td><div class="item-name">إقفال السنة</div><div class="detail">قيد إقفال في الأرباح المحتجزة + أرصدة افتتاحية للسنة الجديدة + قفل نهائي</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#334155">8</td><td><div class="item-name">تقارير المطابقة</div><div class="detail">العملاء/الموردين/المخزون/الخزائن مع حسابات الرقابة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#4D7C0F">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#4D7C0F">
+    <div class="phase-num">10ب</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 10ب: الأصول الثابتة وإعادة التقييم</div>
+      <div class="g">🎯 موديولات إضافية (الموازنة التقديرية مش دلوقتي)</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 3</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#4D7C0F">1</td><td><div class="item-name">سجل الأصول الثابتة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#4D7C0F">2</td><td><div class="item-name">الإهلاك</div><div class="detail">جدول إهلاك شهري + قيود إهلاك أوتوماتيك</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#4D7C0F">3</td><td><div class="item-name">إعادة تقييم العملات الأجنبية</div><div class="detail">آخر الفترة · فروق عملة غير محققة</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#78350F">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#78350F">
+    <div class="phase-num">11</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 11: نقل بيانات الأكسس</div>
+      <div class="g">🎯 بيانات أساسية + أرصدة افتتاحية</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 4</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#78350F">1</td><td><div class="item-name">نقل البيانات الأساسية</div><div class="detail">سكريبت <span class="ltr nw">ETL</span> من <span class="ltr nw">ITEC6.accdb</span></div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#78350F">2</td><td><div class="item-name">الأرصدة الافتتاحية</div><div class="detail">من تاريخ بداية هيتحدد</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#78350F">3</td><td><div class="item-name">مراجعة <span class="ltr nw">tb-Shopes</span> مع المستخدم</div><div class="detail">كان بيتستخدم كأقسام وكمخازن في التحويلات</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#78350F">4</td><td><div class="item-name">مطابقة الأرصدة مع تقارير الأكسس</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+<section class="phase" style="--c:#111827">
+  <table class="items">
+    <thead>
+    <tr><th colspan="3" class="head-cell">
+  <div class="phase-head" style="background:#111827">
+    <div class="phase-num">12</div>
+    <div class="phase-title">
+      <div class="t">المرحلة 12: التسليم</div>
+      <div class="g">🎯 البرنامج جاهز للتشغيل عند العميل</div>
+    </div>
+    <div class="phase-prog">
+      <div class="pp-num">0 / 3</div>
+      <div class="pp-bar"><div style="width:0.0%"></div></div>
+    </div>
+  </div>
+  <div class="phase-state">حالة المرحلة: <span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></div>
+    </th></tr>
+    <tr class="cols"><th style="width:26px">#</th><th>البند</th><th style="width:150px">الحالة</th></tr>
+    </thead>
+    <tbody><tr class="row-todo"><td class="idx" style="color:#111827">1</td><td><div class="item-name">الاختبارات الشاملة</div><div class="detail"><span class="ltr nw">pytest</span> على كل الموديولات</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#111827">2</td><td><div class="item-name">النسخ الاحتياطي والاسترجاع</div><div class="detail">نسخة يومي أوتوماتيك على السيرفر + استرجاع مجرَّب (التجهيز في 1ج)</div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr><tr class="row-todo"><td class="idx" style="color:#111827">3</td><td><div class="item-name">ملف التشغيل (<span class="ltr nw">exe</span>)</div><div class="detail"><span class="ltr nw">PyInstaller</span></div></td><td class="st"><span class="chip" style="color:#64748B;background:#F8FAFC;border-color:#E2E8F0">لسه ⏳</span></td></tr></tbody>
+  </table>
+</section>
+
+<div class="foot">
+  الملف ده بيتولّد من <code>docs/plan/plan_data.json</code> بالسكريبت <code>docs/plan/build_plan.py</code>،
+  وبيتحدّث أول بأول: أول ما بند يخلص بيتكتب قصاده «تم التنفيذ ✅» والتاريخ.
+</div>
+
+</body>
+</html>

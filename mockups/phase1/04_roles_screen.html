@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج مجموعات الصلاحيات — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.tabs{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.tabs button{border:0;border-radius:6px;padding:7px 14px;font:inherit;font-weight:800;cursor:pointer;background:rgba(255,255,255,.15);color:#fff}
+.tabs button.on{background:#fff;color:var(--green)}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;font-size:10px;position:relative}
+.rail{width:62px;background:var(--green-dark);color:#fff;display:flex;flex-direction:column;align-items:center;padding:6px 4px;gap:4px;flex-shrink:0}
+.rail .brand{font-weight:900;font-size:9px;text-align:center;margin-bottom:4px;line-height:1.1}
+.rail .it{width:52px;border-radius:6px;padding:4px 2px;text-align:center;font-size:8.5px;line-height:1.2}
+.rail .it b{display:block;font-size:14px}
+.rail .it.on{background:#fff;color:var(--green)}
+.rail .sp{flex:1}
+.rail .out{background:rgba(220,38,38,.25)}
+.rail.wide{width:118px;align-items:stretch}
+.rail.wide .it{width:auto;display:flex;align-items:center;gap:5px;text-align:right;font-size:9.5px;padding:5px 6px}
+.rail.wide .it b{display:inline;font-size:12px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.hdr{height:40px;background:#fff;border-bottom:1px solid var(--card-border);display:flex;align-items:center;padding:0 8px;gap:8px;flex-shrink:0}
+.av{width:26px;height:26px;border-radius:50%;border:2px solid var(--green);background:#E2E8F0;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.hdr .nm{font-weight:900;font-size:10px;line-height:1.2}
+.hdr .nm small{display:block;color:var(--muted);font-weight:600;font-size:8.5px}
+.hdr .clk{margin-right:auto;text-align:center;font-weight:900;font-size:10px;line-height:1.2}
+.hdr .clk small{display:block;color:var(--muted);font-weight:600;font-size:8px}
+.bell{font-size:13px}
+.content{flex:1;padding:8px;position:relative;overflow:hidden}
+.hero{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--green)}
+.hero b{font-size:26px;font-weight:900}
+.hero small{color:var(--muted);font-size:10px;font-weight:700}
+.popup{position:absolute;top:42px;right:64px;width:170px;background:#fff;border:1px solid var(--card-border);border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.18);padding:8px;z-index:3}
+.popup h4{margin:0 0 4px;color:var(--green);font-size:11px;font-weight:900;border-bottom:2px solid var(--green);padding-bottom:3px}
+.popup .sub{color:var(--muted);font-weight:800;font-size:8.5px;margin:5px 0 2px}
+.popup .ln{padding:3px 4px;border-radius:4px;font-size:9.5px}
+.popup .ln.on{background:var(--first);color:var(--green);font-weight:800}
+.stat{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:6px}
+.stat small{color:var(--muted);font-weight:700;font-size:8.5px;display:block}
+.stat b{font-size:15px;font-weight:900}
+.tile{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:8px;text-align:center;font-weight:800;font-size:9.5px}
+.tile b{display:block;font-size:18px;margin-bottom:2px}
+
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-log{background:#0F766E}.b-prev{background:#6D28D9}.b-exp{background:#0E7490}
+.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:58px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.chk{font-size:8.5px;font-weight:700;margin-left:6px}
+.chk:before{content:"☑ ";color:var(--green)}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.srch{display:flex;gap:4px;margin-bottom:4px}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.photo{width:48px;height:56px;border:1px dashed var(--input);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#F8FAFC;flex-shrink:0}
+.ck{color:var(--green);font-weight:900;text-align:center}
+.x{color:#CBD5E1;text-align:center}
+.key{font-size:8px}
+.chip{display:inline-block;border-radius:10px;padding:1px 6px;font-size:8px;font-weight:800;margin:1px;border:1px solid var(--badge-bd);background:var(--badge-bg);color:var(--badge-tx)}
+.chip.off{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0}
+.chip.deny{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+
+/* ===== شاشة الدخول ===== */
+.lg{width:300px;height:340px;background:#fff;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.2);overflow:hidden;display:flex;flex-direction:column;font-size:11px}
+.lg .hd{background:var(--green-dark);color:#fff;text-align:center;padding:22px 10px}
+.lg .hd b{display:block;font-size:22px;font-weight:900}
+.lg .hd small{font-weight:700;font-size:12px;opacity:.95}
+.lg .bd{padding:16px 22px;display:flex;flex-direction:column;gap:8px;flex:1}
+.lg label{font-weight:800;font-size:10.5px}
+.in{height:30px;border:1.5px solid var(--green);border-radius:6px;padding:0 8px;display:flex;align-items:center;color:#475569;font-size:10.5px;gap:6px;background:#fff}
+.in.g{border-color:var(--input)}
+.err{color:var(--red);font-weight:800;font-size:10px;min-height:14px}
+.bigbtn{height:32px;border-radius:6px;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:12px}
+.bigbtn.ok{background:var(--green);color:#fff}
+.bigbtn.no{background:#fff;color:#374151;border:1px solid var(--input)}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.muted{color:var(--muted);font-weight:700;font-size:9.5px}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج مجموعات الصلاحيات (المرحلة 1 · الشاشة 4)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD — الفرق بس في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج).</p>
+  
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+/* ---------- أجزاء مشتركة ---------- */
+const RAIL_ITEMS=[["🏠","الرئيسية"],["📒","الحسابات"],["🛒","المبيعات"],["📦","المشتريات"],["🏬","المخازن"],["💵","الخزينة"],["📈","التقارير"]];
+function rail(on=0,wide=false){
+  let h=`<div class="rail${wide?' wide':''}"><div class="brand">A-H<br>CODE</div>`;
+  RAIL_ITEMS.forEach(([i,t],k)=>h+=`<div class="it${k===on?' on':''}"><b>${i}</b>${t}</div>`);
+  h+=`<div class="sp"></div><div class="it${on===9?' on':''}"><b>🔐</b>النظام والصلاحيات</div><div class="it out"><b>⏻</b>تسجيل الخروج</div></div>`;
+  return h;
+}
+function hdr(extra=""){
+  return `<div class="hdr"><div class="av">👤</div><div class="nm">مدير النظام<small>مدير الحسابات</small></div>${extra}<div class="clk">10:42:15 ص<small>السبت 07/11/2026</small></div><div class="bell">🔔</div></div>`;
+}
+function popup(style=""){
+  return `<div class="popup" style="${style}"><h4>📒 الحسابات</h4><div class="sub">التعريفات</div><div class="ln on">دليل الحسابات</div><div class="ln">مراكز التكلفة</div><div class="ln">المشاريع</div><div class="sub">الحركات</div><div class="ln">القيود اليومية</div><div class="ln">الأرصدة الافتتاحية</div></div>`;
+}
+function win(inner){return `<div class="win" style="flex-direction:column"><div style="height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0"><span>🛡 مجموعات الصلاحيات — A-H CODE</span><span style="margin-right:auto;color:var(--muted)">_ ▢ ✕</span></div><div class="main" style="display:flex;flex-direction:column;flex:1;min-height:0">${inner}</div></div>`;}
+function tb(btns,mode="عرض"){
+  const M={new:["b-new","جديد"],edit:["b-edit","تعديل"],save:["b-save","حفظ"],del:["b-del","حذف"],can:["b-can","إلغاء"],ref:["b-ref","تحديث"],exit:["b-exit","خروج"],tog:["b-tog","إيقاف/تفعيل"],log:["b-log","سجل الدخول"],prev:["b-prev","معاينة الصلاحيات"],exp:["b-exp","تصدير إكسل"]};
+  return `<div class="tb">${btns.map(b=>`<span class="bt ${M[b][0]}">${M[b][1]}</span>`).join("")}${mode?`<span class="mode">${mode}</span>`:""}</div>`;
+}
+const USER_BTNS=["new","edit","save","can","tog","log","prev","ref","exit"];
+function f(l,v=""){return `<div class="f"><label>${l}</label><i>${v}</i></div>`;}
+function userForm(cols=1){
+  const a=[f("اسم المستخدم","ahmed"),f("كلمة المرور","•••• (فاضية = بدون تغيير)"),f("الاسم الكامل","أحمد حسن"),f("المهنة","محاسب"),f("البريد","a@itec.com"),f("الهاتف","0100…"),f("المجموعة","المحاسبين ▾"),f("اللغة","عربي ▾")];
+  const body=cols===2?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 8px">${a.join("")}</div>`:a.join("");
+  return body+`<div style="margin:4px 0"><span class="chk">نشط</span><span class="chk">مدير</span><span class="chk">صلاحية كاملة</span></div>`+f("ملاحظات","")+f("آخر دخول","07/11/2026 09:12");
+}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+function usersTable(n=6){
+  const r=[["admin","مدير النظام","—","نشط"],["ahmed","أحمد حسن","المحاسبين","نشط"],["mona","منى علي","المبيعات","نشط"],["karim","كريم سامي","المخازن","نشط"],["sara","سارة محمد","المحاسبين","موقوف"],["omar","عمر فؤاد","الخزينة","نشط"],["hany","هاني رضا","المشتريات","نشط"]].slice(0,n);
+  return `<table class="tbl"><tr><th>المستخدم</th><th>الاسم</th><th>المجموعة</th><th>الحالة</th></tr>${r.map((x,i)=>`<tr class="${i===1?'sel':''}">${x.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</table>`;
+}
+function searchBox(){return `<div class="srch"><i>🔍 بحث بالاسم / البريد / الهاتف…</i></div><div class="muted" style="font-size:8px;margin-bottom:3px">☐ إظهار المستخدمين غير المفعّلين</div>`;}
+const ACTS=["عرض","إضافة","تعديل","حفظ","حذف","حذف الكل","اعتماد","طباعة","تصدير","ترحيل","إلغاء الترحيل"];
+function matrix(cols=ACTS,rows=null,opts={}){
+  rows=rows||[["sec","📒 الحسابات (مثال للمراحل الجاية)"],["دليل الحسابات","11111001100"],["القيود اليومية","11111K11111"],["sec","🔐 النظام والصلاحيات"],["المستخدمين","11110001000"],["مجموعات الصلاحيات","11111000100"],["صلاحيات المستخدم","10110000100"],["سجل الدخول","10000000100"]];
+  let h=`<table class="tbl"><tr><th>الشاشة</th>${cols.map(c=>`<th style="font-size:7.5px;text-align:center">${c}</th>`).join("")}</tr>`;
+  rows.forEach((r,i)=>{
+    if(r[0]==="sec"){h+=`<tr class="sec"><td colspan="${cols.length+1}">☑ ${r[1]}</td></tr>`;return;}
+    h+=`<tr class="${i===3&&!opts.nosel?'sel':''}"><td>${r[0]}</td>${cols.map((c,k)=>{const v=r[1][k];return v==="1"?`<td class="ck">✔</td>`:v==="K"?`<td class="ck">✔<span class="key">🔑</span></td>`:`<td class="x">☐</td>`;}).join("")}</tr>`;
+  });
+  return h+`</table>`;
+}
+function rolesList(){return `<table class="tbl"><tr><th>الكود</th><th>المجموعة</th></tr><tr><td>ACC</td><td>المحاسبين</td></tr><tr class="sel"><td>SAL</td><td>المبيعات</td></tr><tr><td>INV</td><td>المخازن</td></tr><tr><td>CSH</td><td>الخزينة</td></tr></table>`;}
+const matrixBtns=`<div class="tb" style="border:0;padding:3px 0"><span class="bt b-new">تحديد الكل</span><span class="bt b-can">مسح الكل</span><span class="bt b-log">مزامنة الصلاحيات</span><span class="bt b-save">حفظ صلاحيات المجموعة</span></div>`;
+
+/* ---------- 4) مجموعات الصلاحيات (المصفوفة) ---------- */
+const roleForm=gb("بيانات المجموعة",f("الكود","SAL")+f("الاسم عربي","المبيعات")+f("الاسم إنجليزي","Sales")+f("الوصف","")+`<span class="chk">نشطة</span>`);
+const filt=`<div class="srch"><i>🔍 بحث عن شاشة…</i><i style="flex:.5">الكل ▾</i></div>`;
+const PERM=[
+ ["زي Hr GAD بالظبط","يمين: قائمة المجموعات وبياناتها · شمال: المصفوفة (صف لكل شاشة، عمود لكل إجراء) مترتبة زي القائمة الجانبية بعناوين الأقسام · 🔑 = كلمة سر إجراء.",
+  win(tb(["new","edit","save","can","ref","exit"])+`<div class="content" style="display:grid;grid-template-columns:150px 1fr;gap:8px"><div>${rolesList()}${roleForm}</div><div>${matrixBtns}${filt}${matrix()}</div></div>`,9)],
+ ["المصفوفة بعرض الشاشة + المجموعة قائمة منسدلة","المجموعة بتتختار من قائمة فوق، والمصفوفة واخدة الشاشة كلها.",
+  win(tb(["new","edit","save","can","ref","exit"])+`<div class="content"><div class="f" style="max-width:300px"><label>المجموعة</label><i>المبيعات (SAL) ▾</i></div>${matrixBtns}${filt}${matrix()}</div>`,9)],
+ ["شجرة + خانات الشاشة المختارة","يمين شجرة (قسم ← شاشة)، وشمال خانات الإجراءات للشاشة المختارة بس — أبسط في الشاشات الكتير.",
+  win(tb(["new","edit","save","can","ref","exit"])+`<div class="content" style="display:grid;grid-template-columns:150px 1fr;gap:8px"><div>${rolesList()}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${gb("الشاشات",`<div style="font-size:9px;line-height:1.8">▾ 📒 الحسابات<br>&nbsp;&nbsp;☑ دليل الحسابات<br>&nbsp;&nbsp;<b style="background:var(--sel);padding:1px 4px">☑ القيود اليومية</b><br>&nbsp;&nbsp;☐ مراكز التكلفة<br>▸ 🛒 المبيعات<br>▸ 🔐 النظام</div>`)}${gb("إجراءات: القيود اليومية",ACTS.map((a,i)=>`<div style="font-size:9px">${i<6||i>8?'☑':'☐'} ${a}${a==='حذف الكل'?' 🔑':''}</div>`).join(""))}</div></div>`,9)],
+ ["مصفوفة + فهرس أقسام جانبي","زي Hr GAD + عمود صغير بأسماء الأقسام تدوس على قسم يوديك عليه في المصفوفة.",
+  win(tb(["new","edit","save","can","ref","exit"])+`<div class="content" style="display:grid;grid-template-columns:120px 70px 1fr;gap:6px"><div>${rolesList()}</div><div>${["📒 الحسابات","🛒 المبيعات","📦 المشتريات","🏬 المخازن","💵 الخزينة","📈 التقارير","🔐 النظام"].map((x,i)=>`<div class="chip${i?' off':''}" style="display:block;margin-bottom:3px">${x}</div>`).join("")}</div><div>${matrixBtns}${matrix()}</div></div>`,9)],
+ ["المجموعات تبويبات فوق","كل مجموعة تبويب فوق المصفوفة، وبياناتها في سطر واحد تحت التبويبات.",
+  win(tb(["new","edit","save","can","ref","exit"])+`<div class="content"><div style="display:flex;gap:2px"><span class="bt b-ref">المحاسبين</span><span class="bt b-new">المبيعات</span><span class="bt b-ref">المخازن</span><span class="bt b-ref">الخزينة</span><span class="bt b-ref">+ جديدة</span></div><div style="display:flex;gap:8px;margin:5px 0">${f("الكود","SAL")}${f("الاسم","المبيعات")}<span class="chk">نشطة</span></div>${matrixBtns}${matrix()}</div>`,9)],
+ ["أعمدة ملوّنة حسب النوع","زي Hr GAD بس عناوين الأعمدة متقسمة 3 ألوان: أساسي (عرض..حذف) · حساس 🔑 (حذف الكل) · محاسبي (ترحيل/إلغاء ترحيل).",
+  win(tb(["new","edit","save","can","ref","exit"])+`<div class="content" style="display:grid;grid-template-columns:150px 1fr;gap:8px"><div>${rolesList()}${roleForm}</div><div>${matrixBtns}<div style="display:flex;font-size:8px;font-weight:900;margin-bottom:2px"><span style="flex:5;background:var(--green);color:#fff;text-align:center;margin-left:2px">أساسي</span><span style="flex:1;background:#991B1B;color:#fff;text-align:center;margin-left:2px">حساس 🔑</span><span style="flex:3;background:#64748B;color:#fff;text-align:center;margin-left:2px">عام</span><span style="flex:2;background:#2563EB;color:#fff;text-align:center">محاسبي</span></div>${matrix()}</div></div>`,9)],
+ ["كروت بالشاشات وشرايح للإجراءات","بدل الجدول: كارت لكل شاشة فيه الإجراءات كشرايح (أخضر = مسموح) تدوس عليها تقلبها.",
+  win(tb(["new","edit","save","can","ref","exit"])+`<div class="content" style="display:grid;grid-template-columns:150px 1fr;gap:8px"><div>${rolesList()}</div><div>${matrixBtns}<b style="color:var(--green);font-size:10px">📒 الحسابات</b>${["دليل الحسابات:11111001100","القيود اليومية:11111111111","مراكز التكلفة:11110001000"].map(x=>{const[n,v]=x.split(":");return `<div class="stat" style="margin:4px 0;padding:4px"><b style="font-size:10px">${n}</b><div>${ACTS.map((a,i)=>`<span class="chip${v[i]==='1'?'':' off'}">${a}${a==='حذف الكل'&&v[i]==='1'?' 🔑':''}</span>`).join("")}</div></div>`}).join("")}</div></div>`,9)],
+ ["مصفوفة + شريط ملخص لكل قسم","زي Hr GAD + فوق المصفوفة شريط صغير بعدد الصلاحيات الممنوحة في كل قسم (مثلاً الحسابات 24/33).",
+  win(tb(["new","edit","save","can","ref","exit"])+`<div class="content" style="display:grid;grid-template-columns:150px 1fr;gap:8px"><div>${rolesList()}${roleForm}</div><div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:4px"><div class="stat" style="padding:3px"><small>الحسابات</small><b style="font-size:11px">24 / 33</b></div><div class="stat" style="padding:3px;border-right-color:#2563EB"><small>المبيعات</small><b style="font-size:11px">0 / 44</b></div><div class="stat" style="padding:3px;border-right-color:#B45309"><small>المخازن</small><b style="font-size:11px">5 / 22</b></div><div class="stat" style="padding:3px;border-right-color:#6D28D9"><small>النظام</small><b style="font-size:11px">2 / 39</b></div></div>${matrixBtns}${matrix()}</div></div>`,9)],
+ ["المجموعة + أعضاؤها","يمين: المجموعات، وتحتها المستخدمين اللي في المجموعة المختارة · شمال: المصفوفة.",
+  win(tb(["new","edit","save","can","ref","exit"])+`<div class="content" style="display:grid;grid-template-columns:150px 1fr;gap:8px"><div>${rolesList()}${gb("أعضاء المجموعة (2)",`<div style="font-size:9px;line-height:1.7">👤 منى علي<br>👤 هاني رضا</div>`)}</div><div>${matrixBtns}${filt}${matrix()}</div></div>`,9)],
+ ["مقارنة مجموعتين","المصفوفة فيها عمودين لكل إجراء أساسي: المجموعة المختارة ومجموعة تانية للمقارنة — مفيدة لما تعمل مجموعة جديدة شبه القديمة.",
+  win(tb(["new","edit","save","can","ref","exit"])+`<div class="content"><div style="display:flex;gap:8px">${f("المجموعة","المبيعات ▾")}${f("قارن بـ","المحاسبين ▾")}</div>${matrixBtns}${matrix(["عرض (م)","عرض (ق)","إضافة (م)","إضافة (ق)","تعديل (م)","تعديل (ق)","حذف (م)","حذف (ق)","ترحيل (م)","ترحيل (ق)"],[["sec","📒 الحسابات"],["دليل الحسابات","1110110000"],["القيود اليومية","0101010101"],["sec","🛒 المبيعات"],["فاتورة البيع","1111111010"]],{nosel:true})}<div class="muted" style="margin-top:4px">(م) = المجموعة المختارة · (ق) = المقارنة · "نسخ من المقارنة" بيعمل نفس الصلاحيات</div></div>`,9)],
+];
+
+/* ---------- العرض ---------- */
+const SETS=[
+ ["🛡 مجموعات الصلاحيات",PERM,"شاشة «مجموعات الصلاحيات»: بيانات المجموعة + مصفوفة الصلاحيات (صف لكل شاشة وعمود لكل إجراء، مترتبة زي القائمة الجانبية بعناوين الأقسام). خانة على اسم القسم = تعلّم القسم كله · الضغط على عنوان العمود = الإجراء ده لكل الشاشات · 🔑 = كلمة سر إجراء (حذف الكل / إظهار الإجماليات). نفس المصفوفة هتتستخدم بعد كده في «صلاحيات المستخدم» (بعمود وراثة/سماح/منع + الصلاحية الفعلية). شريط الأدوات فوق زي شاشة المستخدمين اللي اخترتها. الشاشة بتفتح في شباك لوحدها."],
+];
+let cur=0;
+function render(){
+    document.getElementById("note").textContent=SETS[cur][2];
+  document.getElementById("grid").innerHTML=SETS[cur][1].map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]}</div></div>`).join("");
+  window.scrollTo(0,0);
+}
+render();
+</script>
+</body>
+</html>

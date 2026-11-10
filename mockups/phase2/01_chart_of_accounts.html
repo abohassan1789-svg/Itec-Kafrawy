@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج شجرة الحسابات — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:450px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD (نفس نماذج 1ب) ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:430px;display:flex;font-size:10px;position:relative}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.content{flex:1;padding:8px;position:relative;overflow:hidden;min-height:0}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-sub{background:#15803D}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-prn{background:#6D28D9}
+.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;min-width:0;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.chk{font-size:8.5px;font-weight:700;margin-left:6px}
+.chk:before{content:"☑ ";color:var(--green)}
+.unchk{font-size:8.5px;font-weight:700;color:#94A3B8;margin-left:6px}
+.unchk:before{content:"☐ "}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;white-space:nowrap}
+.tbl td{padding:2px 3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)!important}
+.tbl td.n,.tbl th.n{text-align:left}
+.srch{display:flex;gap:4px;margin-bottom:4px}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.muted{color:var(--muted)}
+
+/* ===== شجرة الحسابات ===== */
+.tree{background:#fff;border:1px solid var(--card-border);border-radius:5px;overflow:auto;font-size:8.5px}
+.tr{display:flex;align-items:center;gap:3px;padding:2px 4px;border-bottom:1px solid #F1F5F9;white-space:nowrap;cursor:default}
+.tr:nth-child(even){background:var(--alt)}
+.tr.sel{background:var(--sel)!important;outline:1px solid #86C99D}
+.tr.grp{font-weight:800}
+.tr.l1{background:#E8F5EC!important;color:var(--green);font-weight:900}
+.tr.off{color:#94A3B8}
+.tg{width:11px;text-align:center;color:var(--green);cursor:pointer;font-size:8px;flex-shrink:0;user-select:none}
+.tg.leaf{color:transparent;cursor:default}
+.ic{font-size:9px;flex-shrink:0}
+.cd{font-weight:900;color:#334155;min-width:30px}
+.tr.l1 .cd{color:var(--green)}
+.nm{overflow:hidden;text-overflow:ellipsis}
+.bal{margin-right:auto;font-weight:800;direction:ltr;unicode-bidi:isolate;color:#334155;padding-left:2px}
+.bal.cr{color:#B45309}
+.bdg{display:inline-block;border-radius:9px;padding:0 6px;font-size:7.5px;font-weight:900;border:1px solid;white-space:nowrap;line-height:12px}
+.t-asset{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.t-liab{background:#FFF7ED;color:#B45309;border-color:#FED7AA}
+.t-equity{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.t-rev{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.t-exp{background:#FEF2F2;color:#B91C1C;border-color:#FECACA}
+.b-role{background:#F0FDFA;color:#0F766E;border-color:#99F6E4}
+.b-sys{background:#F1F5F9;color:#475569;border-color:#CBD5E1}
+.b-off{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0}
+.seg2{display:flex;gap:3px;flex:1}
+.seg2 span{flex:1;text-align:center;border:1px solid var(--input);border-radius:4px;padding:1px 0;font-size:8.5px;font-weight:800;color:#64748B;background:#F8FAFC}
+.seg2 span.on{background:#ECFDF3;border-color:#137A38;color:#087443}
+.seg2 span.on.cr{background:#FFF7ED;border-color:#B45309;color:#B45309}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap}
+.tabs2 span{padding:3px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569}
+.tabs2 span.on{background:var(--green);color:#fff}
+.panel{background:#fff;border:1px solid var(--card-border);border-radius:0 7px 7px 7px;padding:6px}
+.hint{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:3px 0}
+.warnb{background:#FFF7ED;border:1px solid #FED7AA;color:#9A3412;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:3px 0}
+.okb{background:#ECFDF3;border:1px solid #B7E4C7;color:#087443;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:3px 0}
+.crumb{background:#fff;border:1px solid var(--card-border);border-radius:5px;padding:3px 6px;font-size:8.5px;font-weight:800;color:#334155;margin-bottom:5px}
+.crumb b{color:var(--green)}
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.col{background:#fff;border:1px solid var(--card-border);border-radius:5px;overflow:hidden}
+.col h5{margin:0;background:var(--green);color:#fff;font-size:8.5px;padding:3px 5px;font-weight:900}
+.col .it{padding:2px 5px;font-size:8.5px;border-bottom:1px solid #F1F5F9;display:flex;gap:3px;white-space:nowrap}
+.col .it.on{background:var(--sel);font-weight:900}
+.col .it .arr{margin-right:auto;color:#94A3B8}
+.tcard{background:#fff;border:1px solid var(--card-border);border-right:4px solid;border-radius:7px;padding:5px 6px;font-size:8px}
+.tcard b{font-size:9.5px;font-weight:900;display:block}
+.tcard .r{font-size:12px;font-weight:900;direction:ltr;text-align:right}
+.tcard small{color:var(--muted);font-weight:700}
+.fchip{display:inline-block;border:1px solid var(--input);border-radius:10px;padding:1px 7px;font-size:8px;font-weight:800;color:#475569;background:#fff;margin:0 0 3px 3px}
+.fchip.on{background:var(--first);border-color:#86C99D;color:var(--green)}
+.rep{font-size:8.5px}
+.rep .h{background:var(--green);color:#fff;font-weight:900;padding:2px 5px;border-radius:4px 4px 0 0}
+.rep .r{display:flex;justify-content:space-between;padding:2px 5px;border-bottom:1px solid #EEF2F6}
+.rep .r.s{font-weight:900;background:#F8FAFC}
+.rep .r.me{background:var(--sel);font-weight:900;outline:1px solid #86C99D}
+.rep .r span:last-child{direction:ltr;unicode-bidi:isolate}
+input.lv,select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv:focus,select.lv:focus{box-shadow:0 0 0 2px #BFDBFE}
+.mv td.n{direction:ltr;text-align:left}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شجرة الحسابات (المرحلة 2 · الشاشة 1)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD — الفرق بس في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). البيانات أمثلة، و<b>الشجرة شغالة</b>: دوس ▾ / ▸ تقفل وتفتح، وفي النموذج 8 <b>الخانات الزرقا شغالة</b>.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ---------- البيانات (دليل مصري مقترح — أمثلة) ----------
+// الكود، الاسم، الأب، فرعي؟، الطبيعة، التصنيف، التدفقات، الدور، طرف، مركز تكلفة، نظامي، نشط، الرصيد، الاسم الإنجليزي
+const A=[
+ ["1","الأصول",null,0,"dr","","","",0,0,1,1,2043500,"Assets"],
+ ["11","الأصول المتداولة","1",0,"dr","cur","op","",0,0,1,1,1818500,"Current Assets"],
+ ["1101","النقدية بالخزائن","11",0,"dr","cur","cash","cash",0,0,0,1,91500,"Cash on Hand"],
+ ["110101","الخزينة الرئيسية","1101",1,"dr","cur","cash","cash",0,0,0,1,85000,"Main Cash Box"],
+ ["110102","خزينة النثريات","1101",1,"dr","cur","cash","cash",0,0,0,1,6500,"Petty Cash"],
+ ["1102","البنوك","11",0,"dr","cur","cash","bank",0,0,0,1,580000,"Banks"],
+ ["110201","البنك الأهلي — جاري","1102",1,"dr","cur","cash","bank",0,0,0,1,420000,"NBE Current"],
+ ["110202","بنك مصر — جاري","1102",1,"dr","cur","cash","bank",0,0,0,1,160000,"Banque Misr Current"],
+ ["1103","العملاء","11",1,"dr","cur","op","customers",1,0,1,1,610000,"Customers"],
+ ["1104","أوراق القبض (شيكات)","11",1,"dr","cur","op","notes_rec",1,0,1,1,95000,"Notes Receivable"],
+ ["1105","المخزون","11",1,"dr","cur","op","inventory",0,0,1,1,380000,"Inventory"],
+ ["1106","ضرايب لينا","11",0,"dr","cur","op","",0,0,0,1,50000,"Tax Receivables"],
+ ["110601","ض.ق.م — مدخلات","1106",1,"dr","cur","op","vat_in",0,0,1,1,42000,"VAT Input"],
+ ["110602","خصم من المنبع (لينا)","1106",1,"dr","cur","op","wht_rec",0,0,1,1,8000,"WHT Receivable"],
+ ["1107","عهد الموظفين","11",1,"dr","cur","op","custody",1,0,1,1,12000,"Employee Custody"],
+ ["12","الأصول الثابتة","1",0,"dr","noncur","inv","",0,0,1,1,225000,"Fixed Assets"],
+ ["1201","أجهزة وحاسبات","12",1,"dr","noncur","inv","",0,0,0,1,60000,"Computers"],
+ ["1202","سيارات","12",1,"dr","noncur","inv","",0,0,0,1,250000,"Vehicles"],
+ ["1209","مجمع الإهلاك","12",1,"cr","noncur","op","depr",0,0,0,1,-85000,"Accumulated Depreciation"],
+ ["2","الخصوم",null,0,"cr","","","",0,0,1,1,461000,"Liabilities"],
+ ["21","الخصوم المتداولة","2",0,"cr","cur","op","",0,0,1,1,461000,"Current Liabilities"],
+ ["2101","الموردين","21",1,"cr","cur","op","suppliers",1,0,1,1,290000,"Suppliers"],
+ ["2102","أوراق الدفع (شيكات)","21",1,"cr","cur","op","notes_pay",1,0,1,1,70000,"Notes Payable"],
+ ["2103","ض.ق.م — مخرجات","21",1,"cr","cur","op","vat_out",0,0,1,1,66000,"VAT Output"],
+ ["2104","خصم من المنبع (مستحق)","21",1,"cr","cur","op","wht_pay",0,0,1,1,5000,"WHT Payable"],
+ ["2105","دفعات مقدمة من العملاء","21",1,"cr","cur","op","advances",1,0,1,1,30000,"Customer Advances"],
+ ["3","حقوق الملكية",null,0,"cr","","fin","",0,0,1,1,1421500,"Equity"],
+ ["31","رأس المال","3",1,"cr","","fin","capital",0,0,1,1,1000000,"Capital"],
+ ["32","جاري الشركاء","3",1,"cr","","fin","partner",1,0,1,1,40000,"Partners Current"],
+ ["33","الأرباح المحتجزة","3",1,"cr","","","retained",0,0,1,1,381500,"Retained Earnings"],
+ ["34","أرصدة افتتاحية","3",1,"cr","","","opening",0,0,1,1,0,"Opening Balances"],
+ ["4","الإيرادات",null,0,"cr","","op","",0,0,1,1,1657000,"Revenues"],
+ ["41","المبيعات","4",0,"cr","","op","",0,0,1,1,1680000,"Sales"],
+ ["4101","مبيعات بضاعة","41",1,"cr","","op","sales",0,1,1,1,1450000,"Goods Sales"],
+ ["4102","إيرادات تركيبات وخدمات","41",1,"cr","","op","",0,1,0,1,230000,"Installation & Services"],
+ ["42","مردودات المبيعات","4",1,"dr","","op","sales_ret",0,1,1,1,-35000,"Sales Returns"],
+ ["43","إيرادات أخرى","4",0,"cr","","op","",0,0,0,1,12000,"Other Revenues"],
+ ["4301","فروق عملة دائنة","43",1,"cr","","op","fx_gain",0,0,1,1,12000,"FX Gains"],
+ ["5","المصروفات والتكاليف",null,0,"dr","","op","",0,0,1,1,1496000,"Expenses"],
+ ["51","تكلفة المبيعات","5",1,"dr","","op","cogs",0,1,1,1,980000,"Cost of Sales"],
+ ["52","مصروفات عمومية وإدارية","5",0,"dr","","op","",0,0,0,1,483500,"G&A Expenses"],
+ ["5201","المرتبات والأجور","52",1,"dr","","op","",0,1,0,1,360000,"Salaries"],
+ ["5202","الإيجار","52",1,"dr","","op","",0,0,0,1,96000,"Rent"],
+ ["5203","كهرباء ومياه","52",1,"dr","","op","",0,0,0,1,18000,"Utilities"],
+ ["5204","مصروفات نثرية","52",1,"dr","","op","",0,0,0,1,9500,"Miscellaneous"],
+ ["53","مصروفات بيع وتوزيع","5",0,"dr","","op","",0,0,0,1,22000,"Selling Expenses"],
+ ["5301","نقل ومشال","53",1,"dr","","op","",0,1,0,1,22000,"Freight"],
+ ["5302","عمولات بيع","53",1,"dr","","op","",0,1,0,0,0,"Sales Commissions"],
+ ["54","مصروفات تمويلية","5",0,"dr","","fin","",0,0,0,1,10500,"Finance Costs"],
+ ["5401","فروق عملة مدينة","54",1,"dr","","op","fx_loss",0,0,1,1,7000,"FX Losses"],
+ ["5402","مصاريف بنكية","54",1,"dr","","op","",0,0,0,1,3500,"Bank Charges"],
+];
+const AM=Object.fromEntries(A.map(a=>[a[0],a]));
+const root=a=>{while(a[2])a=AM[a[2]];return a;};
+const lvl=a=>{let n=1;while(a[2]){a=AM[a[2]];n++;}return n;};
+const anc=a=>{const o=[];while(a[2]){a=AM[a[2]];o.unshift(a[0]);}return o;};
+const kids=c=>A.filter(a=>a[2]===c);
+const TYPE={"1":["asset","أصول"],"2":["liab","خصوم"],"3":["equity","حقوق ملكية"],"4":["rev","إيرادات"],"5":["exp","مصروفات"]};
+const typ=a=>TYPE[root(a)[0]];
+const stmt=a=>"123".includes(root(a)[0])?"الميزانية":"قائمة الدخل";
+const CLS={cur:"متداول",noncur:"غير متداول","":"—"};
+const clsOf=a=>{const r=root(a)[0];if(r==="1"||r==="2")return (a[5]==="cur"?"أصول/خصوم متداولة":"غير متداولة").replace("أصول/خصوم",r==="1"?"أصول":"خصوم");if(r==="3")return "حقوق الملكية";if(r==="4")return a[0]==="42"?"مردودات":"إيرادات النشاط";if(a[0]==="51")return "تكلفة المبيعات";if(a[0].startsWith("54"))return "مصروفات تمويلية";return "مصروفات تشغيل";};
+const CF={op:"أنشطة تشغيلية",inv:"أنشطة استثمارية",fin:"أنشطة تمويلية",cash:"نقدية (مش بند)","":"—"};
+const ROLE={"":"—",cash:"خزينة",bank:"بنك",customers:"العملاء",suppliers:"الموردين",notes_rec:"أوراق قبض",notes_pay:"أوراق دفع",inventory:"المخزون",vat_in:"ض.ق.م مدخلات",vat_out:"ض.ق.م مخرجات",wht_rec:"خصم منبع لينا",wht_pay:"خصم منبع علينا",custody:"عهد",advances:"دفعات مقدمة",capital:"رأس المال",partner:"جاري شريك",retained:"أرباح محتجزة",opening:"أرصدة افتتاحية",sales:"المبيعات",sales_ret:"مردودات مبيعات",cogs:"تكلفة المبيعات",fx_gain:"فروق عملة +",fx_loss:"فروق عملة −",depr:"مجمع إهلاك"};
+const PARTY={customers:"عميل",notes_rec:"عميل",suppliers:"مورد",notes_pay:"مورد",custody:"موظف",advances:"عميل",partner:"شريك"};
+const N=c=>`<span class="ltr">${c}</span>`;
+const m0=n=>N(Math.abs(n).toLocaleString("en-US"));
+const tB=a=>{const t=typ(a);return `<span class="bdg t-${t[0]}">${t[1]}</span>`;};
+const natT=a=>a[4]==="dr"?"مدين":"دائن";
+
+// ---------- مكونات ----------
+function win(inner){return `<div class="win" style="flex-direction:column"><div style="height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0"><span>📒 شجرة الحسابات — A-H CODE</span><span style="margin-right:auto;color:var(--muted)">_ ▢ ✕</span></div><div class="main" style="flex:1;min-height:0">${inner}</div></div>`;}
+function tb(mode="عرض",extra=""){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">حساب رئيسي جديد</span><span class="bt ${ed?'b-dis':'b-sub'}">＋ فرعي تحت المحدد</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt b-ref">تحديث</span>${extra}<span class="bt b-exp">تصدير إكسل</span><span class="bt b-prn">طباعة الدليل</span><span class="bt b-exit">خروج</span><span class="mode" style="${ed?'background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE':''}">${mode}</span></div>`;}
+const TB=tb(), TBN=tb("جديد"), TBX=tb("عرض",'<span class="bt b-tog">فتح الكل / قفل الكل</span>');
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+const seg=(a,b,on,cr)=>`<div class="seg2"><span class="${on===0?'on':''}">${a}</span><span class="${on===1?'on'+(cr?' cr':''):''}">${b}</span></div>`;
+const row2=(a,b)=>`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${a}${b}</div>`;
+
+// الشجرة: opts = {sel, bal, badges, depth (أقصى مستوى مفتوح), only (كود جذر), h}
+function tree(o={}){
+  const sel=o.sel||"1103", maxOpen=o.depth||3, h=o.h||300;
+  const rows=A.filter(a=>!o.only||root(a)[0]===o.only).map(a=>{
+    const L=lvl(a), leaf=a[3]===1, open=L<maxOpen, hidden=anc(a).some(c=>lvl(AM[c])>=maxOpen);
+    const badges=o.badges?`${a[7]?`<span class="bdg b-role">${ROLE[a[7]]}</span>`:''}${a[10]&&leaf?'<span class="bdg b-sys">🔒</span>':''}${a[11]?'':'<span class="bdg b-off">موقوف</span>'}`:'';
+    return `<div class="tr ${L===1?'l1':''} ${leaf?'':'grp'} ${a[0]===sel?'sel':''} ${a[11]?'':'off'}" data-c="${a[0]}" data-anc="${anc(a).join(" ")}" style="padding-right:${4+(L-1)*11}px;${hidden?'display:none':''}"><span class="tg ${leaf?'leaf':''}">${leaf?'•':open?'▾':'▸'}</span><span class="ic">${leaf?'📄':'📁'}</span><span class="cd ltr">${a[0]}</span><span class="nm">${a[1]}</span>${badges}${o.bal?`<span class="bal ${a[4]==="cr"?'cr':''}">${m0(a[12])}</span>`:''}</div>`;
+  }).join("");
+  return `<div class="tree" style="height:${h}px">${rows}</div>`;
+}
+const S=AM["1103"];
+const srch=`<div class="srch"><i>🔍 بحث بالكود / الاسم…</i></div>`;
+const cnt=`<div class="cnt">${A.length} حساب · ${A.filter(a=>a[3]).length} فرعي (بيقبل قيود) · ${A.filter(a=>!a[3]).length} رئيسي · موقوف ${A.filter(a=>!a[11]).length}</div>`;
+
+const F_BASIC=(a=S)=>f("الكود *",N(a[0]))+f("الاسم عربي *",a[1])+f("الاسم إنجليزي",N(a[13]))+f("تحت حساب",`${N(a[2])} — ${AM[a[2]]?AM[a[2]][1]:'(جذر)'} ▾`)+row2(f("المستوى",lvl(a),"lock"),f("نوع الحساب",typ(a)[1]+" 🔒","lock"))+`<div class="f"><label>الحساب</label>${seg("رئيسي (تجميعي)","فرعي (بيقبل قيود)",a[3]?1:0)}</div><div class="f"><label>الطبيعة</label>${seg("مدين","دائن",a[4]==="dr"?0:1,1)}</div>`;
+const F_REP=(a=S)=>f("القائمة",stmt(a)+" 🔒","lock")+f("التصنيف",clsOf(a)+" ▾")+f("التدفقات النقدية",CF[a[6]]+" ▾");
+const F_POST=(a=S)=>f("الدور",ROLE[a[7]]+" ▾")+`<div class="f"><label>لازم مع القيد</label><span class="${a[8]?'chk':'unchk'}">طرف${a[8]?' ('+PARTY[a[7]]+')':''}</span><span class="${a[9]?'chk':'unchk'}">مركز تكلفة</span></div>`+f("العملة",N("EGP")+" ▾")+`<div class="f"><label>الحالة</label><span class="${a[11]?'chk':'unchk'}">نشط</span>${a[10]?'<span class="bdg b-sys">🔒 نظامي (مايتمسحش)</span>':''}</div>`;
+const FORM=(a=S)=>F_BASIC(a)+F_REP(a)+F_POST(a);
+
+// قائمة مختصرة (ميزانية / دخل) — النموذج 9
+function bsPreview(sel="1103"){
+  const r=(c,s="")=>{const a=AM[c];return `<div class="r ${s} ${c===sel?'me':''}"><span>${"&nbsp;".repeat((lvl(a)-1)*3)}${a[1]}</span><span>${m0(a[12])}</span></div>`;};
+  return `<div class="rep"><div class="h">الميزانية (مختصر — ${N("31/12/2026")})</div>${r("11","s")}${r("1101")}${r("1102")}${r("1103")}${r("1104")}${r("1105")}${r("12","s")}<div class="r s"><span>إجمالي الأصول</span><span>${m0(2043500)}</span></div>${r("21","s")}${r("2101")}${r("3","s")}<div class="r"><span>&nbsp;&nbsp;&nbsp;صافي ربح الفترة</span><span>${m0(161000)}</span></div><div class="r s"><span>إجمالي الخصوم وحقوق الملكية</span><span>${m0(2043500)}</span></div></div>`;
+}
+
+// ---------- النماذج ----------
+const DN=[
+ ["زي Hr GAD: الفورم يمين + الشجرة شمال","نفس الـ Base Screen بتاع كل الشاشات: يمين «بيانات الحساب» و«التقارير» و«القيود»، وشمال «دليل الحسابات» شجرة بدل الجدول (📁 رئيسي ▾ يتفتح ويتقفل، 📄 فرعي بيقبل قيود) + البحث + عدد الحسابات.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1.05fr 1fr;gap:8px"><div>${gb("بيانات الحساب",F_BASIC())}${gb("التقارير",F_REP())}${gb("القيود",F_POST())}</div>${gb("دليل الحسابات",srch+tree({h:300})+cnt)}</div>`)],
+ ["الشجرة يمين + الفورم شمال (زي برامج المحاسبة)","الشجرة هي الأساس فبتبقى أول حاجة يمين وبالرصيد قصاد كل حساب (من القيود) · شمال الفورم بتاع الحساب المختار في جروبات.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${gb("دليل الحسابات",srch+tree({bal:1,h:300})+cnt)}<div>${gb("بيانات الحساب",F_BASIC())}${gb("التقارير",F_REP())}${gb("القيود",F_POST())}</div></div>`)],
+ ["جدول شجري بعرض الشاشة + الفورم تحت","فوق جدول بأعمدة: الحساب (متدرّج زي الشجرة) · النوع · الطبيعة · رئيسي/فرعي · الدور · الرصيد — تشوف خصايص كل الحسابات مرة واحدة · تحت الفورم في 3 أعمدة.",
+  win(TBX+`<div class="content"><div class="tree" style="height:205px"><table class="tbl"><tr><th>الحساب</th><th>النوع</th><th>الطبيعة</th><th>رئيسي/فرعي</th><th>الدور</th><th class="n">الرصيد</th></tr>${A.filter(a=>lvl(a)<=3).map(a=>`<tr class="${a[0]==="1103"?'sel':''}" style="${lvl(a)===1?'font-weight:900;color:var(--green)':''}"><td style="padding-right:${3+(lvl(a)-1)*10}px">${a[3]?'📄':'📁'} <b class="ltr">${a[0]}</b> ${a[1]}</td><td>${tB(a)}</td><td>${natT(a)}</td><td>${a[3]?'فرعي':'رئيسي'}</td><td>${a[7]?`<span class="bdg b-role">${ROLE[a[7]]}</span>`:''}</td><td class="n">${m0(a[12])}</td></tr>`).join("")}</table></div>${gb("الحساب المختار — 1103 العملاء",`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div>${f("الكود *",N("1103"))+f("الاسم عربي *","العملاء")+f("تحت حساب",N("11")+" — الأصول المتداولة ▾")+`<div class="f"><label>الحساب</label>${seg("رئيسي","فرعي",1)}</div>`}</div><div>${f("نوع الحساب","أصول 🔒","lock")+`<div class="f"><label>الطبيعة</label>${seg("مدين","دائن",0,1)}</div>`+F_REP()}</div><div>${F_POST()}</div></div>`,"margin-top:8px")}</div>`)],
+ ["الشجرة + الفورم بتبويبات","يمين الشجرة · شمال الفورم في 4 تبويبات: «البيانات الأساسية» · «التقارير والتصنيف» · «القيود والإلزام» · «الرصيد والحركة» — كل تبويب فيه حاجات قليلة فالشاشة مرتاحة.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 1.05fr;gap:8px">${gb("دليل الحسابات",srch+tree({h:300})+cnt)}<div style="margin-top:6px"><div class="tabs2"><span class="on">البيانات الأساسية</span><span>التقارير والتصنيف</span><span>القيود والإلزام</span><span>الرصيد والحركة</span></div><div class="panel">${F_BASIC()}<div class="hint">النوع والقائمة بيتورثوا من الجذر (1 أصول … 5 مصروفات) — مابيتكتبوش بإيد.</div><div class="hint">«فرعي» = بيقبل قيود · «رئيسي» = تجميعي بس (رصيده = مجموع اللي تحته).</div></div></div></div>`)],
+ ["أعمدة زي ويندوز (مستوى في كل عمود)","فوق المسار (الأصول ← المتداولة ← العملاء) · في النص 4 أعمدة: كل عمود مستوى، تدوس على حساب يفتح اللي تحته في العمود اللي بعده · تحت الفورم بتاع الحساب المختار.",
+  win(TB+`<div class="content"><div class="crumb">📍 <b>1 الأصول</b> ← <b>11 الأصول المتداولة</b> ← <b>1103 العملاء</b></div><div class="cols">${[["المستوى 1",kids(null).length?A.filter(a=>!a[2]):[],"1"],["تحت «الأصول»",kids("1"),"11"],["تحت «المتداولة»",kids("11"),"1103"],["تحت «العملاء»",[],""]].map(([h,l,on])=>`<div class="col"><h5>${h}</h5>${l.length?l.map(a=>`<div class="it ${a[0]===on?'on':''}">${a[3]?'📄':'📁'} <b class="ltr">${a[0]}</b> ${a[1]}${a[3]?'':'<span class="arr">◂</span>'}</div>`).join(""):'<div class="it muted">«العملاء» حساب فرعي — مفيش تحته</div>'}</div>`).join("")}</div>${gb("1103 — العملاء",`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px"><div>${f("الكود *",N("1103"))+f("الاسم عربي *","العملاء")+f("الاسم إنجليزي",N("Customers"))}</div><div>${f("نوع الحساب","أصول 🔒","lock")+`<div class="f"><label>الطبيعة</label>${seg("مدين","دائن",0,1)}</div>`+f("التصنيف","أصول متداولة ▾")}</div><div>${f("الدور","العملاء ▾")+`<div class="f"><label>لازم مع القيد</label><span class="chk">طرف (عميل)</span></div>`+f("الرصيد",m0(610000)+" مدين","lock")}</div></div>`,"margin-top:8px")}</div>`)],
+ ["تبويب لكل نوع (أصول · خصوم · حقوق ملكية · إيرادات · مصروفات)","فوق 5 تبويبات بألوان الأنواع · جوه كل تبويب شجرة النوع ده بس يمين والفورم شمال — الدليل الكبير بيبقى أسهل في التصفح · هنا ظاهر تبويب «الأصول».",
+  win(TB+`<div class="content"><div class="tabs2">${[["1","الأصول","#1D4ED8"],["2","الخصوم","#B45309"],["3","حقوق الملكية","#6D28D9"],["4","الإيرادات","#087443"],["5","المصروفات","#B91C1C"]].map(([c,t,col])=>`<span class="${c==="1"?'on':''}" style="${c==="1"?`background:${col}`:`border-top:2px solid ${col}`}">${N(c)} ${t} (${A.filter(a=>root(a)[0]===c).length})</span>`).join("")}</div><div class="panel" style="display:grid;grid-template-columns:1fr 1.05fr;gap:8px;border-top:2px solid #1D4ED8"><div>${srch}${tree({only:"1",bal:1,h:300})}</div><div>${gb("بيانات الحساب",F_BASIC())}${gb("التقارير والقيود",F_REP()+f("الدور","العملاء ▾"),"margin-top:8px")}</div></div></div>`)],
+ ["الشجرة + الفورم + «كارت الحساب» (الرصيد وآخر الحركات)","يمين الشجرة · في النص الفورم · شمال كارت الحساب: الرصيد (مدين/دائن) ومجموع الحركة في السنة وآخر 5 قيود عليه، وزرار «كشف حساب» — تشوف الحساب بيعمل إيه من غير ما تفتح تقرير.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 1fr .95fr;gap:8px">${gb("دليل الحسابات",srch+tree({h:322}))}<div>${gb("بيانات الحساب",F_BASIC())}${gb("التقارير والقيود",F_REP()+f("الدور","العملاء ▾"))}</div><div>${gb("كارت الحساب — 1103",`<div class="tcard" style="border-right-color:#1D4ED8"><small>الرصيد في ${N("08/11/2026")}</small><div class="r">${m0(610000)}</div><small>مدين · سنة ${N("2026")}: مدين ${m0(2140000)} / دائن ${m0(1530000)}</small></div><table class="tbl mv" style="margin-top:5px"><tr><th>التاريخ</th><th>المستند</th><th class="n">مدين</th><th class="n">دائن</th></tr>${[["07/11","INV-00412","57,000",""],["06/11","RCV-00188","","40,000"],["05/11","INV-00411","12,540",""],["03/11","SRT-00021","","3,420"],["01/11","RCV-00185","","25,000"]].map(r=>`<tr><td>${N(r[0])}</td><td>${N(r[1])}</td><td class="n">${r[2]}</td><td class="n">${r[3]}</td></tr>`).join("")}</table><div style="margin-top:5px"><span class="bt b-exp">📄 كشف حساب</span> <span class="bt b-edit">ميزان المراجعة</span></div><div class="cnt">الأرقام أمثلة — بتتحسب من القيود (المرحلة 4)</div>`)}</div></div>`)],
+ ["«حساب فرعي جديد»: الكود بيتولّد لوحده + لوحة القواعد","وضع «جديد»: تختار «تحت حساب» ← الكود الجاي بيتكتب لوحده (أكبر كود تحته + 1) والمستوى والنوع والقائمة والطبيعة بيتورثوا · شمال لوحة بتراجع وانت بتكتب. <b>جرّب: غيّر «تحت حساب» أو «الطبيعة».</b>",
+  win(TBN+`<div class="content" style="display:grid;grid-template-columns:.95fr 1.1fr .9fr;gap:8px">${gb("دليل الحسابات",tree({sel:"1102",h:322}))}${gb("حساب فرعي جديد",`<div class="live8"><div class="f"><label>تحت حساب *</label><select class="lv" data-k="parent">${A.filter(a=>!a[3]).map(a=>`<option value="${a[0]}" ${a[0]==="1102"?'selected':''}>${a[0]} — ${a[1]}</option>`).join("")}</select></div><div class="f"><label>الكود *</label><i class="lock" data-o="code"></i></div><div class="f"><label>الاسم عربي *</label><input class="lv" data-k="name" value="بنك القاهرة — جاري"></div><div class="f"><label>المستوى</label><i class="lock" data-o="lvl"></i></div><div class="f"><label>نوع الحساب</label><i class="lock" data-o="type"></i></div><div class="f"><label>القائمة</label><i class="lock" data-o="stmt"></i></div><div class="f"><label>الطبيعة</label><select class="lv" data-k="nat"><option value="">زي الأب</option><option value="dr">مدين</option><option value="cr">دائن</option></select></div><div class="f"><label>الحساب</label>${seg("رئيسي","فرعي (بيقبل قيود)",1)}</div><div class="f"><label>الدور</label><i data-o="role"></i></div></div>`)}${gb("المراجعة",`<div class="rules8"></div>`)}</div>`)],
+ ["الشجرة + الفورم + «هيظهر فين في التقارير»","يمين الشجرة · في النص الفورم · شمال معاينة الميزانية (أو قائمة الدخل لو الحساب إيراد/مصروف) ومكان الحساب المختار متعلّم عليه — تتأكد إن التصنيف صح قبل ما تحفظ.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">${gb("دليل الحسابات",srch+tree({h:322}))}<div>${gb("بيانات الحساب",F_BASIC())}${gb("التقارير",F_REP())}</div>${gb("هيظهر فين",bsPreview()+`<div class="hint">«العملاء» بيظهر في <b>الميزانية ← الأصول المتداولة</b>، وفي <b>التدفقات ← أنشطة تشغيلية</b>.</div><div class="cnt">الأرقام أمثلة — بتتحسب من القيود</div>`)}</div>`)],
+ ["كروت ملخص + فلاتر فوق، والشجرة والفورم تحت","فوق 5 كروت (عدد الحسابات ومجموع رصيد كل نوع) وتحتها فلاتر سريعة (فرعي بس · ليه دور · لازم طرف · لازم مركز تكلفة · موقوف) · تحت الشجرة بالشارات (الدور 🔒 نظامي) والفورم.",
+  win(TBX+`<div class="content"><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px">${[["1","الأصول","#1D4ED8"],["2","الخصوم","#B45309"],["3","حقوق الملكية","#6D28D9"],["4","الإيرادات","#087443"],["5","المصروفات","#B91C1C"]].map(([c,t,col])=>`<div class="tcard" style="border-right-color:${col}"><b>${N(c)} ${t}</b><div class="r" style="color:${col}">${m0(AM[c][12])}</div><small>${A.filter(a=>root(a)[0]===c).length} حساب · ${A.filter(a=>root(a)[0]===c&&a[3]).length} فرعي</small></div>`).join("")}</div><div style="margin:5px 0 0">${["الكل","فرعي بس","ليه دور","لازم طرف","لازم مركز تكلفة","نظامي","موقوف"].map((x,i)=>`<span class="fchip ${i===0?'on':''}">${x}</span>`).join("")}</div><div style="display:grid;grid-template-columns:1.1fr 1fr;gap:8px">${gb("دليل الحسابات",srch+tree({badges:1,h:228}))}<div>${gb("بيانات الحساب",f("الكود *",N("1103"))+f("الاسم عربي *","العملاء")+f("تحت حساب",N("11")+" — الأصول المتداولة ▾")+`<div class="f"><label>الحساب</label>${seg("رئيسي","فرعي",1)}</div><div class="f"><label>الطبيعة</label>${seg("مدين","دائن",0,1)}</div>`)}${gb("التقارير والقيود",f("التصنيف","أصول متداولة ▾")+f("الدور","العملاء ▾")+`<div class="f"><label>لازم مع القيد</label><span class="chk">طرف (عميل)</span><span class="unchk">مركز تكلفة</span></div>`)}</div></div></div>`)],
+];
+
+const SETS=[["📒 شجرة الحسابات",DN,`شاشة «شجرة الحسابات» — أول شاشة في **المرحلة 2 (دليل الحسابات)** وأول شاشة في قسم **«الحسابات»** في القائمة. كل حساب ليه: **الكود** (بيتولّد لوحده تحت الأب: ${N("1")} ← ${N("11")} ← ${N("1103")} ← ${N("110301")})، **الاسم** عربي/إنجليزي، **تحت حساب** (الأب)، **المستوى** (بيتحسب)، **رئيسي** (تجميعي — مابيقبلش قيود) أو **فرعي** (بيقبل قيود)، **نوع الحساب** (أصول / خصوم / حقوق ملكية / إيرادات / مصروفات — بيتورث من الجذر)، **الطبيعة** (مدين / دائن)، **القائمة** (الميزانية / قائمة الدخل — بتتورث)، **التصنيف** (متداول / غير متداول / تكلفة مبيعات / مصروفات تشغيل…) و**بند التدفقات النقدية** — التقارير بتتعمل من الحقول دي **مش من أول رقم في الكود**، **الدور** (خزينة، بنك، العملاء، الموردين، ض.ق.م، جاري شريك، عهد… — البرنامج بيعرف منه أنهي حساب يستخدم في المستندات)، **لازم مع القيد**: طرف (عميل/مورد/موظف) أو مركز تكلفة، **العملة**، **نشط / موقوف**، و**نظامي** 🔒 (حسابات البرنامج محتاجها — مابتتمسحش). **القواعد:** القيود على الحسابات **الفرعية النشطة** بس · حساب عليه قيود مايتمسحش (يتوقف بس) ولا يتحوّل رئيسي · الرئيسي رصيده = مجموع اللي تحته. **العملاء والموردين = حساب رقابة واحد + بُعد الطرف** (قرارك) — مش حساب لكل عميل. الدليل اللي في النماذج = **دليل مصري جاهز مقترح** هيتسجل أول مرة وتعدّل فيه براحتك، و**الأرصدة أمثلة** (بتتحسب من القيود في المرحلة 4).`]];
+
+// ---------- التشغيل ----------
+let cur=0;
+function nextCode(p){const ks=kids(p).map(a=>a[0]);const width=p.length<2?p.length+1:p.length+2;if(!ks.length)return p+(width-p.length===1?"1":"01");const mx=Math.max(...ks.map(k=>parseInt(k.slice(p.length))||0))+1;return p+String(mx).padStart(width-p.length,"0");}
+function upd8(box){
+  const p=AM[box.querySelector('[data-k="parent"]').value], nat=box.querySelector('[data-k="nat"]').value||p[4];
+  const code=nextCode(p[0]), set=(k,v)=>{const e=box.querySelector(`[data-o="${k}"]`);if(e)e.innerHTML=v;};
+  set("code",N(code)+" (اتولّد لوحده)");set("lvl",lvl(p)+1);set("type",typ(p)[1]+" (زي «"+root(p)[1]+"»)");set("stmt",stmt(p));set("role",p[7]?ROLE[p[7]]+" (زي الأب)":"—");
+  const name=box.querySelector('[data-k="name"]').value.trim();
+  const r=[];
+  r.push(`<div class="okb">✔ الكود ${N(code)} تحت ${N(p[0])} ومش متكرر</div>`);
+  r.push(name?`<div class="okb">✔ الاسم مكتوب</div>`:`<div class="warnb">✖ الاسم مطلوب</div>`);
+  r.push(nat!==p[4]?`<div class="warnb">⚠ الطبيعة «${nat==="dr"?"مدين":"دائن"}» عكس الأب — مقبولة (زي مجمع الإهلاك) بس اتأكد</div>`:`<div class="okb">✔ الطبيعة ${nat==="dr"?"مدين":"دائن"} زي الأب</div>`);
+  r.push(p[3]?`<div class="warnb">✖ الأب فرعي — اختار حساب رئيسي</div>`:`<div class="okb">✔ الأب «${p[1]}» رئيسي</div>`);
+  r.push(`<div class="hint">🛈 «فرعي» = بيقبل قيود من أول ما يتحفظ</div><div class="hint">🛈 حساب عليه قيود مايتمسحش — بيتوقف بس</div>`);
+  if(lvl(p)+1>5)r.push(`<div class="warnb">✖ أقصى عمق 5 مستويات</div>`);
+  box.closest(".content").querySelector(".rules8").innerHTML=r.join("");
+}
+document.addEventListener("input",e=>{const b=e.target.closest&&e.target.closest(".live8");if(b)upd8(b);});
+document.addEventListener("change",e=>{const b=e.target.closest&&e.target.closest(".live8");if(b)upd8(b);});
+document.addEventListener("click",e=>{
+  const t=e.target.closest&&e.target.closest(".tg");if(!t||t.classList.contains("leaf"))return;
+  const row=t.closest(".tr"), c=row.dataset.c, box=row.parentElement, open=t.textContent==="▾";
+  box.querySelectorAll(".tr").forEach(r=>{const a=r.dataset.anc.split(" ");if(!a.includes(c))return;
+    if(open){r.style.display="none";}else if(a[a.length-1]===c){r.style.display="";const g=r.querySelector(".tg");if(!g.classList.contains("leaf"))g.textContent="▸";}});
+  t.textContent=open?"▸":"▾";
+});
+function render(){
+  document.getElementById("note").innerHTML=SETS[cur][2].replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+  document.getElementById("grid").innerHTML=SETS[cur][1].map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]}</div></div>`).join("");
+  document.querySelectorAll(".live8").forEach(upd8);
+  window.scrollTo(0,0);
+}
+render();
+// ?n=رقم ← نموذج واحد بس (للمراجعة والصور)
+const only=new URLSearchParams(location.search).get("n");
+if(only){document.querySelector(".top").style.display="none";document.querySelector(".note").style.display="none";document.querySelectorAll(".opt").forEach((o,j)=>o.style.display=j===only-1?"":"none");}
+</script>
+</body>
+</html>

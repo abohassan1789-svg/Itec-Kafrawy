@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج مراكز التكلفة — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج مراكز التكلفة (المرحلة 2 · الشاشة 3)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD — الفرق في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). المراكز أمثلة لشركة ITEC (الأقسام اللي في الأكسس: BMS · MCC · Installation · Office…)، و<b>الخانات الزرقا والشجرة شغالين</b>: دوس على أي مركز، افتح واقفل الفروع (▾/▸)، غيّر «تحت مركز» أو الفلتر وشوف النتيجة.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== مراكز التكلفة: [الكود، الاسم، الأب، النوع، المسؤول، نشط، الاسم EN] =====
+const TYP={admin:"إداري",ops:"تشغيلي (فني)",sales:"بيعي",serv:"خدمي"};
+const CC=[
+ ["1","الإدارة العامة","","admin","م. أحمد حسن",true,"General Management"],
+ ["11","الإدارة العليا","1","admin","م. أحمد حسن",true,"Top Management"],
+ ["12","الحسابات والمالية","1","admin","أ. محمود سامي",true,"Finance"],
+ ["13","الموارد البشرية","1","admin","أ. منى فؤاد",true,"HR"],
+ ["14","المكتب (Office)","1","admin","أ. منى فؤاد",true,"Office"],
+ ["2","الأنشطة الفنية","","ops","م. خالد عبد الله",true,"Technical Operations"],
+ ["21","BMS — أنظمة إدارة المباني","2","ops","م. خالد عبد الله",true,"BMS"],
+ ["2101","BMS — مشروعات","21","ops","م. عمرو نبيل",true,"BMS Projects"],
+ ["2102","BMS — عقود صيانة","21","ops","م. عمرو نبيل",true,"BMS Maintenance"],
+ ["22","MCC — لوحات التحكم","2","ops","م. ياسر كمال",true,"MCC"],
+ ["2201","MCC — ورشة التصنيع","22","ops","م. ياسر كمال",true,"MCC Workshop"],
+ ["2202","MCC — توريد","22","ops","م. ياسر كمال",true,"MCC Supply"],
+ ["23","التركيبات (Installation)","2","ops","م. شريف عادل",true,"Installation"],
+ ["24","الصيانة وخدمة ما بعد البيع","2","ops","م. شريف عادل",true,"After-Sales Service"],
+ ["3","المبيعات والتسويق","","sales","أ. هاني رزق",true,"Sales & Marketing"],
+ ["31","مبيعات القاهرة والجيزة","3","sales","أ. هاني رزق",true,"Cairo Sales"],
+ ["32","مبيعات الإسكندرية والدلتا","3","sales","أ. وليد فتحي",true,"Alex & Delta Sales"],
+ ["33","المناقصات والعطاءات","3","sales","أ. هاني رزق",true,"Tenders"],
+ ["34","معرض Cairo ICT 2025","3","sales","أ. وليد فتحي",false,"Exhibition 2025"],
+ ["4","المخازن والنقل","","serv","أ. سعيد مرسي",true,"Stores & Logistics"],
+ ["41","المخزن الرئيسي","4","serv","أ. سعيد مرسي",true,"Main Store"],
+ ["42","النقل والتوزيع","4","serv","أ. سعيد مرسي",true,"Transport"],
+];
+const CM=Object.fromEntries(CC.map(c=>[c[0],c]));
+const kids=p=>CC.filter(c=>c[2]===p);
+const isLeaf=c=>kids(c).length===0;
+const desc=c=>[c,...kids(c).flatMap(k=>desc(k[0]))];
+const lvl=c=>CM[c][2]?lvl(CM[c][2])+1:1;
+const path=c=>CM[c][2]?[...path(CM[c][2]),c]:[c];
+const N=c=>`<span class="ltr">${c}</span>`;
+const nm=c=>`${N(c)} ${CM[c][1]}`;
+const m0=n=>n.toLocaleString("en-US");
+function nextCode(p){const ks=kids(p).map(c=>c[0]);
+  if(!p) return String(Math.max(0,...ks.map(Number))+1);
+  const w=p.length===1?1:2;const n=Math.max(0,...ks.map(k=>Number(k.slice(p.length))))+1;return p+String(n).padStart(w,"0");}
+
+// ===== أوامر التوريد (المشاريع — البند الجاي): [الرقم، الاسم، العميل، المركز، القيمة، العملة، الحالة] =====
+const P=[
+ ["2026/0141","توريد وتركيب BMS — مستشفى النيل التخصصي","مستشفى النيل التخصصي","2101",2450000,"EGP","جاري"],
+ ["2026/0148","BMS — برج التجمع الإداري","شركة التجمع للتطوير","2101",1320000,"EGP","جاري"],
+ ["2026/0160","عقد صيانة BMS سنوي — مول المدينة","مول المدينة","2102",420000,"EGP","جاري"],
+ ["2026/0117","تصنيع لوحات MCC — محطة مياه الشرب","شركة مياه الدلتا","2201",1860000,"EGP","مقفول"],
+ ["2026/0152","لوحات MCC — مصنع الدلتا للنسيج","مصنع الدلتا للنسيج","2202",38000,"USD","جاري"],
+ ["2026/0155","توريد MCC — مجمع أدوية النيل","مجمع النيل للأدوية","2202",21500,"EUR","جاري"],
+ ["2026/0163","تركيبات كابلات — برج التجمع الإداري","شركة التجمع للتطوير","23",310000,"EGP","جاري"],
+ ["2026/0129","صيانة طارئة — فندق الوادي","فندق الوادي الكبير","24",85000,"EGP","مقفول"],
+];
+const projOf=(c,inc=true)=>P.filter(p=>inc?desc(c).includes(p[3]):p[3]===c);
+
+// ===== أرقام توضيحية لكل مركز فرعي: [إيرادات، مصروفات] (الحقيقي مع القيود — المرحلة 4) =====
+const AMT={"11":[0,410000],"12":[0,265000],"13":[0,140000],"14":[0,98000],"2101":[3770000,2610000],"2102":[420000,190000],"2201":[1860000,1340000],"2202":[2850000,2190000],"23":[310000,215000],"24":[85000,61000],"31":[0,230000],"32":[0,175000],"33":[0,64000],"34":[0,0],"41":[0,120000],"42":[0,96000]};
+
+// ===== الحسابات اللي عليها «لازم مركز تكلفة» (من الدليل 0009) =====
+const RQ=[
+ ["4101","مبيعات بضاعة",true,"",""],
+ ["4102","إيرادات تركيبات وخدمات",true,"23","2"],
+ ["42","مردودات المبيعات",true,"",""],
+ ["51","تكلفة المبيعات",true,"","2"],
+ ["5201","المرتبات والأجور",true,"",""],
+ ["5202","الإيجار",false,"11",""],
+ ["5203","كهرباء ومياه",false,"14",""],
+ ["5204","مصروفات نثرية",false,"",""],
+ ["5301","نقل ومشال",true,"42",""],
+ ["5402","مصاريف بنكية",false,"12",""],
+];
+const RM=Object.fromEntries(RQ.map(r=>[r[0],r]));
+
+const ST={s1:"2101",t1:"2",s2:"22",p2:"22",ty2:"ops",s3:"2201",s4:"2101",s5:"21",t5:"data",s6:"2101",side6:"2",s7:"21",s8:"5301",c8:"2",f9:"2",inc9:true,s10:"21",inc10:true,flt10:"all"};
+const COL={};   // الفروع المقفولة لكل نموذج
+const colOf=n=>COL[n]||(COL[n]=new Set());
+
+// ===== أدوات =====
+function win(inner,title="🎯 مراكز التكلفة — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+function tb(mode="عرض"){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">مركز جديد</span><span class="bt ${ed?'b-dis':'b-new'}">+ فرعي تحت المحدد</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ${ed?'ed':''}">${mode}</span></div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+const tyB=c=>`<span class="bdg ty">${TYP[CM[c][3]]}</span>`;
+const stB=c=>CM[c][5]?'<span class="bdg ok">نشط</span>':'<span class="bdg x">موقوف</span>';
+const pjB=(c,inc=true)=>{const n=projOf(c,inc).length;return n?`<span class="bdg pj">📋 ${n}</span>`:'';};
+const leafB=c=>isLeaf(c)?'<span class="bdg ok">فرعي</span>':'<span class="bdg cc">رئيسي</span>';
+const countLine=()=>`<div class="cnt">${CC.length} مركز · ${CC.filter(c=>!kids(c[0]).length).length} فرعي · ${CC.filter(c=>!c[5]).length} موقوف · ${P.length} أمر توريد مربوط</div>`;
+const expBtns=n=>`<span class="mini" data-exp="${n}">عرض الكل</span><span class="mini" data-colall="${n}">طي الكل</span>`;
+
+function tree(n,opts={}){
+  const col=colOf(n), sel=ST["s"+n], out=[];
+  const walk=(list,d)=>{for(const c of list){const has=kids(c[0]).length>0, open=!col.has(c[0]);
+    const cls=[c[0]===sel?'sel':'',c[5]?'':'off',opts.hl&&opts.hl.has(c[0])?'hl':''].join(' ');
+    out.push(`<div class="${cls}" data-set="s${n}" data-v="${c[0]}" style="padding-right:${3+d*11}px">${has?`<b class="tg" data-tog="${n}:${c[0]}">${open?'▾':'▸'}</b>`:'<b class="tg"></b>'}${has?'📁':'📄'} ${nm(c[0])}${c[5]?'':' <span class="bdg x">موقوف</span>'}${opts.pj?' '+pjB(c[0],false):''}</div>`);
+    if(has&&open) walk(kids(c[0]),d+1);}};
+  walk(opts.root?[CM[opts.root]]:kids(""),0);
+  return `<div class="scroll tree">${out.join("")}</div>`;
+}
+function ccSelect(key,val,{leafOnly=false,empty="",exclude=null,cls=""}={}){
+  const ops=CC.filter(c=>(!leafOnly||isLeaf(c[0]))&&(!exclude||!desc(exclude).includes(c[0])));
+  return `<select class="lv ${cls}" data-st="${key}">${empty!==false?`<option value="">${empty||'—'}</option>`:''}${ops.map(c=>`<option value="${c[0]}" ${c[0]===val?'selected':''}>${'  '.repeat(lvl(c[0])-1)}${c[0]} ${c[1]}${c[5]?'':' (موقوف)'}</option>`).join("")}</select>`;}
+function typeSelect(key,val){return `<select class="lv" data-st="${key}">${Object.keys(TYP).map(t=>`<option value="${t}" ${t===val?'selected':''}>${TYP[t]}</option>`).join("")}</select>`;}
+function viewForm(c){const x=CM[c];
+  return gb("بيانات المركز",f("الكود",x[0],"lock")+f("الاسم",x[1])+f("الاسم EN",x[6])+f("تحت مركز",x[2]?`${x[2]} ${CM[x[2]][1]}`:"— (مركز رئيسي أول مستوى)")+f("النوع",TYP[x[3]])+f("المسؤول",x[4])+f("المستوى",`${lvl(c)} — ${isLeaf(c)?'فرعي (بيقبل قيود)':'رئيسي (تجميعي)'}`,"lock")+f("الحالة",x[5]?"نشط":"موقوف","lock"))
+   +gb("مربوط بيه",`<div style="display:flex;gap:3px;flex-wrap:wrap">${pjB(c)||'<span class="hint">مفيش أوامر توريد</span>'}<span class="bdg cc">${desc(c).length-1} فرع تحته</span><span class="bdg x">القيود: مع المرحلة 4</span></div>`);}
+
+// ===== النماذج =====
+function m1(){
+  const roots=kids("");
+  const tabs=roots.map(r=>`<span class="${ST.t1===r[0]?'on':''}" data-set="t1" data-v="${r[0]}">${r[0]} ${r[1]}<em>${desc(r[0]).length}</em></span>`).join("");
+  if(!desc(ST.t1).includes(ST.s1)) ST.s1=ST.t1;
+  return win(tb()+`<div class="content" style="flex-direction:column;gap:0"><div class="tabs2">${tabs}</div><div style="display:flex;gap:7px;flex:1;min-height:0;border-top:2px solid var(--green);padding-top:4px"><div class="col" style="width:50%;overflow:auto">${viewForm(ST.s1)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث بالكود أو الاسم…</i>${expBtns(1)}</div>${tree(1,{root:ST.t1})}${countLine()}</div></div></div>`);}
+
+function m2(){
+  const p=ST.p2, can=!p||lvl(p)<5, split=p&&isLeaf(p), gen=can?nextCode(p):"—";
+  const code=!can?"—":split?gen.slice(0,-2)+String(Number(gen.slice(-2))+1).padStart(2,"0"):gen;
+  const form=gb("مركز جديد",f("الكود",`${code} (بيتولّد لوحده)`,"lock")+`<div class="f"><label>تحت مركز</label>${ccSelect("p2",p,{empty:"— مركز رئيسي أول مستوى —"})}</div>`+f("الاسم","")+f("الاسم EN","")+`<div class="f"><label>النوع</label>${typeSelect("ty2",ST.ty2)}</div>`+f("المسؤول","")+`<div class="f"><label>نشط</label><input type="checkbox" class="cb" checked></div>`+f("ملاحظات",""))
+   +(can?`<div class="ok-line" style="margin-top:4px">✔ الكود المقترح ${N(code)} تحت ${p?nm(p):'الجذر'} · النوع بيتورث من الأب (وتقدر تغيّره)</div>`+(split?`<div class="bad-line" style="margin-top:2px">⚠ «${nm(p)}» فرعي — مع «حفظ» هيتحوّل رئيسي وتتعمل تحته ${N(gen)} «${CM[p][1]} — عام» تاخد قيوده وأوامر توريده</div>`:''):`<div class="bad-line">⛔ المستوى الخامس آخر مستوى — مينفعش تفرّع تحته</div>`);
+  return win(tb("جديد")+`<div class="content"><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i>${expBtns(2)}</div>${tree(2,{hl:new Set(p?[p]:[])})}${countLine()}</div><div class="col" style="width:52%;overflow:auto">${form}</div></div>`);}
+
+function m3(){
+  const rows=CC.map(c=>`<tr class="${c[0]===ST.s3?'sel':''} ${c[5]?'':'off'}" data-set="s3" data-v="${c[0]}" style="cursor:pointer"><td>${N(c[0])}</td><td><b>${c[1]}</b></td><td>${c[2]?N(c[2]):'—'}</td><td>${TYP[c[3]]}</td><td>${leafB(c[0])}</td><td>${stB(c[0])}</td></tr>`).join("");
+  return win(tb()+`<div class="content"><div class="col" style="width:46%;overflow:auto">${viewForm(ST.s3)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث… (F1)</i><span class="chipf on">الكل</span><span class="chipf">النشط</span></div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الاسم</th><th>تحت</th><th>النوع</th><th></th><th>الحالة</th></tr>${rows}</table></div>${countLine()}</div></div>`);}
+
+function m4(){
+  const col=colOf(4), out=[];
+  const walk=(list,d)=>{for(const c of list){const has=kids(c[0]).length>0, open=!col.has(c[0]);
+    out.push(`<tr class="${c[0]===ST.s4?'sel':''} ${c[5]?'':'off'} ${d===0?'sec':''}" data-set="s4" data-v="${c[0]}" style="cursor:pointer"><td style="padding-right:${3+d*12}px">${has?`<b class="tg" data-tog="4:${c[0]}">${open?'▾':'▸'}</b>`:'<b class="tg"></b>'}${has?'📁':'📄'} ${N(c[0])}</td><td><b>${c[1]}</b></td><td>${TYP[c[3]]}</td><td>${c[4]}</td><td>${pjB(c[0])}</td><td>${stB(c[0])}</td></tr>`);
+    if(has&&open) walk(kids(c[0]),d+1);}};
+  walk(kids(""),0);
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch"><i>🔍 بحث بالكود أو الاسم أو المسؤول…</i>${expBtns(4)}</div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الاسم</th><th>النوع</th><th>المسؤول</th><th>أوامر التوريد</th><th>الحالة</th></tr>${out.join("")}</table></div><div class="hint">دبل كليك على أي سطر ← بيفتح فورم المركز في شباك صغير (جديد / تعديل).</div>${countLine()}</div>`);}
+
+function m5(){
+  const c=ST.s5, x=CM[c];
+  const T={data:"البيانات",kids:`الفروع (${desc(c).length-1})`,acc:"الحسابات",prj:`أوامر التوريد (${projOf(c).length})`};
+  const itabs=Object.keys(T).map(t=>`<span class="${ST.t5===t?'on':''}" data-set="t5" data-v="${t}">${T[t]}</span>`).join("");
+  let body="";
+  if(ST.t5==="data") body=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 8px;margin-top:5px">${f("الكود",x[0],"lock")+f("النوع",TYP[x[3]])+f("الاسم",x[1])+f("الاسم EN",x[6])+f("تحت مركز",x[2]?nm(x[2]):"—")+f("المسؤول",x[4])+f("المستوى",`${lvl(c)} — ${isLeaf(c)?'فرعي':'رئيسي'}`,"lock")+f("الحالة",x[5]?"نشط":"موقوف","lock")}</div>`;
+  if(ST.t5==="kids") body=`<div class="scroll" style="margin-top:4px"><table class="tbl"><tr><th>الكود</th><th>الاسم</th><th>المستوى</th><th></th></tr>${desc(c).slice(1).map(k=>`<tr><td>${N(k)}</td><td>${'· '.repeat(lvl(k)-lvl(c)-1)}${CM[k][1]}</td><td>${lvl(k)}</td><td>${leafB(k)}</td></tr>`).join("")||'<tr><td colspan="4" class="hint">مركز فرعي — مفيش تحته حاجة</td></tr>'}</table></div>`;
+  if(ST.t5==="acc") body=`<div class="hint" style="margin:4px 0">الحسابات اللي «لازم مركز تكلفة» — أي قيد عليها بيطلب مركز فرعي:</div><div class="scroll"><table class="tbl"><tr><th>الحساب</th><th>لازم مركز</th><th>المركز ده مسموح؟</th></tr>${RQ.filter(r=>r[2]).map(r=>{const ok=isLeaf(c)&&(!r[4]||desc(r[4]).includes(c));return `<tr><td>${N(r[0])} ${r[1]}</td><td><span class="bdg ok">✔</span></td><td>${ok?'<span class="bdg ok">مسموح</span>':isLeaf(c)?`<span class="bdg no">لأ — فروع ${r[4]} بس</span>`:'<span class="bdg cc">رئيسي — بيجمّع فروعه</span>'}</td></tr>`;}).join("")}</table></div>`;
+  if(ST.t5==="prj") body=`<div class="scroll" style="margin-top:4px"><table class="tbl"><tr><th>الأمر</th><th>المشروع</th><th>المركز</th><th class="n">القيمة</th></tr>${projOf(c).map(p=>`<tr><td>${N(p[0])}</td><td>${p[1]}</td><td>${N(p[3])}</td><td class="n">${m0(p[4])} ${p[5]}</td></tr>`).join("")||'<tr><td colspan="4" class="hint">مفيش أوامر توريد على المركز ده</td></tr>'}</table></div>`;
+  return win(tb()+`<div class="content"><div class="col" style="width:40%"><div class="srch"><i>🔍 بحث…</i>${expBtns(5)}</div>${tree(5,{pj:true})}</div><div class="col" style="flex:1"><div class="hdr"><b>${nm(c)}</b> ${tyB(c)} ${leafB(c)} ${stB(c)}<div class="p">${path(c).map(nm).join(" ◂ ")}</div></div><div class="itabs">${itabs}</div><div class="col" style="flex:1;background:#fff;border:1px solid var(--card-border);border-top:none;padding:4px">${body}</div></div></div>`);}
+
+function m6(){
+  const side=kids("").map(r=>`<div class="it ${ST.side6===r[0]?'on':''}" data-set="side6" data-v="${r[0]}">${N(r[0])} ${r[1]}<small>${desc(r[0]).length-1}</small></div>`).join("");
+  const ks=desc(ST.side6).slice(1); if(!ks.includes(ST.s6)) ST.s6=ks[0];
+  const rows=ks.map(k=>`<tr class="${k===ST.s6?'sel':''} ${CM[k][5]?'':'off'}" data-set="s6" data-v="${k}" style="cursor:pointer"><td>${N(k)}</td><td style="padding-right:${3+(lvl(k)-2)*12}px"><b>${CM[k][1]}</b></td><td>${CM[k][4]}</td><td>${leafB(k)}</td><td>${pjB(k)}</td><td>${stB(k)}</td></tr>`).join("");
+  const c=ST.s6, x=CM[c];
+  const det=gb("المركز المختار",`<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 8px">${f("المركز",nm(c),"lock")+f("تحت",x[2]?nm(x[2]):"—","lock")+f("النوع",TYP[x[3]],"lock")+f("المسؤول",x[4],"lock")}</div><div class="hint">${path(c).map(nm).join(" ◂ ")} · الرصيد / المصروفات: مع القيود (المرحلة 4)</div>`,"flex-shrink:0");
+  return win(tb()+`<div class="content"><div class="side"><div style="color:var(--green);font-weight:900;font-size:9px;border-bottom:2px solid var(--green);padding-bottom:2px;margin-bottom:2px">المراكز الرئيسية</div>${side}<div class="cnt" style="margin-top:auto">${CC.length} مركز</div></div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث في كل المراكز…</i></div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الاسم</th><th>المسؤول</th><th></th><th>أوامر</th><th>الحالة</th></tr>${rows}</table></div>${det}</div></div>`);}
+
+function m7(){
+  const card=(k,cls)=>`<div class="oc ${cls} ${k===ST.s7?'sel':''} ${CM[k][5]?'':'off'}" data-set="s7" data-v="${k}">${N(k)} ${CM[k][1]}<small>${CM[k][4]}${projOf(k).length?` · 📋 ${projOf(k).length}`:''}</small></div>`;
+  const lanes=kids("").map(r=>`<div class="lane">${card(r[0],'r')}${kids(r[0]).map(c=>card(c[0],'c')+kids(c[0]).map(g=>card(g[0],'g')).join("")).join("")}</div>`).join("");
+  const c=ST.s7;
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="scroll"><div class="org">${lanes}</div></div><div class="hdr" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><b>${nm(c)}</b>${tyB(c)}${leafB(c)}${stB(c)}<span class="hint" style="margin:0">${path(c).map(nm).join(" ◂ ")}</span><span class="btn-s" style="margin-right:auto">فتح الفورم</span></div>${countLine()}</div>`,"🎯 مراكز التكلفة — الهيكل — A-H CODE");}
+
+function m8(){
+  const rows=RQ.map(r=>`<tr class="${r[0]===ST.s8?'sel':''}" data-set="s8" data-v="${r[0]}" style="cursor:pointer"><td>${N(r[0])} <b>${r[1]}</b></td><td style="text-align:center"><input type="checkbox" class="cb" data-rq="${r[0]}" ${r[2]?'checked':''}></td><td style="width:30%">${ccSelect("def:"+r[0],r[3],{leafOnly:true,empty:"— مفيش —"})}</td><td style="width:24%"><select class="lv" data-st="alw:${r[0]}"><option value="">كل المراكز</option>${kids("").map(x=>`<option value="${x[0]}" ${x[0]===r[4]?'selected':''}>فروع ${x[0]} ${x[1]} بس</option>`).join("")}</select></td></tr>`).join("");
+  const a=RM[ST.s8], c=ST.c8;
+  let msg;
+  if(!c) msg=a[2]?`⛔ «${a[1]}» لازم مركز تكلفة — القيد مش هيتحفظ`:`✔ من غير مركز — مسموح («${a[1]}» مش بيطلب مركز)`;
+  else if(!isLeaf(c)) msg=`⛔ «${CM[c][1]}» مركز رئيسي — القيد على مركز فرعي بس`;
+  else if(!CM[c][5]) msg=`⛔ «${CM[c][1]}» موقوف`;
+  else if(a[4]&&!desc(a[4]).includes(c)) msg=`⛔ «${a[1]}» بيقبل مراكز «${CM[a[4]][1]}» وفروعها بس`;
+  else msg=`✔ تمام — السطر هيتسجل على ${nm(c)}`;
+  const ok=msg.startsWith("✔");
+  const test=gb("جرّب سطر قيد",`<div class="f"><label>الحساب</label><select class="lv" data-st="s8">${RQ.map(r=>`<option value="${r[0]}" ${r[0]===ST.s8?'selected':''}>${r[0]} ${r[1]}</option>`).join("")}</select></div><div class="f"><label>مركز التكلفة</label>${ccSelect("c8",c,{empty:"— فاضي —",cls:ok?'':'bad'})}</div><div class="${ok?'ok-line':'bad-line'}">${msg}</div><div class="hint">لما تختار الحساب في القيد، المركز الافتراضي بتاعه بيتكتب لوحده (وتقدر تغيّره).</div>`,"flex-shrink:0");
+  return win(`<div class="tb"><span class="bt b-edit">تعديل</span><span class="bt b-save">حفظ</span><span class="bt b-can">إلغاء</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ed">تعديل</span></div><div class="content" style="flex-direction:column"><div class="scroll"><table class="tbl"><tr><th>حساب المصروف / الإيراد</th><th>لازم مركز</th><th>المركز الافتراضي</th><th>المسموح</th></tr>${rows}</table></div>${test}</div>`,"🎯 مراكز التكلفة ↔ الحسابات — A-H CODE");}
+
+function m9(){
+  const c=ST.f9, inc=ST.inc9, set=inc?desc(c):[c];
+  const leaves=set.filter(k=>AMT[k]);
+  let R=0,E=0; leaves.forEach(k=>{R+=AMT[k][0];E+=AMT[k][1];});
+  const mx=Math.max(1,...leaves.map(k=>Math.max(...AMT[k])));
+  const rows=leaves.map(k=>{const [r,e]=AMT[k];return `<tr><td>${N(k)}</td><td>${CM[k][1]}</td><td class="n">${r?m0(r):'—'}</td><td class="n">${m0(e)}</td><td class="n" style="color:${r-e<0?'#B91C1C':'#087443'}">${m0(r-e)}</td><td style="width:22%"><span class="bar" style="width:${Math.round(r/mx*100)}%"></span><br><span class="bar e" style="width:${Math.round(e/mx*100)}%"></span></td></tr>`;}).join("")||`<tr><td colspan="6" class="hint">«${CM[c][1]}» رئيسي — علّم «يشمل الفروع» عشان تشوف أرقام فروعه</td></tr>`;
+  ST.s9=c;
+  return win(`<div class="tb"><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode">معاينة الفلتر</span></div><div class="content"><div class="col" style="width:34%"><div class="hint" style="margin:0 0 3px">الأصفر = المراكز اللي داخلة في الفلتر</div>${tree(9,{hl:new Set(set)})}</div><div class="col" style="flex:1"><div class="f"><label>مركز التكلفة</label>${ccSelect("f9",c,{empty:false})}</div><div class="f"><label></label><label style="width:auto;display:flex;gap:4px;align-items:center;cursor:pointer"><input type="checkbox" class="cb" data-inc="9" ${inc?'checked':''}> يشمل الفروع (الأب بيجيب كل الأبناء)</label></div><div class="hint" style="margin-bottom:3px">داخل الفلتر: ${set.length} مركز · ${leaves.length} فرعي عليهم أرقام — <b>أرقام توضيحية</b>، الحقيقي من القيود (المرحلة 4)</div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>المركز</th><th class="n">إيرادات</th><th class="n">مصروفات</th><th class="n">الصافي</th><th></th></tr>${rows}<tr class="tot"><td colspan="2">الإجمالي (${nm(c)})</td><td class="n">${m0(R)}</td><td class="n">${m0(E)}</td><td class="n">${m0(R-E)}</td><td></td></tr></table></div></div></div>`,"🎯 مراكز التكلفة — فلتر الأب — A-H CODE");}
+
+function m10(){
+  const c=ST.s10, inc=ST.inc10;
+  const F={all:"الكل",run:"جاري",done:"مقفول"};
+  const ps=projOf(c,inc).filter(p=>ST.flt10==="all"||(ST.flt10==="run"&&p[6]==="جاري")||(ST.flt10==="done"&&p[6]==="مقفول"));
+  const chips=Object.keys(F).map(x=>`<span class="chipf ${ST.flt10===x?'on':''}" data-set="flt10" data-v="${x}">${F[x]}</span>`).join("");
+  const rows=ps.map(p=>`<tr><td>${N(p[0])}</td><td><b>${p[1]}</b><div style="color:var(--muted);font-size:7.5px">${p[2]}</div></td><td>${N(p[3])}</td><td class="n">${m0(p[4])} ${p[5]}</td><td>${p[6]==="جاري"?'<span class="bdg ok">جاري</span>':'<span class="bdg x">مقفول</span>'}</td></tr>`).join("")||'<tr><td colspan="5" class="hint">مفيش أوامر توريد هنا</td></tr>';
+  return win(tb()+`<div class="content"><div class="col" style="width:40%"><div class="srch"><i>🔍 بحث…</i>${expBtns(10)}</div>${tree(10,{pj:true})}${countLine()}</div><div class="col" style="flex:1"><div class="hdr"><b>${nm(c)}</b> ${tyB(c)} ${leafB(c)}<div class="p">${path(c).map(nm).join(" ◂ ")}</div></div><div class="srch" style="margin-top:4px"><label style="font-size:8.5px;font-weight:700;display:flex;gap:4px;align-items:center;cursor:pointer"><input type="checkbox" class="cb" data-inc="10" ${inc?'checked':''}> يشمل الفروع</label><span style="margin-right:auto"></span>${chips}</div><div class="scroll"><table class="tbl"><tr><th>الأمر</th><th>المشروع / العميل</th><th>المركز</th><th class="n">القيمة</th><th>الحالة</th></tr>${rows}</table></div><div style="display:flex;gap:4px;align-items:center;margin-top:3px"><span class="btn-s d">+ أمر توريد جديد على المركز ده</span><span class="hint" style="margin:0">شاشة أوامر التوريد = البند الجاي في الخطة</span></div></div></div>`);}
+
+const M=[
+ ["تبويب لكل مركز رئيسي + شجرة + فورم (زي شجرة الحسابات)","نفس شكل «شجرة الحسابات» (النموذج 6): تبويب لكل مركز رئيسي (الإدارة · الأنشطة الفنية · المبيعات · المخازن) وتحته الشجرة شمال والفورم يمين، و«عرض الكل / طي الكل».",m1],
+ ["شجرة واحدة + فورم «مركز جديد»","الشجرة كلها مرة واحدة، والفورم في وضع «جديد»: غيّر «تحت مركز» (الخانة الزرقا) وشوف الكود المقترح بيتولّد لوحده (2203، 2103…) والأب بيتعلّم بالأصفر. لو الأب فرعي بيقولك هيتفرّع.",m2],
+ ["Base Screen: فورم يمين + قائمة شمال","زي شاشة المستخدمين بالظبط: قائمة مسطّحة فيها كل المراكز (الكود، الاسم، تحت، النوع، رئيسي/فرعي، الحالة) والفورم يمين. الشجرة بتبان من عمود «تحت».",m3],
+ ["جدول شجري (Tree-grid)","جدول واحد بالأعمدة كلها (النوع، المسؤول، عدد أوامر التوريد، الحالة) والفروع بتتفتح وتتقفل جوه الجدول نفسه. الفورم بيفتح في شباك صغير.",m4],
+ ["شجرة + تفاصيل بتبويبات","الشجرة شمال بعدد أوامر التوريد قصاد كل مركز، ويمين المركز المختار وتحته تبويبات: البيانات · الفروع · الحسابات (مسموح ولا لأ) · أوامر التوريد. دوس على التبويبات.",m5],
+ ["شريط المراكز الرئيسية + جدول + تفاصيل (زي الحسابات الافتراضية)","نفس شكل «الحسابات الافتراضية» (النموذج 9): المراكز الرئيسية في شريط جانبي، وفروعه في الجدول، وتحت تفاصيل المركز المختار ومساره.",m6],
+ ["هيكل تنظيمي (كروت)","كل مركز رئيسي عمود، وتحته فروعه كروت (المسؤول + عدد أوامر التوريد). نظرة واحدة على تنظيم الشركة كله. دوس على أي كارت.",m7],
+ ["المراكز ↔ الحسابات","شاشة (أو تبويب) لربط الحسابات: «لازم مركز» لكل حساب مصروف / إيراد، و<b>مركز افتراضي</b> بيتكتب لوحده في القيد، و<b>المسموح</b> (مثلاً تكلفة المبيعات على الأنشطة الفنية بس). تحت «جرّب سطر قيد» بيوريك الرسالة اللي هتطلع.",m8],
+ ["فلتر الأب بيجيب الأبناء (معاينة تقرير)","توضيح لفكرة الفلتر: اختار «2 الأنشطة الفنية» ← بيجمع BMS + MCC + التركيبات + الصيانة وفروعهم. شيل «يشمل الفروع» وشوف الفرق. الأرقام توضيحية.",m9],
+ ["شجرة + أوامر التوريد المربوطة","الشجرة شمال، ويمين أوامر التوريد اللي على المركز (ولو علّمت «يشمل الفروع» بتيجي أوامر فروعه كمان) بفلتر جاري / مقفول. بيمهّد لشاشة أوامر التوريد (البند الجاي).",m10],
+];
+
+const NOTE=`<b>مراكز التكلفة</b> = شجرة (<span class="ltr">acc.cost_centers</span>) بتقول <b>الفلوس دي اتصرفت / دخلت لمين جوه الشركة</b> (قسم BMS، ورشة MCC، التركيبات، الإدارة…) — بُعد إضافي على سطر القيد جنب الحساب، فتقدر تطلع ربح كل نشاط لوحده. الحساب بيقول «إيه» (مرتبات، نقل، مبيعات) والمركز بيقول «لمين».
+<ul>
+<li><b>الشجرة:</b> الكود بيتولّد لوحده تحت الأب زي الدليل (<span class="ltr">2 ← 22 ← 2201</span>) لحد 5 مستويات · <b>رئيسي</b> = تجميعي و<b>فرعي</b> = اللي بيتكتب في القيد · «+ فرعي تحت المحدد» بنفس فكرة تفريع الحسابات («— عام» بياخد قيوده) · النوع (إداري / تشغيلي / بيعي / خدمي) بيتورث من الأب.</li>
+<li><b>فلتر الأب بيجيب الأبناء:</b> أي تقرير أو كشف تختار فيه «2 الأنشطة الفنية» بيجمع كل اللي تحته (دالة <span class="ltr">acc.cost_center_tree(id)</span> بـ Recursive CTE) — النموذج 9 بيوضّحها.</li>
+<li><b>الربط بالحسابات:</b> الحسابات اللي عليها «لازم مركز تكلفة» في الدليل (مبيعات بضاعة، إيرادات التركيبات، مردودات المبيعات، تكلفة المبيعات، المرتبات، نقل ومشال، عمولات بيع) ← أي سطر قيد عليها من غير مركز فرعي نشط <b>بيترفض برسالة عربي</b> (ده هيتعمل مع القيود في المرحلة 4). <b>اقتراح (النموذج 8):</b> مركز افتراضي لكل حساب (الإيجار ← الإدارة العليا) + «المسموح» (تكلفة المبيعات على الأنشطة الفنية بس).</li>
+<li><b>أوامر التوريد (البند الجاي):</b> كل أمر توريد مربوط بمركز فرعي، فلما تختار الأمر في المستند المركز بيتكتب لوحده.</li>
+<li><b>الحماية:</b> المركز اللي تحته فروع أو عليه أمر توريد أو قيود <b>مايتمسحش</b> (FK RESTRICT) — يتوقف بس، والموقوف مايتختارش في مستند جديد · الكود unique · <span class="ltr">row_version</span> (جهازين على نفس المركز) + سجل التعديلات · index على الأب وعلى المركز في كل جدول بيستخدمه.</li>
+<li><b>مكانها:</b> «الحسابات» ← «دليل الحسابات» ← «مراكز التكلفة» بعد «الحسابات الافتراضية». البيانات المبدئية: الأقسام اللي في الأكسس (<span class="ltr">tb-Shopes</span>: BMS · MCC · Installation · Office…) — والأسامي اللي هنا أمثلة تتعدّل.</li>
+</ul>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+document.addEventListener("change",e=>{
+  const t=e.target, k=t.dataset.st;
+  if(t.dataset.rq){RM[t.dataset.rq][2]=t.checked;render();return;}
+  if(t.dataset.inc){ST["inc"+t.dataset.inc]=t.checked;render();return;}
+  if(!k) return;
+  if(k.startsWith("def:")) RM[k.slice(4)][3]=t.value;
+  else if(k.startsWith("alw:")) RM[k.slice(4)][4]=t.value;
+  else { ST[k]=t.value; if(k==="p2"&&t.value){ST.ty2=CM[t.value][3];ST.s2=t.value;} if(k==="s8"){ST.c8=RM[t.value][3]||"";} }
+  render();
+});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const tg=e.target.closest("[data-tog]");
+  if(tg){const [n,c]=tg.dataset.tog.split(":");const s=colOf(n);s.has(c)?s.delete(c):s.add(c);render();return;}
+  const ex=e.target.closest("[data-exp]"); if(ex){colOf(ex.dataset.exp).clear();render();return;}
+  const ca=e.target.closest("[data-colall]"); if(ca){const s=colOf(ca.dataset.colall);CC.forEach(c=>{if(kids(c[0]).length)s.add(c[0]);});render();return;}
+  const s=e.target.closest("[data-set]");
+  if(s){ST[s.dataset.set]=s.dataset.v; if(s.dataset.set==="s2"){ST.p2=s.dataset.v;ST.ty2=CM[s.dataset.v][3];} if(s.dataset.set==="s9") ST.f9=s.dataset.v; if(s.dataset.set==="s8") ST.c8=RM[s.dataset.v][3]||""; render();}
+});
+ST.c8=RM[ST.s8][3]||"";
+render();
+</script>
+</body>
+</html>

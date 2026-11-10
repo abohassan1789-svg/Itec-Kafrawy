@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج أكواد الضريبة — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.tabs{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.tabs button{border:0;border-radius:6px;padding:7px 14px;font:inherit;font-weight:800;cursor:pointer;background:rgba(255,255,255,.15);color:#fff}
+.tabs button.on{background:#fff;color:var(--green)}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;font-size:10px;position:relative}
+.rail{width:62px;background:var(--green-dark);color:#fff;display:flex;flex-direction:column;align-items:center;padding:6px 4px;gap:4px;flex-shrink:0}
+.rail .brand{font-weight:900;font-size:9px;text-align:center;margin-bottom:4px;line-height:1.1}
+.rail .it{width:52px;border-radius:6px;padding:4px 2px;text-align:center;font-size:8.5px;line-height:1.2}
+.rail .it b{display:block;font-size:14px}
+.rail .it.on{background:#fff;color:var(--green)}
+.rail .sp{flex:1}
+.rail .out{background:rgba(220,38,38,.25)}
+.rail.wide{width:118px;align-items:stretch}
+.rail.wide .it{width:auto;display:flex;align-items:center;gap:5px;text-align:right;font-size:9.5px;padding:5px 6px}
+.rail.wide .it b{display:inline;font-size:12px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.hdr{height:40px;background:#fff;border-bottom:1px solid var(--card-border);display:flex;align-items:center;padding:0 8px;gap:8px;flex-shrink:0}
+.av{width:26px;height:26px;border-radius:50%;border:2px solid var(--green);background:#E2E8F0;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.hdr .nm{font-weight:900;font-size:10px;line-height:1.2}
+.hdr .nm small{display:block;color:var(--muted);font-weight:600;font-size:8.5px}
+.hdr .clk{margin-right:auto;text-align:center;font-weight:900;font-size:10px;line-height:1.2}
+.hdr .clk small{display:block;color:var(--muted);font-weight:600;font-size:8px}
+.bell{font-size:13px}
+.content{flex:1;padding:8px;position:relative;overflow:hidden}
+.hero{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--green)}
+.hero b{font-size:26px;font-weight:900}
+.hero small{color:var(--muted);font-size:10px;font-weight:700}
+.popup{position:absolute;top:42px;right:64px;width:170px;background:#fff;border:1px solid var(--card-border);border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.18);padding:8px;z-index:3}
+.popup h4{margin:0 0 4px;color:var(--green);font-size:11px;font-weight:900;border-bottom:2px solid var(--green);padding-bottom:3px}
+.popup .sub{color:var(--muted);font-weight:800;font-size:8.5px;margin:5px 0 2px}
+.popup .ln{padding:3px 4px;border-radius:4px;font-size:9.5px}
+.popup .ln.on{background:var(--first);color:var(--green);font-weight:800}
+.stat{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:6px}
+.stat small{color:var(--muted);font-weight:700;font-size:8.5px;display:block}
+.stat b{font-size:15px;font-weight:900}
+.tile{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:8px;text-align:center;font-weight:800;font-size:9.5px}
+.tile b{display:block;font-size:18px;margin-bottom:2px}
+
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-log{background:#0F766E}.b-prev{background:#6D28D9}.b-exp{background:#0E7490}
+.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:58px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.chk{font-size:8.5px;font-weight:700;margin-left:6px}
+.chk:before{content:"☑ ";color:var(--green)}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.srch{display:flex;gap:4px;margin-bottom:4px}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.photo{width:48px;height:56px;border:1px dashed var(--input);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#F8FAFC;flex-shrink:0}
+.ck{color:var(--green);font-weight:900;text-align:center}
+.x{color:#CBD5E1;text-align:center}
+.key{font-size:8px}
+.chip{display:inline-block;border-radius:10px;padding:1px 6px;font-size:8px;font-weight:800;margin:1px;border:1px solid var(--badge-bd);background:var(--badge-bg);color:var(--badge-tx)}
+.chip.off{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0}
+.chip.deny{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+
+
+/* ===== أكواد الضريبة ===== */
+.f label{width:72px}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tabs2{display:flex;gap:2px}
+.tabs2 span{padding:4px 9px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569}
+.tabs2 span.on{background:var(--green);color:#fff}
+.bdg{display:inline-block;border-radius:9px;padding:1px 7px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.add{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.ded{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.b{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+input.lv,select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;direction:ltr;text-align:right;outline:none}
+select.lv{direction:rtl;padding:0 2px}
+input.lv:focus,select.lv:focus{box-shadow:0 0 0 2px #BFDBFE}
+.tbl input.lv,.tbl select.lv{width:100%;height:15px}
+input.ck{margin:0 0 0 3px;vertical-align:middle;accent-color:var(--green)}
+.seg2{display:flex;gap:3px;flex:1}
+.seg2 span{flex:1;text-align:center;border:1px solid var(--input);border-radius:4px;padding:1px 0;font-size:8.5px;font-weight:800;color:#64748B;background:#F8FAFC}
+.seg2 span.on.add{background:#ECFDF3;border-color:#137A38;color:#087443}
+.seg2 span.on.ded{background:#FEE2E2;border-color:#DC2626;color:#B91C1C}
+.hint{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:4px 0}
+.warnb{background:#FFF7ED;border:1px solid #FED7AA;color:#9A3412;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:4px 0}
+.okb{background:#ECFDF3;border:1px solid #B7E4C7;color:#087443;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:3px 0}
+.pl{color:#087443;font-weight:900}.mn{color:#B91C1C;font-weight:900}
+.ctb td.n,.ctb th.n{text-align:left}
+.ctb tr.tot td{background:#F1F5F9!important;font-weight:900;border-top:1px solid #CBD5E1}
+.ctb tr.grand td{background:var(--green)!important;color:#fff;font-weight:900;font-size:9.5px}
+.tcard{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:7px;padding:6px;font-size:8px}
+.tcard.ded{border-right-color:#DC2626}
+.tcard.off{opacity:.5}
+.tcard.sel{outline:1.5px solid var(--green);background:var(--first)}
+.tcard b{font-size:9.5px;font-weight:900;display:block}
+.tcard .r{font-size:15px;font-weight:900;direction:ltr;text-align:right}
+.tcard small{color:var(--muted);font-weight:700}
+.chain{display:flex;flex-direction:column;gap:4px}
+.chain .st{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:800}
+.chain .st .no{width:16px;height:16px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0}
+.chain .st.ded .no{background:#DC2626}
+.chain .ar{text-align:center;color:#94A3B8;font-size:9px;line-height:1}
+.mv{margin-right:auto;color:#64748B;font-size:9px}
+.je td.dr,.je td.cr{direction:ltr;text-align:left;font-weight:800}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج أكواد الضريبة (المرحلة 1ب · الشاشة 5)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD — الفرق بس في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). البيانات أمثلة، و<b>الخانات الزرقا شغالة</b>: غيّر المبلغ أو النسبة أو علّم على الضرايب وشوف الحساب بيتغيّر.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+function win(inner){return `<div class="win" style="flex-direction:column"><div style="height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0"><span>🧾 أكواد الضريبة — A-H CODE</span><span style="margin-right:auto;color:var(--muted)">_ ▢ ✕</span></div><div class="main" style="display:flex;flex-direction:column;flex:1;min-height:0">${inner}</div></div>`;}
+function tb(mode="عرض"){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">ضريبة جديدة</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode" style="${ed?'background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE':''}">${mode}</span></div>`;}
+const TB=tb(), TBE=tb("تعديل"), TBN=tb("جديد");
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+const N=c=>`<span class="ltr">${c}</span>`;
+function fi(l,k,v,x=""){return `<div class="f"><label>${l}</label><input class="lv" data-k="${k}" value="${v}" ${x}></div>`;}
+function sel(k,opts,v){return `<select class="lv" data-k="${k}">${opts.map(o=>`<option value="${o[0]}" ${o[0]===v?'selected':''}>${o[1]}</option>`).join("")}</select>`;}
+function fs(l,k,opts,v){return `<div class="f"><label>${l}</label>${sel(k,opts,v)}</div>`;}
+
+// الكود، الاسم، النوع، النسبة، بتتحسب على، الترتيب، بتتطبق على، نشطة، معفي
+const TX=[
+ ["TBL8","ضريبة جدول 8%","add",8,"net",1,"both",1,0],
+ ["VAT14","قيمة مضافة 14%","add",14,"cum",2,"both",1,0],
+ ["VAT5","قيمة مضافة 5% (مقاولات)","add",5,"cum",2,"both",1,0],
+ ["VAT0","قيمة مضافة صفري (تصدير)","add",0,"cum",2,"sales",1,0],
+ ["EXEMPT","معفي من القيمة المضافة","add",0,"net",2,"both",1,1],
+ ["WHT1","خصم من المنبع 1% (توريدات)","ded",1,"net",3,"both",1,0],
+ ["WHT3","خصم من المنبع 3% (خدمات)","ded",3,"net",3,"both",1,0],
+ ["WHT5","خصم من المنبع 5% (مهن حرة)","ded",5,"net",3,"both",0,0],
+];
+const TXM=Object.fromEntries(TX.map(t=>[t[0],t]));
+const KINDS=[["add","إضافة (+) بتزوّد الإجمالي"],["ded","خصم (−) بتقلّل الإجمالي"]];
+const BASES=[["net","الصافي بس"],["cum","الصافي + الضرايب اللي قبلها"]];
+const BASE_T={net:"الصافي",cum:"الصافي + اللي قبلها"};
+const APP_T={both:"المبيعات والمشتريات",sales:"المبيعات",purch:"المشتريات"};
+const kindB=t=>t[8]?'<span class="bdg x">معفي</span>':t[2]==="add"?'<span class="bdg add">＋ إضافة</span>':'<span class="bdg ded">− خصم</span>';
+const stB=t=>t[7]?'<span class="bdg add">نشطة</span>':'<span class="bdg x">موقوفة</span>';
+const pct=t=>t[8]?'—':N(t[3].toFixed(2)+"%");
+const m2=n=>n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+
+// الحساب: بالترتيب · «الصافي + اللي قبلها» = الصافي + ضرايب الإضافة اللي ترتيبها أقل
+function calc(net,list){
+  const rows=list.filter(t=>!t[8]).slice().sort((a,b)=>a[5]-b[5]);
+  const out=rows.map(t=>{const before=rows.filter(o=>o[2]==="add"&&o[5]<t[5]);return {t,base:0,before};});
+  out.forEach(r=>{r.base=r.t[4]==="cum"?net+out.filter(o=>r.before.includes(o.t)).reduce((s,o)=>s+o.amt,0):net;r.amt=Math.round(r.base*r.t[3])/100;});
+  const add=out.filter(r=>r.t[2]==="add").reduce((s,r)=>s+r.amt,0), ded=out.filter(r=>r.t[2]==="ded").reduce((s,r)=>s+r.amt,0);
+  return {out,add,ded,total:net+add-ded};
+}
+function calcTable(net,list,small=false){
+  const c=calc(net,list);
+  return `<table class="tbl ctb"><tr><th>الضريبة</th><th class="n">بتتحسب على</th><th class="n">النسبة</th><th class="n">المبلغ</th></tr>${c.out.map(r=>`<tr><td><b>${r.t[1]}</b></td><td class="n">${N(m2(r.base))}</td><td class="n">${N(r.t[3]+"%")}</td><td class="n ${r.t[2]==="add"?'pl':'mn'}">${N((r.t[2]==="add"?"+ ":"− ")+m2(r.amt))}</td></tr>`).join("")}${small?'':`<tr class="tot"><td colspan="3">الصافي</td><td class="n">${N(m2(net))}</td></tr><tr class="tot"><td colspan="3">ضرايب الإضافة</td><td class="n pl">${N("+ "+m2(c.add))}</td></tr><tr class="tot"><td colspan="3">ضرايب الخصم</td><td class="n mn">${N("− "+m2(c.ded))}</td></tr>`}<tr class="grand"><td colspan="3">إجمالي الفاتورة</td><td class="n">${N(m2(c.total))}</td></tr></table>`;
+}
+// مربع حساب حي: data-codes = الضرايب المعلّمة · data-edit = الكود اللي في الفورم (النسبة/النوع/الأساس من الخانات)
+function calcBox(codes,net=10000,opts={}){
+  const pick=opts.pick?`<div style="display:flex;flex-wrap:wrap;gap:2px 8px;margin:3px 0;font-size:8.5px;font-weight:800">${TX.filter(t=>t[7]&&!t[8]).map(t=>`<label><input type="checkbox" class="ck" data-tax="${t[0]}" ${codes.includes(t[0])?'checked':''}>${t[0]}</label>`).join("")}</div>`:'';
+  const body=`<div class="f"><label>صافي الفاتورة</label><input class="lv" data-k="net" value="${net}" type="number" min="0"></div>${pick}<div class="cout"></div>`;
+  return `<div class="calc" data-codes="${codes.join(",")}" ${opts.edit?`data-edit="${opts.edit}"`:''} ${opts.small?'data-small="1"':''}>${opts.form||''}${opts.title?gb(opts.title,body):body}</div>`;
+}
+
+const R=TXM.VAT14;
+function ttable(cols=["code","name","kind","rate","st"],s=1,rows=TX){
+  const T={code:"الكود",name:"الضريبة",kind:"النوع",rate:"النسبة",base:"بتتحسب على",ord:"الترتيب",app:"بتتطبق على",st:"الحالة"};
+  const V=t=>({code:`<b class="ltr">${t[0]}</b>`,name:t[1],kind:kindB(t),rate:pct(t),base:BASE_T[t[4]],ord:t[5],app:APP_T[t[6]],st:stB(t)});
+  return `<table class="tbl"><tr>${cols.map(c=>`<th>${T[c]}</th>`).join("")}</tr>${rows.map((t,i)=>`<tr class="${rows[i]===TX[s]?'sel':''}">${cols.map(c=>`<td>${V(t)[c]}</td>`).join("")}</tr>`).join("")}</table>`;
+}
+const srch=`<div class="srch"><i>🔍 بحث بالكود / الاسم…</i></div>`;
+const cnt=`<div class="cnt">عدد الضرايب: 8 · إضافة 5 · خصم 3 · موقوفة 1</div>`;
+const KIND=k=>`<div class="f"><label>النوع *</label><div class="seg2"><span class="add ${k==="add"?'on':''}">＋ إضافة</span><span class="ded ${k==="ded"?'on':''}">− خصم</span></div></div>`;
+const ACC=f("حساب المبيعات","🔒 هيتربط بعد دليل الحسابات","lock")+f("حساب المشتريات","🔒 هيتربط بعد دليل الحسابات","lock");
+const FORM=(t=R)=>f("الكود *",N(t[0]))+f("الاسم *",t[1])+KIND(t[2])+f("النسبة %",N(t[3].toFixed(2)))+f("بتتحسب على",BASE_T[t[4]]+" ▾")+f("الترتيب",t[5])+f("بتتطبق على",APP_T[t[6]]+" ▾")+`<div class="f"><label>الحالة</label><span class="chk">نشطة</span><span style="font-size:8.5px;color:#94A3B8;font-weight:700">☐ معفي</span></div>`;
+const FORM_LIVE=f("الكود *",N(R[0]))+f("الاسم *",R[1])+fs("النوع *","kind",KINDS,"add")+fi("النسبة %","rate","14",'type="number" min="0" max="100" step="0.5"')+fs("بتتحسب على","base",BASES,"cum")+f("الترتيب","2")+f("بتتطبق على",APP_T.both+" ▾");
+
+const DN=[
+ ["زي Hr GAD: الفورم يمين + القائمة شمال","نفس الـ Base Screen: يمين «بيانات الضريبة» (الكود، الاسم، النوع إضافة/خصم، النسبة، بتتحسب على إيه، الترتيب، بتتطبق على المبيعات/المشتريات) وتحتها «الحسابات» (هتتربط بعد الدليل) · شمال «البحث والتسجيل» بكل الضرايب ونوعها بلون (أخضر + / أحمر −).",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1.05fr 1fr;gap:8px"><div>${gb("بيانات الضريبة",FORM())}${gb("الحسابات",ACC,"margin-top:10px")}</div>${gb("البحث والتسجيل",srch+ttable()+cnt)}</div>`)],
+ ["زي «العملات»: الفورم وتحته «مثال على فاتورة» + القائمة شمال","نفس النموذج 10 في العملات: يمين الفورم وتحته مثال حي — فاتورة صافيها 10,000 عليها ضريبة الجدول + الضريبة دي + خصم من المنبع، وبيتحسب قصادك وانت بتغيّر النسبة أو النوع أو «بتتحسب على» · شمال القائمة.",
+  win(TBE+`<div class="content" style="display:grid;grid-template-columns:1.1fr 1fr;gap:8px"><div>${calcBox(["TBL8","VAT14","WHT1"],10000,{edit:"VAT14",small:true,title:"مثال على فاتورة (بيتحسب وانت بتكتب)",form:gb("بيانات الضريبة",FORM_LIVE)+`<div style="height:6px"></div>`})}</div>${gb("البحث والتسجيل",srch+ttable(["code","name","kind","rate"])+cnt)}</div>`)],
+ ["ضرايب الإضافة وضرايب الخصم في قايمتين + الفورم تحت","فوق قايمتين جنب بعض: يمين «ضرايب الإضافة ＋» (أخضر) وشمال «ضرايب الخصم −» (أحمر) — باين على طول أنهي بتزوّد وأنهي بتخصم · تحت الفورم بتاع اللي مختارها في عمودين.",
+  win(TB+`<div class="content"><div style="display:grid;grid-template-columns:1.2fr 1fr;gap:8px">${gb("＋ ضرايب الإضافة",ttable(["code","name","rate","base"],1,TX.filter(t=>t[2]==="add")))}${gb("− ضرايب الخصم",ttable(["code","name","rate","st"],-1,TX.filter(t=>t[2]==="ded")))}</div>${gb("بيانات الضريبة — VAT14",`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div>${f("الكود *",N("VAT14"))+f("الاسم *",R[1])+KIND("add")+f("النسبة %",N("14.00"))}</div><div>${f("بتتحسب على",BASE_T.cum+" ▾")+f("الترتيب","2")+f("بتتطبق على",APP_T.both+" ▾")+f("الحسابات","🔒 بعد دليل الحسابات","lock")}</div></div>`,"margin-top:10px")}</div>`)],
+ ["تبويبات: «ضرايب الإضافة» / «ضرايب الخصم»","تبويب لكل نوع، وجوه كل تبويب الـ Base Screen العادي (الفورم يمين والقائمة شمال) — كل نوع لوحده ومفيش لخبطة · هنا ظاهر تبويب الخصم.",
+  win(TB+`<div class="content"><div class="tabs2"><span>＋ ضرايب الإضافة (5)</span><span class="on" style="background:#DC2626">− ضرايب الخصم (3)</span></div><div style="background:#fff;border:1px solid var(--card-border);border-radius:0 7px 7px 7px;padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px"><div>${gb("بيانات الضريبة",FORM(TXM.WHT1))}</div>${gb("البحث والتسجيل",srch+ttable(["code","name","rate","st"],5,TX.filter(t=>t[2]==="ded"))+`<div class="cnt">ضرايب الخصم: 3 · موقوفة 1</div>`)}</div></div>`)],
+ ["جدول واحد بتعدّل فيه كل الضرايب","كل الضرايب في جدول واحد بعرض الشاشة، وتعدّل النوع والنسبة والأساس والترتيب في السطر نفسه — أسرع حاجة لو الضرايب قليلة وعايز تشوفها كلها مرة واحدة.",
+  win(TBE+`<div class="content"><table class="tbl" style="table-layout:fixed"><tr><th style="width:50px">الكود</th><th>الضريبة</th><th style="width:78px">النوع</th><th style="width:50px">النسبة %</th><th style="width:132px">بتتحسب على</th><th style="width:44px">الترتيب</th><th style="width:36px">نشطة</th></tr>${TX.map((t,i)=>`<tr class="${i===1?'sel':''}"><td><b class="ltr">${t[0]}</b></td><td>${t[1]}</td><td>${t[8]?'<span class="bdg x">معفي</span>':sel("k"+i,[["add","＋ إضافة"],["ded","− خصم"]],t[2])}</td><td>${t[8]?'—':`<input class="lv" value="${t[3]}" type="number">`}</td><td>${sel("b"+i,[["net","الصافي"],["cum","الصافي + اللي قبلها"]],t[4])}</td><td><input class="lv" value="${t[5]}" type="number"></td><td style="text-align:center"><input type="checkbox" class="ck" ${t[7]?'checked':''}></td></tr>`).join("")}</table><div class="cnt">الحسابات بتتربط من «تعديل» بعد دليل الحسابات · «حفظ» بيحفظ الجدول كله مرة واحدة</div></div>`)],
+ ["كروت: كارت لكل ضريبة","فوق كارت لكل ضريبة فيه النسبة كبيرة (أخضر = إضافة، أحمر = خصم، باهت = موقوفة) · تحت الفورم بتاع الكارت المختار.",
+  win(TB+`<div class="content"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">${TX.map((t,i)=>`<div class="tcard ${t[2]} ${t[7]?'':'off'} ${i===1?'sel':''}"><b>${t[1]}</b><div class="r ${t[8]?'muted':t[2]==="add"?'pl':'mn'}">${t[8]?'معفي':(t[2]==="add"?'+ ':'− ')+t[3]+'%'}</div><small>${N(t[0])} · على ${BASE_T[t[4]]}</small></div>`).join("")}</div>${gb("بيانات الضريبة — VAT14",`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div>${f("الكود *",N("VAT14"))+f("الاسم *",R[1])+KIND("add")}</div><div>${f("النسبة %",N("14.00"))+f("بتتحسب على",BASE_T.cum+" ▾")+f("الترتيب","2")}</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${f("بتتطبق على",APP_T.both+" ▾")}<div class="f"><label>الحالة</label><span class="chk">نشطة</span><span style="font-size:8.5px;color:#94A3B8;font-weight:700">☐ معفي</span></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${ACC}</div>`,"margin-top:10px")}</div>`)],
+ ["الفورم + «ترتيب الحساب» + القائمة","يمين الفورم · في النص سلسلة بتوريك الضرايب بتتحسب بأنهي ترتيب: الصافي ← ضريبة الجدول ← القيمة المضافة (على الصافي + الجدول) ← الخصم من المنبع، وتقدر تطلّع وتنزّل بـ ▲▼ · شمال القائمة.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr .85fr 1fr;gap:8px">${gb("بيانات الضريبة",FORM())}${gb("ترتيب الحساب",`<div class="chain"><div class="st" style="background:#F1F5F9"><span class="no" style="background:#64748B">٠</span>صافي الفاتورة</div><div class="ar">▼</div><div class="st"><span class="no">1</span>ضريبة جدول 8%<span class="mv">▲▼</span></div><div class="ar">▼ على الصافي</div><div class="st" style="outline:1.5px solid var(--green)"><span class="no">2</span>قيمة مضافة 14%<span class="mv">▲▼</span></div><div class="ar">▼ على الصافي + الجدول</div><div class="st ded"><span class="no">3</span>خصم من المنبع 1%<span class="mv">▲▼</span></div><div class="ar">▼ على الصافي</div><div class="st" style="background:var(--green);color:#fff"><span class="no" style="background:#fff;color:var(--green)">=</span>إجمالي الفاتورة</div></div>`)}${gb("البحث والتسجيل",srch+ttable(["code","name","kind"])+cnt)}</div>`)],
+ ["«جرّب فاتورة»: علّم على الضرايب وشوف الحساب","يمين القائمة · شمال «جرّب فاتورة»: تكتب الصافي وتعلّم على الضرايب اللي عايزها (أكتر من ضريبة) ← جدول الضرايب بيطلع زي ما هيبقى في الفاتورة بالظبط بـ + و − والإجمالي.",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 1.25fr;gap:8px">${gb("البحث والتسجيل",srch+ttable(["code","name","kind","rate"])+cnt)}${gb("جرّب فاتورة",calcBox(["TBL8","VAT14","WHT1"],10000,{pick:true}))}</div>`)],
+ ["الفورم + لوحة القواعد","يمين القائمة · في النص «ضريبة جديدة» · شمال لوحة بتراجع وانت بتكتب: الكود إنجليزي مش متكرر، النسبة من 0 لـ 100، المعفي مالوش نسبة، «على الصافي + اللي قبلها» محتاج ضريبة إضافة ترتيبها أقل، والضريبة اللي عليها فواتير مابتتمسحش (بتتوقف بس).",
+  win(TBN+`<div class="content" style="display:grid;grid-template-columns:1fr 1.1fr 150px;gap:8px"><div>${srch}${ttable(["code","name"],-1)}</div>${gb("ضريبة جديدة",f("الكود *",N("WHT2"))+f("الاسم *","خصم من المنبع 2%")+KIND("ded")+f("النسبة %",N("2.00"))+f("بتتحسب على",BASE_T.net+" ▾")+f("الترتيب","3")+f("بتتطبق على",APP_T.both+" ▾"))}${gb("المراجعة",`<div class="okb">✔ الكود ${N("WHT2")} مش متكرر</div><div class="okb">✔ النسبة 2% (من 0 لـ 100)</div><div class="okb">✔ خصم ← بتقلّل الإجمالي</div><div class="okb">✔ على الصافي</div><div class="warnb">🛈 الحسابات بتتربط بعد الدليل</div><div class="warnb">🛈 عليها فواتير ← إيقاف بس، مش حذف</div>`)}</div>`)],
+ ["الفورم + «هتبان ازاي في الفاتورة والقيد»","يمين الفورم · شمال معاينة: جدول الضرايب زي ما هيظهر في فاتورة بيع (صافي 10,000) وتحته «القيد» اللي هيتعمل لوحده — كل ضريبة في حسابها (الحسابات أمثلة لحد ما نعمل الدليل).",
+  win(TB+`<div class="content" style="display:grid;grid-template-columns:1fr 1.25fr;gap:8px">${gb("بيانات الضريبة",FORM()+ACC)}<div>${gb("في الفاتورة (صافي 10,000)",calcTable(10000,[TXM.TBL8,TXM.VAT14,TXM.WHT1],true))}${gb("القيد",`<table class="tbl je"><tr><th>الحساب</th><th style="text-align:left">مدين</th><th style="text-align:left">دائن</th></tr><tr><td>العميل</td><td class="dr">12,212.00</td><td class="cr"></td></tr><tr><td>ضريبة خصم من المنبع (لينا)</td><td class="dr">100.00</td><td class="cr"></td></tr><tr><td>المبيعات</td><td class="dr"></td><td class="cr">10,000.00</td></tr><tr><td>ضريبة الجدول</td><td class="dr"></td><td class="cr">800.00</td></tr><tr class="sel"><td>ض.ق.م — مخرجات</td><td class="dr"></td><td class="cr">1,512.00</td></tr><tr class="sec"><td>الإجمالي (متوازن ✔)</td><td class="dr">12,312.00</td><td class="cr">12,312.00</td></tr></table>`,"margin-top:8px")}</div></div>`)],
+];
+
+const SETS=[
+ ["🧾 أكواد الضريبة",DN,`شاشة «أكواد الضريبة» (الشاشة الخامسة والأخيرة في 1ب). قرارك: **الفاتورة الواحدة ممكن يبقى فيها أكتر من ضريبة** في **جدول ضرايب لوحده**، والضرايب **نوعين: إضافة** (بتزوّد الإجمالي — زي القيمة المضافة 14% وضريبة الجدول) و**خصم** (بتقلّل الإجمالي — زي الخصم من المنبع ${N("1% / 3% / 5%")}). كل كود ليه: **الكود** (إنجليزي زي ${N("VAT14")})، **الاسم**، **النوع** (إضافة / خصم)، **النسبة**، **بتتحسب على إيه** (الصافي بس، أو الصافي + ضرايب الإضافة اللي قبلها — زي القيمة المضافة على السعر + ضريبة الجدول)، **الترتيب**، **بتتطبق على** (المبيعات / المشتريات / الاتنين)، **نشطة / موقوفة**، و**معفي** (من غير نسبة — بيظهر في إقرار القيمة المضافة لوحده، غير «الصفري»). **الحسابات** (حساب ضريبة المبيعات وحساب ضريبة المشتريات) بتتربط **بعد دليل الحسابات** (المرحلة 2). الضريبة اللي عليها فواتير مابتتمسحش (بتتوقف بس). «الأسعار شاملة الضريبة ولا لأ» هيبقى اختيار في الفاتورة نفسها. **مثال:** صافي 10,000 + جدول 8% (800) + قيمة مضافة 14% على 10,800 (1,512) − خصم من المنبع 1% (100) = **12,212**. مكانها: «النظام والصلاحيات» ← «الإعدادات العامة» بعد «العملات وأسعار الصرف».`],
+];
+let cur=0;
+function updCalc(box){
+  const net=parseFloat(box.querySelector('[data-k="net"]').value)||0;
+  let codes=box.dataset.codes.split(",").filter(Boolean);
+  const cks=box.querySelectorAll("[data-tax]"); if(cks.length) codes=[...cks].filter(c=>c.checked).map(c=>c.dataset.tax);
+  const list=codes.map(c=>{const t=TXM[c].slice();if(box.dataset.edit===c){const g=k=>{const e=box.querySelector(`[data-k="${k}"]`);return e?e.value:null};const r=parseFloat(g("rate"));if(!isNaN(r))t[3]=r;if(g("kind"))t[2]=g("kind");if(g("base"))t[4]=g("base");}return t;});
+  box.querySelector(".cout").innerHTML=list.length?calcTable(net,list,!!box.dataset.small):'<div class="hint">علّم على ضريبة واحدة على الأقل</div>';
+}
+document.addEventListener("input",e=>{const b=e.target.closest&&e.target.closest(".calc");if(b)updCalc(b);});
+document.addEventListener("change",e=>{const b=e.target.closest&&e.target.closest(".calc");if(b)updCalc(b);});
+function render(){
+  document.getElementById("note").innerHTML=SETS[cur][2].replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+  document.getElementById("grid").innerHTML=SETS[cur][1].map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]}</div></div>`).join("");
+  document.querySelectorAll(".calc").forEach(updCalc);
+  window.scrollTo(0,0);
+}
+render();
+</script>
+</body>
+</html>

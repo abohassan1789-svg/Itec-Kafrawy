@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج مجموعات العملاء — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.tbl td input.lv,.tbl td select.lv{width:100%;height:15px}
+.gcard{background:#fff;border:1px solid var(--card-border);border-top:3px solid var(--green);border-radius:7px;padding:5px 7px;cursor:pointer;font-size:8px;line-height:1.6}
+.gcard.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.gcard.off{border-top-color:#94A3B8;color:#64748B}
+.gcard b{font-size:9.5px;display:block}
+.gcard .big{font-size:12px;font-weight:900;color:var(--green)}
+.dlg{position:absolute;inset:0;background:rgba(15,23,42,.35);display:flex;align-items:center;justify-content:center}
+.dlg .box{background:#fff;border-radius:7px;width:66%;box-shadow:0 8px 24px rgba(0,0,0,.25);overflow:hidden}
+.dlg .bh{background:var(--green);color:#fff;font-weight:900;font-size:9.5px;padding:4px 8px}
+.dlg .bb{padding:6px 8px}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج مجموعات العملاء (المرحلة 3أ · الشاشة 1)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD — الفرق في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). المجموعات والعملاء أمثلة (الأسامي من الأكسس)، و<b>الخانات الزرقا شغالة</b>: دوس على أي مجموعة، غيّر حساب الرقابة أو الافتراضي، وجرّب «حساب لوحده» في النموذج 7.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== المجموعات: [0 الكود، 1 الاسم، 2 EN، 3 حساب الرقابة، 4 مدة السداد، 5 حد الائتمان، 6 العملة، 7 ض.ق.م، 8 خصم المنبع، 9 نشط، 10 ملاحظات] =====
+const G=[
+ ["1","عملاء — عام","General Customers","1103",30,200000,"EGP","VAT14","",true,"المجموعة الافتراضية لأي عميل جديد"],
+ ["2","شركات مقاولات وتكييف","Contractors & HVAC","1103",60,500000,"EGP","VAT14","",true,""],
+ ["3","مصانع وشركات أدوية","Factories & Pharma","1103",45,750000,"EGP","VAT14","",true,""],
+ ["4","فنادق ومستشفيات ومدارس","Hotels, Hospitals & Schools","1103",30,300000,"EGP","VAT14","",true,""],
+ ["5","قطاع عام وجهات حكومية","Public Sector","1103",90,1000000,"EGP","VAT14","WHT1",true,"بيخصموا 1% من المنبع"],
+ ["6","عملاء أجانب (تصدير)","Foreign Customers","1103",30,50000,"USD","VAT0","",true,"فاتورة تصدير — ض.ق.م صفري"],
+];
+// ===== العملاء (أسامي وهمية مكان بيانات الأكسس): [الكود، الاسم، المجموعة، مدة السداد، الحد، العملة، الرصيد التوضيحي] =====
+const C=[
+ ["385","النخبة للتشييد والبناء","2",60,1500000,"EGP",1245000],
+ ["173","المدار الهندسية","2",60,800000,"EGP",524300],
+ ["381","تكنو للحلول الهندسية والتجارة","2",45,600000,"EGP",238050],
+ ["154","بيت الخبرة للتبريد والتكييف والمقاولات","2",60,500000,"EGP",610000],
+ ["226","الريادة للتكييف والتجارة","2",45,400000,"EGP",256500],
+ ["239","بروفيشنال ميدل إيست","2",60,500000,"EGP",145000],
+ ["311","نوفا فارما للصناعات الدوائية","3",45,750000,"EGP",412650],
+ ["372","وادي النيل للعلوم والاستثمار","3",30,900000,"EGP",0],
+ ["151","المستقبل للخدمات التعليمية","4",30,5000000,"EGP",1368000],
+ ["94","فندق النيل الكبير","4",30,300000,"EGP",42000],
+ ["117","الأفق للمقاولات العمومية والتوريدات","5",90,2000000,"EGP",868400],
+ ["188","GULFAIR","6",30,50000,"USD",18500],
+ ["309","Bonyan","1",30,200000,"EGP",330000],
+];
+const TAX={VAT14:"ض.ق.م 14%",VAT0:"ض.ق.م صفري (تصدير)",EXEMPT:"معفي","":"—",WHT1:"خصم منبع 1%",WHT3:"خصم منبع 3%"};
+const ACC={"1103":"العملاء"};
+const N=c=>`<span class="ltr">${c}</span>`;
+const m0=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
+const GM=()=>Object.fromEntries(G.map(g=>[g[0],g]));
+const mem=g=>C.filter(c=>c[2]===g);
+const accName=a=>ACC[a]||"؟";
+const ST={s1:"2", s3:"2", s4:"5", s5:"2", s6:"2",ap6:"new",nt6:"60", n7name:"مستشفيات ومراكز طبية",n7own:true,n7term:"45",n7lim:"400000",n7cur:"EGP",n7vat:"VAT14",n7wht:"", s8:"2",t8:"grp", s9:"2",mv9:"309",to9:"2", n10:"شركات مقاولات"};
+const OWN={}; // المجموعات اللي ليها حساب لوحدها (النموذج 4)
+OWN["5"]=false;
+
+function win(inner,title="🗂️ مجموعات العملاء — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+function tb(mode="عرض",w="مجموعة جديدة"){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">${w}</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-dis':'b-tog'}">إيقاف / تفعيل</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ${ed?'ed':''}">${mode}</span></div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+function sel(key,val,opts,cls=""){return `<select class="lv ${cls}" data-st="${key}">${opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return `<option value="${v}" ${v===val?'selected':''}>${t}</option>`;}).join("")}</select>`;}
+const stB=g=>g[9]?'<span class="bdg ok">نشط</span>':'<span class="bdg x">موقوف</span>';
+const taxB=g=>`<span class="bdg pj">${TAX[g[7]]}</span>${g[8]?` <span class="bdg wr">${TAX[g[8]]}</span>`:''}`;
+const cnt=()=>`<div class="cnt">${G.length} مجموعة · ${C.length} عميل (أمثلة) — في الأكسس مفيش مجموعات (430 عميل هيتوزّعوا وقت النقل، والباقي على «عملاء — عام»)</div>`;
+const accOpts=()=>Object.keys(ACC).map(k=>[k,`${k} ${ACC[k]}`]);
+function grpTable(key,cols="std"){
+  const rows=G.map(g=>`<tr class="${g[0]===ST[key]?'sel':''} ${g[9]?'':'off'}" data-set="${key}" data-v="${g[0]}" style="cursor:pointer"><td>${N(g[0])}</td><td><b>${g[1]}</b>${g[0]==="1"?' <span class="bdg ok">افتراضية</span>':''}</td>${cols==="std"?`<td>${N(g[3])}</td><td class="n">${g[4]} يوم</td>`:''}<td class="n">${mem(g[0]).length}</td></tr>`).join("");
+  return `<div class="scroll"><table class="tbl"><tr><th>الكود</th><th>المجموعة</th>${cols==="std"?'<th>الحساب</th><th class="n">المدة</th>':''}<th class="n">عملاء</th></tr>${rows}</table></div>`;}
+function viewForm(g){
+  return gb("بيانات المجموعة",f("الكود",N(g[0]),"lock")+f("الاسم",g[1])+f("الاسم EN",g[2])+f("حساب الرقابة",`${N(g[3])} ${accName(g[3])}`)+f("الحالة",g[9]?"نشط":"موقوف","lock"))
+   +gb("الافتراضي للعميل الجديد",f("مدة السداد",`${g[4]} يوم`)+f("حد الائتمان",`${m0(g[5])} ${g[6]}`)+f("العملة",g[6])+f("ض.ق.م",TAX[g[7]])+f("خصم المنبع",TAX[g[8]])+f("ملاحظات",g[10]))
+   +`<div class="hint">👥 ${mem(g[0]).length} عميل في المجموعة · الافتراضي بيتنسخ للعميل الجديد بس (وتقدر تغيّره عنده)</div>`;}
+
+// ===== النماذج =====
+function m1(){const g=GM()[ST.s1];
+  return win(tb()+`<div class="content"><div class="col" style="width:50%;overflow:auto">${viewForm(g)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث بالاسم… (F1)</i></div>${grpTable("s1")}${cnt()}</div></div>`);}
+
+function m2(){
+  const rows=G.map((g,i)=>`<tr class="${g[9]?'':'off'}"><td>${N(g[0])}</td><td><input class="lv" data-g="${i}:1" value="${g[1]}"></td><td style="width:13%">${sel("g:"+i+":3",g[3],accOpts())}</td><td style="width:8%"><input class="lv" data-g="${i}:4" value="${g[4]}" style="direction:ltr"></td><td style="width:12%"><input class="lv" data-g="${i}:5" value="${g[5]}" style="direction:ltr"></td><td style="width:8%">${sel("g:"+i+":6",g[6],["EGP","USD","EUR"])}</td><td style="width:13%">${sel("g:"+i+":7",g[7],["VAT14","VAT0","EXEMPT"].map(t=>[t,TAX[t]]))}</td><td style="width:11%">${sel("g:"+i+":8",g[8],["","WHT1","WHT3"].map(t=>[t,TAX[t]]))}</td><td class="n">${mem(g[0]).length}</td></tr>`).join("");
+  return win(`<div class="tb"><span class="bt b-new">+ سطر</span><span class="bt b-save">حفظ الكل</span><span class="bt b-can">إلغاء</span><span class="bt b-del">حذف السطر</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ed">تعديل</span></div><div class="content" style="flex-direction:column"><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>المجموعة</th><th>حساب الرقابة</th><th>المدة (يوم)</th><th>حد الائتمان</th><th>العملة</th><th>ض.ق.م</th><th>خصم المنبع</th><th class="n">عملاء</th></tr>${rows}</table></div><div class="hint">المجموعات قليلة (5–10) ← جدول واحد بيتعدّل في مكانه زي «الحسابات الافتراضية»، و«حفظ الكل» مرة واحدة (كل سطر بـ row_version لوحده).</div>${cnt()}</div>`);}
+
+function m3(){
+  const side=G.map(g=>`<div class="it ${ST.s3===g[0]?'on':''}" data-set="s3" data-v="${g[0]}"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${g[1]}</span><small>${mem(g[0]).length}</small></div>`).join("");
+  const g=GM()[ST.s3], ms=mem(g[0]);
+  const rows=ms.map(c=>`<tr><td>${N(c[0])}</td><td><b>${c[1]}</b></td><td class="n">${c[3]} يوم ${c[3]!==g[4]?'<span class="bdg wr">≠</span>':''}</td><td class="n">${m0(c[4])} ${c[5]}</td><td class="n">${m0(c[6])}</td></tr>`).join("")||'<tr><td colspan="5" class="hint">مفيش عملاء في المجموعة دي</td></tr>';
+  return win(tb()+`<div class="content"><div class="side" style="width:150px"><div style="color:var(--green);font-weight:900;font-size:9px;border-bottom:2px solid var(--green);padding-bottom:2px;margin-bottom:2px">المجموعات</div>${side}<div class="cnt" style="margin-top:auto">${G.length} مجموعة</div></div><div class="col" style="flex:1;gap:4px"><div class="hdr"><b>${g[1]}</b> ${stB(g)} ${taxB(g)}<div class="p">حساب الرقابة ${g[3]} ${accName(g[3])} · ${g[4]} يوم · حد ${m0(g[5])} ${g[6]}</div></div>${gb("بيانات المجموعة",`<div class="g2">${f("الاسم",g[1])+f("الاسم EN",g[2])+f("حساب الرقابة",`${g[3]} ${accName(g[3])}`)+f("مدة السداد",`${g[4]} يوم`)+f("حد الائتمان",m0(g[5]))+f("العملة",g[6])}</div>`,"flex-shrink:0")}<div class="hint" style="margin:0">عملاء المجموعة (<span class="bdg wr">≠</span> = مدته غير الافتراضي):</div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>العميل</th><th class="n">المدة</th><th class="n">الحد</th><th class="n">الرصيد</th></tr>${rows}</table></div></div></div>`);}
+
+function m4(){
+  const own=G.filter(g=>OWN[g[0]]);
+  let tree=[[0,"1","الأصول","📁"],[1,"11","الأصول المتداولة","📁"],[2,"1101","النقدية بالخزائن","📁"],[2,"1102","البنوك","📁"]];
+  if(!own.length) tree.push([2,"1103","العملاء","📄",G.map(g=>g[0])]);
+  else { tree.push([2,"1103","العملاء","📁"]); tree.push([3,"110301","العملاء — عام","📄",G.filter(g=>!OWN[g[0]]).map(g=>g[0])]); own.forEach((g,i)=>tree.push([3,"1103"+String(i+2).padStart(2,"0"),g[1],"📄",[g[0]]])); }
+  tree.push([2,"1104","أوراق القبض (شيكات)","📄"],[2,"1105","المخزون","📄"]);
+  const rows=tree.map(t=>`<div style="padding-right:${3+t[0]*12}px" class="${t[4]&&t[4].includes(ST.s4)?'hl':''}">${t[3]} ${N(t[1])} ${t[2]}${t[4]?' '+t[4].map(x=>`<span class="bdg cc" data-set="s4" data-v="${x}" style="cursor:pointer">🗂️ ${GM()[x][1]}</span>`).join(" "):''}</div>`).join("");
+  const g=GM()[ST.s4];
+  return win(tb()+`<div class="content"><div class="col" style="width:52%"><div class="hint" style="margin:0 0 3px">شجرة الحسابات ↔ المجموعات المربوطة بكل حساب رقابة:</div><div class="scroll tree">${rows}</div></div><div class="col" style="flex:1;overflow:auto">${gb("المجموعة",f("الاسم",g[1])+f("حساب الرقابة",own.length&&OWN[g[0]]?'حساب لوحدها (تحت 1103)':own.length?'110301 العملاء — عام':'1103 العملاء',"lock")+`<div class="f"><label>حساب لوحدها؟</label><input type="checkbox" class="cb" data-own="${g[0]}" ${OWN[g[0]]?'checked':''}></div>`+f("مدة السداد",`${g[4]} يوم`)+f("حد الائتمان",m0(g[5])))}<div class="${OWN[g[0]]?'bad-line':'ok-line'}" style="${OWN[g[0]]?'color:#92400E':''};margin-top:4px">${OWN[g[0]]?'⚠ أول مجموعة تاخد حساب لوحدها: 1103 بيتفرّع (زرار «+ فرعي» في الدليل) ← 110301 «العملاء — عام» لباقي المجموعات + حساب جديد للمجموعة دي':'✔ على حساب الرقابة المشترك — الشجرة مابتتغيّرش'}</div><div class="hint">علّم «حساب لوحدها» على أي مجموعة وشوف الشجرة شمال بتتغيّر.</div></div></div>`,"🗂️ مجموعات العملاء ↔ شجرة الحسابات — A-H CODE");}
+
+function m5(){
+  const cards=G.map(g=>{const ms=mem(g[0]),b=ms.filter(c=>c[5]==="EGP").reduce((s,c)=>s+c[6],0);return `<div class="gcard ${g[0]===ST.s5?'sel':''} ${g[9]?'':'off'}" data-set="s5" data-v="${g[0]}"><b>${g[1]}</b><div class="r" style="display:flex;justify-content:space-between"><span class="big">${ms.length}</span><span style="color:var(--muted)">عميل</span></div><div>💰 ${m0(b)} ${g[6]==="USD"?'USD '+m0(ms.reduce((s,c)=>s+c[6],0)):'EGP'}</div><div>⏱ ${g[4]} يوم · حد ${m0(g[5])}</div><div>${taxB(g)}</div></div>`;}).join("");
+  const g=GM()[ST.s5];
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="scroll"><div class="cards">${cards}</div></div><div class="hdr" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><b>${g[1]}</b>${stB(g)}<span class="hint" style="margin:0">حساب ${g[3]} ${accName(g[3])} · ${g[6]} · ${g[10]||''}</span><span class="btn-s" style="margin-right:auto">فتح الفورم</span><span class="btn-s g">عملاء المجموعة</span></div></div>`,"🗂️ مجموعات العملاء — كروت — A-H CODE");}
+
+function m6(){
+  const g=GM()[ST.s6], nt=Number(ST.nt6)||0, ms=mem(g[0]);
+  const diff=ms.filter(c=>c[3]!==nt);
+  const rows=ms.map(c=>{const ch=ST.ap6==="all"?c[3]!==nt:ST.ap6==="same"?c[3]===g[4]&&c[3]!==nt:false;return `<tr><td>${N(c[0])}</td><td>${c[1]}</td><td class="n">${c[3]} يوم</td><td class="n" style="${ch?'color:#1D4ED8;font-weight:900':''}">${ch?nt+' يوم ✎':'زي ما هو'}</td></tr>`;}).join("");
+  const nCh=ms.filter(c=>ST.ap6==="all"?c[3]!==nt:ST.ap6==="same"?c[3]===g[4]&&c[3]!==nt:false).length;
+  return win(tb("تعديل")+`<div class="content"><div class="col" style="width:44%;overflow:auto">${gb("تعديل المجموعة",f("الاسم",g[1])+f("حساب الرقابة",`${g[3]} ${accName(g[3])}`,"lock")+`<div class="f"><label>مدة السداد</label><input class="lv" data-st="nt6" value="${ST.nt6}" style="direction:ltr"><span style="font-size:8px">يوم (كانت ${g[4]})</span></div>`+f("حد الائتمان",m0(g[5]))+f("العملة",g[6]))}${gb("التغيير يتطبّق على",`<label style="display:block;font-size:8.5px;font-weight:700;cursor:pointer"><input type="radio" name="ap6" data-ap="new" ${ST.ap6==='new'?'checked':''}> العملاء الجداد بس (اقتراحي)</label><label style="display:block;font-size:8.5px;font-weight:700;cursor:pointer"><input type="radio" name="ap6" data-ap="same" ${ST.ap6==='same'?'checked':''}> + الحاليين اللي على الافتراضي القديم (${g[4]} يوم)</label><label style="display:block;font-size:8.5px;font-weight:700;cursor:pointer"><input type="radio" name="ap6" data-ap="all" ${ST.ap6==='all'?'checked':''}> + كل عملاء المجموعة</label>`)}</div><div class="col" style="flex:1"><div class="hint" style="margin:0 0 3px">معاينة قبل الحفظ — ${nCh} عميل هيتعدّل من ${ms.length}:</div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>العميل</th><th class="n">دلوقتي</th><th class="n">بعد الحفظ</th></tr>${rows}</table></div><div class="hint">التعديل الجماعي في نفس الـ Transaction + سجل التعديلات لكل عميل · الفواتير القديمة استحقاقها مايتغيّرش.</div></div></div>`,"🗂️ مجموعات العملاء — تعديل الافتراضي — A-H CODE");}
+
+function m7(){
+  const nm=ST.n7name.trim(), chk=[], split=!Object.values(OWN).some(Boolean);
+  const dup=G.find(g=>g[1]===nm);
+  chk.push(!nm?["bad","الاسم مطلوب"]:dup?["bad",`الاسم موجود (مجموعة ${dup[0]})`]:["ok","الاسم مش متكرر"]);
+  chk.push(ST.n7own?["warn",split?`هيتعمل حساب رقابة لوحده: 1103 «العملاء» يتحوّل رئيسي ← 110301 «العملاء — عام» (ياخد المجموعات الـ ${G.length} الحالية) + 110302 «${nm||'…'}» للمجموعة دي — في نفس العملية`:`هيتعمل حساب 1103xx «${nm}» تحت العملاء`]:["ok","على حساب الرقابة المشترك 1103 العملاء"]);
+  const t=Number(ST.n7term);chk.push(isNaN(t)||t<0||t>365?["bad","مدة السداد من 0 لـ 365 يوم"]:["ok",`مدة السداد ${t} يوم${t===0?' (نقدي)':''}`]);
+  chk.push(ST.n7cur!=="EGP"&&ST.n7vat==="VAT14"?["warn","عملة أجنبية + ض.ق.م 14% — لو تصدير غالباً «صفري»"]:["ok",`${TAX[ST.n7vat]}${ST.n7wht?' + '+TAX[ST.n7wht]:''}`]);
+  const ok=chk.every(c=>c[0]!=="bad"), ic=x=>x==="ok"?"✔":x==="warn"?"⚠":"⛔";
+  const form=gb("مجموعة جديدة",`${f("الكود",String(G.length+1)+" (بيتولّد لوحده)","lock")}<div class="f"><label>الاسم</label><input class="lv ${chk[0][0]==='bad'?'bad':''}" data-st="n7name" value="${ST.n7name}"></div>${f("الاسم EN","")}<div class="f"><label>حساب لوحدها؟</label><label style="font-size:8.5px;font-weight:700;display:flex;gap:4px;align-items:center;cursor:pointer"><input type="checkbox" class="cb" data-flag="n7own" ${ST.n7own?'checked':''}> حساب رقابة خاص بالمجموعة في الدليل</label></div><div class="sec2">الافتراضي للعميل الجديد</div><div class="f"><label>مدة السداد</label><input class="lv" data-st="n7term" value="${ST.n7term}" style="direction:ltr"></div><div class="f"><label>حد الائتمان</label><input class="lv" data-st="n7lim" value="${ST.n7lim}" style="direction:ltr"><div style="width:58px;display:flex">${sel("n7cur",ST.n7cur,["EGP","USD","EUR"])}</div></div><div class="f"><label>ض.ق.م</label>${sel("n7vat",ST.n7vat,["VAT14","VAT0","EXEMPT"].map(x=>[x,TAX[x]]))}</div><div class="f"><label>خصم المنبع</label>${sel("n7wht",ST.n7wht,["","WHT1","WHT3"].map(x=>[x,TAX[x]]))}</div>`);
+  return win(tb("جديد")+`<div class="content"><div class="col" style="width:55%;overflow:auto">${form}</div><div class="col" style="flex:1;overflow:auto">${gb("التحقق قبل الحفظ",chk.map(c=>`<div class="${c[0]==='ok'?'ok-line':'bad-line'}" style="${c[0]==='warn'?'color:#92400E':''};margin-bottom:2px">${ic(c[0])} ${c[1]}</div>`).join("")+`<div style="margin-top:4px">${ok?'<span class="btn-s">حفظ ✔</span>':'<span class="btn-s d">حفظ (فيه أخطاء)</span>'}</div>`)}<div class="hint" style="margin-top:4px">جرّب: شيل «حساب لوحدها»، اكتب «عملاء — عام» (متكرر)، أو غيّر العملة لـ USD.</div></div></div>`);}
+
+function m8(){
+  const T={cus:"العملاء",grp:"المجموعات"};
+  const tabs=Object.keys(T).map(t=>`<span class="${ST.t8===t?'on':''}" data-set="t8" data-v="${t}">${T[t]}<em>${t==='cus'?C.length:G.length}</em></span>`).join("");
+  let inner;
+  if(ST.t8==="grp"){const g=GM()[ST.s8];inner=`<div class="col" style="width:50%;overflow:auto">${viewForm(g)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${grpTable("s8","short")}</div>`;}
+  else inner=`<div class="col" style="flex:1"><div class="srch"><i>🔍 بحث في العملاء…</i></div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>العميل</th><th>المجموعة</th><th class="n">الرصيد</th></tr>${C.map(c=>`<tr><td>${N(c[0])}</td><td><b>${c[1]}</b></td><td><span class="bdg cc" data-set="s8" data-v="${c[2]}" style="cursor:pointer">${GM()[c[2]][1]}</span></td><td class="n">${m0(c[6])} ${c[5]}</td></tr>`).join("")}</table></div><div class="hint">دوس على اسم المجموعة ← بيفتح تبويب «المجموعات» عليها.</div></div>`;
+  return win(tb("عرض",ST.t8==="grp"?"مجموعة جديدة":"عميل جديد")+`<div class="content" style="flex-direction:column;gap:0"><div class="tabs2">${tabs}</div><div style="display:flex;gap:7px;flex:1;min-height:0;border-top:2px solid var(--green);padding-top:4px">${inner}</div></div>`,"👥 العملاء — A-H CODE");}
+
+function m9(){
+  const g=GM()[ST.s9], ms=mem(g[0]);
+  const top=G.map(x=>`<tr class="${x[0]===ST.s9?'sel':''}" data-set="s9" data-v="${x[0]}" style="cursor:pointer"><td>${N(x[0])}</td><td><b>${x[1]}</b></td><td>${N(x[3])}</td><td class="n">${x[4]} يوم</td><td class="n">${m0(x[5])} ${x[6]}</td><td>${taxB(x)}</td><td class="n">${mem(x[0]).length}</td></tr>`).join("");
+  const bottom=ms.map(c=>`<tr><td>${N(c[0])}</td><td>${c[1]}</td><td class="n">${m0(c[6])} ${c[5]}</td></tr>`).join("")||'<tr><td colspan="3" class="hint">فاضية</td></tr>';
+  const mv=C.find(c=>c[0]===ST.mv9);
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="scroll" style="max-height:38%"><table class="tbl"><tr><th>الكود</th><th>المجموعة</th><th>الحساب</th><th class="n">المدة</th><th class="n">الحد</th><th>الضرايب</th><th class="n">عملاء</th></tr>${top}</table></div><div style="display:flex;gap:7px;flex:1;min-height:0"><div class="col" style="flex:1"><div class="hint" style="margin:3px 0">عملاء «${g[1]}»:</div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>العميل</th><th class="n">الرصيد</th></tr>${bottom}</table></div></div><div class="col" style="width:42%">${gb("نقل عميل لمجموعة تانية",`<div class="f"><label>العميل</label>${sel("mv9",ST.mv9,C.map(c=>[c[0],`${c[0]} ${c[1]}`]))}</div>${f("مجموعته دلوقتي",GM()[mv[2]][1],"lock")}<div class="f"><label>إلى</label>${sel("to9",ST.to9,G.map(x=>[x[0],x[1]]))}</div><div class="${ST.to9===mv[2]?'bad-line':'ok-line'}">${ST.to9===mv[2]?'⛔ نفس المجموعة':GM()[ST.to9][3]===GM()[mv[2]][3]?'✔ نفس حساب الرقابة — النقل تصنيف بس':'⚠ حساب رقابة مختلف — رصيده لازم يتنقل بقيد تسوية (مع القيود)'}</div><div style="margin-top:4px"><span class="btn-s">نقل</span></div>`)}</div></div></div>`);}
+
+function m10(){
+  const dup=G.find(g=>g[1]===ST.n10.trim());
+  const cust=gb("عميل جديد",f("الاسم","شركة النيل للمقاولات")+`<div class="f"><label>المجموعة</label><i style="background:#fff">${ST.n10&&!dup?'(جديدة) ':''}${dup?dup[1]:'…'}</i><span class="btn-s">…</span></div>`+f("رقم التسجيل","")+f("مدة السداد",""));
+  const box=`<div class="dlg"><div class="box"><div class="bh">🗂️ مجموعة عملاء جديدة</div><div class="bb"><div class="f"><label>الاسم</label><input class="lv ${dup?'bad':''}" data-st="n10" value="${ST.n10}"></div>${f("حساب الرقابة","1103 العملاء","lock")}<div class="f"><label>مدة السداد</label><i>60</i><label style="width:auto">حد</label><i>500,000</i></div><div class="${dup?'bad-line':'ok-line'}">${dup?`⛔ موجودة — اختارها بدل ما تعمل جديدة`:'✔ هتتحفظ وترجع للعميل مختارة'}</div><div style="display:flex;gap:4px;justify-content:flex-start;margin-top:5px"><span class="btn-s ${dup?'d':''}">حفظ واختيار</span><span class="btn-s g">إلغاء</span></div></div></div></div>`;
+  return win(tb("جديد","عميل جديد")+`<div class="content" style="position:relative"><div class="col" style="flex:1">${cust}<div class="hint">من غير شاشة لوحدها: زرار «…» جنب خانة المجموعة في شاشة العميل بيفتح الشباك الصغير ده (والتعديل والحذف من «إعدادات العملاء»).</div></div>${box}</div>`,"👥 العملاء — A-H CODE");}
+
+const M=[
+ ["Base Screen: فورم يمين + قائمة شمال","زي شاشة المستخدمين بالظبط: قائمة المجموعات (الكود، الاسم، حساب الرقابة، المدة، عدد العملاء) والفورم يمين: البيانات + «الافتراضي للعميل الجديد» (المدة، الحد، العملة، ض.ق.م، خصم المنبع).",m1],
+ ["جدول واحد بيتعدّل في مكانه","المجموعات قليلة، فكلها في جدول واحد والخانات الزرقا بتتعدّل جوه الجدول (زي «الحسابات الافتراضية»)، و«حفظ الكل». أسرع حاجة لو عددها صغير.",m2],
+ ["شريط المجموعات + تفاصيل + عملاءها (زي الحسابات الافتراضية)","المجموعات في شريط جانبي، ويمين بيانات المجموعة وتحتها عملاءها، والعميل اللي مدته غير الافتراضي عليه علامة ≠.",m3],
+ ["شجرة الحسابات ↔ المجموعات","بيوريك كل مجموعة مربوطة بأنهي حساب رقابة في الشجرة. علّم «حساب لوحدها» على مجموعة وشوف 1103 بيتفرّع (110301 عام + حساب للمجموعة).",m4],
+ ["كروت","كل مجموعة كارت: عدد العملاء والرصيد والمدة والحد والضرايب. تحت شريط المجموعة المختارة و«عملاء المجموعة».",m5],
+ ["تعديل الافتراضي + تطبيقه على العملاء","غيّر مدة السداد (الخانة الزرقا) واختار يتطبّق على مين: الجداد بس / اللي على الافتراضي القديم / الكل — والمعاينة يمين بتوريك مين هيتعدّل قبل الحفظ.",m6],
+ ["فورم «مجموعة جديدة» بالتحقق","الخانات شغالة: «حساب لوحدها» بيقولك هيعمل إيه في الدليل، والاسم المتكرر بيترفض، والعملة الأجنبية مع 14% بتنبّهك.",m7],
+ ["تبويب جوه شاشة العملاء","مفيش شاشة لوحدها: شاشة العملاء فيها تبويبين «العملاء» و«المجموعات». دوس على اسم مجموعة في تبويب العملاء ← بيفتحها.",m8],
+ ["المجموعات فوق + العملاء تحت + نقل عميل","جدول المجموعات فوق، وعملاء المختارة تحت، وجنبها «نقل عميل لمجموعة تانية» بيقولك لو النقل محتاج قيد تسوية (حساب رقابة مختلف).",m9],
+ ["شباك صغير من شاشة العميل","زرار «…» جنب خانة المجموعة وانت بتعمل عميل جديد بيفتح شباك صغير تضيف منه مجموعة وترجع. أخف حل.",m10],
+];
+
+const NOTE=`<b>مجموعات العملاء</b> = جدول <span class="ltr">party.customer_groups</span>: كل عميل لازم يبقى في مجموعة، والمجموعة بتحدد <b>حساب الرقابة</b> اللي العميل بيتقيّد عليه + <b>الافتراضي</b> اللي بيتملى للعميل الجديد. (من القرار: «حساب رقابة + بُعد الطرف · ممكن حساب رقابة لكل مجموعة».)
+<ul>
+<li><b>الخانات:</b> الكود (بيتولّد لوحده) · الاسم عربي (مطلوب ومايتكررش) + EN · <b>حساب الرقابة</b> (فرعي نشط بدور «العملاء» — الافتراضي 1103) · مدة السداد (يوم) · حد الائتمان · العملة · <b>ض.ق.م الافتراضي</b> (14% / صفري للتصدير / معفي) · <b>خصم المنبع</b> (الجهات الحكومية بتخصم 1%) · نشط · ملاحظات.</li>
+<li><b>مجموعة جاهزة «عملاء — عام»</b> (نظامية مابتتمسحش) = الافتراضية لأي عميل جديد، والعملاء اللي جايين من الأكسس من غير تصنيف بيروحولها.</li>
+<li><b>حساب لكل مجموعة (اختياري):</b> لو مجموعة عايزة حساب لوحدها ← 1103 بيتفرّع بالزرار اللي اتعمل في الدليل (110301 «العملاء — عام» + حساب للمجموعة) — النموذج 4 و7.</li>
+<li><b>الحماية:</b> المجموعة اللي فيها عملاء <b>مابتتمسحش</b> (FK RESTRICT) — تتوقف بس، والموقوفة مابتتختارش لعميل جديد · تغيير حساب الرقابة لمجموعة عليها قيود ممنوع (أو بقيد تسوية — مع القيود) · <span class="ltr">row_version</span> + سجل التعديلات · index على حساب الرقابة.</li>
+<li><b>بعدها:</b> شاشة العملاء (نماذجها جاهزة) — وخانة «المجموعة» فيها بتملى الحساب والمدة والحد والعملة والضرايب. <b>مكانها:</b> قسم «المبيعات» ← «مجموعات العملاء» قبل «العملاء». الصلاحيات: عرض · جديد · تعديل · حذف · إيقاف · تصدير.</li>
+</ul>`;
+
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>أسامي المجموعات:</b> الـ 6 دول (عام · مقاولات وتكييف · مصانع وأدوية · فنادق ومستشفيات ومدارس · قطاع عام · أجانب) ينفعوا؟ ولا قولّي التقسيمة اللي إنتوا شغالين بيها.</li>
+<li><b>حساب الرقابة:</b> كل المجموعات على «1103 العملاء» (اقتراحي — والتفصيل من البُعد) ولا فيه مجموعات عايزها بحساب لوحدها في الميزانية (زي الجهات الحكومية أو الأجانب)؟</li>
+<li><b>لما تغيّر الافتراضي في المجموعة</b> (مدة / حد): يتطبّق على العملاء الجداد بس (اقتراحي) ولا يسألك ويطبّق على الحاليين كمان (النموذج 6)؟</li>
+<li><b>الضرايب الافتراضية على المجموعة</b> (ض.ق.م 14% / صفري / معفي + خصم المنبع للحكومة): محتاجينها هنا عشان الفاتورة تتملى لوحدها؟ ولا الضريبة بتتحدد في الفاتورة بس؟</li>
+<li><b>المجموعات مستوى واحد</b> (اقتراحي) ولا شجرة (مجموعة رئيسية وتحتها فرعية)؟</li>
+<li><b>المجموعة لازم</b> لكل عميل؟ (اقتراحي: أيوه، والافتراضي «عملاء — عام».)</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+document.addEventListener("change",e=>{
+  const t=e.target, k=t.dataset.st;
+  if(t.dataset.own){OWN[t.dataset.own]=t.checked;render();return;}
+  if(t.dataset.flag){ST[t.dataset.flag]=t.checked;render();return;}
+  if(t.dataset.ap){ST.ap6=t.dataset.ap;render();return;}
+  if(t.dataset.g){const [i,j]=t.dataset.g.split(":").map(Number);G[i][j]=j===1?t.value:Number(t.value)||0;render();return;}
+  if(!k) return;
+  if(k.startsWith("g:")){const [,i,j]=k.split(":").map(Number);G[i][j]=t.value;render();return;}
+  ST[k]=t.value; render();
+});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const s=e.target.closest("[data-set]");
+  if(s){ST[s.dataset.set]=s.dataset.v; if(s.closest('.opt')===document.querySelectorAll('.opt')[7]&&s.dataset.set==="s8") ST.t8="grp"; render();}
+});
+render();
+</script>
+</body>
+</html>

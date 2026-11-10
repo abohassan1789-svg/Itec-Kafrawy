@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج ترقيم المستندات — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.tabs{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.tabs button{border:0;border-radius:6px;padding:7px 14px;font:inherit;font-weight:800;cursor:pointer;background:rgba(255,255,255,.15);color:#fff}
+.tabs button.on{background:#fff;color:var(--green)}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;font-size:10px;position:relative}
+.rail{width:62px;background:var(--green-dark);color:#fff;display:flex;flex-direction:column;align-items:center;padding:6px 4px;gap:4px;flex-shrink:0}
+.rail .brand{font-weight:900;font-size:9px;text-align:center;margin-bottom:4px;line-height:1.1}
+.rail .it{width:52px;border-radius:6px;padding:4px 2px;text-align:center;font-size:8.5px;line-height:1.2}
+.rail .it b{display:block;font-size:14px}
+.rail .it.on{background:#fff;color:var(--green)}
+.rail .sp{flex:1}
+.rail .out{background:rgba(220,38,38,.25)}
+.rail.wide{width:118px;align-items:stretch}
+.rail.wide .it{width:auto;display:flex;align-items:center;gap:5px;text-align:right;font-size:9.5px;padding:5px 6px}
+.rail.wide .it b{display:inline;font-size:12px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.hdr{height:40px;background:#fff;border-bottom:1px solid var(--card-border);display:flex;align-items:center;padding:0 8px;gap:8px;flex-shrink:0}
+.av{width:26px;height:26px;border-radius:50%;border:2px solid var(--green);background:#E2E8F0;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.hdr .nm{font-weight:900;font-size:10px;line-height:1.2}
+.hdr .nm small{display:block;color:var(--muted);font-weight:600;font-size:8.5px}
+.hdr .clk{margin-right:auto;text-align:center;font-weight:900;font-size:10px;line-height:1.2}
+.hdr .clk small{display:block;color:var(--muted);font-weight:600;font-size:8px}
+.bell{font-size:13px}
+.content{flex:1;padding:8px;position:relative;overflow:hidden}
+.hero{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--green)}
+.hero b{font-size:26px;font-weight:900}
+.hero small{color:var(--muted);font-size:10px;font-weight:700}
+.popup{position:absolute;top:42px;right:64px;width:170px;background:#fff;border:1px solid var(--card-border);border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.18);padding:8px;z-index:3}
+.popup h4{margin:0 0 4px;color:var(--green);font-size:11px;font-weight:900;border-bottom:2px solid var(--green);padding-bottom:3px}
+.popup .sub{color:var(--muted);font-weight:800;font-size:8.5px;margin:5px 0 2px}
+.popup .ln{padding:3px 4px;border-radius:4px;font-size:9.5px}
+.popup .ln.on{background:var(--first);color:var(--green);font-weight:800}
+.stat{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:6px}
+.stat small{color:var(--muted);font-weight:700;font-size:8.5px;display:block}
+.stat b{font-size:15px;font-weight:900}
+.tile{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:8px;text-align:center;font-weight:800;font-size:9.5px}
+.tile b{display:block;font-size:18px;margin-bottom:2px}
+
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-log{background:#0F766E}.b-prev{background:#6D28D9}.b-exp{background:#0E7490}
+.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:58px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.chk{font-size:8.5px;font-weight:700;margin-left:6px}
+.chk:before{content:"☑ ";color:var(--green)}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.srch{display:flex;gap:4px;margin-bottom:4px}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.photo{width:48px;height:56px;border:1px dashed var(--input);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#F8FAFC;flex-shrink:0}
+.ck{color:var(--green);font-weight:900;text-align:center}
+.x{color:#CBD5E1;text-align:center}
+.key{font-size:8px}
+.chip{display:inline-block;border-radius:10px;padding:1px 6px;font-size:8px;font-weight:800;margin:1px;border:1px solid var(--badge-bd);background:var(--badge-bg);color:var(--badge-tx)}
+.chip.off{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0}
+.chip.deny{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+
+
+/* ===== ترقيم المستندات ===== */
+.f label{width:70px}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tabs2{display:flex;gap:2px}
+.tabs2 span{padding:4px 9px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569}
+.tabs2 span.on{background:var(--green);color:#fff}
+.bdg{display:inline-block;border-radius:9px;padding:1px 7px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.b{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.o{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.c{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.l{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.b-adj{background:#B45309}
+input.lv,select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;direction:ltr;text-align:right;outline:none}
+select.lv{direction:rtl;padding:0 2px}
+input.lv:focus,select.lv:focus{box-shadow:0 0 0 2px #BFDBFE}
+.tbl input.lv,.tbl select.lv{width:100%;height:15px}
+.pvl{flex:1;height:18px;border:1px solid #B7E4C7;border-radius:4px;background:#ECFDF3;color:#087443;font-weight:900;font-size:10px;padding:1px 6px;display:flex;align-items:center;justify-content:flex-end}
+.pv{direction:ltr;unicode-bidi:isolate;font-family:Consolas,'Segoe UI',monospace;font-weight:900}
+.tbl .pv{color:#087443}
+.pv.ov{color:#B91C1C}
+.nx{direction:ltr;unicode-bidi:isolate;font-family:Consolas,'Segoe UI',monospace;font-weight:800;color:#087443}
+.hint{background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:4px 0}
+.warnb{background:#FFF7ED;border:1px solid #FED7AA;color:#9A3412;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:4px 0}
+.okb{background:#ECFDF3;border:1px solid #B7E4C7;color:#087443;border-radius:6px;padding:4px 6px;font-size:8.5px;font-weight:700;margin:3px 0}
+.big{background:linear-gradient(135deg,var(--green-dark),var(--green));color:#fff;border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.big .pv{font-size:20px;display:inline-block}
+.big small{display:block;font-size:8.5px;opacity:.92;font-weight:700}
+.dlg{background:#fff;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.25);width:330px;overflow:hidden;font-size:9px}
+.dlg .h{background:var(--green-dark);color:#fff;font-weight:900;padding:7px 10px;font-size:10.5px}
+.dlg .b{padding:10px}
+.dcard{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:7px;padding:8px 6px;font-size:8px}
+.dcard.sel{outline:1.5px solid var(--green);background:var(--first)}
+.dcard b{font-size:9.5px;font-weight:900;display:block}
+.dcard .nx{font-size:10px;display:block;margin:2px 0;text-align:right}
+.dcard small{color:var(--muted);font-weight:700}
+.seg{border:1px dashed #94A3B8;border-radius:6px;padding:4px;background:#fff;display:flex;flex-direction:column;gap:3px;min-width:0}
+.seg small{color:var(--muted);font-weight:800;font-size:8px;text-align:center}
+.seg.on{border-style:solid;border-color:var(--green);background:var(--first)}
+.mx td.c{text-align:center}
+.mx td.on{outline:1.5px solid var(--green);outline-offset:-2px;background:var(--sel)!important;font-weight:900}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج ترقيم المستندات (المرحلة 1ب · الشاشة 4)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD — الفرق بس في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). البيانات أمثلة، و<b>الخانات الزرقا شغالة</b>: غيّر البادئة أو الخانات أو الفاصل وشوف الرقم بيتغيّر.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+function win(inner){return `<div class="win" style="flex-direction:column"><div style="height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0"><span>🔢 ترقيم المستندات — A-H CODE</span><span style="margin-right:auto;color:var(--muted)">_ ▢ ✕</span></div><div class="main" style="display:flex;flex-direction:column;flex:1;min-height:0">${inner}</div></div>`;}
+function tb(mode="عرض"){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt b-ref">تحديث</span><span class="bt ${ed?'b-dis':'b-adj'}">🔢 ضبط العدّاد 🔑</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode" style="${ed?'background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE':''}">${mode}</span></div>`;}
+const TB=tb(), TBE=tb("تعديل");
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+const N=c=>`<span class="ltr">${c}</span>`;
+
+// الحقول الحية
+function fi(l,k,v,x=""){return `<div class="f"><label>${l}</label><input class="lv" data-k="${k}" value="${v}" ${x}></div>`;}
+function sel(k,opts,v){return `<select class="lv" data-k="${k}">${opts.map(o=>`<option value="${o[0]}" ${o[0]===v?'selected':''}>${o[1]}</option>`).join("")}</select>`;}
+function fs(l,k,opts,v){return `<div class="f"><label>${l}</label>${sel(k,opts,v)}</div>`;}
+const SEPS=[["-","شرطة «-»"],["/","سلاش «/»"],["","من غير فاصل"]];
+const YFS=[["full","2026 كاملة"],["short","26 رقمين"],["none","من غير سنة"]];
+const WHEN=[["save","وقت الحفظ (المسودة بتاخد رقم)"],["post","وقت الاعتماد (من غير فجوات)"]];
+const STEPS=[["1","خطوة واحدة: اعتماد = ترحيل"],["2","خطوتين: اعتماد ثم ترحيل"]];
+const pv=(n,y="",x="")=>`<b class="pv" data-n="${n}" ${y?`data-y="${y}"`:''} ${x}></b>`;
+const PVL=(l,n,y="")=>`<div class="f"><label>${l}</label><div class="pvl">${pv(n,y)}</div></div>`;
+const PRE=()=>`maxlength="6"`;
+const DIG='type="number" min="3" max="8"';
+function scope(r,inner,extra=""){return `<div class="lvs" data-p="${r[3]}" data-s="-" data-yf="full" data-d="${r[4]}" data-n="${r[5]+1}" data-y="2026" ${extra}>${inner}</div>`;}
+
+// النوع، الاسم، الموديول، البادئة، الخانات، آخر رقم 2026، آخر رقم 2025، الاعتماد
+const DT=[
+ ["sales_invoice","فاتورة مبيعات","المبيعات","INV",5,1248,4410,1],
+ ["sales_return","مرتجع مبيعات","المبيعات","SRT",4,37,121,1],
+ ["purchase_invoice","فاتورة مشتريات","المشتريات","PUR",5,612,2093,1],
+ ["purchase_return","مرتجع مشتريات","المشتريات","PRT",4,9,40,1],
+ ["receipt","سند قبض","الخزينة والبنوك","RCV",5,880,3120,1],
+ ["payment","سند صرف","الخزينة والبنوك","PAY",5,1033,3877,1],
+ ["journal","قيد يومية","الحسابات","JV",5,2410,8016,2],
+ ["opening","أرصدة افتتاحية","الحسابات","OPN",3,1,1,1],
+ ["transfer","تحويل مخزني","المخازن","TRF",4,145,502,1],
+ ["expense","مصروف","المصروفات","EXP",5,377,1290,1],
+];
+function fmt(p,s,yf,y,d,n){const ys=yf==="full"?String(y):yf==="short"?String(y).slice(-2):"";return [p,ys,String(n).padStart(d,"0")].filter(x=>x!=="").join(s);}
+const NX=(r,y=2026,n=null)=>`<span class="nx">${fmt(r[3],"-","full",y,r[4],n??r[5]+1)}</span>`;
+const stp=r=>r[7]===2?'<span class="bdg b">خطوتين</span>':'<span class="bdg o">خطوة واحدة</span>';
+function ttable(cols=["name","p","last","next"],s=0,rows=DT){
+  const T={name:"نوع المستند",mod:"الموديول",p:"البادئة",d:"الخانات",last:"آخر رقم",next:"الرقم الجاي",st:"الاعتماد"};
+  const V=r=>({name:`<b>${r[1]}</b>`,mod:r[2],p:`<b class="ltr">${r[3]}</b>`,d:r[4],last:N(r[5]),next:NX(r),st:stp(r)});
+  return `<table class="tbl"><tr>${cols.map(c=>`<th>${T[c]}</th>`).join("")}</tr>${rows.map((r,i)=>`<tr class="${i===s?'sel':''}">${cols.map(c=>`<td>${V(r)[c]}</td>`).join("")}</tr>`).join("")}</table>`;
+}
+const R=DT[0];
+const YEAR=`<div class="f"><label>السنة المالية</label><i>2026 — الحالية ▾</i></div>`;
+const srch=`<div class="srch"><i>🔍 بحث بالنوع / البادئة…</i></div>`;
+const cnt=`<div class="cnt">عدد الأنواع: 10 · السنة 2026 (الحالية) · 2025 🔒 مقفولة للعرض بس</div>`;
+const RULE1=`<span class="bdg c">يبدأ من 1 كل سنة 🔒</span>`;
+// فورم النوع (حي)
+const FORM=f("نوع المستند",R[1],"lock")+f("الموديول",R[2],"lock")+fi("البادئة *","p",R[3],PRE())+fs("الفاصل","s",SEPS,"-")+fs("السنة في الرقم","yf",YFS,"full")+fi("عدد الخانات","d",R[4],DIG);
+const FORM_X=fs("صرف الرقم","w",WHEN,"save")+fs("الاعتماد","st",STEPS,"1");
+const CNTR=f("آخر رقم اتصرف",N(R[5])+" — بتاريخ 08/11/2026","lock")+PVL("الرقم الجاي",R[5]+1);
+const LOG=[["05/11/2026 14:20","فاتورة مبيعات","2026","العدّاد: من 1190 لـ 1200","بداية دفتر ورقي جديد","admin"],["20/10/2026 11:02","مرتجع مبيعات","—",`البادئة: من ${N("SR")} لـ ${N("SRT")}`,"توحيد البادئات","admin"],["01/07/2026 09:05","سند صرف","2026","العدّاد: من 640 لـ 650","أرقام اتصرفت يدوي","admin"],["15/03/2026 16:40","قيد يومية","—","الاعتماد: من خطوة واحدة لـ خطوتين","مراجعة القيود قبل الترحيل","admin"],["02/01/2026 08:30","تحويل مخزني","—","الخانات: من 3 لـ 4","التحويلات زادت","admin"],["01/01/2026 00:00","كل الأنواع","2026","عدّادات 2026 اتعملت لوحدها من 1","أول مستند في السنة","system"],["12/12/2025 10:15","سند قبض","—",`البادئة: من ${N("RC")} لـ ${N("RCV")}`,"توحيد البادئات","admin"],["30/06/2025 13:00","أرصدة افتتاحية","—","الخانات: من 5 لـ 3","مستند واحد في السنة","admin"]];
+
+const DN=[
+ ["زي Hr GAD: الفورم يمين + القائمة شمال","نفس ترتيب الـ Base Screen: يمين «بيانات النوع» (البادئة، الفاصل، السنة في الرقم، الخانات، وقت صرف الرقم، طريقة الاعتماد) وتحتها «عدّاد سنة 2026» بآخر رقم والرقم الجاي — بيتغيّر وانت بتكتب · شمال «البحث والتسجيل» بكل أنواع المستندات والرقم الجاي لكل واحد.",
+  win(TBE+`<div class="content" style="display:grid;grid-template-columns:1.1fr 1fr;gap:8px">`+scope(R,`${gb("بيانات النوع",FORM+FORM_X)}${gb("عدّاد سنة 2026 "+RULE1,CNTR,"margin-top:10px")}`)+`${gb("البحث والتسجيل",YEAR+srch+ttable()+cnt)}</div>`)],
+ ["زي «السنة المالية»: الفورم + عدّاداته في كل سنة تحته + القائمة شمال","نفس النموذج اللي اخترته في السنة المالية: يمين بيانات النوع وتحتها جدول «العدّاد في كل سنة» (2027 لسه هيبدأ من 1 · 2026 الحالية · 2025 🔒 مقفولة) · شمال الأنواع. واضح فيه إن كل سنة ليها عدّاد لوحدها.",
+  win(TBE+`<div class="content" style="display:grid;grid-template-columns:1.1fr 1fr;gap:8px">`+scope(R,`${gb("بيانات النوع",FORM)}${gb("العدّاد في كل سنة",`<table class="tbl"><tr><th>السنة</th><th>الحالة</th><th>آخر رقم</th><th>الرقم الجاي</th></tr><tr><td><b>2027</b></td><td><span class="bdg o">مفتوحة</span></td><td class="muted">لسه</td><td>${pv(1,2027)}</td></tr><tr class="sel"><td><b>2026</b></td><td><span class="bdg c">الحالية</span></td><td>${N(R[5])}</td><td>${pv(R[5]+1)}</td></tr><tr><td><b>2025</b></td><td><span class="bdg l">🔒 مقفولة</span></td><td>${N(R[6])}</td><td class="muted">للعرض بس</td></tr></table><div class="hint">العدّاد بيتعمل لوحده مع أول مستند في السنة — ويبدأ من 1.</div>`,"margin-top:10px")}`)+`${gb("البحث والتسجيل",YEAR+srch+ttable(["name","p","next"])+cnt)}</div>`)],
+ ["زي «العملات»: الفورم وتحته لوحة مساعدة + القائمة شمال","نفس فكرة النموذج 10 في العملات: يمين الفورم وتحته لوحة خضرا كبيرة بالرقم الجاي، وأول رقم في السنة الجاية، وأقصى عدد مستندات تسيعه الخانات · شمال القائمة.",
+  win(TBE+`<div class="content" style="display:grid;grid-template-columns:1.1fr 1fr;gap:8px">`+scope(R,`${gb("بيانات النوع",FORM)}${gb("معاينة",`<div class="big"><small>الرقم الجاي لـ «${R[1]}» في 2026</small>${pv(R[5]+1)}<small>آخر رقم اتصرف: ${N(R[5])} — بتاريخ 08/11/2026</small></div><div class="f"><label>أول رقم 2027</label><div class="pvl">${pv(1,2027)}</div></div><div class="f"><label>الخانات بتسيع</label><i class="lock"><span class="pvd"></span></i></div><div class="okb">✔ يبدأ من 1 كل سنة — ومفيش رقمين زي بعض في نفس السنة</div>`,"margin-top:10px")}`)+`${gb("البحث والتسجيل",YEAR+srch+ttable(["name","p","last","next"])+cnt)}</div>`)],
+ ["جدول واحد بتعدّل فيه كل الأنواع","كل الأنواع في جدول واحد بعرض الشاشة، وتعدّل البادئة والفاصل والسنة والخانات في السطر نفسه، وعمود «الرقم الجاي» بيتغيّر قصادك · فوق اختيار السنة. أسرع حاجة لو عايز تظبط الكل مرة واحدة.",
+  win(TBE+`<div class="content"><div style="display:flex;gap:8px;align-items:center;margin-bottom:4px"><div style="width:190px">${YEAR}</div><span style="margin-bottom:4px">${RULE1}</span></div><table class="tbl"><tr><th>نوع المستند</th><th style="width:52px">البادئة</th><th style="width:62px">الفاصل</th><th style="width:74px">السنة</th><th style="width:38px">الخانات</th><th>آخر رقم</th><th>الرقم الجاي</th></tr>${DT.map((r,i)=>`<tr class="lvs ${i===0?'sel':''}" data-n="${r[5]+1}" data-y="2026"><td><b>${r[1]}</b></td><td><input class="lv" data-k="p" value="${r[3]}" maxlength="6"></td><td>${sel("s",SEPS,"-")}</td><td>${sel("yf",YFS,"full")}</td><td><input class="lv" data-k="d" ${DIG} value="${r[4]}"></td><td>${N(r[5])}</td><td>${pv(r[5]+1)}</td></tr>`).join("")}</table><div class="cnt">التعديل بيتحفظ مرة واحدة بـ «حفظ» · «آخر رقم» مابيتعدّلش هنا (من «🔢 ضبط العدّاد» بس)</div></div>`)],
+ ["مصفوفة: الأنواع × السنين","جدول فيه كل نوع في سطر وكل سنة مالية في عمود (آخر رقم اتصرف) — تشوف الصورة كلها مرة واحدة · تختار خانة ← تحت تفاصيلها وشكل الرقم بتاعها.",
+  win(TB+`<div class="content"><table class="tbl mx"><tr><th>نوع المستند</th><th>البادئة</th><th style="text-align:center">2025 🔒 مقفولة</th><th style="text-align:center">2026 الحالية</th><th style="text-align:center">2027 مفتوحة</th></tr>${DT.map((r,i)=>`<tr><td><b>${r[1]}</b></td><td><b class="ltr">${r[3]}</b></td><td class="c muted">${N(r[6])}</td><td class="c ${i===0?'on':''}">${N(r[5])}</td><td class="c muted">لسه</td></tr>`).join("")}</table>`+scope(R,gb(`${R[1]} · سنة 2026`,`<div style="display:grid;grid-template-columns:.8fr 1.2fr 1.3fr;gap:6px">${f("آخر رقم",N(R[5]),"lock")}${f("اتصرف في",N("08/11/2026 10:42")+" · user","lock")}${PVL("الرقم الجاي",R[5]+1)}</div>`,"margin-top:8px"))+`</div>`)],
+ ["كروت: كارت لكل نوع بالرقم الجاي","فوق كارت لكل نوع مستند فيه الرقم الجاي كبير وآخر رقم اتصرف (قيد اليومية عليه «خطوتين» بلون دهبي) · تحت شكل الرقم للكارت المختار في سطر واحد بمعاينة حية.",
+  win(TBE+`<div class="content"><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px">${DT.map((r,i)=>`<div class="dcard ${i===0?'sel':''}" style="${r[7]===2?'border-right-color:#D97706':''}"><b>${r[1]}</b>${NX(r)}<small>آخر: ${N(r[5])} · ${r[7]===2?'<span style="color:#B45309">خطوتين</span>':'خطوة واحدة'}</small></div>`).join("")}</div>`+scope(R,gb(`شكل رقم «${R[1]}»`,`<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px">${fi("البادئة *","p",R[3],PRE())}${fs("الفاصل","s",SEPS,"-")}${fs("السنة","yf",YFS,"full")}${fi("الخانات","d",R[4],DIG)}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${fs("صرف الرقم","w",WHEN,"save")}${fs("الاعتماد","st",STEPS,"1")}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${PVL("الجاي في 2026",R[5]+1)}${PVL("أول رقم 2027",1,2027)}</div>`,"margin-top:10px"))+`</div>`)],
+ ["تبويبات: «شكل الترقيم» / «العدّادات» / «سجل الضبط»","شاشة فيها 3 تبويبات: شكل الرقم لكل نوع · العدّادات بالسنة · و«سجل الضبط» (مين غيّر العدّاد أو البادئة، إمتى، ومن كام لكام، والسبب) — هنا ظاهر تبويب السجل.",
+  win(TB+`<div class="content"><div class="tabs2"><span>شكل الترقيم</span><span>العدّادات</span><span class="on">سجل الضبط</span></div><div style="background:#fff;border:1px solid var(--card-border);border-radius:0 7px 7px 7px;padding:8px"><div style="display:flex;gap:6px;margin-bottom:6px">${f("النوع","الكل ▾")}${f("السنة","2026 ▾")}</div><table class="tbl"><tr><th>التاريخ</th><th>النوع</th><th>السنة</th><th>اللي اتغيّر</th><th>السبب</th><th>بواسطة</th></tr>${LOG.map((r,i)=>`<tr class="${i===0?'sel':''}"><td>${N(r[0])}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>`).join("")}</table><div class="cnt">السجل ده من سجل التعديلات (audit) — مابيتمسحش</div></div></div>`)],
+ ["نافذة «ضبط العدّاد» 🔢 (بصلاحية وكلمة سر)","الـ Base Screen العادي · «ضبط العدّاد» بيفتح نافذة: الرقم الجاي الجديد وبتوريك شكله على طول، ومابتقبلش رقم أقل من أكبر رقم اتستخدم فعلاً (عشان مايتكررش) · لازم سبب، وصلاحية لوحدها بكلمة سر 🔑، وبيتسجل في سجل التعديلات. (جرّب تكتب 1200 أو 1300)",
+  win(TB+`<div class="content" style="display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.25)">`+scope(R,`<div class="dlg"><div class="h">🔢 ضبط عدّاد «${R[1]}» — سنة 2026</div><div class="b">${f("آخر رقم اتصرف",N(R[5]),"lock")}${f("أكبر رقم مستخدم",N("INV-2026-01248"),"lock")}${fi("الرقم الجاي *","n",R[5]+1,'type="number" min="1"')}<div class="f"><label>هيبقى</label><div class="pvl">${pv("")}</div></div><div class="pvchk"></div>${fi("السبب *","r","بداية دفتر ورقي جديد",'style="direction:rtl"')}${f("🔑 كلمة السر","••••••")}<div class="muted" style="font-weight:700">الأرقام اللي هتتنط (لو كبّرت) مش هترجع — وده هيتسجل.</div><div style="display:flex;gap:6px;margin-top:6px"><span class="bt" style="background:var(--green);padding:5px 14px;font-size:9.5px">حفظ</span><span class="bt b-can" style="padding:5px 14px;font-size:9.5px">إلغاء</span></div></div></div>`,'data-used="1248"')+`</div>`)],
+ ["شجرة بالموديول + الفورم + لوحة القواعد","يمين الأنواع متجمّعة تحت موديولها (المبيعات، المشتريات، الخزينة…) · في النص الفورم · شمال لوحة بتراجع القواعد وانت بتكتب: البادئة حروف إنجليزي وأرقام لحد 6، مش متكررة مع نوع تاني، الخانات من 3 لـ 8، والترقيم من 1 كل سنة.",
+  win(TBE+`<div class="content" style="display:grid;grid-template-columns:.95fr 1.2fr 145px;gap:8px"><div>${srch}<table class="tbl">${[...new Set(DT.map(r=>r[2]))].map(m=>`<tr class="sec"><td colspan="2">▾ ${m}</td></tr>`+DT.filter(r=>r[2]===m).map(r=>`<tr class="${r===R?'sel':''}"><td style="background:transparent">${r[1]}</td><td><b class="ltr">${r[3]}</b></td></tr>`).join("")).join("")}</table></div>`+scope(R,`${gb("بيانات النوع",FORM+fs("صرف الرقم","w",WHEN,"save")+PVL("الرقم الجاي",R[5]+1))}`)+`${gb("المراجعة",`<div class="okb">✔ البادئة إنجليزي (${N("INV")})</div><div class="okb">✔ مش متكررة مع نوع تاني</div><div class="okb">✔ الخانات 5 (من 3 لـ 8)</div><div class="okb">✔ يبدأ من 1 كل سنة</div><div class="warnb">🔒 جهازين مايخدوش نفس الرقم (الحجز بـ ${N("FOR UPDATE")})</div><div class="warnb">🛈 «آخر رقم» من «ضبط العدّاد» بس</div>`)}</div>`)],
+ ["«بنّاء الرقم» بالقطع + القائمة شمال","يمين الرقم مكتوب قطع: [البادئة] [الفاصل] [السنة] [الفاصل] [المسلسل] — كل قطعة ليها خانتها، وتحتها الرقم كبير وأمثلة (الجاي، أول رقم في 2027، رقم كبير لو عدّى الخانات) · شمال قائمة صغيرة بالأنواع.",
+  win(TBE+`<div class="content" style="display:grid;grid-template-columns:1.45fr 1fr;gap:8px">`+scope(R,`${gb(`شكل رقم «${R[1]}»`,`<div style="display:grid;grid-template-columns:1.1fr .9fr 1.2fr .8fr 1fr;gap:4px;direction:ltr"><div class="seg on"><small>البادئة</small><input class="lv" data-k="p" value="${R[3]}" maxlength="6"></div><div class="seg"><small>فاصل</small>${sel("s",SEPS,"-")}</div><div class="seg on"><small>السنة</small>${sel("yf",YFS,"full")}</div><div class="seg"><small>فاصل</small><i class="muted" style="font-style:normal;text-align:center;font-size:8px">زي اللي قبله</i></div><div class="seg on"><small>المسلسل</small><input class="lv" data-k="d" ${DIG} value="${R[4]}"></div></div><div class="big" style="margin-top:8px;text-align:center"><small>الرقم الجاي في 2026</small>${pv(R[5]+1)}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">${PVL("أول رقم 2027",1,2027)}${PVL("المستند 100000",100000)}</div><div class="hint">لو المسلسل عدّى الخانات البرنامج بيكمّل بخانة زيادة (بالأحمر) — مابيقفش.</div>`)}`)+`${gb("الأنواع — 2026",srch+ttable(["name","next"])+cnt)}</div>`)],
+];
+
+const SETS=[
+ ["🔢 ترقيم المستندات",DN,`شاشة «ترقيم المستندات» (الشاشة الرابعة في 1ب). الفكرة: **عدّاد لكل (نوع مستند، سنة مالية)** في جدول <span class="ltr">core.document_sequences</span> مربوط بالسنين اللي في «السنة المالية والفترات». قرارك: **الترقيم بيبدأ من 1 كل سنة** (مثلاً <span class="ltr">INV-2026-00001</span>). لكل نوع: **البادئة** (${N("INV")}، ${N("PUR")}، ${N("RCV")}… حروف إنجليزي وأرقام لحد 6)، **الفاصل** (شرطة أو سلاش أو من غير)، **السنة في الرقم** (2026 أو 26 أو من غير)، **عدد الخانات** (3–8)، و**آخر رقم اتصرف** و**الرقم الجاي**. أنواع المستندات **ثابتة من البرنامج** (كل شاشة مستند بتضيف نوعها) فمفيش «جديد» ولا «حذف» — بتعدّل الشكل بس. الحجز بـ <span class="ltr">FOR UPDATE</span> جوه نفس الـ Transaction، فجهازين مايخدوش نفس الرقم أبداً، والعدّاد بيتعمل لوحده مع أول مستند في السنة، والسنة المقفولة 🔒 عدّاداتها للعرض بس. **«🔢 ضبط العدّاد»** صلاحية لوحدها بكلمة سر 🔑، ومايقدرش ينزل تحت أكبر رقم اتستخدم، وكل ضبط بيتسجل في سجل التعديلات. ومعاها خانتين لكل نوع (قول لو مش عايزهم): **«صرف الرقم»** وقت الحفظ (المسودة بتاخد رقم) ولا وقت الاعتماد (الأرقام المعتمدة من غير فجوات) · و**«الاعتماد»** خطوة واحدة (قرارك: اعتماد = ترحيل) ولا خطوتين لنوع معيّن. مكانها: «النظام والصلاحيات» ← «الإعدادات العامة» بعد «العملات وأسعار الصرف».`],
+];
+let cur=0;
+function q(sc,k){const el=sc.querySelector(`[data-k="${k}"]`);return el?el.value:(sc.dataset[k]??"");}
+function upd(sc){
+  const p=q(sc,"p").toUpperCase(),s=q(sc,"s"),yf=q(sc,"yf")||"full";
+  let d=parseInt(q(sc,"d"),10);if(!(d>=1))d=5;d=Math.min(Math.max(d,1),10);
+  sc.querySelectorAll(".pv").forEach(b=>{
+    const n=parseInt(b.dataset.n||q(sc,"n")||sc.dataset.n,10)||1, y=b.dataset.y||sc.dataset.y||2026;
+    const ov=String(n).length>d;
+    b.textContent=fmt(p,s,yf,y,d,n); b.classList.toggle("ov",ov);
+    b.title=ov?"عدّى الخانات — بيكمّل بخانة زيادة":"";
+  });
+  sc.querySelectorAll(".pvd").forEach(e=>e.innerHTML=`لحد ${N("9".repeat(d))} مستند في السنة`);
+  sc.querySelectorAll(".pvchk").forEach(e=>{const n=parseInt(q(sc,"n"),10),u=parseInt(sc.dataset.used,10);
+    e.innerHTML=!(n>0)?'<div class="warnb">⚠ اكتب رقم أكبر من صفر</div>':n<=u?`<div class="warnb" style="background:#FEE2E2;border-color:#FECACA;color:#B91C1C">✖ مينفعش — لازم أكبر من ${N(u)} (أكبر رقم اتستخدم) عشان مايتكررش</div>`:`<div class="okb">✔ مقبول${n>u+1?` — هيتنط ${N(n-u-1)} رقم`:''}</div>`;});
+}
+document.addEventListener("input",e=>{const t=e.target;if(t.dataset&&t.dataset.k==="p"){const c=t.value.toUpperCase().replace(/[^A-Z0-9]/g,"");if(c!==t.value)t.value=c;}const sc=t.closest&&t.closest(".lvs");if(sc)upd(sc);});
+document.addEventListener("change",e=>{const sc=e.target.closest&&e.target.closest(".lvs");if(sc)upd(sc);});
+function render(){
+  document.getElementById("note").innerHTML=SETS[cur][2].replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
+  document.getElementById("grid").innerHTML=SETS[cur][1].map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]}</div></div>`).join("");
+  document.querySelectorAll(".lvs").forEach(upd);
+  window.scrollTo(0,0);
+}
+render();
+</script>
+</body>
+</html>
