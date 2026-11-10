@@ -113,6 +113,10 @@ SECTIONS: tuple[Section, ...] = (
             Target("customers", "العملاء", "Customers", icon="👥",
                    actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="👥"),
+        Group("أوامر التوريد", (
+            Target("projects", "أوامر التوريد", "Supply Orders", icon="📋",
+                   actions=("view", "create", "edit", "save", "delete", "export")),
+        ), icon="📋"),
     )),
     Section("purch", "المشتريات", "Purchases", "📦"),
     Section("inv", "المخازن", "Inventory", "🏬"),
