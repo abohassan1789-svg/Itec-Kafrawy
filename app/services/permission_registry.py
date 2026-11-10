@@ -118,7 +118,12 @@ SECTIONS: tuple[Section, ...] = (
                    actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="📋"),
     )),
-    Section("purch", "المشتريات", "Purchases", "📦"),
+    Section("purch", "المشتريات", "Purchases", "📦", groups=(
+        Group("الموردين", (
+            Target("supplier_groups", "مجموعات الموردين", "Supplier Groups", icon="🗂️",
+                   actions=("view", "create", "edit", "save", "delete", "export")),
+        ), icon="🚚"),
+    )),
     Section("inv", "المخازن", "Inventory", "🏬"),
     Section("cash", "الخزينة", "Cash & Banks", "💵"),
     Section("rep", "التقارير", "Reports", "📈"),
