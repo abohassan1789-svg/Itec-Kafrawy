@@ -61,7 +61,7 @@ def test_menu_tree_admin_sees_everything():
     SESSION.start(ADMIN, set())
     tree = menu_tree(SESSION.can)
     ids = [s["id"] for s in tree]
-    assert ids == ["acc", "sales", "purch", "inv", "cash", "rep", "sys"]
+    assert ids == ["acc", "sales", "purch", "hr", "inv", "cash", "rep", "sys"]
     sys_sec = tree[-1]
     assert sys_sec["bottom"] and not sys_sec["coming_soon"] and sys_sec["count"] == 8
     acc = tree[0]
@@ -70,7 +70,9 @@ def test_menu_tree_admin_sees_everything():
     assert not sales["coming_soon"] and sales["count"] == 3             # «المبيعات» ← مجموعات العملاء + العملاء + أوامر التوريد
     purch = tree[2]
     assert not purch["coming_soon"] and purch["count"] == 2             # «المشتريات» ← مجموعات الموردين + الموردين
-    assert all(s["coming_soon"] for s in tree[3:-1])
+    hr = tree[3]
+    assert not hr["coming_soon"] and hr["count"] == 1                   # «الموظفين» ← قسم لوحده
+    assert all(s["coming_soon"] for s in tree[4:-1])
 
 
 def test_menu_tree_hides_what_user_cannot_view():
@@ -96,7 +98,7 @@ def test_layout_rail_on_right_with_logo_and_header(qapp, monkeypatch):
     assert w.home_page.logo_view is not None                           # لوجو ITEC موجود
     assert w.user_header.name.text() == "مدير النظام"
     assert w.active_rail() == "home"
-    assert list(w._rail_buttons) == ["home", "acc", "sales", "purch", "inv", "cash", "rep", "sys"]
+    assert list(w._rail_buttons) == ["home", "acc", "sales", "purch", "hr", "inv", "cash", "rep", "sys"]
     w._quitting = True
     w.close()
 

@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج الموظفين — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة الموظفين (المرحلة 3ب · الشاشة 3)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل «العملاء» و«الموردين» — الفرق في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>كل الأسامي والأرقام وهمية</b>، والعهد والمبالغ <b>توضيحية</b>. <b>الخانات الزرقا والتبويبات شغالين</b>: دوس على أي موظف، غيّر الفلاتر، جرّب «موظف جديد» في النموذج 8، وعلّم الأدوار في النموذج 9.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== الأقسام (إدارية بس — للفلتر والتجميع) =====
+const DP={ADM:"الإدارة",SAL:"المبيعات",STO:"المشتريات والمخازن",FIN:"الحسابات والخزينة",TEC:"التركيبات والصيانة"};
+const CC={ADM:"1101 الإدارة العامة",SAL:"2101 المبيعات",STO:"3101 المخازن",FIN:"1102 الحسابات",TEC:"4101 التركيبات"};
+// الأدوار: s مندوب مبيعات · t أمين خزينة · w أمين مخزن · c بياخد عهدة
+const RL={s:"مندوب",t:"أمين خزينة",w:"أمين مخزن",c:"عهدة"};
+const USERS=["admin","sara.f","mona.k","hany.s","omar.t","",];
+
+// ===== الموظفين (كله وهمي) =====
+// [0 الكود، 1 الاسم، 2 EN، 3 الوظيفة، 4 القسم، 5 الموبايل، 6 الرقم القومي، 7 تاريخ التعيين، 8 الأدوار، 9 حد العهدة، 10 العهدة المفتوحة، 11 مستخدم البرنامج، 12 نشط، 13 فواتير كمندوب 2026، 14 العنوان]
+const E=[
+ ["EMP-001","م/ أحمد سمير","Ahmed Samir","المدير العام","ADM","01000002001","28001010100011","2015-03-01","c",50000,0,"admin",true,0,"مدينة نصر"],
+ ["EMP-002","م/ كريم عادل","Karim Adel","مدير مبيعات","SAL","01000002002","28505050100022","2018-06-15","sc",30000,12500,"",true,184,"المعادي"],
+ ["EMP-003","أ/ سارة فؤاد","Sara Fouad","محاسبة","FIN","01000002003","29203030100033","2021-01-10","t",0,0,"sara.f",true,0,"الدقي"],
+ ["EMP-004","أ/ هاني سعد","Hany Saad","أمين مخزن","STO","01000002004","28807070100044","2019-09-01","wc",10000,3200,"hany.s",true,0,"شبرا"],
+ ["EMP-005","م/ عمر طارق","Omar Tarek","مهندس مبيعات","SAL","01000002005","29409090100055","2022-04-03","s",0,0,"omar.t",true,97,"6 أكتوبر"],
+ ["EMP-006","م/ محمود رضا","Mahmoud Reda","مهندس تركيبات","TEC","01000002006","","2020-11-20","c",20000,18400,"",true,0,"حلوان"],
+ ["EMP-007","أ/ منى كمال","Mona Kamal","رئيس الحسابات","FIN","01000002007","28602020100077","2016-02-01","tc",15000,0,"mona.k",true,0,"مصر الجديدة"],
+ ["EMP-008","أ/ ياسر نبيل","Yasser Nabil","مسؤول مشتريات","STO","01000002008","29001010100088","2023-05-14","c",25000,7600,"",true,0,"العبور"],
+ ["EMP-009","م/ إسلام فتحي","Eslam Fathy","مهندس مبيعات","SAL","01000002009","29511110100099","2024-08-01","s",0,0,"",true,41,"التجمع الخامس"],
+ ["EMP-010","أ/ رامي جمال","Ramy Gamal","فني صيانة","TEC","01000002010","","2021-07-07","c",5000,1150,"",true,0,"الهرم"],
+ ["EMP-011","أ/ نهى صلاح","Noha Salah","سكرتارية","ADM","01000002011","","2025-01-05","",0,0,"",true,0,"المهندسين"],
+ ["EMP-012","م/ وليد حسن","Walid Hassan","مهندس مبيعات (سابق)","SAL","01000002012","28408080100122","2017-03-12","s",0,0,"",false,12,"الزيتون"],
+];
+const EMx=Object.fromEntries(E.map(e=>[e[0],e]));
+const N=c=>`<span class="ltr">${c}</span>`;
+const m0=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
+const has=(e,r)=>e[8].includes(r);
+const roles=e=>[...e[8]].map(r=>`<span class="rl ${r}">${RL[r]}</span>`).join("")||'<span class="hint" style="margin:0">—</span>';
+const stB=e=>e[12]?'<span class="bdg ok">نشط</span>':'<span class="bdg x">موقوف</span>';
+const av=e=>`<span class="av ${e[12]?'':'off'}">${e[1].replace(/^(م|أ|د)\/\s*/,"").split(" ").map(w=>w[0]).slice(0,2).join("")}</span>`;
+const over=e=>e[9]>0&&e[10]>e[9];
+const cust=e=>e[10]?`<span class="ltr" style="font-weight:900;color:${over(e)?'#B91C1C':'#6D28D9'}">${m0(e[10])}</span>`:'<span class="hint" style="margin:0">—</span>';
+
+const ST={s1:"EMP-002",f1:"all",r1:"", r2:"s",s2:"EMP-005", s3:"EMP-004",t3:"main", d4:"",oc4:false,us4:false,f4:"all",s4:"EMP-006", s5:"EMP-007",f5:"all", d6:"SAL",s6:"EMP-002", s7:"EMP-006",t7:"cust",
+  n8name:"م/ تامر يوسف",n8nid:"2950505010012",n8dept:"SAL",n8job:"مندوب مبيعات",n8user:"",n8rs:true,n8rt:false,n8rw:false,n8rc:true,n8lim:"10000", i10:0};
+
+// ===== أدوات =====
+function win(inner,title="🪪 الموظفين — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+function tb(mode="عرض"){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">موظف جديد</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-dis':'b-tog'}">إيقاف / تفعيل</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ${ed?'ed':''}">${mode}</span></div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+function chipsF(key,F){return Object.keys(F).map(x=>`<span class="chipf ${ST[key]===x?'on':''}" data-set="${key}" data-v="${x}">${F[x]}</span>`).join("");}
+const FS={all:"الكل",act:"النشط",off:"الموقوف"};
+const byStatus=(es,k)=>es.filter(e=>ST[k]==="all"||(ST[k]==="act"?e[12]:!e[12]));
+function keepSel(key,es){if(es.length&&!es.find(e=>e[0]===ST[key])) ST[key]=es[0][0];return es.length?EMx[ST[key]]:null;}
+function sel(key,val,opts,cls=""){return `<select class="lv ${cls}" data-st="${key}">${opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return `<option value="${v}" ${v===val?'selected':''}>${t}</option>`;}).join("")}</select>`;}
+const cnt=()=>`<div class="cnt">${E.length} موظف (أمثلة) · ${E.filter(e=>e[12]).length} نشط · ${E.filter(e=>has(e,"s")).length} مندوب · ${E.filter(e=>e[10]>0).length} عليهم عهدة مفتوحة — في الأكسس 19 موظف</div>`;
+
+function empTable(es,key,mode="std"){
+  const rows=es.map(e=>`<tr class="${e[0]===ST[key]?'sel':''} ${e[12]?'':'off'}" data-set="${key}" data-v="${e[0]}" style="cursor:pointer"><td>${N(e[0])}</td><td><b>${e[1]}</b>${mode==="std"?`<div style="color:var(--muted);font-size:7.5px">${e[3]} · ${DP[e[4]]}</div>`:''}</td><td>${roles(e)}</td><td class="n">${cust(e)}</td><td>${stB(e)}</td></tr>`).join("")||'<tr><td colspan="5" class="hint">مفيش موظفين هنا</td></tr>';
+  return `<div class="scroll"><table class="tbl"><tr><th>الكود</th><th>${mode==="std"?'الموظف / الوظيفة':'الموظف'}</th><th>الأدوار</th><th class="n">العهدة</th><th>الحالة</th></tr>${rows}</table></div>`;}
+function viewForm(e,compact=false){
+  if(!e) return '<div class="hint">مفيش موظف</div>';
+  const a=gb("البيانات الأساسية",f("الكود",N(e[0]),"lock")+f("الاسم",e[1])+f("الاسم EN",e[2])+f("الوظيفة",e[3])+f("القسم",DP[e[4]])+f("مركز التكلفة",CC[e[4]])+f("الحالة",e[12]?"نشط":"موقوف","lock"));
+  const b=gb("الاتصال والهوية",f("الموبايل",N(e[5]))+f("العنوان",e[14])+f("الرقم القومي",e[6]?N(e[6]):"")+f("تاريخ التعيين",N(e[7])));
+  const d=gb("الأدوار والعهدة",`<div class="f"><label>الأدوار</label><span>${roles(e)}</span></div>`+f("مستخدم البرنامج",e[11]?N(e[11]):"— مش مربوط")+f("حد العهدة",has(e,"c")?(e[9]?`${m0(e[9])} EGP`:"من غير حد"):"— مابياخدش عهدة")+`<div class="hint">العهدة المفتوحة ${m0(e[10])} EGP على 1107 عهد الموظفين ببُعد الموظف — توضيحي، الحقيقي من القيود (المرحلة 5)</div>`);
+  return compact?a+d:a+b+d;}
+
+// ===== النماذج =====
+function m1(){
+  const es=byStatus(E,"f1").filter(e=>!ST.r1||has(e,ST.r1)), e=keepSel("s1",es);
+  return win(tb()+`<div class="content"><div class="col" style="width:46%;overflow:auto">${viewForm(e)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 الاسم أو الكود أو الموبايل أو الوظيفة… (F1)</i></div><div class="srch"><div style="width:110px;display:flex">${sel("r1",ST.r1,[["","كل الأدوار"],...Object.entries(RL).map(([k,v])=>[k,v])])}</div><span style="margin-right:auto"></span>${chipsF("f1",FS)}</div>${empTable(es,"s1")}${cnt()}</div></div>`);}
+
+function m2(){
+  const T={"":"الكل",...RL};
+  const tabs=Object.keys(T).map(r=>`<span class="${ST.r2===r?'on':''}" data-set="r2" data-v="${r}">${T[r]}<em>${E.filter(e=>!r||has(e,r)).length}</em></span>`).join("");
+  const es=E.filter(e=>!ST.r2||has(e,ST.r2)), e=keepSel("s2",es);
+  const H={"":"كل الموظفين",s:"المندوبين — بيظهروا في خانة «المندوب» في فاتورة البيع",t:"أمناء الخزائن — بيتختاروا في شاشة الخزائن",w:"أمناء المخازن — بيتختاروا في شاشة المخازن",c:"اللي بياخدوا عهدة — بيظهروا في «صرف عهدة» وحسابهم 1107 ببُعد الموظف"};
+  return win(tb()+`<div class="content" style="flex-direction:column;gap:0"><div class="tabs2">${tabs}</div><div style="display:flex;gap:7px;flex:1;min-height:0;border-top:2px solid var(--green);padding-top:4px"><div class="col" style="width:46%;overflow:auto">${viewForm(e,true)}</div><div class="col" style="flex:1"><div class="hdr" style="margin-bottom:4px"><b>${T[ST.r2]}</b><div class="p">${H[ST.r2]}</div></div><div class="srch"><i>🔍 بحث…</i></div>${empTable(es,"s2","short")}</div></div></div>`);}
+
+function m3(){
+  const e=EMx[ST.s3];
+  const T={main:"البيانات",cont:"الاتصال والهوية",role:"الأدوار والمستخدم",cust:"العهدة",note:"ملاحظات"};
+  const itabs=Object.keys(T).map(t=>`<span class="${ST.t3===t?'on':''}" data-set="t3" data-v="${t}">${T[t]}</span>`).join("");
+  let body="";
+  if(ST.t3==="main") body=f("الكود",N(e[0]),"lock")+f("الاسم",e[1])+f("الاسم EN",e[2])+f("الوظيفة",e[3])+f("القسم",DP[e[4]])+f("مركز التكلفة",CC[e[4]])+f("الحالة",e[12]?"نشط":"موقوف","lock");
+  if(ST.t3==="cont") body=f("الموبايل",N(e[5]))+f("تليفون","")+f("الإيميل","")+f("العنوان",e[14])+f("الرقم القومي",e[6]?N(e[6]):"")+f("تاريخ التعيين",N(e[7]))+`<div class="hint">الرقم القومي اختياري — 14 رقم ومايتكررش لو اتكتب.</div>`;
+  if(ST.t3==="role") body=Object.entries(RL).map(([k,v])=>`<div class="f"><label>${v}</label><i class="lock">${has(e,k)?"✔ أيوه":"—"}</i></div>`).join("")+f("مستخدم البرنامج",e[11]?N(e[11]):"— مش مربوط")+`<div class="hint">ربط الموظف بمستخدم: لما المستخدم ده يعمل فاتورة بيع، «المندوب» بيتملى بيه لوحده.</div>`;
+  if(ST.t3==="cust") body=f("بياخد عهدة",has(e,"c")?"أيوه":"لأ","lock")+f("حد العهدة",e[9]?`${m0(e[9])} EGP`:"من غير حد")+f("العهدة المفتوحة",`${m0(e[10])} EGP`,"lock")+f("رصيد أول المدة","0")+`<div class="hint">حد العهدة: صرف عهدة جديدة تعدّي الحد ← تنبيه (أو منع — سؤال 4). الرصيد الافتتاحي = سطر في مستند الأرصدة الافتتاحية (مدين 1107 ببُعد الموظف).</div>`;
+  if(ST.t3==="note") body=`<div class="f"><label>ملاحظات</label><i style="height:60px;white-space:normal"></i></div>`;
+  return win(tb()+`<div class="content"><div class="col" style="width:38%"><div class="srch"><i>🔍 بحث… (F1)</i></div>${empTable(E,"s3","short")}</div><div class="col" style="flex:1"><div class="hdr" style="display:flex;gap:6px;align-items:center">${av(e)}<div><b>${N(e[0])} ${e[1]}</b> ${stB(e)}<div class="p">${e[3]} · ${DP[e[4]]} · ${roles(e)}</div></div></div><div class="itabs">${itabs}</div><div class="col" style="flex:1;background:#fff;border:1px solid var(--card-border);border-top:none;padding:6px;overflow:auto">${body}</div></div></div>`);}
+
+function m4(){
+  let es=byStatus(E,"f4").filter(e=>(!ST.d4||e[4]===ST.d4)&&(!ST.oc4||e[10]>0)&&(!ST.us4||e[11]));
+  keepSel("s4",es);
+  const rows=es.map(e=>`<tr class="${e[0]===ST.s4?'sel':''} ${e[12]?'':'off'}" data-set="s4" data-v="${e[0]}" style="cursor:pointer"><td>${N(e[0])}</td><td><b>${e[1]}</b></td><td>${e[3]}</td><td>${DP[e[4]]}</td><td class="ltr">${e[5]}</td><td>${roles(e)}</td><td>${e[11]?N(e[11]):'—'}</td><td class="n">${e[9]?m0(e[9]):'—'}</td><td class="n">${cust(e)}</td><td>${stB(e)}</td></tr>`).join("")||'<tr><td colspan="10" class="hint">مفيش موظفين في الفلتر ده</td></tr>';
+  const tot=es.reduce((a,e)=>a+e[10],0);
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch" style="flex-wrap:wrap"><label style="font-size:8.5px;font-weight:800">القسم</label><div style="width:120px;display:flex">${sel("d4",ST.d4,[["","كل الأقسام"],...Object.entries(DP)])}</div><label style="font-size:8.5px;font-weight:700;display:flex;gap:3px;align-items:center;cursor:pointer"><input type="checkbox" class="cb" data-flag="oc4" ${ST.oc4?'checked':''}> عليه عهدة مفتوحة</label><label style="font-size:8.5px;font-weight:700;display:flex;gap:3px;align-items:center;cursor:pointer"><input type="checkbox" class="cb" data-flag="us4" ${ST.us4?'checked':''}> مربوط بمستخدم</label><span style="margin-right:auto"></span>${chipsF("f4",FS)}</div><div class="srch"><i>🔍 الاسم أو الكود أو الموبايل…</i></div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الموظف</th><th>الوظيفة</th><th>القسم</th><th>الموبايل</th><th>الأدوار</th><th>المستخدم</th><th class="n">حد العهدة</th><th class="n">العهدة</th><th>الحالة</th></tr>${rows}<tr class="tot"><td colspan="8">الإجمالي (${es.length} موظف)</td><td class="n">${m0(tot)}</td><td></td></tr></table></div><div class="hint">19 موظف بس في الأكسس ← صفحة واحدة، والصفحات موجودة لو زادوا · دبل كليك ← فورم الموظف</div></div>`);}
+
+function m5(){
+  const es=byStatus(E,"f5"), e=keepSel("s5",es);
+  const cards=es.map(x=>`<div class="pc ${x[12]?'':'done'} ${x[0]===ST.s5?'sel':''}" data-set="s5" data-v="${x[0]}"><div class="r">${av(x)}<span style="flex:1;margin-right:4px"><b>${x[1]}</b><span class="m" style="display:block">${x[3]}</span></span></div><div class="m">${N(x[0])} · ${DP[x[4]]} · <span class="ltr">${x[5]}</span></div><div class="r"><span>${roles(x)}</span><span>${cust(x)}</span></div></div>`).join("");
+  const bar=e?`<div class="hdr" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${av(e)}<b>${N(e[0])} ${e[1]}</b>${roles(e)}<span class="hint" style="margin:0">${e[11]?'👤 '+e[11]+' · ':''}${has(e,"s")?'🧾 '+e[13]+' فاتورة كمندوب 2026 · ':''}عهدة ${m0(e[10])}</span><span class="btn-s" style="margin-right:auto">فتح الفورم</span></div>`:'';
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch"><i>🔍 بحث…</i>${chipsF("f5",FS)}</div><div class="scroll"><div class="cards">${cards}</div></div>${bar}</div>`,"🪪 الموظفين — كروت — A-H CODE");}
+
+function m6(){
+  const side=Object.entries(DP).map(([k,v])=>`<div class="it ${ST.d6===k?'on':''}" data-set="d6" data-v="${k}"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v}</span><small>${E.filter(e=>e[4]===k).length}</small></div>`).join("");
+  const es=E.filter(e=>e[4]===ST.d6), e=keepSel("s6",es);
+  const det=e?gb("الموظف المختار",`<div class="g2">${f("الموظف",`${N(e[0])} ${e[1]}`,"lock")+f("الوظيفة",e[3],"lock")+f("الموبايل",N(e[5]),"lock")+f("التعيين",N(e[7]),"lock")+f("المستخدم",e[11]?N(e[11]):'—',"lock")+f("العهدة",`${m0(e[10])} / ${e[9]?m0(e[9]):'من غير حد'}`,"lock")}</div><div class="hint">${roles(e)}</div>`,"flex-shrink:0"):'';
+  return win(tb()+`<div class="content"><div class="side" style="width:130px"><div style="color:var(--green);font-weight:900;font-size:9px;border-bottom:2px solid var(--green);padding-bottom:2px;margin-bottom:2px">الأقسام</div>${side}<div class="cnt" style="margin-top:auto">${E.length} موظف</div></div><div class="col" style="flex:1"><div class="hdr" style="margin-bottom:4px"><b>${DP[ST.d6]}</b><div class="p">مركز التكلفة الافتراضي ${CC[ST.d6]} — بيتحط لوحده على مصروفات الموظف (العهد والمرتبات بعدين)</div></div>${empTable(es,"s6","short")}${det}</div></div>`,"🪪 الموظفين حسب القسم — A-H CODE");}
+
+function m7(){
+  const e=EMx[ST.s7];
+  const T={cust:"العهد المفتوحة",stmt:"كشف حساب العهدة",inv:`فواتير كمندوب (${e[13]})`,data:"البيانات"};
+  const itabs=Object.keys(T).map(t=>`<span class="${ST.t7===t?'on':''}" data-set="t7" data-v="${t}">${T[t]}</span>`).join("");
+  const kp=(t,v,k="")=>`<div class="kp ${k}"><small>${t}</small><b>${v}</b></div>`;
+  let body="";
+  if(ST.t7==="cust") body=e[10]?`<table class="tbl"><tr><th>العهدة</th><th>التاريخ</th><th>البيان</th><th class="n">المصروف</th><th class="n">المتسوّى</th><th class="n">الباقي</th></tr><tr><td>${N("CUS-2026/0041")}</td><td class="ltr">2026-10-02</td><td>مصاريف تركيب موقع المعادي</td><td class="n">${m0(Math.round(e[10]*0.7))}</td><td class="n">0</td><td class="n">${m0(Math.round(e[10]*0.7))}</td></tr><tr><td>${N("CUS-2026/0037")}</td><td class="ltr">2026-09-14</td><td>نقل ومستلزمات</td><td class="n">${m0(e[10]-Math.round(e[10]*0.7)+2000)}</td><td class="n">2,000</td><td class="n">${m0(e[10]-Math.round(e[10]*0.7))}</td></tr></table><div class="hint">التسوية FIFO (الأقدم الأول) — مع شاشة العهد (المرحلة 5)</div>`:'<div class="hint">مفيش عهدة مفتوحة على الموظف ده</div>';
+  if(ST.t7==="stmt"){let r=0;const L=[["2026-09-14","صرف عهدة CUS-2026/0037 — خزينة رئيسية",Math.round(e[10]*0.3)+2000,0],["2026-09-30","تسوية — فواتير نقل ومستلزمات",0,2000],["2026-10-02","صرف عهدة CUS-2026/0041 — خزينة رئيسية",Math.round(e[10]*0.7),0]];body=`<div class="scroll"><table class="tbl"><tr><th>التاريخ</th><th>البيان</th><th class="n">مدين</th><th class="n">دائن</th><th class="n">الرصيد</th></tr>${L.map(x=>{r+=x[2]-x[3];return `<tr><td class="ltr">${x[0]}</td><td>${x[1]}</td><td class="n">${x[2]?m0(x[2]):''}</td><td class="n">${x[3]?m0(x[3]):''}</td><td class="n">${m0(r)}</td></tr>`;}).join("")}</table></div><div class="hint">من القيود على 1107 عهد الموظفين ببُعد الموظف — أرقام توضيحية</div>`;}
+  if(ST.t7==="inv") body=has(e,"s")?`<table class="tbl"><tr><th>الشهر</th><th class="n">عدد الفواتير</th><th class="n">صافي المبيعات</th></tr><tr><td>أكتوبر 2026</td><td class="n">${Math.round(e[13]/10)}</td><td class="n">${m0(e[13]*41000)}</td></tr><tr><td>سبتمبر 2026</td><td class="n">${Math.round(e[13]/11)}</td><td class="n">${m0(e[13]*36500)}</td></tr></table><div class="hint">تقرير مبيعات المندوب — بعد شاشة المبيعات (المرحلة 8)</div>`:'<div class="hint">الموظف ده مش مندوب</div>';
+  if(ST.t7==="data") body=`<div class="g2">${f("الوظيفة",e[3])+f("القسم",DP[e[4]])+f("الموبايل",N(e[5]))+f("الرقم القومي",e[6]?N(e[6]):'')+f("التعيين",N(e[7]))+f("المستخدم",e[11]?N(e[11]):'—')}</div><div class="hint">${roles(e)}</div>`;
+  return win(tb()+`<div class="content"><div class="col" style="width:34%"><div class="srch"><i>🔍 بحث…</i></div>${empTable(E,"s7","short")}</div><div class="col" style="flex:1;gap:4px"><div class="hdr" style="display:flex;gap:6px;align-items:center">${av(e)}<div><b>${N(e[0])} ${e[1]}</b> ${stB(e)}<div class="p">${e[3]} · ${DP[e[4]]} · من ${e[7]}</div></div></div><div class="kpis">${kp("العهدة المفتوحة",m0(e[10]),e[10]?"b":"g")+kp("حد العهدة",e[9]?m0(e[9]):"—","b")+kp("المتاح من الحد",e[9]?m0(Math.max(0,e[9]-e[10])):"—",over(e)?"r":"g")+kp("فواتير كمندوب 2026",has(e,"s")?e[13]:"—","b")}</div><div class="itabs">${itabs}</div><div class="col" style="flex:1;background:#fff;border:1px solid var(--card-border);border-top:none;padding:4px;overflow:auto">${body}</div></div></div>`,"🪪 الموظف — نظرة كاملة — A-H CODE");}
+
+function m8(){
+  const nm=ST.n8name.trim(), nid=ST.n8nid.replace(/\D/g,""), chk=[];
+  const bare=s=>s.replace(/^(م|أ|د)\/\s*/,"");
+  const same=E.find(e=>bare(e[1])===bare(nm));
+  chk.push(!nm?["bad","الاسم مطلوب"]:same?["warn",`فيه موظف بنفس الاسم «${same[1]}» (${same[0]}) — لو شخص تاني ميّزه (مثلاً اسم الأب)`]:["ok","الاسم مش متكرر"]);
+  const dupN=nid?E.find(e=>e[6]===nid):null;
+  chk.push(!nid?["ok","من غير رقم قومي (اختياري)"]:nid.length!==14?["bad",`الرقم القومي لازم 14 رقم (مكتوب ${nid.length})`]:dupN?["bad",`الرقم القومي ده لموظف تاني «${dupN[1]}»`]:["ok","الرقم القومي سليم ومش متكرر"]);
+  const dupU=ST.n8user?E.find(e=>e[11]===ST.n8user):null;
+  chk.push(!ST.n8user?["ok","مش مربوط بمستخدم برنامج"]:dupU?["bad",`المستخدم «${ST.n8user}» مربوط بموظف تاني «${dupU[1]}» — المستخدم الواحد لموظف واحد`]:["ok",`مربوط بالمستخدم «${ST.n8user}» — فواتيره هتاخده «مندوب» لوحدها`]);
+  const rs=["s","t","w","c"].filter(r=>ST["n8r"+r]);
+  chk.push(rs.length?["ok","الأدوار: "+rs.map(r=>RL[r]).join(" · ")]:["warn","مفيش ولا دور — الموظف مش هيظهر في أي اختيار (لا مندوب ولا عهدة ولا أمين)"]);
+  const lim=Number(ST.n8lim)||0;
+  if(ST.n8rc) chk.push(lim<0?["bad","حد العهدة مايبقاش سالب"]:["ok",lim?`حد العهدة ${m0(lim)} EGP — العهدة اللي تعدّيه ← تنبيه`:"عهدة من غير حد"]);
+  else if(lim) chk.push(["warn","فيه حد عهدة بس الموظف مش متعلّم «بياخد عهدة» — الحد مش هيتستخدم"]);
+  chk.push(["ok",`العهدة على 1107 عهد الموظفين ببُعد الموظف · مركز التكلفة ${CC[ST.n8dept]} (من القسم)`]);
+  const ok=chk.every(c=>c[0]!=="bad");
+  const ic=t=>t==="ok"?"✔":t==="warn"?"⚠":"⛔";
+  const cb=r=>`<label style="font-size:8.5px;font-weight:700;display:flex;gap:3px;align-items:center;cursor:pointer"><input type="checkbox" class="cb" data-flag="n8r${r}" ${ST["n8r"+r]?'checked':''}> ${RL[r]}</label>`;
+  const form=gb("موظف جديد",`${f("الكود","EMP-013 (بيتولّد لوحده)","lock")}<div class="f"><label>الاسم</label><input class="lv ${chk[0][0]==='bad'?'bad':''}" data-st="n8name" value="${ST.n8name}"></div><div class="f"><label>الوظيفة</label><input class="lv" data-st="n8job" value="${ST.n8job}"></div><div class="f"><label>القسم</label>${sel("n8dept",ST.n8dept,Object.entries(DP))}</div><div class="f"><label>الرقم القومي</label><input class="lv ${chk[1][0]==='bad'?'bad':''}" data-st="n8nid" value="${ST.n8nid}" style="direction:ltr;text-align:left"></div><div class="f"><label>مستخدم البرنامج</label>${sel("n8user",ST.n8user,[["","— من غير —"],...USERS.filter(Boolean)],chk[2][0]==='bad'?'bad':'')}</div><div class="sec2">الأدوار</div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px">${cb("s")+cb("t")+cb("w")+cb("c")}</div><div class="f"><label>حد العهدة</label><input class="lv" data-st="n8lim" value="${ST.n8lim}" style="direction:ltr;text-align:left"></div>`);
+  const res=`${chk.map(c=>`<div class="${c[0]==='ok'?'ok-line':'bad-line'}" style="${c[0]==='warn'?'color:#92400E':''};margin-bottom:2px">${ic(c[0])} ${c[1]}</div>`).join("")}<div style="margin-top:4px">${ok?'<span class="btn-s">حفظ ✔</span>':'<span class="btn-s d">حفظ (فيه أخطاء)</span>'}</div>`;
+  return win(tb("جديد")+`<div class="content"><div class="col" style="width:55%;overflow:auto">${form}</div><div class="col" style="flex:1;overflow:auto">${gb("التحقق قبل الحفظ",res)}<div class="hint" style="margin-top:4px">جرّب: كمّل الرقم القومي لـ 14 رقم، غيّر المستخدم لـ «hany.s» (مربوط بموظف تاني)، شيل كل الأدوار، أو غيّر الاسم لـ «م/ كريم عادل».</div></div></div>`);}
+
+function m9(){
+  const rows=E.map(e=>`<tr class="${e[12]?'':'off'}"><td>${N(e[0])}</td><td><b>${e[1]}</b><div style="color:var(--muted);font-size:7.5px">${e[3]}</div></td>${["s","t","w","c"].map(r=>`<td style="text-align:center"><input type="checkbox" class="cb" data-role="${e[0]}:${r}" ${has(e,r)?'checked':''}></td>`).join("")}<td style="width:70px">${sel("u9:"+e[0],e[11],[["","—"],...USERS.filter(Boolean)])}</td><td class="n">${has(e,"c")?(e[9]?m0(e[9]):'من غير'):'—'}</td></tr>`).join("");
+  const T=["s","t","w","c"].map(r=>`${RL[r]} ${E.filter(e=>e[12]&&has(e,r)).length}`).join(" · ");
+  const dup=USERS.filter(u=>u&&E.filter(e=>e[11]===u).length>1);
+  return win(`<div class="tb"><span class="bt b-new">موظف جديد</span><span class="bt b-save">حفظ الكل</span><span class="bt b-can">إلغاء</span><span class="bt b-ref">تحديث</span><span class="bt b-exit">خروج</span><span class="mode ed">تعديل</span></div><div class="content" style="flex-direction:column"><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الموظف</th><th>مندوب</th><th>أمين خزينة</th><th>أمين مخزن</th><th>عهدة</th><th>المستخدم</th><th class="n">حد العهدة</th></tr>${rows}</table></div><div class="hint">النشطين: ${T}</div><div class="${dup.length?'bad-line':'ok-line'}">${dup.length?'⛔ المستخدم «'+dup[0]+'» مربوط بأكتر من موظف — لازم واحد بس':'✔ كل مستخدم مربوط بموظف واحد بالكتير'}</div><div class="hint">مصفوفة أدوار (زي شاشة الصلاحيات): علّم الأدوار وغيّر المستخدم من الجدول على طول — مناسبة لأن الموظفين قليلين (19).</div></div>`,"🪪 أدوار الموظفين — A-H CODE");}
+
+function m10(){
+  const i=Math.max(0,Math.min(E.length-1,ST.i10)), e=E[i];
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="nav"><span class="mini" data-nav="first">الأول</span><span class="mini" data-nav="prev">السابق</span><b style="font-size:9px;margin:0 6px">موظف ${i+1} من ${E.length}</b><span class="mini" data-nav="next">التالي</span><span class="mini" data-nav="last">الأخير</span><span class="hint" style="margin:0 8px 0 0">(زي شاشة FEmp في الأكسس)</span></div>${gb("الموظف",`<div class="g2">${f("الكود",N(e[0]),"lock")+f("الموبايل",N(e[5]))+f("الاسم",e[1])+f("العنوان",e[14])+f("الوظيفة",e[3])+f("القسم",DP[e[4]])+f("الأدوار",[...e[8]].map(r=>RL[r]).join("، ")||"—")+f("حد العهدة",e[9]?m0(e[9]):"—")}</div>`,"flex-shrink:0")}<div class="hint" style="margin:4px 0 2px">آخر حركة عهدة (توضيحي):</div><div class="scroll"><table class="tbl"><tr><th>المستند</th><th>التاريخ</th><th class="n">المبلغ</th></tr>${e[10]?`<tr><td>صرف عهدة CUS-2026/0041</td><td class="ltr">2026-10-02</td><td class="n">${m0(Math.round(e[10]*0.7))}</td></tr><tr><td>تسوية عهدة</td><td class="ltr">2026-09-30</td><td class="n">2,000</td></tr>`:'<tr><td colspan="3" class="hint">مفيش حركة عهدة</td></tr>'}<tr class="tot"><td colspan="2">العهدة المفتوحة</td><td class="n">${m0(e[10])}</td></tr></table></div></div>`);}
+
+const M=[
+ ["Base Screen: فورم يمين + قائمة شمال (زي العملاء والموردين)","نفس شكل العملاء والموردين: القائمة (الكود، الموظف والوظيفة، الأدوار، العهدة المفتوحة، الحالة) بفلتر الدور والكل / النشط / الموقوف، والفورم يمين في 3 مجموعات: الأساسية · الاتصال والهوية · الأدوار والعهدة.",m1],
+ ["تبويب لكل دور","تبويبات: الكل · المندوبين · أمناء الخزائن · أمناء المخازن · العهد — بعدد كل واحد، وفوق القائمة الدور ده بيظهر فين في البرنامج.",m2],
+ ["قائمة + فورم بتبويبات","القائمة شمال، ويمين الموظف (بالحروف الأولى من اسمه) والفورم متقسّم تبويبات: البيانات · الاتصال والهوية · الأدوار والمستخدم · العهدة · ملاحظات.",m3],
+ ["قائمة كاملة بفلاتر","كل الأعمدة في جدول واحد: الوظيفة والقسم والموبايل والأدوار والمستخدم وحد العهدة والعهدة المفتوحة، بفلتر القسم و«عليه عهدة مفتوحة» و«مربوط بمستخدم». الفورم بدبل كليك.",m4],
+ ["كروت","كل موظف كارت بالحروف الأولى من اسمه (زي صورة المستخدم في Hr GAD) والوظيفة والقسم والموبايل والأدوار والعهدة. تحت شريط الموظف المختار.",m5],
+ ["شريط الأقسام + جدول + تفاصيل","الأقسام في شريط جانبي (الإدارة، المبيعات، المخازن، الحسابات، التركيبات)، وكل قسم ليه مركز تكلفة افتراضي بيتحط لوحده على مصروفات موظفينه.",m6],
+ ["نظرة كاملة على الموظف","القائمة شمال، ويمين الموظف وكروت (العهدة المفتوحة · حد العهدة · المتاح · فواتيره كمندوب) وتبويبات: العهد المفتوحة · كشف حساب العهدة · فواتير كمندوب · البيانات. الأرقام توضيحية.",m7],
+ ["فورم «موظف جديد» بالتحقق","الخانات الزرقا شغالة: الاسم المتكرر ← تنبيه، الرقم القومي 14 رقم ومايتكررش (اختياري)، مستخدم البرنامج لموظف واحد بس، من غير أدوار ← تنبيه، وحد العهدة.",m8],
+ ["مصفوفة الأدوار (زي الصلاحيات)","جدول واحد: كل موظف وقصاده خانات مندوب / أمين خزينة / أمين مخزن / عهدة والمستخدم المربوط — بتتعلّم في مكانها و«حفظ الكل». جرّب تربط نفس المستخدم لموظفين.",m9],
+ ["سجل واحد بأزرار تنقّل (زي الأكسس)","شبه شاشة FEmp القديمة: سجل واحد بأزرار الأول / السابق / التالي / الأخير، وتحت آخر حركة عهدة.",m10],
+];
+
+const NOTE=`<b>الموظفين</b> = جدول <span class="ltr">party.employees</span> بدل <span class="ltr">TbEMP</span> في الأكسس (19 موظف — الاسم والتليفون والعنوان بس). <b>الموظف هنا «طرف» مش شئون عاملين:</b> البرنامج مش هيعمل مرتبات ولا حضور وانصراف — الموظف بيتستخدم في 4 أماكن:
+<ul>
+<li><b>العهد:</b> حساب رقابة واحد «1107 عهد الموظفين» (الحساب الافتراضي «عهد الموظفين») + الموظف <b>بُعد</b> على سطر القيد — مفيش حساب لكل موظف، وكشف العهدة من البُعد (زي العملاء والموردين). صرف العهدة وتسويتها مع المرحلة 5.</li>
+<li><b>المندوب</b> على فاتورة البيع (قرار العملاء: المندوب على الفاتورة بس — اختياري) · <b>أمين الخزينة</b> في شاشة الخزائن · <b>أمين المخزن</b> في شاشة المخازن (الجايين على طول).</li>
+<li><b>الخانات المقترحة:</b> الكود (بيتولّد لوحده وثابت) · الاسم (مطلوب) + EN · الوظيفة · القسم · الموبايل/التليفون/الإيميل/العنوان · الرقم القومي (اختياري) · تاريخ التعيين · <b>الأدوار</b> (مندوب / أمين خزينة / أمين مخزن / بياخد عهدة) · <b>حد العهدة</b> · <b>مستخدم البرنامج المربوط</b> (اختياري) · نشط · ملاحظات.</li>
+<li><b>الحماية:</b> الموظف اللي عليه عهدة أو فاتورة كمندوب أو أمين لخزينة/مخزن <b>مايتمسحش</b> (FK RESTRICT) — يتوقف بس، والموقوف مايتختارش في مستند جديد · <span class="ltr">row_version</span> (جهازين) + سجل التعديلات · الكود جوه قفل · index على الاسم والقسم والمستخدم.</li>
+<li><b>مكانها:</b> قسم جديد في القائمة؟ أو تحت «الحسابات» / «الخزينة» — سؤال 6. الصلاحيات: عرض · جديد · تعديل · حفظ · حذف · إيقاف · تصدير.</li>
+</ul>`;
+
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>كود الموظف:</b> <span class="ltr">EMP-001</span> زي الموردين (اقتراحي) — ولا رقم بس 1، 2، 3؟</li>
+<li><b>الخانات:</b> نضيف <b>الرقم القومي</b> و<b>تاريخ التعيين</b> (اختياريين)؟ ولا نكتفي بالاسم والوظيفة والقسم والاتصال؟ (مفيش مرتب ولا بيانات شئون عاملين — اقتراحي.)</li>
+<li><b>الأقسام:</b> نعملها قايمة ثابتة (الإدارة، المبيعات، المشتريات والمخازن، الحسابات والخزينة، التركيبات والصيانة — أو أسامي تانية)، وكل قسم مربوط بمركز تكلفة (النموذج 6)؟ ولا القسم = <b>مركز التكلفة</b> نفسه من الشجرة اللي اتعملت (اقتراحي — من غير جدول جديد)؟</li>
+<li><b>حد العهدة:</b> لما عهدة جديدة تعدّي الحد: <b>تنبيه بس</b> (زي حد ائتمان العميل — اقتراحي) ولا منع؟</li>
+<li><b>ربط الموظف بمستخدم البرنامج:</b> نعمله (عشان «المندوب» يتملى لوحده في فاتورة البيع، وكل مستخدم لموظف واحد بس) — اقتراحي أيوه؟</li>
+<li><b>مكان الشاشة في القائمة:</b> قسم جديد «الموظفين» ولا تحت «الخزينة» (عشان العهد)؟ — اقتراحي تحت «الخزينة» ← «الموظفين والعهد».</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+document.addEventListener("change",e=>{
+  const t=e.target, k=t.dataset.st;
+  if(t.dataset.flag){ST[t.dataset.flag]=t.checked;render();return;}
+  if(t.dataset.role){const [code,r]=t.dataset.role.split(":"),x=EMx[code];x[8]=t.checked?[...new Set([...x[8],r])].sort().join(""):x[8].replace(r,"");render();return;}
+  if(!k) return;
+  if(k.startsWith("u9:")) EMx[k.slice(3)][11]=t.value;
+  else ST[k]=t.value;
+  render();
+});
+document.addEventListener("input",e=>{const t=e.target;if(t.matches("input.lv")&&t.dataset.st){ST[t.dataset.st]=t.value;}});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const nv=e.target.closest("[data-nav]"); if(nv){const a=nv.dataset.nav;ST.i10=a==="first"?0:a==="last"?E.length-1:a==="prev"?Math.max(0,ST.i10-1):Math.min(E.length-1,ST.i10+1);render();return;}
+  const s=e.target.closest("[data-set]");
+  if(s){ST[s.dataset.set]=s.dataset.v; render();}
+});
+render();
+</script>
+</body>
+</html>

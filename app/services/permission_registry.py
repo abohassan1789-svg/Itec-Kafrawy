@@ -126,6 +126,13 @@ SECTIONS: tuple[Section, ...] = (
                    actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="🚚"),
     )),
+    # قسم لوحده (قرار المستخدم 2026-11-11) عشان يتضاف فيه حاجات تانية بعدين.
+    Section("hr", "الموظفين", "Employees", "🪪", groups=(
+        Group("الموظفين", (
+            Target("employees", "الموظفين", "Employees", icon="🪪",
+                   actions=("view", "create", "edit", "save", "delete", "export")),
+        ), icon="🪪"),
+    )),
     Section("inv", "المخازن", "Inventory", "🏬"),
     Section("cash", "الخزينة", "Cash & Banks", "💵"),
     Section("rep", "التقارير", "Reports", "📈"),

@@ -267,7 +267,7 @@ def test_grouped_matrix_follows_sidebar(sec_db):
     assert sales_header["count"] == 3
     purch_header = next(e for e in entries if e["kind"] == "header" and e["gid"] == "purch")
     assert purch_header["count"] == 2
-    assert targets == ["chart_of_accounts", "default_accounts", "cost_centers", "customer_groups", "customers", "projects", "supplier_groups", "suppliers", "company", "fiscal_years", "currencies", "tax_codes", "users", "roles", "user_permissions", "login_logs"]
+    assert targets == ["chart_of_accounts", "default_accounts", "cost_centers", "customer_groups", "customers", "projects", "supplier_groups", "suppliers", "employees", "company", "fiscal_years", "currencies", "tax_codes", "users", "roles", "user_permissions", "login_logs"]
 
 
 def test_action_password(sec_db, monkeypatch):
