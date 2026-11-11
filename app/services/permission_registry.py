@@ -122,6 +122,8 @@ SECTIONS: tuple[Section, ...] = (
         Group("الموردين", (
             Target("supplier_groups", "مجموعات الموردين", "Supplier Groups", icon="🗂️",
                    actions=("view", "create", "edit", "save", "delete", "export")),
+            Target("suppliers", "الموردين", "Suppliers", icon="🚚",
+                   actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="🚚"),
     )),
     Section("inv", "المخازن", "Inventory", "🏬"),
