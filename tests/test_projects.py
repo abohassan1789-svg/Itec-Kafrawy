@@ -85,12 +85,12 @@ def payload(env, **extra):
 # ---- القاعدة ---------------------------------------------------------------
 def test_database_rules(env):
     db, cc, c1 = env["db"], env["cc"], env["c1"]
-    pid = ins(db, "0001-Itec", cc["2101"], customer_id=c1)
-    p = proj(db, "0001-Itec")
+    pid = ins(db, "Itec-001", cc["2101"], customer_id=c1)
+    p = proj(db, "Itec-001")
     assert (p["status"], p["tax_inclusive"], p["doc_kind"], p["row_version"]) == ("open", True, "invoice", 1)
-    ins(db, "0002-Itec", cc["2202"])                                            # من غير عميل ← مسموح
+    ins(db, "Itec-002", cc["2202"])                                            # من غير عميل ← مسموح
     with pytest.raises(psycopg.errors.UniqueViolation):                         # الرقم مايتكررش (من غير كابيتال)
-        ins(db, "0001-ITEC", cc["2101"])
+        ins(db, "ITEC-001", cc["2101"])
     for extra in (dict(amount=-1), dict(status="x"), dict(doc_kind="x"), dict(code=" ", name="x"),
                   dict(start_date=date(2026, 5, 1), end_date=date(2026, 4, 1))):
         with pytest.raises(psycopg.errors.CheckViolation):
@@ -107,7 +107,7 @@ def test_database_rules(env):
     with pytest.raises(psycopg.errors.RaiseException, match="موقوفة"):
         ins(db, "X-5", cc["2101"], currency_code="EUR")
     db.execute("UPDATE acc.projects SET status = 'cancelled', amount = 10 WHERE id = %s", [pid])
-    assert proj(db, "0001-Itec")["row_version"] == 2
+    assert proj(db, "Itec-001")["row_version"] == 2
     # العميل اللي عليه أمر مايتمسحش (يتوقف بس) · المركز اللي عليه أمر مايتمسحش ولا يتحوّل رئيسي من «تعديل»
     with pytest.raises(psycopg.errors.RaiseException, match="عليه 1 أمر توريد — وقّفه"):
         db.execute("DELETE FROM party.customers WHERE id = %s", [c1])
@@ -120,14 +120,27 @@ def test_database_rules(env):
     db.execute("UPDATE acc.cost_centers SET manager_name = 'م. جديد' WHERE id = %s", [cc["2101"]])
 
 
+def test_numbering_past_999(env):
+    """صيغة المستخدم Itec-001 (0018): بعد 999 بيكمّل Itec-1000 ولحد المليون وأكتر من غير أي خطأ."""
+    db, cc = env["db"], env["cc"]
+    assert db.fetch_one("SELECT pattern, digits FROM acc.project_numbering") == {"pattern": "Itec-{SEQ}", "digits": 3}
+    db.execute("UPDATE acc.project_numbering SET last_no = 998")
+    assert [db.fetch_value("SELECT acc.next_project_no()") for _ in range(3)] == ["Itec-999", "Itec-1000", "Itec-1001"]
+    db.execute("UPDATE acc.project_numbering SET last_no = 999999")
+    code = db.fetch_value("SELECT acc.next_project_no()")
+    assert code == "Itec-1000000"
+    ins(db, code, cc["2101"])                                                   # بيتحفظ عادي (العمود 30 حرف)
+    assert db.fetch_value("SELECT acc.peek_project_no()") == "Itec-1000001"
+
+
 def test_numbering(env):
     db, cc = env["db"], env["cc"]
-    assert db.fetch_value("SELECT acc.peek_project_no()") == "0001-Itec"
-    assert db.fetch_value("SELECT acc.next_project_no()") == "0001-Itec"
-    ins(db, "0001-Itec", cc["2101"])
-    ins(db, "0002-itec", cc["2101"])                                            # اتكتب بالإيد قبل العدّاد
-    assert db.fetch_value("SELECT acc.peek_project_no()") == "0003-Itec"        # بيعدّي المكتوب بالإيد
-    assert db.fetch_value("SELECT acc.next_project_no()") == "0003-Itec"
+    assert db.fetch_value("SELECT acc.peek_project_no()") == "Itec-001"
+    assert db.fetch_value("SELECT acc.next_project_no()") == "Itec-001"
+    ins(db, "Itec-001", cc["2101"])
+    ins(db, "itec-002", cc["2101"])                                             # اتكتب بالإيد قبل العدّاد
+    assert db.fetch_value("SELECT acc.peek_project_no()") == "Itec-003"        # بيعدّي المكتوب بالإيد
+    assert db.fetch_value("SELECT acc.next_project_no()") == "Itec-003"
     with pytest.raises(psycopg.errors.RaiseException, match="مابينزلش"):
         db.execute("UPDATE acc.project_numbering SET last_no = 1")
     with pytest.raises(psycopg.errors.RaiseException, match="مابيتمسحش"):
@@ -142,7 +155,7 @@ def test_numbering(env):
 
 def test_split_cost_center_moves_projects(env):
     db, cc = env["db"], env["cc"]
-    pid = ins(db, "0001-Itec", cc["2101"])
+    pid = ins(db, "Itec-001", cc["2101"])
     general = db.fetch_value("SELECT acc.split_cost_center(%s)", [cc["2101"]])
     row = db.fetch_one("SELECT code, name_ar FROM acc.cost_centers WHERE id = %s", [general])
     assert row["code"] == "210101" and row["name_ar"].endswith("— عام")
@@ -150,7 +163,7 @@ def test_split_cost_center_moves_projects(env):
     assert db.fetch_value("SELECT is_leaf FROM acc.cost_centers WHERE id = %s", [cc["2101"]]) is False
     # فلتر الأب بيجيب الأوامر اللي تحته
     service = env["service"]
-    assert [r["code"] for r in service.list_projects(center_id=cc["2"])] == ["0001-Itec"]
+    assert [r["code"] for r in service.list_projects(center_id=cc["2"])] == ["Itec-001"]
     assert service.list_projects(center_id=cc["1"]) == []
 
 
@@ -159,23 +172,23 @@ def test_service_save_rules_and_list(env):
     db, service, cc = env["db"], env["service"], env["cc"]
     d = service.new_defaults()
     assert (d["code"], d["status"], d["currency_code"], d["tax_inclusive"], d["doc_kind"], d["order_date"]) == \
-           ("0001-Itec", "open", "EGP", True, "invoice", date.today())
+           ("Itec-001", "open", "EGP", True, "invoice", date.today())
     pid = service.save_project(None, payload(env, start_date=date(2026, 11, 1), end_date=date(2027, 3, 1),
                                              order_date=date(2026, 10, 12)))
     p = service.get_project(pid)
     assert (p["code"], p["customer_name"], p["center_code"], p["amount"], p["start_date"]) == \
-           ("0001-Itec", "العاصمة للمقاولات", "2101", Decimal("1121076.00"), date(2026, 11, 1))
+           ("Itec-001", "العاصمة للمقاولات", "2101", Decimal("1121076.00"), date(2026, 11, 1))
     audit = db.fetch_one("SELECT action, entity_label, record_label FROM sec.audit_log "
                          "WHERE entity = 'acc.projects' ORDER BY id DESC LIMIT 1")
     assert audit == {"action": "create", "entity_label": "أمر توريد",
-                     "record_label": "0001-Itec Medical Simulation Building"}
+                     "record_label": "Itec-001 Medical Simulation Building"}
     # رقم بالإيد + من غير عميل + غير شامل/بيان بالدولار + سنة تانية
     pid2 = service.save_project(None, payload(env, auto_code=False, code="IC25-129", name="صيانة طارئة",
                                               customer_id=None, cost_center_id=cc["24"], tax_inclusive=False,
                                               doc_kind="statement", currency_code="USD", amount="0",
                                               order_date=date(2025, 2, 11)))
     assert service.get_project(pid2)["customer_id"] is None
-    assert service.new_defaults()["code"] == "0002-Itec"
+    assert service.new_defaults()["code"] == "Itec-002"
     with pytest.raises(BusinessError, match="موجود قبل كده"):
         service.save_project(None, payload(env, auto_code=False, code="ic25-129"))
     for bad, msg in ((dict(name=""), "اسم المشروع"), (dict(cost_center_id=None), "مركز التكلفة"),
@@ -247,7 +260,7 @@ def test_two_devices(env):
         fresh = dev1.get_project(pid)
         assert fresh["amount"] == Decimal("500.00") and fresh["status"] == "open" and fresh["row_version"] == 2
         # الاتنين شايفين نفس الرقم المقترح وبيحفظوا في نفس اللحظة: الأول ماسك قفل العدّاد ← التاني يستنى
-        assert dev1.new_defaults()["code"] == dev2.new_defaults()["code"] == "0002-Itec"
+        assert dev1.new_defaults()["code"] == dev2.new_defaults()["code"] == "Itec-002"
         results: dict[str, object] = {}
 
         def second_device():
@@ -266,9 +279,9 @@ def test_two_devices(env):
             dev1.repository.insert_project({**data, "code": first}, ex=tx)
         worker.join(10)
         assert "error" not in results
-        assert dev1.get_project(results["id"])["code"] == "0003-Itec"
+        assert dev1.get_project(results["id"])["code"] == "Itec-003"
         assert sorted(r["code"] for r in db.fetch_all("SELECT code FROM acc.projects")) == \
-               ["0001-Itec", "0002-Itec", "0003-Itec"]
+               ["Itec-001", "Itec-002", "Itec-003"]
         # نفس الرقم بالإيد من جهازين في نفس اللحظة ← التاني بيترفض برسالة عربي
         results.clear()
 
@@ -300,7 +313,7 @@ def test_screen_new_save_edit_delete(env, monkeypatch):
     try:
         assert screen.current_id is None and "عدد الأوامر: 0" in screen.count_label.text()
         screen.new_record()
-        assert screen.mode == "new" and screen.code_edit.text() == "0001-Itec"
+        assert screen.mode == "new" and screen.code_edit.text() == "Itec-001"
         assert screen.status_combo.currentData() == "open" and screen.currency.currentData() == "EGP"
         assert not screen.start_date.isEnabled()
         screen.name_edit.setText("BMS Controllers for City Tower")
@@ -312,8 +325,8 @@ def test_screen_new_save_edit_delete(env, monkeypatch):
         screen.has_end.setChecked(True)
         assert screen.end_date.isEnabled()
         screen.save()
-        assert shown[-1] == "saved" and screen.mode == "view" and screen.code_edit.text() == "0001-Itec"
-        p = proj(db, "0001-Itec")
+        assert shown[-1] == "saved" and screen.mode == "view" and screen.code_edit.text() == "Itec-001"
+        p = proj(db, "Itec-001")
         assert (p["customer_id"], p["cost_center_id"], p["amount"], p["currency_code"], p["tax_inclusive"],
                 p["end_date"], p["start_date"]) == \
                (env["c2"], cc["2202"], Decimal("64000.00"), "USD", False, date.today(), None)
@@ -321,7 +334,7 @@ def test_screen_new_save_edit_delete(env, monkeypatch):
         assert texts[2] == "Delta Dynamics" and texts[3] == "جاري" and "64,000.00 USD" in texts[4]
         # رقم بالإيد + من غير عميل
         screen.new_record()
-        assert screen.code_edit.text() == "0002-Itec"
+        assert screen.code_edit.text() == "Itec-002"
         screen.code_edit.setText("IC26-310")
         screen.name_edit.setText("Medical Simulation Building")
         screen.center.setCurrentIndex(screen.center.findData(cc["2101"]))
@@ -329,7 +342,7 @@ def test_screen_new_save_edit_delete(env, monkeypatch):
         assert shown[-1] == "saved" and proj(db, "IC26-310")["customer_id"] is None
         # عميل مكتوب غلط ← رسالة والفورم بيفضل
         screen.new_record()
-        assert screen.code_edit.text() == "0002-Itec"
+        assert screen.code_edit.text() == "Itec-002"
         screen.name_edit.setText("x")
         screen.center.setCurrentIndex(screen.center.findData(cc["2101"]))
         screen.customer.setEditText("عميل مش موجود")
@@ -337,23 +350,23 @@ def test_screen_new_save_edit_delete(env, monkeypatch):
         assert "مش في القايمة" in shown[-1] and screen.mode == "new"
         # الرقم المقترح اتاخد من جهاز تاني قبل الحفظ ← بياخد اللي بعده ورسالة
         screen.customer.setCurrentIndex(0)
-        ins(db, "0002-Itec", cc["2101"], name="من جهاز تاني")
+        ins(db, "Itec-002", cc["2101"], name="من جهاز تاني")
         screen.save()
-        assert "اتحفظ برقم 0003-Itec" in shown[-2] and shown[-1] == "saved"
+        assert "اتحفظ برقم Itec-003" in shown[-2] and shown[-1] == "saved"
         # «تعديل» + جهاز تاني عدّل ← الحفظ بيترفض والفورم بيفضل
         screen.load(int(p["id"]))
         screen.edit_record()
-        db.execute("UPDATE acc.projects SET notes = 'من جهاز تاني' WHERE code = '0001-Itec'")
+        db.execute("UPDATE acc.projects SET notes = 'من جهاز تاني' WHERE code = 'Itec-001'")
         screen.status_combo.setCurrentIndex(screen.status_combo.findData("closed"))
         conflicts: list = []
         monkeypatch.setattr(messages, "ask_conflict", lambda _p, exc: conflicts.append(exc) or False)
         screen.save()
-        assert conflicts and screen.mode == "edit" and proj(db, "0001-Itec")["status"] == "open"
+        assert conflicts and screen.mode == "edit" and proj(db, "Itec-001")["status"] == "open"
         screen.cancel()
         screen.edit_record()
         screen.status_combo.setCurrentIndex(screen.status_combo.findData("closed"))
         screen.save()
-        assert proj(db, "0001-Itec")["status"] == "closed"
+        assert proj(db, "Itec-001")["status"] == "closed"
         # الفلاتر: الحالة والمركز (الأب بيجيب الأبناء)
         closed_chip = next(b for b in screen.status_buttons.buttons() if b.property("status") == "closed")
         closed_chip.click()
@@ -367,7 +380,7 @@ def test_screen_new_save_edit_delete(env, monkeypatch):
         assert screen.year_filter.findData(date.today().year) > 0
         screen.load(int(p["id"]))
         screen.delete()
-        assert proj(db, "0001-Itec") is None and screen.current_id is None
+        assert proj(db, "Itec-001") is None and screen.current_id is None
     finally:
         screen.close()
 
@@ -377,16 +390,16 @@ def test_screen_paging(env, monkeypatch):
 
     db, cc = env["db"], env["cc"]
     for i in range(1, 6):
-        ins(db, f"{i:04d}-Itec", cc["2101"], order_date=date(2026, 1, i))
+        ins(db, f"Itec-{i:03d}", cc["2101"], order_date=date(2026, 1, i))
     monkeypatch.setattr(module, "PAGE_SIZE", 2)
     screen = make_screen(db)
     try:
         assert screen.page_label.text() == "صفحة 1 من 3" and screen.table.rowCount() == 2
-        assert screen.current_record["code"] == "0005-Itec"                       # الأحدث الأول
+        assert screen.current_record["code"] == "Itec-005"                       # الأحدث الأول
         screen.next_button.click()
         screen.next_button.click()
         assert screen.page_label.text() == "صفحة 3 من 3" and screen.table.rowCount() == 1
-        screen.search.setText("0002")                                           # بحث جديد ← أول صفحة
+        screen.search.setText("Itec-002")                                           # بحث جديد ← أول صفحة
         assert screen.page_label.text() == "صفحة 1 من 1" and screen.table.rowCount() == 1
         screen.search.clear()
         screen.new_record()
