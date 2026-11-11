@@ -149,7 +149,7 @@ def test_linked_account_and_tax_protection(env):
         db.execute("UPDATE acc.accounts SET role_code = NULL WHERE id = %s", [sub])
     with pytest.raises(psycopg.errors.RaiseException, match="افتراضي لمجموعات العملاء"):
         db.execute("UPDATE acc.tax_codes SET is_active = false WHERE id = %s", [tax["WHT1"]])
-    with pytest.raises(psycopg.errors.RaiseException, match="غيّره في المجموعات الأول"):
+    with pytest.raises(psycopg.errors.RaiseException, match="غيّره (في المجموعات|عندهم) الأول"):
         db.execute("DELETE FROM acc.tax_codes WHERE id = %s", [tax["VAT14"]])
     db.execute("UPDATE acc.tax_codes SET name_ar = 'خصم منبع 1%%' WHERE id = %s", [tax["WHT1"]])   # الاسم عادي
     db.execute("DELETE FROM party.customer_groups WHERE id = %s", [gid])

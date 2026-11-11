@@ -22,7 +22,7 @@ _SELECT = """
            c.payment_terms_days, c.credit_limit, c.currency_code,
            c.vat_tax_code_id, v.code AS vat_code, v.name_ar AS vat_name,
            c.wht_tax_code_id, w.code AS wht_code, w.name_ar AS wht_name,
-           c.notes, c.is_active, c.created_at, c.updated_at, c.row_version
+           c.notes, c.is_system, c.is_active, c.created_at, c.updated_at, c.row_version
     FROM party.customers c
     JOIN party.customer_groups g ON g.id = c.group_id
     JOIN acc.accounts a ON a.id = g.control_account_id

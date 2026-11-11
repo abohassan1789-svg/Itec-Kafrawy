@@ -125,6 +125,33 @@ def test_database_rules(env):
     assert cust(db, "1")["row_version"] == 2
 
 
+def test_cash_customer(env):
+    """«عميل نقدي» (0019): نظامي كوده 0 في «عملاء — عام» · نقدي · مابيتمسحش ولا بيتوقف · اسمه بيتعدّل."""
+    db, service, general, tax = env["db"], env["service"], env["general"], env["tax"]
+    c = cust(db, "0")
+    assert (c["name_ar"], c["is_system"], c["group_id"], c["payment_terms_days"], c["credit_limit"],
+            c["tax_reg_no"], c["currency_code"], c["vat_tax_code_id"]) ==            ("عميل نقدي", True, general, 0, Decimal("0.00"), None, "EGP", tax["VAT14"])
+    with pytest.raises(psycopg.errors.RaiseException, match="مابيتمسحش"):
+        db.execute("DELETE FROM party.customers WHERE code = '0'")
+    with pytest.raises(psycopg.errors.RaiseException, match="مابيتوقفش"):
+        db.execute("UPDATE party.customers SET is_active = false WHERE code = '0'")
+    with pytest.raises(psycopg.errors.RaiseException, match="من البرنامج بس"):
+        db.execute("UPDATE party.customers SET is_system = false WHERE code = '0'")
+    rec = service.get_customer(int(c["id"]))
+    with pytest.raises(BusinessError, match="مابيتمسحش"):
+        service.delete_customer(rec["id"], rec["row_version"])
+    with pytest.raises(BusinessError, match="مابيتوقفش"):
+        service.set_active(rec["id"], False, rec["row_version"])
+    with pytest.raises(BusinessError, match="مابيتوقفش"):
+        service.save_customer(rec["id"], {**rec, "is_active": False}, rec["row_version"])
+    service.save_customer(rec["id"], {**rec, "name_ar": "عميل نقدي — كاش"}, rec["row_version"])
+    assert cust(db, "0")["name_ar"] == "عميل نقدي — كاش"
+    assert service.new_defaults()["code"] == "1"                                # العاديين بيبدأوا من 1
+    db.execute("INSERT INTO party.customers (code, name_ar, group_id, currency_code) VALUES ('1', 'عادي', %s, 'EGP')",
+               [general])
+    db.execute("DELETE FROM party.customers WHERE code = '1'")                    # العادي بيتمسح عادي
+
+
 def test_group_and_tax_protection(env):
     db, tax, general = env["db"], env["tax"], env["general"]
     gid = new_group(db, wht_tax_code_id=tax["WHT1"])
@@ -190,16 +217,16 @@ def test_service_defaults_save_and_rules(env):
     service.set_active(cid, False, 3)                                              # نفس الحالة ← مفيش تغيير
     assert service.get_customer(cid)["row_version"] == 3
     # القائمة: البحث والفلاتر والصفحات والعدد
-    assert [r["code"] for r in service.list_customers()] == ["1", "2", "3"]
+    assert [r["code"] for r in service.list_customers()] == ["0", "1", "2", "3"]
     assert [r["code"] for r in service.list_customers("1002003")] == ["1"]          # الضريبي من غير شُرَط
     assert [r["code"] for r in service.list_customers("gulf")] == ["2"]
     assert [r["code"] for r in service.list_customers("0100000")] == ["1"]          # الموبايل
     assert [r["code"] for r in service.list_customers("من غير")] == ["3"]
     assert [r["code"] for r in service.list_customers(status="inactive")] == ["1"]
-    assert [r["code"] for r in service.list_customers(group_id=general)] == ["2", "3"]
-    assert [r["code"] for r in service.list_customers(page=2, page_size=2)] == ["3"]
-    assert service.count_customers() == {"total": 3, "active": 2, "inactive": 1, "no_tax": 1}
-    assert len(service.lookup_customers()) == 3
+    assert [r["code"] for r in service.list_customers(group_id=general)] == ["0", "2", "3"]
+    assert [r["code"] for r in service.list_customers(page=2, page_size=2)] == ["2", "3"]
+    assert service.count_customers() == {"total": 4, "active": 3, "inactive": 1, "no_tax": 2}
+    assert len(service.lookup_customers()) == 4
     service.delete_customer(cid, 3)
     assert cust(db, "1") is None
     assert service.new_defaults()["code"] == "4"                                    # بيكمّل بعد الأكبر
@@ -264,7 +291,7 @@ def test_two_devices(env):
                  "notes": None}, ex=tx)
         worker.join(10)
         assert isinstance(results.get("error"), BusinessError) and "متسجل قبل كده" in str(results["error"])
-        assert sorted(r["code"] for r in db.fetch_all("SELECT code FROM party.customers")) == ["1", "2"]
+        assert sorted(r["code"] for r in db.fetch_all("SELECT code FROM party.customers")) == ["0", "1", "2"]
         # من غير تعارض في الرقم: كودين مختلفين
         results.clear()
 
@@ -286,7 +313,7 @@ def test_two_devices(env):
                  "notes": None}, ex=tx)
         worker.join(10)
         assert "error" not in results
-        assert sorted(int(r["code"]) for r in db.fetch_all("SELECT code FROM party.customers")) == [1, 2, 3, 4]
+        assert sorted(int(r["code"]) for r in db.fetch_all("SELECT code FROM party.customers")) == [0, 1, 2, 3, 4]
     finally:
         dev2.db.close()
 
@@ -297,7 +324,14 @@ def test_screen_new_save_edit_toggle_delete(env, monkeypatch):
     gid = new_group(db, payment_terms_days=90, credit_limit=Decimal("1000000"), wht_tax_code_id=tax["WHT1"])
     screen = make_screen(db)
     try:
-        assert screen.current_id is None and "عدد العملاء: 0" in screen.count_label.text()
+        # العميل النقدي (0019) أول واحد: نظامي ← «حذف» و«إيقاف / تفعيل» مقفولين
+        assert screen.current_record["code"] == "0" and screen.name_ar.text() == "عميل نقدي"
+        assert screen.system_badge.isVisibleTo(screen) and not screen.delete_button.isEnabled()
+        assert not screen.toggle_button.isEnabled() and screen.terms.value() == 0
+        assert screen.table.item(0, 1).text() == "عميل نقدي 🔒" and "عدد العملاء: 1" in screen.count_label.text()
+        screen.edit_record()
+        assert not screen.is_active.isEnabled() and screen.name_ar.isEnabled()
+        screen.cancel()
         screen.new_record()
         assert screen.mode == "new" and screen.code_edit.text() == "1 (مقترح)"
         assert screen.group.currentData() == env["general"] and screen.terms.value() == 30
@@ -314,7 +348,7 @@ def test_screen_new_save_edit_toggle_delete(env, monkeypatch):
         c = cust(db, "1")
         assert (c["group_id"], c["payment_terms_days"], c["wht_tax_code_id"], c["tax_reg_no"]) == \
                (gid, 90, tax["WHT1"], "200-300-400")
-        texts = [screen.table.item(0, col).text() for col in range(screen.table.columnCount())]
+        texts = [screen.table.item(1, col).text() for col in range(screen.table.columnCount())]
         assert texts[1] == "وزارة الإسكان" and texts[2] == "قطاع عام وجهات حكومية" and texts[5] == "نشط"
         # «تعديل»: تغيير المجموعة مابيغيّرش المدة
         screen.edit_record()
@@ -344,10 +378,10 @@ def test_screen_new_save_edit_toggle_delete(env, monkeypatch):
         assert cust(db, "1")["is_active"] is False and screen.current_record["is_active"] is False
         active_chip = next(b for b in screen.status_buttons.buttons() if b.property("status") == "active")
         active_chip.click()
-        assert screen.table.rowCount() == 0 and screen.current_id is None
+        assert screen.table.rowCount() == 1 and screen.current_id is None       # النقدي بس
         all_chip = next(b for b in screen.status_buttons.buttons() if b.property("status") == "all")
         all_chip.click()
-        assert screen.table.rowCount() == 1
+        assert screen.table.rowCount() == 2
         screen.load(int(c["id"]))
         screen.delete()
         assert cust(db, "1") is None and screen.current_id is None
@@ -366,10 +400,10 @@ def test_screen_paging(env, monkeypatch):
     try:
         assert screen.page_label.text() == "صفحة 1 من 3" and screen.table.rowCount() == 2
         assert not screen.prev_button.isEnabled() and screen.next_button.isEnabled()
-        assert screen.current_record["code"] == "1"
+        assert screen.current_record["code"] == "0"
         screen.next_button.click()
         screen.next_button.click()
-        assert screen.page_label.text() == "صفحة 3 من 3" and screen.table.rowCount() == 1
+        assert screen.page_label.text() == "صفحة 3 من 3" and screen.table.rowCount() == 2
         assert not screen.next_button.isEnabled()
         screen.search.setText("عميل 2")                        # بحث جديد ← أول صفحة
         assert screen.page_label.text() == "صفحة 1 من 1" and screen.table.rowCount() == 1

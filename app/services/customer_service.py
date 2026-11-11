@@ -8,6 +8,7 @@
 * **المندوب** على الفاتورة بس — مفيش خانة مندوب على العميل.
 
 * حساب الرقابة من المجموعة (حساب رقابة + بُعد الطرف — القرار 2) · افتراضي المجموعة بيتنسخ للعميل الجديد.
+* «عميل نقدي» (كود 0 — سكريبت 0019) نظامي للبيع الكاش: مابيتمسحش ولا بيتوقف.
 * كل حفظ / إيقاف / مسح في ``sec.audit_log`` في نفس الـ transaction + ``row_version`` (جهازين على نفس العميل).
 """
 
@@ -30,6 +31,7 @@ MAX_TERMS = 365
 MAX_LIMIT = Decimal("9999999999999999.99")
 PAGE_SIZE = 100
 LOOKUP_LIMIT = 5000
+SYSTEM_STOP = "العميل «{}» نظامي (للبيع الكاش) — مابيتوقفش."
 _EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 # (المفتاح، الاسم، أقصى طول) للخانات النصية الاختيارية
 _TEXTS = (("name_en", "الاسم EN", 200), ("contact_person", "المسؤول", 120), ("mobile", "الموبايل", 30),
@@ -159,6 +161,8 @@ class CustomerService:
                 if before is None:
                     raise BusinessError("العميل ده مش موجود (ممكن يكون اتمسح).")
                 clean["code"] = before["code"]                       # الكود ثابت بعد الإضافة
+                if before["is_system"] and not clean["is_active"]:
+                    raise BusinessError(SYSTEM_STOP.format(before["name_ar"]))
             else:
                 clean["code"] = self.repository.next_code(tx)        # جوه قفل الترقيم
             exclude = None if customer_id is None else int(customer_id)
@@ -193,6 +197,8 @@ class CustomerService:
                 raise BusinessError("العميل ده مش موجود (ممكن يكون اتمسح).")
             if bool(before["is_active"]) == bool(active):
                 return
+            if before["is_system"] and not active:
+                raise BusinessError(SYSTEM_STOP.format(before["name_ar"]))
             updated = self.repository.set_active(int(customer_id), bool(active), ex=tx,
                                                  expected_version=expected_version)
             self.guard.ensure(tx, updated, expected_version, entity=ENTITY, entity_id=customer_id)
@@ -207,6 +213,8 @@ class CustomerService:
             self.guard.check(tx, before, expected_version, entity=ENTITY, entity_id=customer_id)
             if before is None:
                 raise BusinessError("العميل ده مش موجود (ممكن يكون اتمسح).")
+            if before["is_system"]:
+                raise BusinessError(f"العميل «{before['name_ar']}» نظامي (للبيع الكاش) — مابيتمسحش.")
             # TODO (الفواتير والسندات وأوامر التوريد والقيود): العميل اللي عليه حركة مايتمسحش — FK RESTRICT
             # من الجداول دي + رسالة عربي «عليه N فاتورة — وقّفه بدل ما تمسحه».
             deleted = self.repository.delete_customer(int(customer_id), ex=tx, expected_version=expected_version)

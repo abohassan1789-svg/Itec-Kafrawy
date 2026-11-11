@@ -137,12 +137,19 @@ class CustomersScreen(BaseScreen):
         self.control_account.setReadOnly(True)
         self.control_account.setToolTip("حساب الرقابة بييجي من المجموعة — العميل بُعد على سطر القيد (مش حساب لوحده)")
         self.is_active = QCheckBox("نشط")
+        self.system_badge = QLabel("🔒 نظامي (للبيع الكاش)")
+        self.system_badge.setStyleSheet(f"color:{MUTED}; font-weight:700;")
+        flags = QHBoxLayout()
+        flags.setSpacing(18)
+        flags.addWidget(self.is_active)
+        flags.addWidget(self.system_badge)
+        flags.addStretch(1)
         form.addRow("الكود", self.code_edit)
         form.addRow("الاسم *", self.name_ar)
         form.addRow("الاسم EN", self.name_en)
         form.addRow("المجموعة *", self.group)
         form.addRow("حساب الرقابة", self.control_account)
-        form.addRow("الحالة", self.is_active)
+        form.addRow("الحالة", flags)
 
     def _build_contact(self) -> QGroupBox:
         box = QGroupBox("الاتصال والضرايب")
@@ -281,10 +288,18 @@ class CustomersScreen(BaseScreen):
             chip.setEnabled(not editing)
         self.group_filter.setEnabled(not editing)
         self._update_paging(editing)
+        system = self._is_system()
+        self.system_badge.setVisible(system)
+        if system:                                   # العميل النقدي: مابيتمسحش ولا بيتوقف
+            self.delete_button.setEnabled(False)
+            self.is_active.setEnabled(False)
+
+    def _is_system(self) -> bool:
+        return bool(self.current_record and self.current_record.get("is_system")) and self.mode != "new"
 
     def update_extra_buttons(self) -> None:
         idle = self.mode == "view" and self.current_id is not None
-        self.toggle_button.setEnabled(idle and self.can("edit") and self.can("save"))
+        self.toggle_button.setEnabled(idle and self.can("edit") and self.can("save") and not self._is_system())
 
     def new_record(self) -> None:
         super().new_record()
@@ -365,6 +380,8 @@ class CustomersScreen(BaseScreen):
             return f"⁦{value}⁩" if value else ""
         if key == "is_active":
             return "نشط" if value else "موقوف"
+        if key == "name_ar" and row.get("is_system"):
+            return f"{value} 🔒"
         return default_format(key, value, row)
 
     def refresh_list(self) -> None:
