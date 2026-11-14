@@ -105,6 +105,11 @@ SECTIONS: tuple[Section, ...] = (
             Target("cost_centers", "مراكز التكلفة", "Cost Centers", icon="🎯",
                    actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="🗂"),
+        # الشركاء تحت «الحسابات» لأنها حقوق ملكية (31 رأس المال · 32 جاري الشركاء) — 2026-11-14.
+        Group("حقوق الملكية", (
+            Target("partners", "الشركاء", "Partners", icon="🤝",
+                   actions=("view", "create", "edit", "save", "delete", "export")),
+        ), icon="🤝"),
     )),
     Section("sales", "المبيعات", "Sales", "🛒", groups=(
         Group("العملاء", (

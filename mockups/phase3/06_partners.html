@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج الشركاء — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+.ring{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.ring b{background:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:var(--green)}
+.stack{display:flex;height:12px;border-radius:6px;overflow:hidden;background:#E2E8F0;flex-shrink:0}
+.stack span{display:block;height:100%;color:#fff;font-size:7px;font-weight:900;text-align:center;line-height:12px;overflow:hidden;white-space:nowrap}
+.bal-p{color:#087443;font-weight:900}.bal-n{color:#B91C1C;font-weight:900}
+.tbl input.lv{width:52px;height:15px;text-align:left;direction:ltr}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة الشركاء (المرحلة 3ب · الشاشة 4)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل «العملاء» و«الموردين» و«الموظفين» — الفرق في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>كل الأسامي والأرقام وهمية</b>، ورأس المال والجاري والأرباح <b>توضيحية</b> (الحقيقي من القيود بعدين). <b>الخانات الزرقا والتبويبات شغالين</b>: دوس على أي شريك، غيّر النسب في النموذج 6، وجرّب «شريك جديد» في النموذج 8.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const TY={m:"متضامن",s:"موصي"};
+const COL=["#137A38","#2563EB","#B45309","#6D28D9","#0E7490","#DC2626"];
+
+// ===== الشركاء (كله وهمي) =====
+// [0 الكود، 1 الاسم، 2 EN، 3 النوع، 4 الموبايل، 5 الرقم القومي، 6 تاريخ الدخول، 7 نسبة الربح، 8 نسبة الخسارة، 9 رأس المال المكتتب، 10 المدفوع، 11 الجاري (+ له / − عليه)، 12 نشط، 13 العنوان، 14 مسحوبات 2026، 15 إيداعات 2026، 16 نصيبه من أرباح 2025]
+const P=[
+ ["PRT-001","م/ حسام عبد الله","Hossam Abdallah","m","01000003001","27805050100011","2012-01-01",50,50,500000,500000,42000,true,"مدينة نصر",268000,0,310000],
+ ["PRT-002","أ/ طارق منصور","Tarek Mansour","m","01000003002","28009090100022","2012-01-01",30,30,300000,300000,-18500,true,"المعادي",230000,25000,186000],
+ ["PRT-003","د/ علا فاروق","Ola Farouk","s","01000003003","","2018-07-01",15,15,150000,150000,7200,true,"الزمالك",86000,0,93000],
+ ["PRT-004","أ/ شريف لطفي","Sherif Lotfy","s","01000003004","29102020100044","2024-01-01",5,5,50000,30000,31000,true,"6 أكتوبر",0,0,31000],
+ ["PRT-005","م/ نادر حلمي","Nader Helmy","m","01000003005","27503030100055","2012-01-01",0,0,0,0,0,false,"الدقي",0,0,0],
+];
+const PX=Object.fromEntries(P.map(p=>[p[0],p]));
+const N=c=>`<span class="ltr">${c}</span>`;
+const m0=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
+const act=()=>P.filter(p=>p[12]);
+const sumPP=()=>act().reduce((a,p)=>a+p[7],0);
+const sumLP=()=>act().reduce((a,p)=>a+p[8],0);
+const stB=p=>p[12]?'<span class="bdg ok">نشط</span>':'<span class="bdg x">خرج</span>';
+const tyB=p=>`<span class="bdg ${p[3]==='m'?'pj':'cc'}">${TY[p[3]]}</span>`;
+const av=p=>`<span class="av ${p[12]?'':'off'}">${p[1].replace(/^(م|أ|د)\/\s*/,"").split(" ").map(w=>w[0]).slice(0,2).join("")}</span>`;
+const bal=v=>v>0?`<span class="bal-p ltr">${m0(v)}</span> <small class="hint">له</small>`:v<0?`<span class="bal-n ltr">${m0(-v)}</span> <small class="hint">عليه</small>`:'<span class="hint" style="margin:0">—</span>';
+const pbar=p=>`<span class="pg"><span style="width:${p[7]}%"></span></span> <b class="ltr">${p[7]}%</b>`;
+const color=p=>COL[P.indexOf(p)%COL.length];
+const ring=(p,v=p[7])=>`<span class="ring" style="background:conic-gradient(${color(p)} ${v*3.6}deg,#E2E8F0 0)"><b>${v}%</b></span>`;
+function sumLine(){const s=sumPP(),l=sumLP();return s===100&&l===100?`<div class="ok-line">✔ مجموع نسب الشركاء النشطين: الربح ${s}% · الخسارة ${l}%</div>`:`<div class="bad-line">⚠ مجموع النسب مش 100%: الربح ${s}% · الخسارة ${l}% — توزيع الأرباح مش هيشتغل لحد ما يتظبط</div>`;}
+
+const ST={s1:"PRT-001",f1:"all", s2:"PRT-002", s3:"PRT-003",t3:"main", ty4:"",f4:"all",s4:"PRT-001", s5:"PRT-001", same6:true, s7:"PRT-002",t7:"stmt",
+  n8name:"أ/ مها سليم",n8nid:"2930404010012",n8type:"s",n8pp:"10",n8lp:"10",n8same:true,n8cap:"100000",n8date:"2026-11-14", s9:"PRT-001", i10:0};
+const P6=Object.fromEntries(P.filter(p=>p[12]).map(p=>[p[0],[p[7],p[8]]]));
+
+// ===== أدوات =====
+function win(inner,title="🤝 الشركاء — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+function tb(mode="عرض"){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">شريك جديد</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-dis':'b-tog'}">إيقاف / تفعيل</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ${ed?'ed':''}">${mode}</span></div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+function chipsF(key,F){return Object.keys(F).map(x=>`<span class="chipf ${ST[key]===x?'on':''}" data-set="${key}" data-v="${x}">${F[x]}</span>`).join("");}
+const FS={all:"الكل",act:"النشط",off:"اللي خرجوا"};
+const byStatus=(ps,k)=>ps.filter(p=>ST[k]==="all"||(ST[k]==="act"?p[12]:!p[12]));
+function keepSel(key,ps){if(ps.length&&!ps.find(p=>p[0]===ST[key])) ST[key]=ps[0][0];return ps.length?PX[ST[key]]:null;}
+function sel(key,val,opts,cls=""){return `<select class="lv ${cls}" data-st="${key}">${opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return `<option value="${v}" ${v===val?'selected':''}>${t}</option>`;}).join("")}</select>`;}
+const kp=(t,v,k="")=>`<div class="kp ${k}"><small>${t}</small><b>${v}</b></div>`;
+const cnt=()=>`<div class="cnt">${P.length} شريك (أمثلة) · ${act().length} نشط · رأس المال المدفوع ${m0(P.reduce((a,p)=>a+p[10],0))} EGP — في الأكسس جدول الشركاء فاضي</div>`;
+
+function prtTable(ps,key,mode="std"){
+  const rows=ps.map(p=>`<tr class="${p[0]===ST[key]?'sel':''} ${p[12]?'':'off'}" data-set="${key}" data-v="${p[0]}" style="cursor:pointer"><td>${N(p[0])}</td><td><b>${p[1]}</b>${mode==="std"?`<div style="color:var(--muted);font-size:7.5px">${TY[p[3]]} · من ${p[6].slice(0,4)}</div>`:''}</td><td>${pbar(p)}</td>${mode==="std"?`<td class="n">${m0(p[10])}</td>`:''}<td class="n">${bal(p[11])}</td><td>${stB(p)}</td></tr>`).join("")||'<tr><td colspan="6" class="hint">مفيش شركاء هنا</td></tr>';
+  return `<div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الشريك</th><th>نسبة الربح</th>${mode==="std"?'<th class="n">رأس المال</th>':''}<th class="n">الجاري</th><th>الحالة</th></tr>${rows}</table></div>`;}
+function viewForm(p,compact=false){
+  if(!p) return '<div class="hint">مفيش شريك</div>';
+  const a=gb("البيانات الأساسية",f("الكود",N(p[0]),"lock")+f("الاسم",p[1])+f("الاسم EN",p[2])+f("نوع الشريك",TY[p[3]])+f("تاريخ الدخول",N(p[6]))+f("الحالة",p[12]?"نشط":"خرج","lock"));
+  const b=gb("الاتصال والهوية",f("الموبايل",N(p[4]))+f("العنوان",p[13])+f("الرقم القومي",p[5]?N(p[5]):""));
+  const c=gb("النسب ورأس المال",f("نسبة الربح",N(p[7]+" %"))+f("نسبة الخسارة",N(p[8]+" %"))+f("رأس المال المكتتب",`${m0(p[9])} EGP`)+f("المدفوع",`${m0(p[10])} EGP`,"lock")+f("جاري الشريك",p[11]?`${m0(Math.abs(p[11]))} EGP ${p[11]>0?'له':'عليه'}`:"—","lock")+`<div class="hint">المدفوع من القيود على 31 رأس المال، والجاري من 32 جاري الشركاء — الاتنين ببُعد الشريك (توضيحي، الحقيقي مع المرحلة 5)</div>`);
+  return compact?a+c:a+b+c;}
+
+// ===== النماذج =====
+function m1(){
+  const ps=byStatus(P,"f1"), p=keepSel("s1",ps);
+  return win(tb()+`<div class="content"><div class="col" style="width:46%;overflow:auto">${viewForm(p)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 الاسم أو الكود أو الموبايل… (F1)</i>${chipsF("f1",FS)}</div>${prtTable(ps,"s1")}${sumLine()}${cnt()}</div></div>`);}
+
+function m2(){
+  const ps=P, p=keepSel("s2",ps), cr=P.filter(x=>x[11]>0).reduce((a,x)=>a+x[11],0), dr=P.filter(x=>x[11]<0).reduce((a,x)=>a-x[11],0), s=sumPP();
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="kpis">${kp("رأس المال المدفوع",m0(P.reduce((a,x)=>a+x[10],0)),"b")+kp("مجموع نسب الربح",s+"%",s===100?"g":"r")+kp("جاري ليهم",m0(cr),"g")+kp("جاري عليهم",m0(dr),dr?"r":"g")}</div><div style="display:flex;gap:7px;flex:1;min-height:0"><div class="col" style="width:46%;overflow:auto">${viewForm(p,true)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${prtTable(ps,"s2","short")}<div class="stack" style="margin-top:4px">${act().map(x=>`<span style="width:${x[7]}%;background:${color(x)}" title="${x[1]}">${x[7]}%</span>`).join("")}</div><div class="hint">الشريط = توزيع نسب الربح على الشركاء النشطين</div></div></div></div>`);}
+
+function m3(){
+  const p=PX[ST.s3];
+  const T={main:"البيانات",cont:"الاتصال والهوية",share:"النسب ورأس المال",note:"ملاحظات"};
+  const itabs=Object.keys(T).map(t=>`<span class="${ST.t3===t?'on':''}" data-set="t3" data-v="${t}">${T[t]}</span>`).join("");
+  let body="";
+  if(ST.t3==="main") body=f("الكود",N(p[0]),"lock")+f("الاسم",p[1])+f("الاسم EN",p[2])+f("نوع الشريك",TY[p[3]])+f("تاريخ الدخول",N(p[6]))+f("الحالة",p[12]?"نشط":"خرج","lock");
+  if(ST.t3==="cont") body=f("الموبايل",N(p[4]))+f("تليفون","")+f("الإيميل","")+f("العنوان",p[13])+f("الرقم القومي",p[5]?N(p[5]):"")+`<div class="hint">الرقم القومي اختياري — 14 رقم ومايتكررش لو اتكتب.</div>`;
+  if(ST.t3==="share") body=f("نسبة الربح",N(p[7]+" %"))+f("نسبة الخسارة",N(p[8]+" %"))+f("رأس المال المكتتب",`${m0(p[9])} EGP`)+f("المدفوع",`${m0(p[10])} EGP`,"lock")+f("الباقي من المكتتب",`${m0(p[9]-p[10])} EGP`,"lock")+f("جاري الشريك",p[11]?`${m0(Math.abs(p[11]))} ${p[11]>0?'له':'عليه'}`:"—","lock")+sumLine();
+  if(ST.t3==="note") body=`<div class="f"><label>ملاحظات</label><i style="height:60px;white-space:normal">${p[12]?'':'خرج من الشركة 2023 — حصته اتوزعت على الشركاء'}</i></div>`;
+  return win(tb()+`<div class="content"><div class="col" style="width:40%"><div class="srch"><i>🔍 بحث… (F1)</i></div>${prtTable(P,"s3","short")}</div><div class="col" style="flex:1"><div class="hdr" style="display:flex;gap:6px;align-items:center">${av(p)}<div><b>${N(p[0])} ${p[1]}</b> ${stB(p)} ${tyB(p)}<div class="p">نسبة الربح ${p[7]}% · رأس المال ${m0(p[10])} · من ${p[6]}</div></div></div><div class="itabs">${itabs}</div><div class="col" style="flex:1;background:#fff;border:1px solid var(--card-border);border-top:none;padding:6px;overflow:auto">${body}</div></div></div>`);}
+
+function m4(){
+  const ps=byStatus(P,"f4").filter(p=>!ST.ty4||p[3]===ST.ty4);
+  keepSel("s4",ps);
+  const rows=ps.map(p=>`<tr class="${p[0]===ST.s4?'sel':''} ${p[12]?'':'off'}" data-set="s4" data-v="${p[0]}" style="cursor:pointer"><td>${N(p[0])}</td><td><b>${p[1]}</b></td><td>${TY[p[3]]}</td><td class="ltr">${p[4]}</td><td class="ltr">${p[6]}</td><td class="n">${p[7]}%</td><td class="n">${p[8]}%</td><td class="n">${m0(p[9])}</td><td class="n">${m0(p[10])}</td><td class="n">${bal(p[11])}</td><td>${stB(p)}</td></tr>`).join("")||'<tr><td colspan="11" class="hint">مفيش شركاء في الفلتر ده</td></tr>';
+  const sm=i=>ps.reduce((a,p)=>a+p[i],0);
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch" style="flex-wrap:wrap"><label style="font-size:8.5px;font-weight:800">النوع</label><div style="width:110px;display:flex">${sel("ty4",ST.ty4,[["","كل الأنواع"],...Object.entries(TY)])}</div><span style="margin-right:auto"></span>${chipsF("f4",FS)}</div><div class="srch"><i>🔍 الاسم أو الكود أو الموبايل…</i></div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الشريك</th><th>النوع</th><th>الموبايل</th><th>الدخول</th><th class="n">ربح</th><th class="n">خسارة</th><th class="n">المكتتب</th><th class="n">المدفوع</th><th class="n">الجاري</th><th>الحالة</th></tr>${rows}<tr class="tot"><td colspan="5">الإجمالي (${ps.length} شريك)</td><td class="n">${sm(7)}%</td><td class="n">${sm(8)}%</td><td class="n">${m0(sm(9))}</td><td class="n">${m0(sm(10))}</td><td class="n">${bal(sm(11))}</td><td></td></tr></table></div>${sumLine()}<div class="hint">الشركاء قليلين ← صفحة واحدة · دبل كليك ← فورم الشريك</div></div>`);}
+
+function m5(){
+  const p=PX[ST.s5];
+  const cards=P.map(x=>`<div class="pc ${x[12]?'':'done'} ${x[0]===ST.s5?'sel':''}" data-set="s5" data-v="${x[0]}"><div class="r">${ring(x)}<span style="flex:1;margin-right:4px"><b>${x[1]}</b><span class="m" style="display:block">${N(x[0])} · ${TY[x[3]]}</span></span></div><div class="r" style="margin-top:3px"><span class="m">رأس المال</span><b class="ltr" style="display:inline">${m0(x[10])}</b></div><div class="r"><span class="m">الجاري</span><span>${bal(x[11])}</span></div></div>`).join("");
+  const bar=`<div class="hdr" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${av(p)}<b>${N(p[0])} ${p[1]}</b>${tyB(p)}<span class="hint" style="margin:0">📞 <span class="ltr">${p[4]}</span> · ربح ${p[7]}% / خسارة ${p[8]}% · مسحوبات 2026: ${m0(p[14])}</span><span class="btn-s" style="margin-right:auto">فتح الفورم</span></div>`;
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch"><i>🔍 بحث…</i></div><div class="scroll"><div class="cards">${cards}</div></div>${sumLine()}${bar}</div>`,"🤝 الشركاء — كروت — A-H CODE");}
+
+function m6(){
+  const ids=Object.keys(P6);
+  if(ST.same6) ids.forEach(k=>P6[k][1]=P6[k][0]);
+  const sp=ids.reduce((a,k)=>a+(Number(P6[k][0])||0),0), sl=ids.reduce((a,k)=>a+(Number(P6[k][1])||0),0);
+  const rows=ids.map(k=>{const p=PX[k];return `<tr><td>${N(k)}</td><td><b>${p[1]}</b><div style="color:var(--muted);font-size:7.5px">${TY[p[3]]}</div></td><td class="n">${m0(p[10])}</td><td class="n">${(p[10]/P.reduce((a,x)=>a+(x[12]?x[10]:0),0)*100).toFixed(1)}%</td><td><input class="lv" data-p6="${k}:0" value="${P6[k][0]}"></td><td>${ST.same6?`<span class="ltr" style="font-weight:800">${P6[k][1]}</span>`:`<input class="lv" data-p6="${k}:1" value="${P6[k][1]}">`}</td></tr>`;}).join("");
+  const ok=sp===100&&sl===100;
+  const stack=`<div class="stack">${ids.map(k=>`<span style="width:${Math.max(0,Math.min(100,Number(P6[k][0])||0))}%;background:${color(PX[k])}">${P6[k][0]}%</span>`).join("")}</div>`;
+  return win(`<div class="tb"><span class="bt ${ok?'b-save':'b-dis'}">حفظ التوزيع</span><span class="bt b-can">إلغاء</span><span class="bt b-ref">تحديث</span><span class="bt b-exit">خروج</span><span class="mode ed">تعديل النسب</span></div><div class="content" style="flex-direction:column"><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الشريك</th><th class="n">رأس المال</th><th class="n">نسبته من رأس المال</th><th>نسبة الربح %</th><th>نسبة الخسارة %</th></tr>${rows}<tr class="tot"><td colspan="4">المجموع (لازم 100%)</td><td class="n" style="color:${sp===100?'#087443':'#B91C1C'}">${sp}%</td><td class="n" style="color:${sl===100?'#087443':'#B91C1C'}">${sl}%</td></tr></table></div><label style="font-size:8.5px;font-weight:700;display:flex;gap:3px;align-items:center;cursor:pointer;margin:4px 0"><input type="checkbox" class="cb" data-flag="same6" ${ST.same6?'checked':''}> الخسارة بنفس نسبة الربح</label>${stack}<div class="${ok?'ok-line':'bad-line'}" style="margin-top:3px">${ok?'✔ التوزيع مظبوط — «حفظ التوزيع» شغال':`⛔ المجموع ${sp}% ربح / ${sl}% خسارة — لازم 100% عشان يتحفظ`}</div><div class="hint">كل الشركاء النشطين في جدول واحد والنسب بتتعدّل مع بعض — مايقدرش يتحفظ غير والمجموع 100%. جرّب غيّر 50 لـ 45.</div></div>`,"🤝 توزيع نسب الشركاء — A-H CODE");}
+
+function m7(){
+  const p=PX[ST.s7];
+  const T={stmt:"كشف جاري الشريك",cap:"رأس المال",prof:"توزيعات الأرباح",data:"البيانات"};
+  const itabs=Object.keys(T).map(t=>`<span class="${ST.t7===t?'on':''}" data-set="t7" data-v="${t}">${T[t]}</span>`).join("");
+  let body="";
+  if(ST.t7==="stmt"){
+    const open=p[11]+p[14]-p[15]-p[16];
+    const L=[["2026-01-01","رصيد أول المدة",open<0?-open:0,open>0?open:0],["2026-03-31",`توزيع أرباح 2025 (${p[7]}%)`,0,p[16]]];
+    if(p[14]) {L.push(["2026-05-10","مسحوبات — خزينة رئيسية",Math.round(p[14]*0.6),0]);L.push(["2026-09-02","مسحوبات — تحويل بنكي",p[14]-Math.round(p[14]*0.6),0]);}
+    if(p[15]) L.push(["2026-10-15","إيداع — خزينة رئيسية",0,p[15]]);
+    let r=0;
+    body=`<div class="scroll"><table class="tbl"><tr><th>التاريخ</th><th>البيان</th><th class="n">مدين (سحب)</th><th class="n">دائن (له)</th><th class="n">الرصيد</th></tr>${L.map(x=>{r+=x[3]-x[2];return `<tr><td class="ltr">${x[0]}</td><td>${x[1]}</td><td class="n">${x[2]?m0(x[2]):''}</td><td class="n">${x[3]?m0(x[3]):''}</td><td class="n">${bal(r)}</td></tr>`;}).join("")}</table></div><div class="hint">من القيود على 32 جاري الشركاء ببُعد الشريك — أرقام توضيحية</div>`;}
+  if(ST.t7==="cap") body=`<table class="tbl"><tr><th>التاريخ</th><th>البيان</th><th class="n">المبلغ</th></tr>${p[10]?`<tr><td class="ltr">${p[6]}</td><td>رأس مال ${p[6].startsWith('2012')?'تأسيس':'دخول شريك'}</td><td class="n">${m0(p[10])}</td></tr>`:'<tr><td colspan="3" class="hint">مفيش رأس مال</td></tr>'}<tr class="tot"><td colspan="2">المدفوع / المكتتب</td><td class="n">${m0(p[10])} / ${m0(p[9])}</td></tr></table>${p[9]>p[10]?`<div class="bad-line" style="margin-top:3px">⚠ باقي ${m0(p[9]-p[10])} من رأس المال المكتتب لسه مااتدفعش</div>`:''}<div class="hint">من القيود على 31 رأس المال ببُعد الشريك — زيادة رأس المال مستند في المرحلة 5</div>`;
+  if(ST.t7==="prof") body=p[16]?`<table class="tbl"><tr><th>السنة</th><th class="n">صافي الربح</th><th class="n">النسبة</th><th class="n">نصيبه</th></tr><tr><td>2025</td><td class="n">620,000</td><td class="n">${p[7]}%</td><td class="n">${m0(p[16])}</td></tr>${p[6]<"2025"?`<tr><td>2024</td><td class="n">540,000</td><td class="n">${p[7]}%</td><td class="n">${m0(540000*p[7]/100)}</td></tr>`:''}</table><div class="hint">توزيع الأرباح مع قفل السنة: مدين 33 الأرباح المحتجزة / دائن 32 جاري كل شريك بنسبته (فكرة E3marEG)</div>`:'<div class="hint">مفيش توزيعات للشريك ده</div>';
+  if(ST.t7==="data") body=`<div class="g2">${f("النوع",TY[p[3]])+f("الدخول",N(p[6]))+f("الموبايل",N(p[4]))+f("الرقم القومي",p[5]?N(p[5]):'')+f("نسبة الربح",p[7]+"%")+f("نسبة الخسارة",p[8]+"%")}</div>`;
+  return win(tb()+`<div class="content"><div class="col" style="width:34%"><div class="srch"><i>🔍 بحث…</i></div>${prtTable(P,"s7","short")}</div><div class="col" style="flex:1;gap:4px"><div class="hdr" style="display:flex;gap:6px;align-items:center">${ring(p)}<div><b>${N(p[0])} ${p[1]}</b> ${stB(p)} ${tyB(p)}<div class="p">من ${p[6]} · خسارة ${p[8]}%</div></div></div><div class="kpis">${kp("رأس المال المدفوع",m0(p[10]),"b")+kp("الجاري",p[11]?(p[11]>0?'له ':'عليه ')+m0(Math.abs(p[11])):'—',p[11]<0?"r":"g")+kp("مسحوبات 2026",m0(p[14]),"b")+kp("نصيبه من أرباح 2025",m0(p[16]),"g")}</div><div class="itabs">${itabs}</div><div class="col" style="flex:1;background:#fff;border:1px solid var(--card-border);border-top:none;padding:4px;overflow:auto">${body}</div></div></div>`,"🤝 الشريك — نظرة كاملة — A-H CODE");}
+
+function m8(){
+  const nm=ST.n8name.trim(), nid=ST.n8nid.replace(/\D/g,""), chk=[];
+  const bare=s=>s.replace(/^(م|أ|د)\/\s*/,"");
+  const same=P.find(p=>bare(p[1])===bare(nm));
+  chk.push(!nm?["bad","الاسم مطلوب"]:same?["warn",`فيه شريك بنفس الاسم «${same[1]}» (${same[0]})`]:["ok","الاسم مش متكرر"]);
+  const dupN=nid?P.find(p=>p[5]===nid):null;
+  chk.push(!nid?["ok","من غير رقم قومي (اختياري)"]:nid.length!==14?["bad",`الرقم القومي لازم 14 رقم (مكتوب ${nid.length})`]:dupN?["bad",`الرقم القومي ده لشريك تاني «${dupN[1]}»`]:["ok","الرقم القومي سليم ومش متكرر"]);
+  const pp=Number(ST.n8pp), lp=ST.n8same?pp:Number(ST.n8lp), s=sumPP();
+  const bad=v=>isNaN(v)||v<0||v>100;
+  chk.push(bad(pp)?["bad","نسبة الربح لازم من 0 لـ 100"]:s+pp>100?["warn",`مجموع نسب الربح هيبقى ${s+pp}% — لازم تقلّل نسب الباقيين (النموذج 6) قبل توزيع الأرباح`]:s+pp<100?["warn",`مجموع نسب الربح هيبقى ${s+pp}% — ناقص ${100-s-pp}%`]:["ok","مجموع نسب الربح 100% ✔"]);
+  if(!ST.n8same) chk.push(bad(lp)?["bad","نسبة الخسارة لازم من 0 لـ 100"]:lp!==pp?["warn",`نسبة الخسارة (${lp}%) غير نسبة الربح (${pp}%) — مسموح لو العقد كده`]:["ok","الخسارة = الربح"]);
+  const cap=Number(String(ST.n8cap).replace(/,/g,""));
+  chk.push(isNaN(cap)||cap<0?["bad","رأس المال المكتتب مايبقاش سالب"]:cap===0?["warn","من غير رأس مال (شريك بالمجهود؟)"]:["ok",`رأس المال المكتتب ${m0(cap)} EGP — الدفع الفعلي بمستند «زيادة رأس المال» (المرحلة 5)`]);
+  chk.push(["ok","الجاري على 32 جاري الشركاء ورأس المال على 31 — ببُعد الشريك، من غير حساب جديد"]);
+  const ok=chk.every(c=>c[0]!=="bad");
+  const ic=t=>t==="ok"?"✔":t==="warn"?"⚠":"⛔";
+  const form=gb("شريك جديد",`${f("الكود","PRT-006 (بيتولّد لوحده)","lock")}<div class="f"><label>الاسم</label><input class="lv ${chk[0][0]==='bad'?'bad':''}" data-st="n8name" value="${ST.n8name}"></div><div class="f"><label>نوع الشريك</label>${sel("n8type",ST.n8type,Object.entries(TY))}</div><div class="f"><label>الرقم القومي</label><input class="lv ${chk[1][0]==='bad'?'bad':''}" data-st="n8nid" value="${ST.n8nid}" style="direction:ltr;text-align:left"></div><div class="f"><label>تاريخ الدخول</label><input class="lv" data-st="n8date" value="${ST.n8date}" style="direction:ltr;text-align:left"></div><div class="sec2">النسب ورأس المال</div><div class="f"><label>نسبة الربح %</label><input class="lv ${bad(pp)?'bad':''}" data-st="n8pp" value="${ST.n8pp}" style="direction:ltr;text-align:left"></div><label style="font-size:8.5px;font-weight:700;display:flex;gap:3px;align-items:center;cursor:pointer;margin-bottom:4px"><input type="checkbox" class="cb" data-flag="n8same" ${ST.n8same?'checked':''}> الخسارة بنفس نسبة الربح</label>${ST.n8same?'':`<div class="f"><label>نسبة الخسارة %</label><input class="lv" data-st="n8lp" value="${ST.n8lp}" style="direction:ltr;text-align:left"></div>`}<div class="f"><label>رأس المال المكتتب</label><input class="lv" data-st="n8cap" value="${ST.n8cap}" style="direction:ltr;text-align:left"></div>`);
+  const res=`${chk.map(c=>`<div class="${c[0]==='ok'?'ok-line':'bad-line'}" style="${c[0]==='warn'?'color:#92400E':''};margin-bottom:2px">${ic(c[0])} ${c[1]}</div>`).join("")}<div style="margin-top:4px">${ok?'<span class="btn-s">حفظ ✔</span>':'<span class="btn-s d">حفظ (فيه أخطاء)</span>'}</div>`;
+  return win(tb("جديد")+`<div class="content"><div class="col" style="width:55%;overflow:auto">${form}</div><div class="col" style="flex:1;overflow:auto">${gb("التحقق قبل الحفظ",res)}<div class="hint" style="margin-top:4px">جرّب: كمّل الرقم القومي لـ 14 رقم، خلّي نسبة الربح 0 أو 120، شيل علامة «الخسارة بنفس النسبة»، أو غيّر الاسم لـ «أ/ طارق منصور».</div></div></div>`);}
+
+function m9(){
+  const p=PX[ST.s9], tc=P.reduce((a,x)=>a+x[10],0);
+  const tree=[["3","حقوق الملكية",0],["31","رأس المال",1],...P.filter(x=>x[10]).map(x=>["",x,2,"cap"]),["32","جاري الشركاء",1],...P.filter(x=>x[11]).map(x=>["",x,2,"cur"]),["33","الأرباح المحتجزة",1],["34","أرصدة افتتاحية",1]];
+  const tr=tree.map(t=>t[2]<2?`<div style="padding-right:${t[2]*10+3}px;font-weight:${t[2]?800:900};color:${t[2]?'#111827':'var(--green)'}"><span class="tg">${t[2]?'▾':'▾'}</span>${N(t[0])} ${t[1]}</div>`:`<div class="${t[1][0]===ST.s9?'sel':''}" data-set="s9" data-v="${t[1][0]}" style="padding-right:26px;color:#334155">👤 ${t[1][1]} <span style="margin-right:auto" class="ltr">${t[3]==='cap'?m0(t[1][10]):(t[1][11]>0?'':'−')+m0(Math.abs(t[1][11]))}</span></div>`).join("");
+  const rows=P.filter(x=>x[12]||x[10]||x[11]).map(x=>`<tr class="${x[0]===ST.s9?'sel':''}" data-set="s9" data-v="${x[0]}" style="cursor:pointer"><td><b>${x[1]}</b></td><td class="n">${m0(x[10])}</td><td class="n">${bal(x[11])}</td><td class="n">${m0(x[10]+x[11])}</td><td class="n">${(x[10]/tc*100).toFixed(1)}%</td><td class="n">${x[7]}%</td></tr>`).join("");
+  return win(tb()+`<div class="content"><div class="col" style="width:42%"><div class="hdr" style="margin-bottom:4px"><b>الشركاء في دليل الحسابات</b><div class="p">الشريك بُعد تحت 31 و32 — مش حساب جديد</div></div><div class="scroll tree">${tr}</div></div><div class="col" style="flex:1;gap:4px"><div class="scroll"><table class="tbl"><tr><th>الشريك</th><th class="n">رأس المال</th><th class="n">الجاري</th><th class="n">حقوقه</th><th class="n">من رأس المال</th><th class="n">نسبة الربح</th></tr>${rows}<tr class="tot"><td>الإجمالي</td><td class="n">${m0(tc)}</td><td class="n">${bal(P.reduce((a,x)=>a+x[11],0))}</td><td class="n">${m0(tc+P.reduce((a,x)=>a+x[11],0))}</td><td class="n">100%</td><td class="n">${sumPP()}%</td></tr></table></div>${gb("الشريك المختار",`<div class="g2">${f("الشريك",`${N(p[0])} ${p[1]}`,"lock")+f("النوع",TY[p[3]],"lock")+f("نسبة الربح",p[7]+"%","lock")+f("الدخول",N(p[6]),"lock")}</div>`,"flex-shrink:0")}<div class="hint">«من رأس المال» ممكن تبقى غير «نسبة الربح» (زي ما العقد يقول) — الأرقام توضيحية</div></div></div>`,"🤝 الشركاء وحقوق الملكية — A-H CODE");}
+
+function m10(){
+  const i=Math.max(0,Math.min(P.length-1,ST.i10)), p=P[i];
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="nav"><span class="mini" data-nav="first">الأول</span><span class="mini" data-nav="prev">السابق</span><b style="font-size:9px;margin:0 6px">شريك ${i+1} من ${P.length}</b><span class="mini" data-nav="next">التالي</span><span class="mini" data-nav="last">الأخير</span><span class="hint" style="margin:0 8px 0 0">(زي شاشة FPartener في الأكسس)</span></div>${gb("الشريك",`<div class="g2">${f("الكود",N(p[0]),"lock")+f("الموبايل",N(p[4]))+f("الاسم",p[1])+f("العنوان",p[13])+f("النوع",TY[p[3]])+f("تاريخ الدخول",N(p[6]))+f("نسبة الربح",p[7]+"%")+f("رأس المال",m0(p[10]))}</div>`,"flex-shrink:0")}<div class="hint" style="margin:4px 0 2px">آخر سحب / إيداع (توضيحي — زي TBEida3):</div><div class="scroll"><table class="tbl"><tr><th>الحركة</th><th>التاريخ</th><th class="n">المبلغ</th></tr>${p[14]?`<tr><td>سحب — تحويل بنكي</td><td class="ltr">2026-09-02</td><td class="n">${m0(p[14]-Math.round(p[14]*0.6))}</td></tr><tr><td>سحب — خزينة رئيسية</td><td class="ltr">2026-05-10</td><td class="n">${m0(Math.round(p[14]*0.6))}</td></tr>`:''}${p[15]?`<tr><td>إيداع — خزينة رئيسية</td><td class="ltr">2026-10-15</td><td class="n">${m0(p[15])}</td></tr>`:''}${!p[14]&&!p[15]?'<tr><td colspan="3" class="hint">مفيش حركة</td></tr>':''}<tr class="tot"><td colspan="2">الجاري</td><td class="n">${bal(p[11])}</td></tr></table></div></div>`);}
+
+const M=[
+ ["Base Screen: فورم يمين + قائمة شمال (زي العملاء والموردين والموظفين)","نفس الشكل: القائمة (الكود، الشريك والنوع، نسبة الربح بشريط، رأس المال، الجاري له/عليه، الحالة) بفلتر الكل / النشط / اللي خرجوا، والفورم يمين في 3 مجموعات: الأساسية · الاتصال والهوية · النسب ورأس المال. تحت القائمة سطر بيتأكد إن مجموع النسب 100%.",m1],
+ ["كروت أرقام فوق + قائمة وفورم","فوق: رأس المال المدفوع · مجموع نسب الربح · جاري ليهم · جاري عليهم. وتحت الفورم والقائمة وشريط ملوّن بيوضح توزيع النسب على الشركاء.",m2],
+ ["قائمة + فورم بتبويبات","القائمة شمال، ويمين الشريك (بالحروف الأولى من اسمه) والفورم متقسّم تبويبات: البيانات · الاتصال والهوية · النسب ورأس المال · ملاحظات.",m3],
+ ["قائمة كاملة بفلاتر وإجماليات","كل الأعمدة في جدول واحد: النوع والموبايل والدخول ونسبة الربح والخسارة والمكتتب والمدفوع والجاري، وسطر إجمالي (مجموع النسب لازم 100%). فلتر النوع والحالة. الفورم بدبل كليك.",m4],
+ ["كروت بدايرة النسبة","كل شريك كارت فيه دايرة بنسبة ربحه ولونه، ورأس المال والجاري. تحت شريط الشريك المختار.",m5],
+ ["جدول توزيع النسب (بيتعدّل كله مع بعض)","كل الشركاء النشطين في جدول واحد بنسبة الربح والخسارة، و«حفظ التوزيع» مايشتغلش غير والمجموع 100% بالظبط. الخانات الزرقا شغالة — جرّب غيّر 50 لـ 45، أو شيل «الخسارة بنفس النسبة».",m6],
+ ["نظرة كاملة على الشريك","القائمة شمال، ويمين كروت (رأس المال · الجاري · مسحوبات السنة · نصيبه من الأرباح) وتبويبات: كشف جاري الشريك · رأس المال · توزيعات الأرباح · البيانات. الأرقام توضيحية.",m7],
+ ["فورم «شريك جديد» بالتحقق","الخانات الزرقا شغالة: الاسم المتكرر، الرقم القومي 14 رقم (اختياري)، نسبة الربح من 0 لـ 100 والمجموع بعد الإضافة، الخسارة بنفس النسبة أو لوحدها، ورأس المال المكتتب.",m8],
+ ["الشركاء في دليل الحسابات + حقوق الملكية","شمال شجرة حقوق الملكية (31 رأس المال · 32 جاري الشركاء) والشركاء تحتها كبُعد، ويمين جدول حقوق كل شريك (رأس المال + الجاري) ونسبته من رأس المال جنب نسبة الربح.",m9],
+ ["سجل واحد بأزرار تنقّل (زي الأكسس)","شبه شاشة FPartener القديمة: سجل واحد بأزرار الأول / السابق / التالي / الأخير، وتحت آخر سحب / إيداع (زي TBEida3).",m10],
+];
+
+const NOTE=`<b>الشركاء</b> = جدول <span class="ltr">party.partners</span> بدل <span class="ltr">TBPartner</span> في الأكسس (الجدول فاضي هناك — مفيش ولا شريك متسجل، والسحب والإيداع كانوا في <span class="ltr">TBEida3</span>). الشاشة دي <b>لتعريف الشريك بس</b>، والحركات في المرحلة 5:
+<ul>
+<li><b>الحسابات:</b> «32 جاري الشركاء» حساب رقابة واحد + الشريك <b>بُعد</b> على سطر القيد (زي العملاء والموردين والعهد) — مفيش حساب لكل شريك، وكشف الجاري من البُعد. و«31 رأس المال» اقتراحي يبقى ببُعد الشريك هو كمان عشان نعرف رأس مال كل واحد (سؤال 4).</li>
+<li><b>الحركات (المرحلة 5 — «الشركاء ورأس المال»):</b> سحب / إيداع الشريك (خزينة أو بنك ↔ 32) · زيادة رأس المال (↔ 31) · <b>توزيع الأرباح</b> مع قفل السنة: مدين 33 الأرباح المحتجزة / دائن 32 جاري كل شريك بنسبته (فكرة E3marEG). عشان كده النسب لازم مجموعها 100%.</li>
+<li><b>الخانات المقترحة:</b> الكود (بيتولّد لوحده وثابت) · الاسم (مطلوب) + EN · نوع الشريك · الرقم القومي (اختياري) · الموبايل/التليفون/الإيميل/العنوان · تاريخ الدخول · <b>نسبة الربح %</b> · <b>نسبة الخسارة %</b> · <b>رأس المال المكتتب</b> (رقم مرجعي — المدفوع الفعلي من القيود) · نشط · ملاحظات.</li>
+<li><b>الحماية:</b> الشريك اللي عليه أي قيد <b>مايتمسحش</b> (FK RESTRICT) — يتوقف بس («خرج»)، والموقوف مايتختارش في مستند جديد ونسبته لازم تبقى 0 · <span class="ltr">row_version</span> (جهازين) + سجل التعديلات · الكود جوه قفل · تعديل النسب بيتسجل في السجل بالقديم والجديد.</li>
+<li><b>الصلاحيات:</b> عرض · جديد · تعديل · حفظ · حذف · إيقاف · تصدير — ومكان الشاشة في القائمة سؤال 6.</li>
+</ul>`;
+
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>كود الشريك:</b> <span class="ltr">PRT-001</span> زي الموردين والموظفين (اقتراحي) — ولا حاجة تانية؟</li>
+<li><b>النسب:</b> نسبة واحدة للربح والخسارة (والخسارة بنفس نسبة الربح — اقتراحي، بخانة «الخسارة بنفس النسبة» علشان لو العقد غير كده)؟ ولا نسبة ربح بس من غير خسارة خالص؟</li>
+<li><b>مجموع النسب مش 100%:</b> <b>تنبيه بس</b> وقت حفظ الشريك، و<b>منع</b> وقت توزيع الأرباح (اقتراحي — عشان تقدر تضيف الشركاء واحد واحد)؟ ولا نعمل جدول التوزيع (النموذج 6) ومانحفظش غير والمجموع 100%؟</li>
+<li><b>رأس المال:</b> كل شريك ليه رأس ماله (31 ببُعد الشريك + خانة «رأس المال المكتتب» — اقتراحي)؟ ولا رأس مال إجمالي للشركة من غير تقسيم؟</li>
+<li><b>نوع الشريك</b> (متضامن / موصي): نضيفه ولا مالوش لازمة عندكم؟</li>
+<li><b>مكان الشاشة في القائمة:</b> تحت «الحسابات» ← «الشركاء» (اقتراحي — لأنها حقوق ملكية) ولا قسم لوحده «الشركاء» ولا تحت «الموظفين»؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+document.addEventListener("change",e=>{
+  const t=e.target, k=t.dataset.st;
+  if(t.dataset.flag){ST[t.dataset.flag]=t.checked;render();return;}
+  if(t.dataset.p6){const [c,j]=t.dataset.p6.split(":");P6[c][+j]=Number(t.value)||0;render();return;}
+  if(!k) return;
+  ST[k]=t.value;
+  render();
+});
+document.addEventListener("input",e=>{const t=e.target;if(t.matches("input.lv")&&t.dataset.st){ST[t.dataset.st]=t.value;}});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const nv=e.target.closest("[data-nav]"); if(nv){const a=nv.dataset.nav;ST.i10=a==="first"?0:a==="last"?P.length-1:a==="prev"?Math.max(0,ST.i10-1):Math.min(P.length-1,ST.i10+1);render();return;}
+  const s=e.target.closest("[data-set]");
+  if(s){ST[s.dataset.set]=s.dataset.v; render();}
+});
+render();
+</script>
+</body>
+</html>
