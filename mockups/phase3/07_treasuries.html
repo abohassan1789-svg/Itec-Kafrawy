@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج الخزائن — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+.bal-p{color:#087443;font-weight:900}.bal-n{color:#B91C1C;font-weight:900}
+.wal{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:6px 7px;cursor:pointer;font-size:8px;line-height:1.5;border-top:4px solid var(--green)}
+.wal.usd{border-top-color:#2563EB}
+.wal.off{border-top-color:#94A3B8;background:#F8FAFC;color:#94A3B8}
+.wal.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.wal .big{font-size:12px;font-weight:900;direction:ltr;unicode-bidi:isolate;display:block;margin:2px 0}
+.wal .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.cur{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;direction:ltr;background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}
+.cur.usd{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.mainbar{background:var(--green-dark);color:#fff;display:flex;align-items:center;gap:6px;padding:5px 8px;flex-shrink:0;font-weight:800;font-size:9px}
+.mainbar .box{background:#fff;color:#111827;border-radius:4px;padding:1px 8px;font-weight:900;direction:ltr;font-size:10px}
+.mainbar .mini{background:#FDE68A;border-color:#F59E0B;color:#78350F}
+.rad{font-size:8.5px;font-weight:700;display:flex;gap:3px;align-items:center;cursor:pointer;margin-bottom:3px}
+.lim{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.lim span{display:block;height:100%;background:var(--green)}
+.lim.over span{background:#DC2626}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة الخزائن (المرحلة 3ج · الشاشة 1)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل «الموردين» و«الموظفين» و«الشركاء» — الفرق في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>كل الأسامي والأرقام وهمية</b>، و<b>الأرصدة والحركات توضيحية</b> (الحقيقي من القيود في المرحلة 5). <b>الخانات الزرقا والتبويبات شغالين</b>: دوس على أي خزنة، غيّر الأمين في النموذج 9، وجرّب «خزنة جديدة» في النموذج 8.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const RATE={EGP:1,USD:48.5};
+// ===== الموظفين اللي عليهم دور «أمين خزينة» (وهمي) =====
+const EMPS=[["EMP-004","أ/ محمود سعيد"],["EMP-007","أ/ ياسر نبيل"],["EMP-009","أ/ كريم فوزي"],["EMP-011","أ/ هبة رجب"]];
+const EX=Object.fromEntries(EMPS);
+// ===== الخزائن (كله وهمي) =====
+// [0 الكود، 1 الاسم، 2 EN، 3 العملة، 4 كود الحساب، 5 اسم الحساب، 6 كود الأمين، 7 الرصيد (توضيحي)، 8 نشطة، 9 الافتراضية، 10 المكان، 11 الحد الأقصى، 12 آخر حركة، 13 داخل الشهر، 14 خارج الشهر، 15 رصيد أول المدة]
+const T=[
+ ["TRS-001","الخزينة الرئيسية","Main Cash Box","EGP","110101","الخزينة الرئيسية","EMP-004",184250,true,true,"المكتب الرئيسي — مدينة نصر",0,"2026-11-14",412000,377500,96000],
+ ["TRS-002","خزينة النثريات","Petty Cash","EGP","110102","خزينة النثريات","EMP-007",6800,true,false,"المكتب الرئيسي",10000,"2026-11-13",15000,12450,4000],
+ ["TRS-003","خزينة الدولار","USD Cash Box","USD","110103","خزينة الدولار","EMP-004",3250,true,false,"المكتب الرئيسي",0,"2026-10-28",2000,1200,1500],
+ ["TRS-004","خزينة موقع العاشر","10th City Site Box","EGP","110104","خزينة موقع العاشر","EMP-009",22400,true,false,"موقع العاشر من رمضان",50000,"2026-11-12",60000,48600,0],
+ ["TRS-005","خزينة الفرع القديم","Old Branch Box","EGP","110105","خزينة الفرع القديم","",0,false,false,"الفرع القديم (اتقفل)",0,"2025-06-30",0,0,0],
+];
+const TX=Object.fromEntries(T.map(t=>[t[0],t]));
+// حسابات تحت 1101 (للنموذج 6 و 8) — 110106 فرعي مش مربوط بخزنة
+const ACC=[["110101","الخزينة الرئيسية","EGP"],["110102","خزينة النثريات","EGP"],["110103","خزينة الدولار","USD"],["110104","خزينة موقع العاشر","EGP"],["110105","خزينة الفرع القديم","EGP"],["110106","نقدية بالطريق","EGP"]];
+const linked=c=>T.find(t=>t[4]===c);
+const N=c=>`<span class="ltr">${c}</span>`;
+const m0=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
+const egp=t=>t[7]*RATE[t[3]];
+const act=()=>T.filter(t=>t[8]);
+const stB=t=>t[8]?'<span class="bdg ok">نشطة</span>':'<span class="bdg x">موقوفة</span>';
+const defB=t=>t[9]?'<span class="bdg sy">الافتراضية</span>':'';
+const cur=c=>`<span class="cur ${c==='USD'?'usd':''}">${c}</span>`;
+const amt=t=>`<b class="ltr">${m0(t[7])}</b> ${cur(t[3])}`;
+const emp=c=>c?`${EX[c]} <small class="hint">${c}</small>`:'<span class="bdg no">من غير أمين</span>';
+const limB=t=>t[11]?`<span class="lim ${t[7]>t[11]?'over':''}"><span style="width:${Math.min(100,t[7]/t[11]*100)}%"></span></span> <small class="hint">${m0(t[11])}</small>`:'<span class="hint" style="margin:0">—</span>';
+const totEGP=()=>act().reduce((a,t)=>a+egp(t),0);
+
+const ST={s1:"TRS-001",f1:"all", s2:"TRS-001", s3:"TRS-002",t3:"main", c4:"",f4:"all",s4:"TRS-001", s5:"TRS-001", s6:"110104", s7:"TRS-001",t7:"mov",
+  n8name:"خزينة موقع السادات",n8cur:"EGP",n8mode:"auto",n8acc:"110106",n8emp:"EMP-011",n8lim:"30000", i10:0};
+const EMP9=Object.fromEntries(T.map(t=>[t[0],t[6]]));
+
+// ===== أدوات =====
+function win(inner,title="💵 الخزائن — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+function tb(mode="عرض"){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">خزنة جديدة</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-dis':'b-tog'}">إيقاف / تفعيل</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ${ed?'ed':''}">${mode}</span></div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+function chipsF(key,F){return Object.keys(F).map(x=>`<span class="chipf ${ST[key]===x?'on':''}" data-set="${key}" data-v="${x}">${F[x]}</span>`).join("");}
+const FS={all:"الكل",act:"النشطة",off:"الموقوفة"};
+const byStatus=(ts,k)=>ts.filter(t=>ST[k]==="all"||(ST[k]==="act"?t[8]:!t[8]));
+function keepSel(key,ts){if(ts.length&&!ts.find(t=>t[0]===ST[key])) ST[key]=ts[0][0];return ts.length?TX[ST[key]]:null;}
+function sel(key,val,opts,cls=""){return `<select class="lv ${cls}" data-st="${key}">${opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return `<option value="${v}" ${v===val?'selected':''}>${t}</option>`;}).join("")}</select>`;}
+const kp=(t,v,k="")=>`<div class="kp ${k}"><small>${t}</small><b>${v}</b></div>`;
+const cnt=()=>`<div class="cnt">${T.length} خزائن (أمثلة) · ${act().length} نشطة · إجمالي النقدية ≈ ${m0(totEGP())} EGP (الدولار بـ ${RATE.USD}) — في الأكسس كانت خزنة واحدة</div>`;
+
+function trTable(ts,key,mode="std"){
+  const rows=ts.map(t=>`<tr class="${t[0]===ST[key]?'sel':''} ${t[8]?'':'off'}" data-set="${key}" data-v="${t[0]}" style="cursor:pointer"><td>${N(t[0])}</td><td><b>${t[1]}</b> ${t[9]?'⭐':''}${mode==="std"?`<div style="color:var(--muted);font-size:7.5px">حساب ${t[4]} · ${t[6]?EX[t[6]]:'من غير أمين'}</div>`:''}</td><td>${cur(t[3])}</td><td class="n">${t[8]?amt(t):'<span class="hint" style="margin:0">—</span>'}</td><td>${stB(t)}</td></tr>`).join("")||'<tr><td colspan="5" class="hint">مفيش خزائن هنا</td></tr>';
+  return `<div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الخزنة</th><th>العملة</th><th class="n">الرصيد</th><th>الحالة</th></tr>${rows}</table></div>`;}
+function viewForm(t,compact=false){
+  if(!t) return '<div class="hint">مفيش خزنة</div>';
+  const a=gb("البيانات الأساسية",f("الكود",N(t[0]),"lock")+f("الاسم",t[1])+f("الاسم EN",t[2])+f("العملة",`${t[3]} — ${t[3]==='USD'?'دولار أمريكي':'جنيه مصري'}`)+f("المكان",t[10])+f("الحالة",(t[8]?"نشطة":"موقوفة")+(t[9]?" · الخزينة الافتراضية":""),"lock"));
+  const b=gb("الحساب والأمين",f("الحساب",`${N(t[4])} ${t[5]}`,"lock")+f("تحت","1101 النقدية بالخزائن","lock")+f("أمين الخزينة",t[6]?`${EX[t[6]]} (${t[6]})`:"—")+f("حد أقصى للرصيد",t[11]?`${m0(t[11])} ${t[3]}`:"من غير حد")+`<div class="hint">الحساب بيتعمل لوحده تحت 1101 باسم الخزنة وعملتها (أو بيتختار من الدليل — سؤال 1)</div>`);
+  const c=gb("الرصيد (توضيحي)",f("رصيد أول المدة",`${m0(t[15])} ${t[3]}`,"lock")+f("الرصيد الحالي",`${m0(t[7])} ${t[3]}`,"lock")+f("آخر حركة",N(t[12]),"lock")+`<div class="hint">من القيود على حساب الخزنة — الحقيقي مع المرحلة 5</div>`);
+  return compact?a+b:a+b+c;}
+
+// ===== النماذج =====
+function m1(){
+  const ts=byStatus(T,"f1"), t=keepSel("s1",ts);
+  return win(tb()+`<div class="content"><div class="col" style="width:46%;overflow:auto">${viewForm(t)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 الاسم أو الكود… (F1)</i>${chipsF("f1",FS)}</div>${trTable(ts,"s1")}${cnt()}</div></div>`);}
+
+function m2(){
+  const t=keepSel("s2",T), noEmp=act().filter(x=>!x[6]).length, fx=act().filter(x=>x[3]!=="EGP").length;
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="kpis">${kp("إجمالي النقدية (بالجنيه)",m0(totEGP()),"g")+kp("الخزائن النشطة",act().length,"b")+kp("بعملة أجنبية",fx,"b")+kp("من غير أمين",noEmp,noEmp?"r":"g")}</div><div style="display:flex;gap:7px;flex:1;min-height:0"><div class="col" style="width:46%;overflow:auto">${viewForm(t,true)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${trTable(T,"s2","short")}<div class="hint">الدولار متحوّل بسعر الصرف بتاع النهارده (${RATE.USD}) — توضيحي</div></div></div></div>`);}
+
+function m3(){
+  const t=TX[ST.s3];
+  const TB={main:"البيانات",acc:"الحساب",emp:"الأمين والحد",note:"ملاحظات"};
+  const itabs=Object.keys(TB).map(k=>`<span class="${ST.t3===k?'on':''}" data-set="t3" data-v="${k}">${TB[k]}</span>`).join("");
+  let body="";
+  if(ST.t3==="main") body=f("الكود",N(t[0]),"lock")+f("الاسم",t[1])+f("الاسم EN",t[2])+f("العملة",t[3])+f("المكان",t[10])+f("الحالة",t[8]?"نشطة":"موقوفة","lock")+`<label class="rad"><input type="checkbox" class="cb" ${t[9]?'checked':''} disabled> الخزينة الافتراضية (لسندات القبض والصرف)</label>`;
+  if(ST.t3==="acc") body=f("الحساب",`${N(t[4])} ${t[5]}`,"lock")+f("الحساب الأب","1101 النقدية بالخزائن","lock")+f("الدور","خزينة (cash)","lock")+f("عملة الحساب",t[3],"lock")+`<div class="hint">اسم الحساب بيتغيّر مع اسم الخزنة. الحساب ماينفعش يتربط بأكتر من خزنة.</div>`;
+  if(ST.t3==="emp") body=f("أمين الخزينة",t[6]?`${EX[t[6]]} (${t[6]})`:"—")+f("حد أقصى للرصيد",t[11]?`${m0(t[11])} ${t[3]}`:"من غير حد")+(t[11]?`<div class="${t[7]>t[11]?'bad-line':'ok-line'}">${t[7]>t[11]?'⚠ الرصيد عدّى الحد':'✔ الرصيد تحت الحد'} (${m0(t[7])} من ${m0(t[11])})</div>`:'')+`<div class="hint">الأمين بيتختار من الموظفين اللي عليهم دور «أمين خزينة» بس.</div>`;
+  if(ST.t3==="note") body=`<div class="f"><label>ملاحظات</label><i style="height:60px;white-space:normal">${t[0]==='TRS-002'?'للمصاريف الصغيرة بس — بتتغذى من الخزينة الرئيسية أول كل أسبوع':''}</i></div>`;
+  return win(tb()+`<div class="content"><div class="col" style="width:40%"><div class="srch"><i>🔍 بحث… (F1)</i></div>${trTable(T,"s3","short")}</div><div class="col" style="flex:1"><div class="hdr"><b>${N(t[0])} ${t[1]}</b> ${stB(t)} ${cur(t[3])} ${defB(t)}<div class="p">حساب ${t[4]} · الأمين: ${t[6]?EX[t[6]]:'—'} · الرصيد ${m0(t[7])} ${t[3]}</div></div><div class="itabs">${itabs}</div><div class="col" style="flex:1;background:#fff;border:1px solid var(--card-border);border-top:none;padding:6px;overflow:auto">${body}</div></div></div>`);}
+
+function m4(){
+  const ts=byStatus(T,"f4").filter(t=>!ST.c4||t[3]===ST.c4);
+  keepSel("s4",ts);
+  const rows=ts.map(t=>`<tr class="${t[0]===ST.s4?'sel':''} ${t[8]?'':'off'}" data-set="s4" data-v="${t[0]}" style="cursor:pointer"><td>${N(t[0])}</td><td><b>${t[1]}</b> ${t[9]?'⭐':''}</td><td>${cur(t[3])}</td><td class="ltr">${t[4]}</td><td>${t[6]?EX[t[6]]:'—'}</td><td>${limB(t)}</td><td class="ltr">${t[12]}</td><td class="n">${m0(t[7])}</td><td class="n">${m0(egp(t))}</td><td>${stB(t)}</td></tr>`).join("")||'<tr><td colspan="10" class="hint">مفيش خزائن في الفلتر ده</td></tr>';
+  const byC=["EGP","USD"].map(c=>[c,ts.filter(t=>t[3]===c).reduce((a,t)=>a+t[7],0)]).filter(x=>x[1]);
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch" style="flex-wrap:wrap"><label style="font-size:8.5px;font-weight:800">العملة</label><div style="width:110px;display:flex">${sel("c4",ST.c4,[["","كل العملات"],["EGP","EGP جنيه"],["USD","USD دولار"]])}</div><span style="margin-right:auto"></span>${chipsF("f4",FS)}</div><div class="srch"><i>🔍 الاسم أو الكود أو الأمين…</i></div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الخزنة</th><th>العملة</th><th>الحساب</th><th>الأمين</th><th>الحد</th><th>آخر حركة</th><th class="n">الرصيد</th><th class="n">بالجنيه</th><th>الحالة</th></tr>${rows}${byC.map(([c,v])=>`<tr class="tot"><td colspan="7">إجمالي ${c}</td><td class="n">${m0(v)}</td><td class="n">${m0(v*RATE[c])}</td><td></td></tr>`).join("")}</table></div><div class="hint">الإجمالي لكل عملة لوحده + المقابل بالجنيه · دبل كليك ← فورم الخزنة · الأرصدة توضيحية</div></div>`);}
+
+function m5(){
+  const t=TX[ST.s5];
+  const cards=T.map(x=>`<div class="wal ${x[3]==='USD'?'usd':''} ${x[8]?'':'off'} ${x[0]===ST.s5?'sel':''}" data-set="s5" data-v="${x[0]}"><div class="r"><b>${x[1]}</b>${cur(x[3])}</div><span class="big">${x[8]?m0(x[7]):'—'}</span><div class="r"><span>👤 ${x[6]?EX[x[6]]:'من غير أمين'}</span>${x[9]?'⭐':''}</div><div class="r" style="color:var(--muted)"><span class="ltr">${x[0]} · ${x[4]}</span><span>${x[11]?limB(x):''}</span></div></div>`).join("");
+  const bar=`<div class="hdr" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><b>${N(t[0])} ${t[1]}</b>${cur(t[3])}${stB(t)}<span class="hint" style="margin:0">📍 ${t[10]} · آخر حركة <span class="ltr">${t[12]}</span> · داخل الشهر ${m0(t[13])} / خارج ${m0(t[14])}</span><span class="btn-s" style="margin-right:auto">فتح الفورم</span></div>`;
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch"><i>🔍 بحث…</i><span class="hint" style="margin:0">إجمالي ≈ <b class="ltr">${m0(totEGP())}</b> EGP</span></div><div class="scroll"><div class="cards">${cards}</div></div>${bar}</div>`,"💵 الخزائن — كروت — A-H CODE");}
+
+function m6(){
+  const a=ACC.find(x=>x[0]===ST.s6), t=linked(a[0]);
+  const tr=`<div style="font-weight:900;color:var(--green)"><span class="tg">▾</span>${N("11")} الأصول المتداولة</div><div style="padding-right:13px;font-weight:800"><span class="tg">▾</span>${N("1101")} النقدية بالخزائن <span class="bdg sy" style="margin-right:auto">دور خزينة</span></div>`+ACC.map(x=>{const l=linked(x[0]);return `<div class="${x[0]===ST.s6?'sel':''} ${l&&!l[8]?'off':''}" data-set="s6" data-v="${x[0]}" style="padding-right:26px">${N(x[0])} ${x[1]} ${cur(x[2])} <span style="margin-right:auto">${l?`<span class="bdg ok">💵 ${l[0]}</span>`:'<span class="bdg wr">مش مربوط</span>'}</span></div>`;}).join("")+`<div style="padding-right:13px;font-weight:800;color:#94A3B8"><span class="tg">▸</span>${N("1102")} البنوك <small class="hint">(الشاشة الجاية)</small></div>`;
+  const right=t?gb("الخزنة المربوطة بالحساب",f("الخزنة",`${N(t[0])} ${t[1]}`,"lock")+f("العملة",t[3],"lock")+f("الأمين",t[6]?EX[t[6]]:"—","lock")+f("الرصيد",`${m0(t[7])} ${t[3]}`,"lock")+f("الحالة",t[8]?"نشطة":"موقوفة","lock"))+`<div class="hint">الحساب ده مربوط بخزنة واحدة بس — ماينفعش يتختار لخزنة تانية.</div>`:gb("حساب من غير خزنة",`<div class="bad-line" style="color:#92400E">⚠ الحساب ${a[0]} «${a[1]}» تحت النقدية ومش مربوط بأي خزنة</div><div style="margin-top:5px;display:flex;gap:4px"><span class="btn-s">💵 اعمل خزنة على الحساب ده</span><span class="btn-s g">سيبه حساب عادي</span></div>`)+`<div class="hint">لو الاختيار «يتختار من الدليل» (سؤال 1): الشجرة دي بتوريك كل حساب تحت 1101 مربوط بإيه.</div>`;
+  return win(tb()+`<div class="content"><div class="col" style="width:52%"><div class="hdr" style="margin-bottom:4px"><b>الخزائن في دليل الحسابات</b><div class="p">كل خزنة = حساب فرعي تحت 1101 النقدية بالخزائن</div></div><div class="scroll tree">${tr}</div></div><div class="col" style="flex:1;overflow:auto">${right}</div></div>`,"💵 الخزائن والدليل — A-H CODE");}
+
+function m7(){
+  const t=TX[ST.s7];
+  const TB={mov:"حركة الخزنة",open:"رصيد أول المدة",add:"إضافة أموال",data:"البيانات"};
+  const itabs=Object.keys(TB).map(k=>`<span class="${ST.t7===k?'on':''}" data-set="t7" data-v="${k}">${TB[k]}</span>`).join("");
+  let body="";
+  if(ST.t7==="mov"){
+    const L=[["2026-11-01","رصيد أول الشهر",0,0],["2026-11-03","سند قبض — عميل",Math.round(t[13]*0.55),0],["2026-11-06","سند صرف — مورد",0,Math.round(t[14]*0.6)],["2026-11-10","مصروفات — نثريات",0,Math.round(t[14]*0.15)],["2026-11-12","سند قبض — عميل",t[13]-Math.round(t[13]*0.55),0],["2026-11-14","تحويل للبنك",0,t[14]-Math.round(t[14]*0.6)-Math.round(t[14]*0.15)]];
+    let r=t[7]-t[13]+t[14]; L[0][2]=0;
+    body=t[13]||t[14]?`<div class="scroll"><table class="tbl"><tr><th>التاريخ</th><th>البيان</th><th class="n">داخل</th><th class="n">خارج</th><th class="n">الرصيد</th></tr>${L.map((x,i)=>{if(i)r+=x[2]-x[3];return `<tr><td class="ltr">${x[0]}</td><td>${x[1]}</td><td class="n">${x[2]?m0(x[2]):''}</td><td class="n">${x[3]?m0(x[3]):''}</td><td class="n"><b>${m0(r)}</b></td></tr>`;}).join("")}</table></div><div class="hint">من القيود على حساب الخزنة ${t[4]} — أرقام توضيحية (المرحلة 5)</div>`:'<div class="hint">مفيش حركة على الخزنة دي</div>';}
+  if(ST.t7==="open") body=`${f("السنة","2026","lock")}${f("رصيد أول المدة",`${m0(t[15])} ${t[3]}`,"lock")}<div class="hint">زي FCASHAW في الأكسس — بس هنا بيتسجل في «مستند الأرصدة الافتتاحية» (المرحلة 4): مدين حساب الخزنة / دائن حساب الأرصدة الافتتاحية. الخانة هنا للعرض، والتعديل من المستند (سؤال 7).</div>`;
+  if(ST.t7==="add") body=`<table class="tbl"><tr><th>التاريخ</th><th>من</th><th class="n">المبلغ</th></tr><tr><td class="ltr">2026-11-02</td><td>إيداع شريك — م/ حسام عبد الله</td><td class="n">${m0(Math.round(t[13]*0.2))}</td></tr><tr><td class="ltr">2026-10-20</td><td>سحب من البنك الأهلي</td><td class="n">${m0(Math.round(t[13]*0.1))}</td></tr></table><div class="hint">زي Fmaalk «إضافة أموال للخزينة» في الأكسس — هنا بقت «حركات الخزائن والبنوك» (إيداع شريك ← 32 · سحب من بنك ← 1102) في المرحلة 5، مش جوه الشاشة دي.</div>`;
+  if(ST.t7==="data") body=`<div class="g2">${f("الكود",N(t[0]),"lock")+f("العملة",t[3])+f("الحساب",N(t[4]),"lock")+f("الأمين",t[6]?EX[t[6]]:'—')+f("المكان",t[10])+f("الحد",t[11]?m0(t[11]):'—')}</div>`;
+  return win(tb()+`<div class="content"><div class="col" style="width:34%"><div class="srch"><i>🔍 بحث…</i></div>${trTable(T,"s7","short")}</div><div class="col" style="flex:1;gap:4px"><div class="hdr"><b>${N(t[0])} ${t[1]}</b> ${stB(t)} ${cur(t[3])} ${defB(t)}<div class="p">الأمين ${t[6]?EX[t[6]]:'—'} · حساب ${t[4]}</div></div><div class="kpis">${kp("الرصيد الحالي",m0(t[7]),"g")+kp("داخل الشهر",m0(t[13]),"b")+kp("خارج الشهر",m0(t[14]),"r")+kp("آخر حركة",t[12],"b")}</div><div class="itabs">${itabs}</div><div class="col" style="flex:1;background:#fff;border:1px solid var(--card-border);border-top:none;padding:4px;overflow:auto">${body}</div></div></div>`,"💵 الخزنة — نظرة كاملة — A-H CODE");}
+
+function m8(){
+  const nm=ST.n8name.trim(), chk=[];
+  const same=T.find(t=>t[1]===nm);
+  chk.push(!nm?["bad","الاسم مطلوب"]:same?["bad",`فيه خزنة بنفس الاسم (${same[0]})`]:["ok","الاسم مش متكرر"]);
+  if(ST.n8mode==="auto"){
+    chk.push(["ok",`هيتعمل حساب جديد <b class="ltr">110107</b> «${nm||'…'}» تحت 1101 النقدية بالخزائن بعملة ${ST.n8cur} ودور «خزينة»`]);
+  } else {
+    const a=ACC.find(x=>x[0]===ST.n8acc), l=linked(a[0]);
+    chk.push(l?["bad",`الحساب ${a[0]} مربوط بالفعل بـ «${l[1]}» — اختار حساب تاني`]:a[2]!==ST.n8cur?["bad",`عملة الحساب ${a[0]} (${a[2]}) غير عملة الخزنة (${ST.n8cur})`]:["ok",`هيتربط بالحساب الموجود ${a[0]} «${a[1]}»`]);
+  }
+  const busy=ST.n8emp?T.filter(t=>t[8]&&t[6]===ST.n8emp):[];
+  chk.push(!ST.n8emp?["warn","من غير أمين خزينة — ممكن تختاره بعدين"]:busy.length?["warn",`${EX[ST.n8emp]} أمين على ${busy.map(b=>`«${b[1]}»`).join(" و")} كمان — مسموح`]:["ok",`الأمين ${EX[ST.n8emp]} (عليه دور «أمين خزينة»)`]);
+  const lim=Number(String(ST.n8lim).replace(/,/g,""));
+  chk.push(ST.n8lim===""||lim===0?["ok","من غير حد أقصى للرصيد"]:isNaN(lim)||lim<0?["bad","الحد الأقصى لازم رقم موجب"]:["ok",`حد أقصى ${m0(lim)} ${ST.n8cur} — تنبيه بس لو الرصيد عدّاه`]);
+  chk.push(["ok","الرصيد بيبدأ صفر — رصيد أول المدة من مستند الأرصدة الافتتاحية"]);
+  const ok=chk.every(c=>c[0]!=="bad");
+  const ic=t=>t==="ok"?"✔":t==="warn"?"⚠":"⛔";
+  const accOpts=ACC.map(a=>[a[0],`${a[0]} ${a[1]} (${a[2]})${linked(a[0])?' — مربوط':''}`]);
+  const form=gb("خزنة جديدة",`${f("الكود","TRS-006 (بيتولّد لوحده)","lock")}<div class="f"><label>الاسم</label><input class="lv ${chk[0][0]==='bad'?'bad':''}" data-st="n8name" value="${ST.n8name}"></div><div class="f"><label>العملة</label>${sel("n8cur",ST.n8cur,[["EGP","EGP — جنيه مصري"],["USD","USD — دولار"],["EUR","EUR — يورو"]])}</div><div class="sec2">الحساب في الدليل</div><label class="rad"><input type="radio" name="m8" class="cb" data-mode="auto" ${ST.n8mode==='auto'?'checked':''}> يتعمل لوحده تحت 1101 (اقتراحي)</label><label class="rad"><input type="radio" name="m8" class="cb" data-mode="pick" ${ST.n8mode==='pick'?'checked':''}> أختار حساب موجود</label>${ST.n8mode==='pick'?`<div class="f"><label>الحساب</label>${sel("n8acc",ST.n8acc,accOpts,chk[1][0]==='bad'?'bad':'')}</div>`:''}<div class="sec2">الأمين والحد</div><div class="f"><label>أمين الخزينة</label>${sel("n8emp",ST.n8emp,[["","— من غير أمين —"],...EMPS.map(e=>[e[0],`${e[1]} (${e[0]})`])])}</div><div class="f"><label>حد أقصى للرصيد</label><input class="lv" data-st="n8lim" value="${ST.n8lim}" style="direction:ltr;text-align:left"></div>`);
+  const res=`${chk.map(c=>`<div class="${c[0]==='ok'?'ok-line':'bad-line'}" style="${c[0]==='warn'?'color:#92400E':''};margin-bottom:2px">${ic(c[0])} ${c[1]}</div>`).join("")}<div style="margin-top:4px">${ok?'<span class="btn-s">حفظ ✔</span>':'<span class="btn-s d">حفظ (فيه أخطاء)</span>'}</div>`;
+  return win(tb("جديد")+`<div class="content"><div class="col" style="width:55%;overflow:auto">${form}</div><div class="col" style="flex:1;overflow:auto">${gb("التحقق قبل الحفظ",res)}<div class="hint" style="margin-top:4px">جرّب: غيّر الاسم لـ «خزينة النثريات»، اختار «أختار حساب موجود» وبعدين 110101 (مربوط) أو غيّر العملة لـ USD مع 110106، أو امسح الأمين.</div></div></div>`);}
+
+function m9(){
+  const rows=T.map(t=>{const e=EMP9[t[0]];return `<tr class="${t[8]?'':'off'}"><td>${N(t[0])}</td><td><b>${t[1]}</b></td><td>${cur(t[3])}</td><td>${t[8]?sel("e9:"+t[0],e,[["","— من غير أمين —"],...EMPS.map(x=>[x[0],x[1]])],e?'':'bad'):'<span class="hint" style="margin:0">موقوفة</span>'}</td><td class="n">${t[8]?amt(t):'—'}</td></tr>`;}).join("");
+  const by=EMPS.map(e=>{const ts=T.filter(t=>t[8]&&EMP9[t[0]]===e[0]);return `<div class="oc c" style="cursor:default">👤 ${e[1]} <small>${e[0]} · ${ts.length?ts.length+' خزنة':'من غير خزنة'}</small>${ts.map(t=>`<div style="font-weight:700;font-size:7.5px;color:#334155">• ${t[1]} — <span class="ltr">${m0(t[7])} ${t[3]}</span></div>`).join("")}</div>`;}).join("");
+  const none=act().filter(t=>!EMP9[t[0]]).length;
+  return win(`<div class="tb"><span class="bt b-save">حفظ</span><span class="bt b-can">إلغاء</span><span class="bt b-ref">تحديث</span><span class="bt b-exit">خروج</span><span class="mode ed">توزيع الأمناء</span></div><div class="content"><div class="col" style="width:58%"><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الخزنة</th><th>العملة</th><th>أمين الخزينة</th><th class="n">الرصيد</th></tr>${rows}</table></div><div class="${none?'bad-line':'ok-line'}" style="margin-top:3px">${none?`⚠ ${none} خزنة نشطة من غير أمين`:'✔ كل الخزائن النشطة ليها أمين'}</div><div class="hint">القايمة فيها الموظفين اللي عليهم دور «أمين خزينة» بس (من شاشة الموظفين). جرّب غيّر الأمين.</div></div><div class="col" style="flex:1"><div class="hdr" style="margin-bottom:4px"><b>الأمناء وخزائنهم</b><div class="p">مين ماسك إيه — والعهدة على مين</div></div><div class="scroll">${by}</div></div></div>`,"💵 أمناء الخزائن — A-H CODE");}
+
+function m10(){
+  const i=Math.max(0,Math.min(T.length-1,ST.i10)), t=T[i];
+  return win(`<div class="mainbar">💵 الخزنة: <span style="width:130px;display:flex">${sel("i10s",String(i),T.filter(x=>x[8]).map(x=>[String(T.indexOf(x)),x[1]]))}</span><span class="box">${m0(t[7])} ${t[3]}</span><span class="mini">تحديث الخزنة</span><span style="margin-right:auto;font-size:8px;opacity:.85">(زي «الخزنة» و«تحديث الخزنة» على Main في الأكسس)</span></div>`+tb()+`<div class="content" style="flex-direction:column"><div class="nav"><span class="mini" data-nav="first">الأول</span><span class="mini" data-nav="prev">السابق</span><b style="font-size:9px;margin:0 6px">خزنة ${i+1} من ${T.length}</b><span class="mini" data-nav="next">التالي</span><span class="mini" data-nav="last">الأخير</span></div>${gb("الخزنة",`<div class="g2">${f("الكود",N(t[0]),"lock")+f("العملة",t[3])+f("الاسم",t[1])+f("الحساب",`${N(t[4])}`,"lock")+f("الأمين",t[6]?EX[t[6]]:'—')+f("المكان",t[10])+f("رصيد أول المدة",m0(t[15]),"lock")+f("الحالة",t[8]?'نشطة':'موقوفة',"lock")}</div>`,"flex-shrink:0")}<div class="hint" style="margin-top:4px">سجل واحد بأزرار تنقّل (شبه شاشات الأكسس القديمة)، وفوق شريط رصيد الخزنة اللي كان على Main — بتختار الخزنة من القايمة ورصيدها يبان على طول. الأرقام توضيحية.</div></div>`);}
+
+const M=[
+ ["Base Screen: فورم يمين + قائمة شمال (زي الموردين والموظفين والشركاء)","نفس الشكل: القائمة (الكود، الخزنة والحساب والأمين، العملة، الرصيد، الحالة) بفلتر الكل / النشطة / الموقوفة، والفورم يمين في 3 مجموعات: الأساسية · الحساب والأمين · الرصيد (توضيحي).",m1],
+ ["كروت أرقام فوق + قائمة وفورم","فوق: إجمالي النقدية بالجنيه · الخزائن النشطة · بعملة أجنبية · من غير أمين. وتحت الفورم والقائمة.",m2],
+ ["قائمة + فورم بتبويبات","القائمة شمال، ويمين الخزنة والفورم متقسّم تبويبات: البيانات · الحساب · الأمين والحد · ملاحظات.",m3],
+ ["قائمة كاملة بفلاتر وإجماليات لكل عملة","كل الأعمدة في جدول واحد: العملة والحساب والأمين والحد الأقصى وآخر حركة والرصيد والمقابل بالجنيه، وإجمالي لكل عملة لوحده. فلتر العملة والحالة.",m4],
+ ["كروت «محفظة» لكل خزنة","كل خزنة كارت فيه رصيدها كبير وعملتها ولونها (الجنيه أخضر والدولار أزرق) والأمين والحد. تحت شريط الخزنة المختارة.",m5],
+ ["الخزائن في دليل الحسابات","شمال شجرة 1101 النقدية بالخزائن وكل حساب تحتها مربوط بأنهي خزنة (أو «مش مربوط» وزرار «اعمل خزنة على الحساب ده»)، ويمين الخزنة المربوطة. ده الشكل لو الحساب «يتختار من الدليل».",m6],
+ ["نظرة كاملة على الخزنة","القائمة شمال، ويمين كروت (الرصيد · داخل الشهر · خارج الشهر · آخر حركة) وتبويبات: حركة الخزنة · رصيد أول المدة (زي FCASHAW) · إضافة أموال (زي Fmaalk) · البيانات. الأرقام توضيحية.",m7],
+ ["فورم «خزنة جديدة» بالتحقق","الخانات الزرقا شغالة: الاسم المتكرر، العملة، الحساب (يتعمل لوحده أو تختار حساب موجود — ومايتربطش بخزنتين ولا بعملة غير عملة الخزنة)، الأمين (من «أمناء الخزينة» بس)، والحد الأقصى.",m8],
+ ["توزيع أمناء الخزائن","جدول الخزائن وجنب كل واحدة الأمين في قايمة زرقا (الموظفين اللي عليهم دور «أمين خزينة» بس)، وشمال كل أمين وخزائنه ورصيدها. جرّب غيّر الأمين.",m9],
+ ["شريط رصيد الخزنة + سجل واحد (زي الأكسس)","فوق شريط «الخزنة: [اختار] رصيدها + تحديث الخزنة» زي اللي كان على Main، وتحت سجل واحد بأزرار الأول / السابق / التالي / الأخير.",m10],
+];
+
+const NOTE=`<b>الشاشة دي بتعمل إيه:</b> تعريف <b>الخزائن</b> = جدول <span class="ltr">cash.treasuries</span>: كل خزنة بكود واسم وعملة، و<b>حساب فرعي تحت «1101 النقدية بالخزائن»</b> (دور «خزينة» في الدليل)، و<b>أمين خزينة</b> (موظف عليه دور «أمين خزينة» من شاشة الموظفين). الشاشة <b>لتعريف الخزنة بس</b>، والفلوس اللي بتدخل وتخرج في المرحلة 5.
+<br><b>كانت إيه في الأكسس:</b> <b>مكانش فيه شاشة خزائن</b> — كانت خزنة واحدة بس، ورصيدها ظاهر على شاشة Main («الخزنة» + زرار «تحديث الخزنة»). وكان فيه شاشتين ليهم علاقة: <span class="ltr">FCASHAW</span> «رصيد أول المدة للخزينة» و<span class="ltr">Fmaalk</span> «إضافة أموال للخزينة» في قسم «ماليات».
+<ul>
+<li><b>الحساب:</b> كل خزنة ليها حساب فرعي لوحدها تحت 1101 (مش بُعد زي العملاء) — عشان رصيد كل خزنة يبان في الميزان على طول. الدليل فيه دلوقتي «110101 الخزينة الرئيسية» و«110102 خزينة النثريات» — اقتراحي السكريبت يعمل الخزنتين دول ويربطهم بيهم، والرئيسية تبقى «الافتراضية» (نفس مفتاح «الخزينة الافتراضية» في شاشة الحسابات الافتراضية).</li>
+<li><b>الرصيد:</b> بيتحسب من القيود على حساب الخزنة في المرحلة 5 — هنا <b>توضيحي بس</b>. و<b>الرصيد السالب ممنوع</b> (قرار قديم) — المنع نفسه جوه قفل الصف وقت السند. ورصيد أول المدة (زي FCASHAW) من «مستند الأرصدة الافتتاحية» (المرحلة 4)، وإضافة أموال (زي Fmaalk) من «حركات الخزائن والبنوك» (المرحلة 5).</li>
+<li><b>الخانات المقترحة:</b> الكود (بيتولّد لوحده وثابت) · الاسم (مطلوب ومايتكررش) + EN · العملة · الحساب · أمين الخزينة · المكان · حد أقصى للرصيد (اختياري — تنبيه بس) · الافتراضية · نشطة · ملاحظات.</li>
+<li><b>الحماية:</b> الخزنة اللي عليها حركة <b>ماتتمسحش</b> (FK RESTRICT) — تتوقف بس، والموقوفة ماتتختارش في سند جديد · العملة ماتتغيّرش بعد أول حركة · الحساب مربوط بخزنة واحدة بس · <span class="ltr">row_version</span> (جهازين) + سجل التعديلات · الكود والحساب الجديد جوه قفل.</li>
+<li><b>مكان الشاشة:</b> قسم «الخزينة» 💵 اللي موجود في القايمة وفاضي ← «الخزائن والبنوك» ← «الخزائن» (والبنوك جنبها الشاشة الجاية).</li>
+</ul>`;
+
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>حساب الخزنة:</b> <b>يتعمل لوحده</b> تحت 1101 باسم الخزنة وعملتها (اقتراحي — ومعاه اختيار «أختار حساب موجود» للحسابات اللي في الدليل ومش مربوطة، زي النموذج 8)؟ ولا يتختار من الدليل بس (لازم تعمل الحساب الأول من شجرة الحسابات)؟</li>
+<li><b>كود الخزنة:</b> <span class="ltr">TRS-001</span> زي <span class="ltr">SUB / EMP / PRT</span> (اقتراحي) — ولا حاجة تانية؟</li>
+<li><b>الخزائن اللي بتتعمل مع السكريبت:</b> «الخزينة الرئيسية» على 110101 (الافتراضية) و«خزينة النثريات» على 110102 (اقتراحي)؟ ولا الرئيسية بس؟</li>
+<li><b>أمين الخزينة:</b> اختياري (اقتراحي — تنبيه بس لو خزنة من غير أمين)، والموظف الواحد يقدر يمسك أكتر من خزنة؟ ولا الأمين إجباري؟</li>
+<li><b>العملة:</b> كل خزنة بعملة واحدة (اقتراحي — خزنة الدولار لوحدها وحسابها بالدولار)، والعملة ماتتغيّرش بعد أول حركة؟</li>
+<li><b>حد أقصى للرصيد</b> (زي النثريات 10,000): نضيفه كتنبيه (اقتراحي) ولا مالوش لازمة؟</li>
+<li><b>رصيد أول المدة:</b> يظهر في الشاشة للعرض بس والتسجيل من «مستند الأرصدة الافتتاحية» (اقتراحي — زي باقي الأطراف)؟ ولا خانة تتكتب هنا؟</li>
+<li><b>مين يشوف أنهي خزنة:</b> كل الخزائن لكل المستخدمين زي قرار المخازن (اقتراحي دلوقتي)؟ ولا كل كاشير يشوف خزنته بس (صلاحية لكل خزنة)؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+document.addEventListener("change",e=>{
+  const t=e.target, k=t.dataset.st;
+  if(t.dataset.mode){ST.n8mode=t.dataset.mode;render();return;}
+  if(!k) return;
+  if(k.startsWith("e9:")){EMP9[k.slice(3)]=t.value;render();return;}
+  if(k==="i10s"){ST.i10=+t.value;render();return;}
+  ST[k]=t.value;
+  render();
+});
+document.addEventListener("input",e=>{const t=e.target;if(t.matches("input.lv")&&t.dataset.st){ST[t.dataset.st]=t.value;}});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const nv=e.target.closest("[data-nav]"); if(nv){const a=nv.dataset.nav;ST.i10=a==="first"?0:a==="last"?T.length-1:a==="prev"?Math.max(0,ST.i10-1):Math.min(T.length-1,ST.i10+1);render();return;}
+  const s=e.target.closest("[data-set]");
+  if(s){ST[s.dataset.set]=s.dataset.v; render();}
+});
+render();
+</script>
+</body>
+</html>

@@ -225,6 +225,8 @@ def test_two_devices(env):
             except Exception as exc:  # noqa: BLE001
                 result["error"] = exc
 
+        # 0023: حساب «خزينة النثريات» مربوط بخزنة نشطة ← الخزنة تتوقف الأول عشان الحساب يتوقف
+        db.execute("UPDATE cash.treasuries SET is_active = false WHERE account_id = %s", [ids["110102"]])
         with db.atomic() as tx:
             tx.execute("UPDATE acc.accounts SET is_active = false WHERE id = %s", [ids["110102"]])
             worker = threading.Thread(target=second_device)
@@ -236,6 +238,7 @@ def test_two_devices(env):
         assert mapping(db)["cash_box"] == "110101"
         # والعكس: جهاز اختارها افتراضي (لسه ماحفظش) ← التاني بيوقفها: بيستنى وبعدين يترفض
         db.execute("UPDATE acc.accounts SET is_active = true WHERE id = %s", [ids["110102"]])
+        db.execute("UPDATE cash.treasuries SET is_active = true WHERE account_id = %s", [ids["110102"]])
         acc_service = AccountService(dev2.db)
         petty = acc_service.get_account(ids["110102"])
 
