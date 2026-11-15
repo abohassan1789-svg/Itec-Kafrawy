@@ -143,7 +143,13 @@ SECTIONS: tuple[Section, ...] = (
                    actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="🪪"),
     )),
-    Section("inv", "المخازن", "Inventory", "🏬"),
+    # «الأصناف + المخازن» زي الأكسس (2026-11-15): المخازن أول زرار — وبعدها الوحدات والماركات والأصناف.
+    Section("inv", "المخازن", "Inventory", "🏬", groups=(
+        Group("الأصناف + المخازن", (
+            Target("warehouses", "المخازن", "Warehouses", icon="🏬",
+                   actions=("view", "create", "edit", "save", "delete", "export")),
+        ), icon="📦"),
+    )),
     # «الخزائن والبنوك» (2026-11-15): الخزائن ← البنوك (البنوك وحساباتها — النموذج 7).
     Section("cash", "الخزينة", "Cash & Banks", "💵", groups=(
         Group("الخزائن والبنوك", (

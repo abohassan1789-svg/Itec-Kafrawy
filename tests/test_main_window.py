@@ -74,7 +74,9 @@ def test_menu_tree_admin_sees_everything():
     assert not hr["coming_soon"] and hr["count"] == 1                   # «الموظفين» ← قسم لوحده
     cash = tree[5]
     assert not cash["coming_soon"] and cash["count"] == 2               # «الخزينة» ← الخزائن + البنوك
-    assert tree[4]["coming_soon"] and tree[6]["coming_soon"]            # المخازن والتقارير لسه
+    inv = tree[4]
+    assert not inv["coming_soon"] and inv["count"] == 1                 # «المخازن» ← المخازن (الأصناف + المخازن)
+    assert tree[6]["coming_soon"]                                       # التقارير لسه
 
 
 def test_menu_tree_hides_what_user_cannot_view():

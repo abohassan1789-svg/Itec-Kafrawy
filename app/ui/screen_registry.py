@@ -79,6 +79,12 @@ def _expense_types() -> QWidget:
     return ExpenseTypesScreen()
 
 
+def _warehouses() -> QWidget:
+    from app.ui.screens.warehouses_screen import WarehousesScreen
+
+    return WarehousesScreen()
+
+
 def _customers() -> QWidget:
     from app.ui.screens.customers_screen import CustomersScreen
 
@@ -154,6 +160,7 @@ SCREEN_FACTORIES: dict[str, ScreenFactory] = {
     "treasuries": _treasuries,
     "banks": _banks,
     "expense_types": _expense_types,
+    "warehouses": _warehouses,
     "company": _company,
     "fiscal_years": _fiscal_years,
     "currencies": _currencies,
