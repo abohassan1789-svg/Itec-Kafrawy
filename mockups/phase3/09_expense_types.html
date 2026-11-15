@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج أنواع المصروفات — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+.bal-p{color:#087443;font-weight:900}.bal-n{color:#B91C1C;font-weight:900}
+.wal{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:6px 7px;cursor:pointer;font-size:8px;line-height:1.5;border-top:4px solid var(--green)}
+.wal.usd{border-top-color:#2563EB}
+.wal.off{border-top-color:#94A3B8;background:#F8FAFC;color:#94A3B8}
+.wal.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.wal .big{font-size:12px;font-weight:900;direction:ltr;unicode-bidi:isolate;display:block;margin:2px 0}
+.wal .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.cur{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;direction:ltr;background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}
+.cur.usd{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.mainbar{background:var(--green-dark);color:#fff;display:flex;align-items:center;gap:6px;padding:5px 8px;flex-shrink:0;font-weight:800;font-size:9px}
+.mainbar .box{background:#fff;color:#111827;border-radius:4px;padding:1px 8px;font-weight:900;direction:ltr;font-size:10px}
+.mainbar .mini{background:#FDE68A;border-color:#F59E0B;color:#78350F}
+.rad{font-size:8.5px;font-weight:700;display:flex;gap:3px;align-items:center;cursor:pointer;margin-bottom:3px}
+.lim{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.lim span{display:block;height:100%;background:var(--green)}
+.lim.over span{background:#DC2626}
+</style>
+<style>
+.ico{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:5px;background:#ECFDF3;font-size:11px;flex-shrink:0}
+.ecard{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:5px 7px;cursor:pointer;font-size:8px;line-height:1.5;border-top:4px solid var(--green)}
+.ecard.g53{border-top-color:#2563EB}.ecard.g54{border-top-color:#B45309}
+.ecard.off{border-top-color:#94A3B8;background:#F8FAFC;color:#94A3B8}
+.ecard.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.ecard .big{font-size:11px;font-weight:900;direction:ltr;unicode-bidi:isolate;display:block;margin:1px 0}
+.ecard .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.grp{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;border:1px solid}
+.grp.g52{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.grp.g53{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.grp.g54{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.acc-row{display:flex;gap:4px;align-items:center}
+.rec{background:#fff;border:1px solid #94A3B8;border-radius:4px;padding:6px}
+.rec .ah{background:#1F4E79;color:#fff;font-weight:900;padding:3px 6px;border-radius:3px;font-size:9px;margin-bottom:5px}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة أنواع المصروفات (المرحلة 3ج · الشاشة 3)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل «الخزائن» و«البنوك» — الفرق في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>الأنواع العشرة هي اللي في الأكسس</b> (بعد تصحيح الإملا)، و<b>المبالغ وعدد المرات توضيحية</b> (الحقيقي من المصروفات في المرحلة 9). <b>الخانات الزرقا والتبويبات شغالين</b>: دوس على أي نوع، غيّر الحساب في النموذج 9، وجرّب «نوع جديد» في النموذج 8.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== حسابات المصروفات في الدليل (اللي موجود + المقترح الجديد ★) =====
+// [0 الكود، 1 الاسم، 2 الأب، 3 لازم مركز تكلفة، 4 جديد مقترح]
+const ACC=[
+ ["5201","المرتبات والأجور","52",true,false],
+ ["5202","الإيجار","52",false,false],
+ ["5203","كهرباء ومياه","52",false,false],
+ ["5204","مصروفات نثرية","52",false,false],
+ ["5207","تليفونات وإنترنت","52",false,true],
+ ["5208","وقود وسولار","53",false,true],
+ ["5209","صيانة سيارات","53",false,true],
+ ["5210","انتقالات ومواصلات","52",false,true],
+ ["5211","إكراميات وضيافة","52",false,true],
+ ["5301","نقل ومشال","53",true,false],
+ ["5402","مصاريف بنكية","54",false,false],
+];
+const AX=Object.fromEntries(ACC.map(a=>[a[0],a]));
+const PAR={"52":"مصروفات عمومية وإدارية","53":"مصروفات بيع وتوزيع","54":"مصروفات تمويلية"};
+const CC=[["","— من غير —"],["1101","الإدارة العامة"],["2101","مشاريع التكييف"],["2102","مشاريع الكهرباء"],["3101","أسطول النقل"]];
+const CCX=Object.fromEntries(CC);
+// ===== الأنواع =====
+// [0 الكود، 1 الاسم، 2 EN، 3 الحساب، 4 أمر التوريد (req/opt/no)، 5 المركز الافتراضي، 6 ض.ق.م قابلة للخصم، 7 نشط، 8 مرات السنة دي، 9 المبلغ، 10 أيقونة، 11 رقم الأكسس]
+const T=[
+ ["EXT-001","كهرباء","Electricity","5203","no","1101",false,true,12,18400,"⚡",1],
+ ["EXT-002","إيجارات","Rent","5202","no","1101",false,true,12,96000,"🏢",2],
+ ["EXT-003","مصاريف عامة","General Expenses","5204","opt","",false,true,31,26418,"🧾",3],
+ ["EXT-004","مصاريف نقل بضاعة","Goods Freight","5301","opt","3101",true,true,22,38600,"🚚",4],
+ ["EXT-005","مصاريف تليفونات","Telephone","5207","no","1101",true,true,12,7200,"📞",5],
+ ["EXT-006","إكراميات","Tips","5211","opt","",false,true,9,11525,"🤝",6],
+ ["EXT-007","مياه","Water","5203","no","1101",false,true,12,2400,"💧",7],
+ ["EXT-008","سولار","Diesel","5208","opt","3101",false,true,19,10724,"⛽",8],
+ ["EXT-009","صيانة سيارات","Car Maintenance","5209","no","3101",true,true,3,10043,"🔧",9],
+ ["EXT-010","مواصلات","Transportation","5210","opt","",false,true,27,34825,"🚕",10],
+];
+const TX=Object.fromEntries(T.map(t=>[t[0],t]));
+const N=c=>`<span class="ltr">${c}</span>`;
+const m0=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
+const act=()=>T.filter(t=>t[7]);
+const PJ={req:"لازم",opt:"اختياري",no:"مش مسموح"};
+const pjB=v=>v==="req"?'<span class="bdg no">أمر توريد لازم</span>':v==="opt"?'<span class="bdg pj">أمر توريد اختياري</span>':'<span class="bdg x">من غير أمر</span>';
+const stB=t=>t[7]?'<span class="bdg ok">نشط</span>':'<span class="bdg x">موقوف</span>';
+const par=t=>AX[t[3]][2];
+const grp=p=>`<span class="grp g${p}">${p} ${PAR[p].replace("مصروفات ","")}</span>`;
+const ccReq=t=>AX[t[3]][3];
+const accTxt=a=>`${N(a)} ${AX[a][1]}${AX[a][4]?' <span class="bdg wr">★ جديد</span>':''}`;
+const tot=()=>act().reduce((a,t)=>a+t[9],0);
+
+const ST={s1:"EXT-004",f1:"all", s2:"EXT-002", s3:"52",s3t:"EXT-002", s4:"5203", f5:"",s5:"", s6:"EXT-008", s7:"EXT-004",t7:"main",
+  n8name:"أدوات مكتبية",n8mode:"auto",n8par:"52",n8acc:"5204",n8pj:"opt",n8cc:"1101", i10:0};
+const ACC9=Object.fromEntries(T.map(t=>[t[0],t[3]]));
+const PJ9=Object.fromEntries(T.map(t=>[t[0],t[4]]));
+
+function win(inner,title="🧾 أنواع المصروفات — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+function tb(mode="عرض"){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">نوع جديد</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-dis':'b-tog'}">إيقاف / تفعيل</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ${ed?'ed':''}">${mode}</span></div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+function chipsF(key,F){return Object.keys(F).map(x=>`<span class="chipf ${ST[key]===x?'on':''}" data-set="${key}" data-v="${x}">${F[x]}</span>`).join("");}
+const FS={all:"الكل",act:"النشطة",off:"الموقوفة"};
+const byStatus=(ts,k)=>ts.filter(t=>ST[k]==="all"||(ST[k]==="act"?t[7]:!t[7]));
+function keepSel(key,ts){if(ts.length&&!ts.find(t=>t[0]===ST[key])) ST[key]=ts[0][0];return ts.length?TX[ST[key]]:null;}
+function sel(key,val,opts,cls=""){return `<select class="lv ${cls}" data-st="${key}">${opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return `<option value="${v}" ${v===val?'selected':''}>${t}</option>`;}).join("")}</select>`;}
+const kp=(t,v,k="")=>`<div class="kp ${k}"><small>${t}</small><b>${v}</b></div>`;
+const cnt=()=>`<div class="cnt">${T.length} أنواع (من الأكسس) · ${act().length} نشط · مصروف السنة ≈ ${m0(tot())} EGP (توضيحي)</div>`;
+
+function tTable(ts,key,mode="std"){
+  const rows=ts.map(t=>`<tr class="${t[0]===ST[key]?'sel':''} ${t[7]?'':'off'}" data-set="${key}" data-v="${t[0]}" style="cursor:pointer"><td>${N(t[0])}</td><td>${t[10]} <b>${t[1]}</b>${mode==="std"?`<div style="color:var(--muted);font-size:7.5px">حساب ${t[3]} ${AX[t[3]][1]}</div>`:''}</td><td>${grp(par(t))}</td>${mode==="std"?`<td class="n">${m0(t[9])}</td>`:''}<td>${stB(t)}</td></tr>`).join("")||'<tr><td colspan="5" class="hint">مفيش أنواع هنا</td></tr>';
+  return `<div class="scroll"><table class="tbl"><tr><th>الكود</th><th>النوع</th><th>المجموعة</th>${mode==="std"?'<th class="n">السنة دي</th>':''}<th>الحالة</th></tr>${rows}</table></div>`;}
+function viewForm(t,compact=false){
+  if(!t) return '<div class="hint">مفيش نوع</div>';
+  const a=gb("البيانات الأساسية",f("الكود",N(t[0]),"lock")+f("الاسم",t[1])+f("الاسم EN",t[2])+f("الحالة",t[7]?"نشط":"موقوف","lock"));
+  const b=gb("الحساب في الدليل",f("الحساب",accTxt(t[3]))+f("تحت",`${par(t)} ${PAR[par(t)]}`,"lock")+`<div class="hint">المصروف من النوع ده بيتقيّد: مدين ${t[3]} / دائن الخزنة أو البنك (المرحلة 9). كذا نوع ممكن يبقوا على نفس الحساب (كهرباء ومياه ← 5203).</div>`);
+  const c=gb("التحميل والضريبة",f("أمر التوريد",PJ[t[4]])+f("مركز التكلفة",t[5]?`${t[5]} ${CCX[t[5]]}`:"—")+(ccReq(t)?`<div class="hint" style="color:#6D28D9">الحساب ${t[3]} «لازم مركز تكلفة» ← المركز إجباري في المصروف</div>`:'')+f("ض.ق.م",t[6]?"عليه ض.ق.م قابلة للخصم (فاتورة ضريبية)":"من غير ض.ق.م"));
+  const d=gb("الاستخدام (توضيحي)",f("مرات السنة دي",t[8],"lock")+f("المبلغ",`${m0(t[9])} EGP`,"lock")+`<div class="hint">من جدول المصروفات — الحقيقي مع المرحلة 9</div>`);
+  return compact?a+b+c:a+b+c+d;}
+
+function m1(){
+  const ts=byStatus(T,"f1"), t=keepSel("s1",ts);
+  return win(tb()+`<div class="content"><div class="col" style="width:46%;overflow:auto">${viewForm(t)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 الاسم أو الكود أو الحساب… (F1)</i>${chipsF("f1",FS)}</div>${tTable(ts,"s1")}${cnt()}</div></div>`);}
+
+function m2(){
+  const t=keepSel("s2",T), top=[...act()].sort((a,b)=>b[9]-a[9])[0], newAcc=new Set(T.map(x=>x[3]).filter(a=>AX[a][4])).size;
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="kpis">${kp("أنواع نشطة",act().length,"g")+kp("مصروف السنة (EGP)",m0(tot()),"b")+kp("أكبر نوع",top[1],"b")+kp("حسابات جديدة هتتعمل",newAcc,newAcc?"r":"g")}</div><div style="display:flex;gap:7px;flex:1;min-height:0"><div class="col" style="width:46%;overflow:auto">${viewForm(t,true)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${tTable(T,"s2","short")}</div></div></div>`);}
+
+function m3(){
+  const ts=T.filter(t=>par(t)===ST.s3); keepSel("s3t",ts); const t=TX[ST.s3t];
+  const tabs=Object.keys(PAR).map(p=>`<span class="${ST.s3===p?'on':''}" data-set="s3" data-v="${p}">${p} ${PAR[p]} <em>${T.filter(x=>par(x)===p).length}</em></span>`).join("");
+  const rows=ts.map(x=>`<tr class="${x[0]===ST.s3t?'sel':''}" data-set="s3t" data-v="${x[0]}" style="cursor:pointer"><td>${N(x[0])}</td><td>${x[10]} <b>${x[1]}</b></td><td>${accTxt(x[3])}</td><td class="n">${m0(x[9])}</td></tr>`).join("")||'<tr><td colspan="4" class="hint">مفيش أنواع على المجموعة دي لسه</td></tr>';
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="tabs2">${tabs}</div><div style="display:flex;gap:7px;flex:1;min-height:0;background:#fff;border:1px solid var(--card-border);padding:5px"><div class="col" style="width:52%"><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>النوع</th><th>الحساب</th><th class="n">السنة دي</th></tr>${rows}</table></div><div class="hint">التبويبات = الحسابات الرئيسية تحت «5 المصروفات» — المجموعة بتيجي من الحساب، مش خانة لوحدها.</div></div><div class="col" style="flex:1;overflow:auto">${t?viewForm(t,true):''}</div></div></div>`);}
+
+function m4(){
+  const a=AX[ST.s4], ts=T.filter(t=>t[3]===a[0]);
+  let tr=`<div style="font-weight:900;color:var(--green)"><span class="tg">▾</span>${N("5")} المصروفات والتكاليف</div>`;
+  Object.keys(PAR).forEach(p=>{tr+=`<div style="padding-right:13px;font-weight:800"><span class="tg">▾</span>${N(p)} ${PAR[p]}</div>`;ACC.filter(x=>x[2]===p).forEach(x=>{const l=T.filter(t=>t[3]===x[0]);tr+=`<div class="${x[0]===ST.s4?'sel':''}" data-set="s4" data-v="${x[0]}" style="padding-right:26px">${N(x[0])} ${x[1]}${x[4]?' <span class="bdg wr">★</span>':''}<span style="margin-right:auto">${l.length?l.map(t=>`<span class="bdg ok">${t[10]} ${t[1]}</span>`).join(" "):'<span class="bdg x">مفيش نوع</span>'}</span></div>`;});});
+  const right=ts.length?gb(`الأنواع على ${a[0]} ${a[1]}`,ts.map(t=>`<div class="hdr" style="margin-bottom:3px">${t[10]} <b>${N(t[0])} ${t[1]}</b> ${stB(t)}<div class="p">${pjB(t[4])} · مركز ${t[5]?CCX[t[5]]:'—'} · السنة دي ${m0(t[9])}</div></div>`).join("")+`<div class="hint">كذا نوع على نفس الحساب مسموح — التقرير بيفصّل بالنوع والميزان بالحساب.</div>`):gb("حساب من غير نوع",`<div class="bad-line" style="color:#92400E">⚠ الحساب ${a[0]} «${a[1]}» مفيش عليه نوع مصروف</div><div style="margin-top:5px;display:flex;gap:4px"><span class="btn-s">🧾 اعمل نوع على الحساب ده</span><span class="btn-s g">سيبه (بيتقيّد من القيود بس)</span></div><div class="hint">زي «المرتبات» (بتتقيّد من القيود) و«المصاريف البنكية» (من حركات البنوك).</div>`);
+  return win(tb()+`<div class="content"><div class="col" style="width:58%"><div class="hdr" style="margin-bottom:4px"><b>أنواع المصروفات في دليل الحسابات</b><div class="p">كل حساب مصروف فرعي + الأنواع اللي عليه · ★ = حساب جديد هيتعمل مع السكريبت</div></div><div class="scroll tree">${tr}</div></div><div class="col" style="flex:1;overflow:auto">${right}</div></div>`,"🧾 أنواع المصروفات والدليل — A-H CODE");}
+
+function m5(){
+  const ts=T.filter(t=>(!ST.f5||par(t)===ST.f5)&&(!ST.s5||t[4]===ST.s5));
+  const rows=ts.map(t=>`<tr class="${t[7]?'':'off'}"><td>${N(t[0])}</td><td>${t[10]} <b>${t[1]}</b></td><td class="ltr">${t[3]}</td><td>${AX[t[3]][1]}</td><td>${grp(par(t))}</td><td>${pjB(t[4])}</td><td>${t[5]?CCX[t[5]]:'—'}${ccReq(t)?' <span class="bdg cc">لازم</span>':''}</td><td>${t[6]?'✔':''}</td><td class="n">${t[8]}</td><td class="n">${m0(t[9])}</td><td>${stB(t)}</td></tr>`).join("")||'<tr><td colspan="11" class="hint">مفيش أنواع في الفلتر ده</td></tr>';
+  const s=ts.reduce((a,t)=>a+t[9],0);
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch" style="flex-wrap:wrap"><label style="font-size:8.5px;font-weight:800">المجموعة</label><div style="width:140px;display:flex">${sel("f5",ST.f5,[["","كل المجموعات"],...Object.keys(PAR).map(p=>[p,`${p} ${PAR[p]}`])])}</div><label style="font-size:8.5px;font-weight:800">أمر التوريد</label><div style="width:110px;display:flex">${sel("s5",ST.s5,[["","الكل"],["req","لازم"],["opt","اختياري"],["no","مش مسموح"]])}</div></div><div class="srch"><i>🔍 الاسم أو الكود أو الحساب…</i></div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>النوع</th><th>الحساب</th><th>اسم الحساب</th><th>المجموعة</th><th>أمر التوريد</th><th>المركز</th><th>ض.ق.م</th><th class="n">مرات</th><th class="n">المبلغ</th><th>الحالة</th></tr>${rows}<tr class="tot"><td colspan="9">الإجمالي (${ts.length})</td><td class="n">${m0(s)}</td><td></td></tr></table></div><div class="hint">كل الأعمدة في جدول واحد بفلتر المجموعة وأمر التوريد · دبل كليك ← فورم النوع · المبالغ توضيحية</div></div>`);}
+
+function m6(){
+  const t=TX[ST.s6], mx=Math.max(...T.map(x=>x[9]));
+  const cards=T.map(x=>`<div class="ecard g${par(x)} ${x[7]?'':'off'} ${x[0]===ST.s6?'sel':''}" data-set="s6" data-v="${x[0]}"><div class="r"><span><span class="ico">${x[10]}</span> <b>${x[1]}</b></span>${grp(par(x))}</div><span class="big">${m0(x[9])}</span><div class="r"><span class="pg" style="width:60px"><span style="width:${x[9]/mx*100}%"></span></span><span class="hint" style="margin:0">${x[8]} مرة</span></div><div class="r" style="color:var(--muted)"><span class="ltr">${x[0]} · ${x[3]}</span></div></div>`).join("");
+  const bar=`<div class="hdr" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${t[10]} <b>${N(t[0])} ${t[1]}</b>${stB(t)}<span class="hint" style="margin:0">حساب ${t[3]} ${AX[t[3]][1]} · ${PJ[t[4]]==="لازم"?"أمر توريد لازم":"أمر توريد "+PJ[t[4]]} · مركز ${t[5]?CCX[t[5]]:'—'}</span><span class="btn-s" style="margin-right:auto">فتح الفورم</span></div>`;
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch"><i>🔍 بحث…</i><span class="hint" style="margin:0">مصروف السنة ≈ <b class="ltr">${m0(tot())}</b> EGP</span></div><div class="scroll"><div class="cards">${cards}</div></div>${bar}</div>`,"🧾 أنواع المصروفات — كروت — A-H CODE");}
+
+function m7(){
+  const t=TX[ST.s7];
+  const TB={main:"البيانات",acc:"الحساب",load:"التحميل",tax:"الضريبة",use:"الاستخدام"};
+  const itabs=Object.keys(TB).map(k=>`<span class="${ST.t7===k?'on':''}" data-set="t7" data-v="${k}">${TB[k]}</span>`).join("");
+  let body="";
+  if(ST.t7==="main") body=f("الكود",N(t[0]),"lock")+f("الاسم",t[1])+f("الاسم EN",t[2])+f("الأيقونة",t[10])+f("الحالة",t[7]?"نشط":"موقوف","lock")+f("رقم الأكسس",t[11],"lock");
+  if(ST.t7==="acc") body=f("الحساب",accTxt(t[3]))+f("الحساب الأب",`${par(t)} ${PAR[par(t)]}`,"lock")+f("لازم مركز تكلفة",ccReq(t)?"آه (من الحساب)":"لأ","lock")+`<div class="hint">الحساب لازم فرعي نشط تحت «5 المصروفات». كذا نوع على نفس الحساب مسموح.</div>`;
+  if(ST.t7==="load") body=f("أمر التوريد",PJ[t[4]])+f("مركز التكلفة الافتراضي",t[5]?`${t[5]} ${CCX[t[5]]}`:"—")+`<div class="hint">«لازم» ← المصروف مايتحفظش من غير أمر توريد · «اختياري» ← يتحمّل لو اختاره · «مش مسموح» ← الخانة مقفولة (زي الإيجار). المركز الافتراضي بيتملى لوحده في المصروف ويتغيّر.</div>`;
+  if(ST.t7==="tax") body=f("ض.ق.م",t[6]?"عليه ض.ق.م قابلة للخصم":"من غير")+f("كود الضريبة",t[6]?"VAT14 — 14%":"—")+f("خصم المنبع","— (من المورد لو فيه)")+`<div class="hint">لو «آه»: المصروف بيفتح خانة الضريبة ويقيّدها على 110601 ض.ق.م مدخلات بدل ما تتحمّل على المصروف.</div>`;
+  if(ST.t7==="use") body=`<table class="tbl"><tr><th>الشهر</th><th class="n">مرات</th><th class="n">المبلغ</th></tr>${["2026-08","2026-09","2026-10","2026-11"].map((m,i)=>`<tr><td class="ltr">${m}</td><td class="n">${Math.max(1,Math.round(t[8]/4)-i%2)}</td><td class="n">${m0(Math.round(t[9]/4*(1+((i%3)-1)*0.1)))}</td></tr>`).join("")}</table><div class="hint">من جدول المصروفات — توضيحي (المرحلة 9)</div>`;
+  return win(tb()+`<div class="content"><div class="col" style="width:38%"><div class="srch"><i>🔍 بحث… (F1)</i></div>${tTable(T,"s7","short")}</div><div class="col" style="flex:1"><div class="hdr">${t[10]} <b>${N(t[0])} ${t[1]}</b> ${stB(t)} ${grp(par(t))}<div class="p">حساب ${t[3]} ${AX[t[3]][1]} · ${pjB(t[4])}</div></div><div class="itabs">${itabs}</div><div class="col" style="flex:1;background:#fff;border:1px solid var(--card-border);border-top:none;padding:6px;overflow:auto">${body}</div></div></div>`);}
+
+function m8(){
+  const nm=ST.n8name.trim(), chk=[];
+  const same=T.find(t=>t[1].replace(/\s/g,"")===nm.replace(/\s/g,""));
+  chk.push(!nm?["bad","الاسم مطلوب"]:same?["bad",`فيه نوع بنفس الاسم (${same[0]})`]:["ok","الاسم مش متكرر"]);
+  if(ST.n8mode==="auto"){
+    const nx="52"===ST.n8par?"5212":ST.n8par==="53"?"5302 ← 5303 ← 5304":"5404";
+    chk.push(["ok",`هيتعمل حساب جديد <b class="ltr">${ST.n8par==="53"?"5304":ST.n8par==="54"?"5404":"5212"}</b> «${nm||'…'}» تحت ${ST.n8par} ${PAR[ST.n8par]}`]);
+  } else {
+    const a=AX[ST.n8acc], used=T.filter(t=>t[3]===a[0]);
+    chk.push(["ok",`هيتربط بالحساب الموجود ${a[0]} «${a[1]}»`]);
+    if(used.length) chk.push(["warn",`الحساب ده عليه ${used.map(u=>`«${u[1]}»`).join(" و")} كمان — مسموح (الميزان هيجمعهم)`]);
+    if(a[3]) chk.push(["warn",`الحساب ${a[0]} «لازم مركز تكلفة» ← المركز هيبقى إجباري في المصروف`]);
+  }
+  if(ST.n8pj==="req"&&!ST.n8cc) chk.push(["ok","أمر التوريد لازم — والمركز بييجي من الأمر"]);
+  chk.push(ST.n8cc?["ok",`المركز الافتراضي ${CCX[ST.n8cc]} — بيتملى لوحده ويتغيّر`]:["warn","من غير مركز افتراضي — هيتختار في كل مصروف"]);
+  const ok=chk.every(c=>c[0]!=="bad");
+  const ic=t=>t==="ok"?"✔":t==="warn"?"⚠":"⛔";
+  const form=gb("نوع مصروف جديد",`${f("الكود","EXT-011 (بيتولّد لوحده)","lock")}<div class="f"><label>الاسم</label><input class="lv ${chk[0][0]==='bad'?'bad':''}" data-st="n8name" value="${ST.n8name}"></div><div class="sec2">الحساب في الدليل</div><label class="rad"><input type="radio" name="m8" class="cb" data-mode="auto" ${ST.n8mode==='auto'?'checked':''}> يتعمل حساب جديد باسم النوع</label>${ST.n8mode==='auto'?`<div class="f"><label>تحت</label>${sel("n8par",ST.n8par,Object.keys(PAR).map(p=>[p,`${p} ${PAR[p]}`]))}</div>`:''}<label class="rad"><input type="radio" name="m8" class="cb" data-mode="pick" ${ST.n8mode==='pick'?'checked':''}> أختار حساب موجود (اقتراحي للأنواع الصغيرة)</label>${ST.n8mode==='pick'?`<div class="f"><label>الحساب</label>${sel("n8acc",ST.n8acc,ACC.map(a=>[a[0],`${a[0]} ${a[1]}`]))}</div>`:''}<div class="sec2">التحميل</div><div class="f"><label>أمر التوريد</label>${sel("n8pj",ST.n8pj,[["opt","اختياري"],["req","لازم"],["no","مش مسموح"]])}</div><div class="f"><label>المركز الافتراضي</label>${sel("n8cc",ST.n8cc,CC)}</div>`);
+  const res=`${chk.map(c=>`<div class="${c[0]==='ok'?'ok-line':'bad-line'}" style="${c[0]==='warn'?'color:#92400E':''};margin-bottom:2px">${ic(c[0])} ${c[1]}</div>`).join("")}<div style="margin-top:4px">${ok?'<span class="btn-s">حفظ ✔</span>':'<span class="btn-s d">حفظ (فيه أخطاء)</span>'}</div>`;
+  return win(tb("جديد")+`<div class="content"><div class="col" style="width:55%;overflow:auto">${form}</div><div class="col" style="flex:1;overflow:auto">${gb("التحقق قبل الحفظ",res)}<div class="hint" style="margin-top:4px">جرّب: غيّر الاسم لـ «مياه» أو «سولار»، اختار «أختار حساب موجود» وبعدين 5203 (عليه نوعين) أو 5301 (لازم مركز)، أو امسح المركز.</div></div></div>`);}
+
+function m9(){
+  const accO=ACC.map(a=>[a[0],`${a[0]} ${a[1]}${a[4]?' ★':''}`]);
+  const rows=T.map(t=>`<tr class="${t[7]?'':'off'}"><td>${N(t[0])}</td><td>${t[10]} <b>${t[1]}</b> <small class="hint">أكسس ${t[11]}</small></td><td>${sel("a9:"+t[0],ACC9[t[0]],accO)}</td><td>${sel("p9:"+t[0],PJ9[t[0]],[["opt","اختياري"],["req","لازم"],["no","مش مسموح"]])}</td></tr>`).join("");
+  const by=Object.keys(PAR).map(p=>{const as=ACC.filter(a=>a[2]===p&&T.some(t=>ACC9[t[0]]===a[0]));return `<div class="oc c" style="cursor:default">${p} ${PAR[p]}<small>${as.length} حساب مستخدم</small>${as.map(a=>`<div style="font-weight:700;font-size:7.5px;color:#334155">• ${a[0]} ${a[1]}${a[4]?' ★':''} ← ${T.filter(t=>ACC9[t[0]]===a[0]).map(t=>t[1]).join("، ")}</div>`).join("")}</div>`;}).join("");
+  const nw=new Set(Object.values(ACC9).filter(a=>AX[a][4])).size;
+  return win(`<div class="tb"><span class="bt b-save">حفظ</span><span class="bt b-can">إلغاء</span><span class="bt b-ref">تحديث</span><span class="bt b-exit">خروج</span><span class="mode ed">ربط الأنواع بالحسابات</span></div><div class="content"><div class="col" style="width:60%"><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>النوع</th><th>الحساب</th><th>أمر التوريد</th></tr>${rows}</table></div><div class="${nw?'bad-line':'ok-line'}" style="margin-top:3px;${nw?'color:#92400E':''}">${nw?`★ ${nw} حساب جديد هيتعمل في الدليل مع الحفظ`:'✔ كل الأنواع على حسابات موجودة'}</div><div class="hint">جدول واحد تربط فيه كل الأنواع مرة واحدة (مفيد وقت نقل الأكسس). جرّب غيّر حساب «سولار» لـ 5204.</div></div><div class="col" style="flex:1"><div class="hdr" style="margin-bottom:4px"><b>الحسابات وأنواعها</b><div class="p">الميزان بالحساب — والتقرير بالنوع</div></div><div class="scroll">${by}</div></div></div>`,"🧾 ربط أنواع المصروفات — A-H CODE");}
+
+function m10(){
+  const i=Math.max(0,Math.min(T.length-1,ST.i10)), t=T[i];
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="rec"><div class="ah">أنواع المصروفات (زي FTypeExpense في الأكسس)</div><div class="g2">${f("الكود",N(t[0]),"lock")+f("التاريخ","2026-11-15","lock")+f("النوع",t[1])+f("الحساب",`${N(t[3])} ${AX[t[3]][1]}`)+f("أمر التوريد",PJ[t[4]])+f("الحالة",t[7]?'نشط':'موقوف',"lock")}</div></div><div class="nav" style="margin-top:4px"><span class="mini" data-nav="first">الأول</span><span class="mini" data-nav="prev">السابق</span><b style="font-size:9px;margin:0 6px">نوع ${i+1} من ${T.length}</b><span class="mini" data-nav="next">التالي</span><span class="mini" data-nav="last">الأخير</span></div><div class="scroll" style="margin-top:4px"><table class="tbl"><tr><th>م</th><th>النوع</th><th>الحساب</th></tr>${T.map((x,j)=>`<tr class="${j===i?'sel':''}" data-i10="${j}" style="cursor:pointer"><td>${j+1}</td><td>${x[1]}</td><td class="ltr">${x[3]}</td></tr>`).join("")}</table></div><div class="hint">سجل واحد بأزرار تنقّل وتحته الأنواع كلها (شبه شاشة الأكسس — كان فيها «التاريخ» و«النوع» و«الرقم» بس، من غير حساب).</div></div>`);}
+
+const M=[
+ ["Base Screen: فورم يمين + قائمة شمال (زي الخزائن والموظفين)","نفس الشكل: القائمة (الكود، النوع وحسابه، المجموعة، مصروف السنة، الحالة) بفلتر الكل / النشطة / الموقوفة، والفورم يمين في 4 مجموعات: الأساسية · الحساب في الدليل · التحميل والضريبة · الاستخدام (توضيحي).",m1],
+ ["كروت أرقام فوق + قائمة وفورم","فوق: الأنواع النشطة · مصروف السنة · أكبر نوع · الحسابات الجديدة اللي هتتعمل. وتحت الفورم والقائمة.",m2],
+ ["تبويب لكل مجموعة حسابات","تبويبات بالحسابات الرئيسية تحت «5»: 52 عمومية وإدارية · 53 بيع وتوزيع · 54 تمويلية (بعددها)، وجوه كل تبويب الأنواع بحساباتها والفورم جنبها.",m3],
+ ["الأنواع في دليل الحسابات","شمال شجرة «5 المصروفات» وجنب كل حساب فرعي الأنواع اللي عليه (أو «مفيش نوع» وزرار «اعمل نوع على الحساب ده»)، ويمين الأنواع على الحساب المختار — زي نموذج البنوك 7.",m4],
+ ["قائمة كاملة بفلاتر وإجمالي","كل الأعمدة في جدول واحد: الحساب والمجموعة وأمر التوريد والمركز والضريبة ومرات الاستخدام والمبلغ، بفلتر المجموعة وأمر التوريد وإجمالي تحت.",m5],
+ ["كروت لكل نوع بأيقونة","كل نوع كارت بأيقونته ولونه حسب المجموعة (إدارية أخضر · بيع أزرق · تمويلية برتقاني) ومصروف السنة بشريط. تحت شريط النوع المختار.",m6],
+ ["قائمة + فورم بتبويبات","القائمة شمال، ويمين النوع والفورم متقسّم تبويبات: البيانات · الحساب · التحميل (أمر التوريد والمركز) · الضريبة · الاستخدام بالشهر.",m7],
+ ["فورم «نوع جديد» بالتحقق","الخانات الزرقا شغالة: الاسم المتكرر، الحساب (يتعمل حساب جديد تحت 52/53/54 أو تختار حساب موجود — وتنبيه لو عليه أنواع تانية أو «لازم مركز»)، أمر التوريد، والمركز الافتراضي.",m8],
+ ["ربط كل الأنواع بالحسابات في جدول واحد","جدول الأنواع وجنب كل واحد الحساب وأمر التوريد في قوايم زرقا، وشمال كل مجموعة وحساباتها والأنواع اللي عليها. مفيد وقت نقل الأكسس.",m9],
+ ["سجل واحد + جدول (زي الأكسس)","فوق سجل واحد بأزرار الأول / السابق / التالي / الأخير، وتحت الأنواع كلها — شبه FTypeExpense بس بالحساب.",m10],
+];
+
+const NOTE=`<b>الشاشة دي بتعمل إيه:</b> تعريف <b>أنواع المصروفات</b> = جدول <span class="ltr">exp.expense_types</span>: كل نوع (كهرباء، إيجار، سولار…) بكود واسم، و<b>مربوط بحساب مصروف فرعي في الدليل</b> تحت «5 المصروفات» — عشان شاشة المصروفات (المرحلة 9) تقيّد لوحدها: <b>مدين حساب النوع / دائن الخزنة أو البنك</b>. ومع كل نوع قواعد التحميل: <b>أمر التوريد</b> (لازم / اختياري / مش مسموح) و<b>مركز تكلفة افتراضي</b>. الشاشة <b>لتعريف النوع بس</b>، والمصروف نفسه في المرحلة 9.
+<br><b>كانت إيه في الأكسس:</b> <span class="ltr">FTypeExpense</span> «أنواع المصروفات» في قسم «المصروفات» — جدول <span class="ltr">typeExpens</span> فيه <b>10 أنواع</b> بـ «التاريخ» و«النوع» و«رقم» بس، <b>من غير حساب</b> (المصروفات مكانتش بتعمل قيد). الأنواع: كهرباء · ايجارات · مصاريف عامة · مصاريف نقل بضاعة · مصاريف تليفونات · مصريف اكرميات · مياه · سولار · صيانه سيارات · مواصلات.
+<ul>
+<li><b>ملاحظات من الأكسس:</b> جدول المصروفات <span class="ltr">expen</span> فيه 141 مصروف، وعمود النوع فيه أرقام <b>لحد 21</b> مع إن الأنواع 10 بس ← <b>11 نوع اتمسحوا</b> وفيه مصروفات عليهم (هنشوفهم وقت نقل البيانات — المرحلة 11). و<b>ولا مصروف واحد اتحمّل على أمر توريد ولا عميل</b> (الخانات موجودة بس فاضية).</li>
+<li><b>الحساب:</b> الدليل فيه دلوقتي 5202 الإيجار · 5203 كهرباء ومياه · 5204 نثرية · 5301 نقل ومشال · 5402 مصاريف بنكية. الأنواع اللي مالهاش حساب مناسب (تليفونات · سولار · صيانة سيارات · مواصلات · إكراميات) اقتراحي يتعملها حسابات جديدة ★ (5207–5211) مع السكريبت. وكذا نوع ممكن يبقوا على حساب واحد (كهرباء ومياه ← 5203).</li>
+<li><b>الخانات المقترحة:</b> الكود (بيتولّد لوحده وثابت) · الاسم (مطلوب ومايتكررش) + EN · الحساب · أمر التوريد (لازم/اختياري/مش مسموح) · مركز التكلفة الافتراضي · عليه ض.ق.م قابلة للخصم · نشط · ملاحظات. ومركز التكلفة يبقى <b>إجباري لوحده</b> لو الحساب عليه «لازم مركز تكلفة» (زي 5301 نقل ومشال).</li>
+<li><b>الحماية:</b> النوع اللي عليه مصروف <b>مايتمسحش</b> (FK RESTRICT) — يتوقف بس، والموقوف مايتختارش في مصروف جديد · حساب النوع مايتمسحش ولا يتوقف ولا يتحوّل رئيسي إلا بالتفريع · <span class="ltr">row_version</span> (جهازين) + سجل التعديلات · الكود والحساب الجديد جوه قفل.</li>
+<li><b>مكان الشاشة:</b> قسم جديد <b>«المصروفات»</b> 🧾 في القايمة (زي الأكسس) ← «أنواع المصروفات» — وبعدين «المصروفات» نفسها في المرحلة 9.</li>
+</ul>`;
+
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>حساب النوع:</b> <b>تختار حساب موجود</b> أو <b>يتعمل حساب جديد</b> باسم النوع تحت 52/53/54 (اقتراحي — الاتنين زي النموذج 8)، وكذا نوع مسموح على نفس الحساب؟ ولا كل نوع لازم حساب لوحده؟</li>
+<li><b>الأنواع العشرة من الأكسس:</b> تتعمل مع السكريبت (بعد تصحيح الإملا: «إكراميات»، «صيانة») على الحسابات اللي في الجدول (اقتراحي — ومعاهم 5 حسابات جديدة ★ 5207–5211)؟ ولا تبدأ فاضي وتضيفهم بإيدك؟</li>
+<li><b>كود النوع:</b> <span class="ltr">EXT-001</span> زي <span class="ltr">TRS / BNK</span> (اقتراحي)؟ ولا حاجة تانية؟</li>
+<li><b>أمر التوريد:</b> خانة لكل نوع «لازم / اختياري / مش مسموح» (اقتراحي — الافتراضي «اختياري»)؟ ولا اختياري لكل الأنواع ومن غير خانة؟</li>
+<li><b>مركز التكلفة الافتراضي</b> لكل نوع (بيتملى لوحده في المصروف ويتغيّر): نضيفه (اقتراحي) ولا مالوش لازمة؟</li>
+<li><b>ض.ق.م:</b> خانة «عليه ض.ق.م قابلة للخصم» (زي التليفونات والصيانة بفاتورة ضريبية — الضريبة تروح 110601 مش على المصروف) — نضيفها (اقتراحي) ولا المصروفات كلها من غير ضريبة زي الأكسس؟</li>
+<li><b>مستوى واحد</b> (اقتراحي — المجموعة بتيجي من الحساب الأب 52/53/54) ولا أنواع رئيسية وفرعية؟</li>
+<li><b>مكان الشاشة:</b> قسم جديد «المصروفات» في القايمة زي الأكسس (اقتراحي) ولا تحت «الحسابات»؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+document.addEventListener("change",e=>{
+  const t=e.target, k=t.dataset.st;
+  if(t.dataset.mode){ST.n8mode=t.dataset.mode;render();return;}
+  if(!k) return;
+  if(k.startsWith("a9:")){ACC9[k.slice(3)]=t.value;render();return;}
+  if(k.startsWith("p9:")){PJ9[k.slice(3)]=t.value;render();return;}
+  ST[k]=t.value;
+  render();
+});
+document.addEventListener("input",e=>{const t=e.target;if(t.matches("input.lv")&&t.dataset.st){ST[t.dataset.st]=t.value;}});
+document.addEventListener("focusout",e=>{const t=e.target;if(t.matches("input.lv")&&t.dataset.st){render();}});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const nv=e.target.closest("[data-nav]"); if(nv){const a=nv.dataset.nav;ST.i10=a==="first"?0:a==="last"?T.length-1:a==="prev"?Math.max(0,ST.i10-1):Math.min(T.length-1,ST.i10+1);render();return;}
+  const r=e.target.closest("[data-i10]"); if(r){ST.i10=+r.dataset.i10;render();return;}
+  const s=e.target.closest("[data-set]");
+  if(s){ST[s.dataset.set]=s.dataset.v; render();}
+});
+render();
+</script>
+</body>
+</html>

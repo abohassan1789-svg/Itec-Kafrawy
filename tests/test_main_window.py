@@ -65,7 +65,7 @@ def test_menu_tree_admin_sees_everything():
     sys_sec = tree[-1]
     assert sys_sec["bottom"] and not sys_sec["coming_soon"] and sys_sec["count"] == 8
     acc = tree[0]
-    assert not acc["coming_soon"] and acc["count"] == 4                 # «الحسابات» ← شجرة الحسابات + الحسابات الافتراضية + مراكز التكلفة + الشركاء
+    assert not acc["coming_soon"] and acc["count"] == 5                 # «الحسابات» ← شجرة الحسابات + الحسابات الافتراضية + مراكز التكلفة + الشركاء + أنواع المصروفات
     sales = tree[1]
     assert not sales["coming_soon"] and sales["count"] == 3             # «المبيعات» ← مجموعات العملاء + العملاء + أوامر التوريد
     purch = tree[2]

@@ -110,6 +110,11 @@ SECTIONS: tuple[Section, ...] = (
             Target("partners", "الشركاء", "Partners", icon="🤝",
                    actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="🤝"),
+        # أنواع المصروفات تحت «الحسابات» (رد المستخدم 2026-11-15: مش قسم جديد) — كل نوع مربوط بحساب مصروف.
+        Group("المصروفات", (
+            Target("expense_types", "أنواع المصروفات", "Expense Types", icon="🧾",
+                   actions=("view", "create", "edit", "save", "delete", "export")),
+        ), icon="🧾"),
     )),
     Section("sales", "المبيعات", "Sales", "🛒", groups=(
         Group("العملاء", (
