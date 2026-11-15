@@ -139,10 +139,12 @@ SECTIONS: tuple[Section, ...] = (
         ), icon="🪪"),
     )),
     Section("inv", "المخازن", "Inventory", "🏬"),
-    # «الخزائن والبنوك» (2026-11-15): الخزائن الأول، والبنوك جنبها الشاشة الجاية.
+    # «الخزائن والبنوك» (2026-11-15): الخزائن ← البنوك (البنوك وحساباتها — النموذج 7).
     Section("cash", "الخزينة", "Cash & Banks", "💵", groups=(
         Group("الخزائن والبنوك", (
             Target("treasuries", "الخزائن", "Treasuries", icon="💵",
+                   actions=("view", "create", "edit", "save", "delete", "export")),
+            Target("banks", "البنوك", "Banks", icon="🏦",
                    actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="💵"),
     )),

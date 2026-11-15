@@ -117,6 +117,8 @@ def test_database_rules(env):
         db.execute("DELETE FROM acc.accounts WHERE id = %s", [ids["110202"]])
     # بعد ما يتغيّر: يتوقف ويتمسح عادي
     db.execute(upd, [ids["110201"], "bank"])
+    # 0024: 110202 مربوط بحساب بنكي (بنك مصر — جاري) ← الحساب البنكي يتمسح الأول
+    db.execute("DELETE FROM cash.bank_accounts WHERE account_id = %s", [ids["110202"]])
     db.execute("UPDATE acc.accounts SET is_active = false WHERE id = %s", [ids["110202"]])
     db.execute("DELETE FROM acc.accounts WHERE id = %s", [ids["110202"]])
     # رسالة «نظامي» بتطلع قبل «افتراضي» (ترتيب الـ triggers)

@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج البنوك — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+.bal-p{color:#087443;font-weight:900}.bal-n{color:#B91C1C;font-weight:900}
+.wal{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:6px 7px;cursor:pointer;font-size:8px;line-height:1.5;border-top:4px solid var(--green)}
+.wal.usd{border-top-color:#2563EB}
+.wal.off{border-top-color:#94A3B8;background:#F8FAFC;color:#94A3B8}
+.wal.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.wal .big{font-size:12px;font-weight:900;direction:ltr;unicode-bidi:isolate;display:block;margin:2px 0}
+.wal .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.cur{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;direction:ltr;background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}
+.cur.usd{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.mainbar{background:var(--green-dark);color:#fff;display:flex;align-items:center;gap:6px;padding:5px 8px;flex-shrink:0;font-weight:800;font-size:9px}
+.mainbar .box{background:#fff;color:#111827;border-radius:4px;padding:1px 8px;font-weight:900;direction:ltr;font-size:10px}
+.mainbar .mini{background:#FDE68A;border-color:#F59E0B;color:#78350F}
+.rad{font-size:8.5px;font-weight:700;display:flex;gap:3px;align-items:center;cursor:pointer;margin-bottom:3px}
+.lim{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.lim span{display:block;height:100%;background:var(--green)}
+.lim.over span{background:#DC2626}
+</style>
+<style>
+.bk{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:16px;border-radius:4px;color:#fff;font-weight:900;font-size:7.5px;padding:0 3px;flex-shrink:0}
+.bcard{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:5px 6px;font-size:8px;line-height:1.5;border-top:4px solid var(--green)}
+.bcard.off{background:#F8FAFC;color:#94A3B8}
+.bcard .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.bcard .ln{display:flex;justify-content:space-between;align-items:center;gap:3px;padding:2px 3px;border-radius:4px;cursor:pointer;border-bottom:1px dashed #E2E8F0}
+.bcard .ln.sel{background:#EFF6FF;outline:1px solid #2563EB}
+.bcard .ln b.ltr{font-size:9px}
+.ty{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;background:#F1F5F9;color:#334155;border:1px solid #E2E8F0;white-space:nowrap}
+.ty.od{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.ty.dep{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.ty.sav{background:#ECFEFF;color:#0E7490;border-color:#A5F3FC}
+.iban{direction:ltr;unicode-bidi:isolate;font-family:Consolas,monospace;letter-spacing:.2px}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة البنوك والحسابات البنكية (المرحلة 3ج · الشاشة 2)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل «الخزائن» و«الموردين» — الفرق في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>كل أرقام الحسابات والـ IBAN والأرصدة وهمية</b>، و<b>الأرصدة والحركات توضيحية</b> (الحقيقي من القيود في المرحلة 5). <b>الخانات الزرقا والتبويبات شغالين</b>: دوس على أي بنك أو حساب، وجرّب «حساب بنكي جديد» في النموذج 8 (اكتب IBAN غلط أو رقم حساب متكرر).</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const RATE={EGP:1,USD:48.5};
+// ===== البنوك (وهمي) =====
+// [0 الكود، 1 الاسم، 2 EN، 3 اسم مختصر، 4 SWIFT، 5 الفرع، 6 العنوان، 7 مسؤول الحساب، 8 تليفونه، 9 نشط، 10 لون]
+const B=[
+ ["BNK-001","البنك الأهلي المصري","National Bank of Egypt","الأهلي","NBEGEGCX","فرع مدينة نصر","45 ش عباس العقاد — مدينة نصر","أ/ منى الشريف","0100 111 2233",true,"#137A38"],
+ ["BNK-002","بنك مصر","Banque Misr","بنك مصر","BMISEGCX","فرع روكسي","12 ش الأهرام — مصر الجديدة","أ/ طارق حلمي","0122 444 5566",true,"#B91C1C"],
+ ["BNK-003","البنك التجاري الدولي","Commercial International Bank","CIB","CIBEEGCX","فرع التجمع الخامس","التسعين الشمالي — التجمع","أ/ رانيا فتحي","0111 777 8899",true,"#1D4ED8"],
+ ["BNK-004","بنك القاهرة","Banque du Caire","القاهرة","BCAIEGCX","فرع العاشر","المنطقة الصناعية — العاشر","","",false,"#64748B"],
+];
+const BX=Object.fromEntries(B.map(b=>[b[0],b]));
+// ===== الحسابات البنكية (وهمي) =====
+// [0 الكود، 1 البنك، 2 النوع، 3 العملة، 4 كود الحساب، 5 اسم الحساب، 6 رقم الحساب، 7 IBAN، 8 الرصيد، 9 نشط، 10 الافتراضي، 11 حد التسهيلات، 12 آخر حركة، 13 داخل الشهر، 14 خارج الشهر، 15 رصيد أول المدة، 16 استحقاق الوديعة]
+const A=[
+ ["BNK-001-01","BNK-001","cur","EGP","110201","البنك الأهلي — جاري","1023-0456-7890-1234","EG380003010230456789012345678",1245300,true,true,0,"2026-11-14",820000,615400,900000,""],
+ ["BNK-001-02","BNK-001","cur","USD","110203","البنك الأهلي — جاري USD","1023-0456-7890-5678","EG610003010230456789056780000",18450,true,false,0,"2026-11-09",6000,2500,15000,""],
+ ["BNK-002-01","BNK-002","cur","EGP","110202","بنك مصر — جاري","2201-3300-0099-7711","EG150002022013300009977110000",386900,true,false,0,"2026-11-12",240000,198000,300000,""],
+ ["BNK-003-01","BNK-003","od","EGP","110204","CIB — جاري مدين (تسهيلات)","1000-2233-4455","",-45000,true,false,200000,"2026-11-13",150000,210000,0,""],
+ ["BNK-003-02","BNK-003","dep","EGP","110205","CIB — وديعة 3 شهور","1000-2233-9001","",500000,true,false,0,"2026-09-01",0,0,500000,"2026-12-01"],
+ ["BNK-004-01","BNK-004","cur","EGP","110206","بنك القاهرة — جاري","3300-1200-0045","",0,false,false,0,"2025-12-31",0,0,0,""],
+];
+const AX=Object.fromEntries(A.map(a=>[a[0],a]));
+const TY={cur:"جاري",sav:"توفير",dep:"وديعة لأجل",od:"جاري مدين (تسهيلات)"};
+// حسابات تحت 1102 (للنموذج 7 و 8) — 110207 فرعي مش مربوط بحساب بنكي
+const ACC=[...A.map(a=>[a[4],a[5],a[3]]),["110207","حساب بنكي قديم","EGP"]];
+const linked=c=>A.find(a=>a[4]===c);
+const N=c=>`<span class="ltr">${c}</span>`;
+const m0=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
+const egp=a=>a[8]*RATE[a[3]];
+const act=()=>A.filter(a=>a[9]&&BX[a[1]][9]);
+const accOf=b=>A.filter(a=>a[1]===b);
+const stB=a=>a[9]?'<span class="bdg ok">نشط</span>':'<span class="bdg x">موقوف</span>';
+const defB=a=>a[10]?'<span class="bdg sy">الافتراضي</span>':'';
+const cur=c=>`<span class="cur ${c==='USD'?'usd':''}">${c}</span>`;
+const ty=t=>`<span class="ty ${t}">${TY[t]}</span>`;
+const bal=a=>`<b class="ltr ${a[8]<0?'bal-n':''}">${m0(a[8])}</b> ${cur(a[3])}`;
+const bk=b=>`<span class="bk" style="background:${BX[b][10]}">${BX[b][3]}</span>`;
+const ibanF=s=>s?`<span class="iban">${s.replace(/(.{4})/g,"$1 ").trim()}</span>`:'<span class="hint" style="margin:0">—</span>';
+const odB=a=>a[11]?`<span class="lim ${a[8]<0?'over':''}"><span style="width:${a[8]<0?Math.min(100,-a[8]/a[11]*100):0}%"></span></span> <small class="hint">${m0(a[11])}</small>`:'';
+const totEGP=()=>act().reduce((s,a)=>s+egp(a),0);
+
+const ST={s1:"BNK-001-01",f1:"all", b2:"BNK-001",s2:"BNK-001-01", s3:"BNK-002-01", b4:"BNK-001",s4:"BNK-001-01", c5b:"",c5c:"",c5t:"",f5:"all",s5:"BNK-001-01", s6:"BNK-001-01", s7:"110204", s9:"BNK-001-01",t9:"mov", i10:0,
+  n8bank:"BNK-002",n8type:"cur",n8cur:"USD",n8num:"2201-3300-0099-8822",n8iban:"EG15 0002 0220 1330 0009 9882 2000 1",n8mode:"auto",n8acc:"110207",n8od:"",n8mat:""};
+
+// ===== أدوات =====
+function win(inner,title="🏦 البنوك والحسابات البنكية — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+function tb(mode="عرض",two=false){const ed=mode!=="عرض";return `<div class="tb">${two?`<span class="bt ${ed?'b-dis':'b-new'}">بنك جديد</span>`:''}<span class="bt ${ed?'b-dis':'b-new'}">حساب بنكي جديد</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-dis':'b-tog'}">إيقاف / تفعيل</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ${ed?'ed':''}">${mode}</span></div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+function chipsF(key,F){return Object.keys(F).map(x=>`<span class="chipf ${ST[key]===x?'on':''}" data-set="${key}" data-v="${x}">${F[x]}</span>`).join("");}
+const FS={all:"الكل",act:"النشطة",off:"الموقوفة"};
+const byStatus=(as,k)=>as.filter(a=>ST[k]==="all"||(ST[k]==="act"?a[9]:!a[9]));
+function keepSel(key,as){if(as.length&&!as.find(a=>a[0]===ST[key])) ST[key]=as[0][0];return as.length?AX[ST[key]]:null;}
+function sel(key,val,opts,cls=""){return `<select class="lv ${cls}" data-st="${key}">${opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return `<option value="${v}" ${v===val?'selected':''}>${t}</option>`;}).join("")}</select>`;}
+const kp=(t,v,k="")=>`<div class="kp ${k}"><small>${t}</small><b>${v}</b></div>`;
+const cnt=()=>`<div class="cnt">${B.length} بنوك · ${A.length} حسابات بنكية (أمثلة) · ${act().length} نشط · إجمالي البنوك ≈ ${m0(totEGP())} EGP (الدولار بـ ${RATE.USD}) — في الأكسس كانت 4 بنوك بحساب واحد لكل بنك</div>`;
+
+// جدول الحسابات متجمّع بالبنك
+function acTable(as,key,mode="std"){
+  let rows="";
+  B.forEach(b=>{const xs=as.filter(a=>a[1]===b[0]); if(!xs.length) return;
+    rows+=`<tr class="sec"><td colspan="5">${bk(b[0])} ${b[1]} <small style="font-weight:700;color:var(--muted)">· ${b[5]} · <span class="ltr">${b[4]}</span>${b[9]?'':' · البنك موقوف'}</small></td></tr>`;
+    rows+=xs.map(a=>`<tr class="${a[0]===ST[key]?'sel':''} ${a[9]?'':'off'}" data-set="${key}" data-v="${a[0]}" style="cursor:pointer"><td>${N(a[0])}</td><td><b>${TY[a[2]]}</b> ${a[10]?'⭐':''}${mode==="std"?`<div style="color:var(--muted);font-size:7.5px">رقم <span class="ltr">${a[6]}</span> · حساب ${a[4]}</div>`:''}</td><td>${cur(a[3])}</td><td class="n">${a[9]?bal(a):'<span class="hint" style="margin:0">—</span>'}</td><td>${stB(a)}</td></tr>`).join("");});
+  rows=rows||'<tr><td colspan="5" class="hint">مفيش حسابات هنا</td></tr>';
+  return `<div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الحساب</th><th>العملة</th><th class="n">الرصيد</th><th>الحالة</th></tr>${rows}</table></div>`;}
+function viewForm(a,compact=false){
+  if(!a) return '<div class="hint">مفيش حساب</div>';
+  const b=BX[a[1]];
+  const g1=gb("البنك",f("البنك",`${bk(b[0])} ${b[1]}`)+f("الفرع",b[5])+f("SWIFT",N(b[4])));
+  const g2=gb("الحساب البنكي",f("الكود",N(a[0]),"lock")+f("النوع",TY[a[2]]+(a[16]?` · يستحق ${a[16]}`:""))+f("العملة",`${a[3]} — ${a[3]==='USD'?'دولار أمريكي':'جنيه مصري'}`)+f("رقم الحساب",N(a[6]))+f("IBAN",ibanF(a[7]))+(a[11]?f("حد التسهيلات",`${m0(a[11])} ${a[3]}`):"")+f("الحالة",(a[9]?"نشط":"موقوف")+(a[10]?" · البنك الافتراضي":""),"lock"));
+  const g3=gb("الحساب في الدليل والرصيد",f("الحساب",`${N(a[4])} ${a[5]}`,"lock")+f("تحت","1102 البنوك","lock")+f("رصيد أول المدة",`${m0(a[15])} ${a[3]}`,"lock")+f("الرصيد الحالي",`${m0(a[8])} ${a[3]}`,"lock")+`<div class="hint">الحساب بيتعمل لوحده تحت 1102 (أو بيتختار — سؤال 2) · الرصيد من القيود (المرحلة 5)</div>`);
+  return compact?g1+g2:g1+g2+g3;}
+
+// ===== النماذج =====
+function m1(){
+  const as=byStatus(A,"f1"), a=keepSel("s1",as);
+  return win(tb()+`<div class="content"><div class="col" style="width:46%;overflow:auto">${viewForm(a)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 البنك أو رقم الحساب أو IBAN… (F1)</i>${chipsF("f1",FS)}</div>${acTable(as,"s1")}${cnt()}</div></div>`);}
+
+function m2(){
+  const b=BX[ST.b2], as=accOf(b[0]); keepSel("s2",as); const a=AX[ST.s2];
+  const brow=B.map(x=>{const xs=accOf(x[0]),t=xs.filter(y=>y[9]).reduce((s,y)=>s+egp(y),0);return `<tr class="${x[0]===ST.b2?'sel':''} ${x[9]?'':'off'}" data-set="b2" data-v="${x[0]}" style="cursor:pointer"><td>${N(x[0])}</td><td>${bk(x[0])} <b>${x[1]}</b></td><td class="ltr">${x[4]}</td><td>${x[5]}</td><td>${xs.length}</td><td class="n">${m0(t)}</td><td>${x[9]?'<span class="bdg ok">نشط</span>':'<span class="bdg x">موقوف</span>'}</td></tr>`;}).join("");
+  const arow=as.map(x=>`<tr class="${x[0]===ST.s2?'sel':''} ${x[9]?'':'off'}" data-set="s2" data-v="${x[0]}" style="cursor:pointer"><td>${N(x[0])}</td><td>${ty(x[2])} ${x[10]?'⭐':''}</td><td>${cur(x[3])}</td><td class="ltr">${x[6]}</td><td class="ltr">${x[4]}</td><td class="n">${bal(x)}</td></tr>`).join("");
+  return win(tb("عرض",true)+`<div class="content" style="flex-direction:column"><div class="sec2" style="margin-top:0">① البنوك</div><div style="max-height:96px;overflow:auto;flex-shrink:0"><table class="tbl"><tr><th>الكود</th><th>البنك</th><th>SWIFT</th><th>الفرع</th><th>حسابات</th><th class="n">الإجمالي بالجنيه</th><th>الحالة</th></tr>${brow}</table></div><div style="display:flex;gap:7px;flex:1;min-height:0"><div class="col" style="flex:1"><div class="sec2">② حسابات «${b[1]}»</div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>النوع</th><th>العملة</th><th>رقم الحساب</th><th>الدليل</th><th class="n">الرصيد</th></tr>${arow}</table></div><div class="hint">البنك فوق مرة واحدة (الاسم والفرع وSWIFT)، وتحته كل حساباته — دوس على بنك</div></div><div class="col" style="width:40%;overflow:auto">${gb("الحساب المختار",f("رقم الحساب",N(a[6]))+f("IBAN",ibanF(a[7]))+f("النوع",TY[a[2]])+f("الحساب",`${N(a[4])} ${a[5]}`,"lock")+f("رصيد أول المدة",m0(a[15]),"lock"))}</div></div></div>`);}
+
+function m3(){
+  const a=keepSel("s3",A), neg=act().filter(x=>x[8]<0).length, fx=act().filter(x=>x[3]!=="EGP").length;
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="kpis">${kp("إجمالي البنوك (بالجنيه)",m0(totEGP()),"g")+kp("حسابات نشطة",act().length+" في "+B.filter(b=>b[9]).length+" بنوك","b")+kp("بعملة أجنبية",fx,"b")+kp("على التسهيلات (سالب)",neg,neg?"r":"g")}</div><div style="display:flex;gap:7px;flex:1;min-height:0"><div class="col" style="width:46%;overflow:auto">${viewForm(a,true)}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${acTable(A,"s3","short")}<div class="hint">الدولار متحوّل بسعر الصرف بتاع النهارده (${RATE.USD}) — توضيحي</div></div></div></div>`);}
+
+function m4(){
+  const b=BX[ST.b4], as=accOf(b[0]); keepSel("s4",as); const a=AX[ST.s4];
+  const tabs=B.map(x=>`<span class="${x[0]===ST.b4?'on':''}" data-set="b4" data-v="${x[0]}"><em>${accOf(x[0]).length}</em>${x[3]}</span>`).join("");
+  const rows=as.map(x=>`<tr class="${x[0]===ST.s4?'sel':''} ${x[9]?'':'off'}" data-set="s4" data-v="${x[0]}" style="cursor:pointer"><td>${N(x[0])}</td><td>${ty(x[2])} ${x[10]?'⭐':''}</td><td>${cur(x[3])}</td><td class="ltr">${x[6]}</td><td>${ibanF(x[7])}</td><td class="n">${bal(x)}</td><td>${stB(x)}</td></tr>`).join("");
+  return win(tb("عرض",true)+`<div class="content" style="flex-direction:column;gap:0"><div class="tabs2">${tabs}<span style="background:#fff;color:var(--green);border:1px dashed var(--green)">+ بنك</span></div><div class="col" style="flex:1;background:#fff;border:1px solid var(--card-border);padding:6px;gap:4px"><div class="hdr"><b>${bk(b[0])} ${b[1]}</b> <span class="ltr" style="font-size:8px;color:var(--muted)">${b[2]}</span> ${b[9]?'<span class="bdg ok">نشط</span>':'<span class="bdg x">موقوف</span>'}<div class="p">${b[5]} · ${b[6]} · SWIFT <span class="ltr">${b[4]}</span> · مسؤول الحساب: ${b[7]||'—'} ${b[8]?`<span class="ltr">${b[8]}</span>`:''}</div></div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>النوع</th><th>العملة</th><th>رقم الحساب</th><th>IBAN</th><th class="n">الرصيد</th><th>الحالة</th></tr>${rows}</table></div>${gb("الحساب المختار",`<div class="g2">${f("الحساب",`${N(a[4])} ${a[5]}`,"lock")+f("رصيد أول المدة",m0(a[15]),"lock")+f("آخر حركة",N(a[12]),"lock")+(a[16]?f("استحقاق الوديعة",N(a[16])):a[11]?f("حد التسهيلات",m0(a[11])):f("الافتراضي",a[10]?"أيوه ⭐":"لأ","lock"))}</div>`,"flex-shrink:0")}</div></div>`);}
+
+function m5(){
+  const as=byStatus(A,"f5").filter(a=>(!ST.c5b||a[1]===ST.c5b)&&(!ST.c5c||a[3]===ST.c5c)&&(!ST.c5t||a[2]===ST.c5t));
+  keepSel("s5",as);
+  const rows=as.map(a=>`<tr class="${a[0]===ST.s5?'sel':''} ${a[9]?'':'off'}" data-set="s5" data-v="${a[0]}" style="cursor:pointer"><td>${N(a[0])}</td><td>${bk(a[1])} ${BX[a[1]][1]}</td><td>${ty(a[2])} ${a[10]?'⭐':''}</td><td>${cur(a[3])}</td><td class="ltr">${a[6]}</td><td class="ltr">${a[4]}</td><td>${odB(a)||'<span class="hint" style="margin:0">—</span>'}</td><td class="ltr">${a[12]}</td><td class="n">${a[9]?`<span class="${a[8]<0?'bal-n':''}">${m0(a[8])}</span>`:'—'}</td><td class="n">${a[9]?m0(egp(a)):'—'}</td></tr>`).join("")||'<tr><td colspan="10" class="hint">مفيش حسابات في الفلتر ده</td></tr>';
+  const byC=["EGP","USD"].map(c=>[c,as.filter(a=>a[9]&&a[3]===c).reduce((s,a)=>s+a[8],0)]).filter(x=>x[1]);
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch" style="flex-wrap:wrap"><div style="width:120px;display:flex">${sel("c5b",ST.c5b,[["","كل البنوك"],...B.map(b=>[b[0],b[1]])])}</div><div style="width:90px;display:flex">${sel("c5c",ST.c5c,[["","كل العملات"],["EGP","EGP"],["USD","USD"]])}</div><div style="width:110px;display:flex">${sel("c5t",ST.c5t,[["","كل الأنواع"],...Object.entries(TY)])}</div><span style="margin-right:auto"></span>${chipsF("f5",FS)}</div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>البنك</th><th>النوع</th><th>العملة</th><th>رقم الحساب</th><th>الدليل</th><th>التسهيلات</th><th>آخر حركة</th><th class="n">الرصيد</th><th class="n">بالجنيه</th></tr>${rows}${byC.map(([c,v])=>`<tr class="tot"><td colspan="8">إجمالي ${c}</td><td class="n">${m0(v)}</td><td class="n">${m0(v*RATE[c])}</td></tr>`).join("")}</table></div><div class="hint">فلتر البنك والعملة والنوع والحالة · إجمالي لكل عملة لوحده + المقابل بالجنيه · دبل كليك ← فورم الحساب · الأرصدة توضيحية</div></div>`);}
+
+function m6(){
+  const a=AX[ST.s6], b=BX[a[1]];
+  const cards=B.map(x=>{const xs=accOf(x[0]);return `<div class="bcard ${x[9]?'':'off'}" style="border-top-color:${x[10]}"><div class="r"><b>${bk(x[0])} ${x[1]}</b><span class="ltr" style="color:var(--muted)">${x[4]}</span></div><div style="color:var(--muted)">${x[5]}</div>${xs.map(y=>`<div class="ln ${y[0]===ST.s6?'sel':''}" data-set="s6" data-v="${y[0]}"><span>${ty(y[2])} ${cur(y[3])} ${y[10]?'⭐':''}</span><b class="ltr ${y[8]<0?'bal-n':''}">${y[9]?m0(y[8]):'—'}</b></div>`).join("")}</div>`;}).join("");
+  const bar=`<div class="hdr" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><b>${N(a[0])} ${b[3]} — ${TY[a[2]]}</b>${cur(a[3])}${stB(a)}<span class="hint" style="margin:0">رقم <span class="ltr">${a[6]}</span> · ${a[7]?ibanF(a[7]):'من غير IBAN'} · آخر حركة <span class="ltr">${a[12]}</span></span><span class="btn-s" style="margin-right:auto">فتح الفورم</span></div>`;
+  return win(tb("عرض",true)+`<div class="content" style="flex-direction:column"><div class="srch"><i>🔍 بحث…</i><span class="hint" style="margin:0">إجمالي ≈ <b class="ltr">${m0(totEGP())}</b> EGP</span></div><div class="scroll"><div class="cards" style="grid-template-columns:repeat(2,1fr)">${cards}</div></div>${bar}</div>`,"🏦 البنوك — كارت لكل بنك — A-H CODE");}
+
+function m7(){
+  const ac=ACC.find(x=>x[0]===ST.s7), a=linked(ac[0]);
+  const tr=`<div style="font-weight:900;color:var(--green)"><span class="tg">▾</span>${N("11")} الأصول المتداولة</div><div style="padding-right:13px;font-weight:800;color:#94A3B8"><span class="tg">▸</span>${N("1101")} النقدية بالخزائن <small class="hint">(الخزائن)</small></div><div style="padding-right:13px;font-weight:800"><span class="tg">▾</span>${N("1102")} البنوك <span class="bdg sy" style="margin-right:auto">دور بنك</span></div>`+ACC.map(x=>{const l=linked(x[0]);return `<div class="${x[0]===ST.s7?'sel':''} ${l&&!l[9]?'off':''}" data-set="s7" data-v="${x[0]}" style="padding-right:26px">${N(x[0])} ${x[1]} ${cur(x[2])} <span style="margin-right:auto">${l?`<span class="bdg ok">🏦 ${l[0]}</span>`:'<span class="bdg wr">مش مربوط</span>'}</span></div>`;}).join("");
+  const right=a?gb("الحساب البنكي المربوط",f("البنك",`${bk(a[1])} ${BX[a[1]][1]}`,"lock")+f("الكود",N(a[0]),"lock")+f("النوع",TY[a[2]],"lock")+f("رقم الحساب",N(a[6]),"lock")+f("العملة",a[3],"lock")+f("الرصيد",`${m0(a[8])} ${a[3]}`,"lock")+f("الحالة",a[9]?"نشط":"موقوف","lock"))+`<div class="hint">الحساب ده مربوط بحساب بنكي واحد بس — ماينفعش يتختار لحساب بنكي تاني.</div>`:gb("حساب من غير حساب بنكي",`<div class="bad-line" style="color:#92400E">⚠ الحساب ${ac[0]} «${ac[1]}» تحت البنوك ومش مربوط بأي حساب بنكي</div><div style="margin-top:5px;display:flex;gap:4px"><span class="btn-s">🏦 اعمل حساب بنكي عليه</span><span class="btn-s g">سيبه حساب عادي</span></div>`)+`<div class="hint">الشجرة دي بتوريك كل حساب تحت 1102 مربوط بأنهي حساب بنكي — دوس على 110207.</div>`;
+  return win(tb()+`<div class="content"><div class="col" style="width:54%"><div class="hdr" style="margin-bottom:4px"><b>البنوك في دليل الحسابات</b><div class="p">كل حساب بنكي = حساب فرعي تحت 1102 البنوك (زي الخزائن تحت 1101)</div></div><div class="scroll tree">${tr}</div></div><div class="col" style="flex:1;overflow:auto">${right}</div></div>`,"🏦 البنوك والدليل — A-H CODE");}
+
+function m8(){
+  const b=BX[ST.n8bank], chk=[];
+  const dg=s=>String(s).replace(/[^0-9]/g,"");
+  const num=ST.n8num.trim();
+  const dup=A.find(a=>a[1]===ST.n8bank&&dg(a[6])===dg(num));
+  chk.push(!num?["bad","رقم الحساب مطلوب"]:dup?["bad",`رقم الحساب ده موجود في ${b[1]} (${dup[0]})`]:["ok",`رقم الحساب مش متكرر في ${b[1]}`]);
+  const ib=ST.n8iban.replace(/\s/g,"").toUpperCase();
+  const ibDup=ib&&A.find(a=>a[7]===ib);
+  chk.push(!ib?["warn","من غير IBAN — اختياري، ممكن يتكتب بعدين"]:!/^EG\d{27}$/.test(ib)?["bad",`IBAN المصري = EG + 27 رقم (29 حرف) — المكتوب ${ib.length} حرف`]:ibDup?["bad",`الـ IBAN ده متسجل على ${ibDup[0]}`]:["ok","IBAN شكله صح ومش متكرر"]);
+  const same=A.filter(a=>a[1]===ST.n8bank&&a[2]===ST.n8type&&a[3]===ST.n8cur&&a[9]);
+  if(same.length) chk.push(["warn",`فيه ${TY[ST.n8type]} ${ST.n8cur} تاني في ${b[1]} (${same[0][0]}) — مسموح`]);
+  const nm=`${b[3]} — ${TY[ST.n8type]}${ST.n8cur!=="EGP"?" "+ST.n8cur:""}`;
+  if(ST.n8mode==="auto") chk.push(["ok",`هيتعمل حساب جديد <b class="ltr">110208</b> «${nm}» تحت 1102 البنوك بعملة ${ST.n8cur} ودور «بنك»`]);
+  else {const ac=ACC.find(x=>x[0]===ST.n8acc), l=linked(ac[0]);
+    chk.push(l?["bad",`الحساب ${ac[0]} مربوط بالفعل بـ ${l[0]} — اختار حساب تاني`]:ac[2]!==ST.n8cur?["bad",`عملة الحساب ${ac[0]} (${ac[2]}) غير عملة الحساب البنكي (${ST.n8cur})`]:["ok",`هيتربط بالحساب الموجود ${ac[0]} «${ac[1]}»`]);}
+  if(ST.n8type==="od"){const v=Number(String(ST.n8od).replace(/,/g,""));chk.push(!ST.n8od||!(v>0)?["bad","الجاري المدين لازم له حد تسهيلات (رقم موجب)"]:["ok",`الرصيد يقدر ينزل لحد −${m0(v)} ${ST.n8cur}`]);}
+  else chk.push(["ok","الرصيد السالب ممنوع (مفيش تسهيلات)"]);
+  if(ST.n8type==="dep") chk.push(ST.n8mat?["ok",`الوديعة تستحق ${ST.n8mat} — تنبيه قبلها`]:["warn","من غير تاريخ استحقاق للوديعة"]);
+  chk.push(["ok","الرصيد بيبدأ صفر — رصيد أول المدة من مستند الأرصدة الافتتاحية"]);
+  const ok=chk.every(c=>c[0]!=="bad"), ic=t=>t==="ok"?"✔":t==="warn"?"⚠":"⛔";
+  const nextNo=`${ST.n8bank}-0${accOf(ST.n8bank).length+1}`;
+  const accOpts=ACC.map(x=>[x[0],`${x[0]} ${x[1]} (${x[2]})${linked(x[0])?' — مربوط':''}`]);
+  const form=gb("حساب بنكي جديد",`${f("الكود",`${nextNo} (بيتولّد لوحده)`,"lock")}<div class="f"><label>البنك</label>${sel("n8bank",ST.n8bank,B.filter(x=>x[9]).map(x=>[x[0],x[1]]))}</div><div class="f"><label>النوع</label>${sel("n8type",ST.n8type,Object.entries(TY))}</div><div class="f"><label>العملة</label>${sel("n8cur",ST.n8cur,[["EGP","EGP — جنيه مصري"],["USD","USD — دولار"],["EUR","EUR — يورو"]])}</div><div class="f"><label>رقم الحساب</label><input class="lv ${chk[0][0]==='bad'?'bad':''}" data-st="n8num" value="${ST.n8num}" style="direction:ltr;text-align:left"></div><div class="f"><label>IBAN</label><input class="lv ${chk[1][0]==='bad'?'bad':''}" data-st="n8iban" value="${ST.n8iban}" style="direction:ltr;text-align:left"></div>${ST.n8type==="od"?`<div class="f"><label>حد التسهيلات</label><input class="lv" data-st="n8od" value="${ST.n8od}" style="direction:ltr;text-align:left"></div>`:''}${ST.n8type==="dep"?`<div class="f"><label>تاريخ الاستحقاق</label><input class="lv" data-st="n8mat" value="${ST.n8mat}" placeholder="2027-02-01" style="direction:ltr;text-align:left"></div>`:''}<div class="sec2">الحساب في الدليل</div><label class="rad"><input type="radio" name="m8" class="cb" data-mode="auto" ${ST.n8mode==='auto'?'checked':''}> يتعمل لوحده تحت 1102 (اقتراحي)</label><label class="rad"><input type="radio" name="m8" class="cb" data-mode="pick" ${ST.n8mode==='pick'?'checked':''}> أختار حساب موجود</label>${ST.n8mode==='pick'?`<div class="f"><label>الحساب</label>${sel("n8acc",ST.n8acc,accOpts)}</div>`:''}`);
+  const res=`${chk.map(c=>`<div class="${c[0]==='ok'?'ok-line':'bad-line'}" style="${c[0]==='warn'?'color:#92400E':''};margin-bottom:2px">${ic(c[0])} ${c[1]}</div>`).join("")}<div style="margin-top:4px">${ok?'<span class="btn-s">حفظ ✔</span>':'<span class="btn-s d">حفظ (فيه أخطاء)</span>'}</div>`;
+  return win(tb("جديد")+`<div class="content"><div class="col" style="width:55%;overflow:auto">${form}</div><div class="col" style="flex:1;overflow:auto">${gb("التحقق قبل الحفظ",res)}<div class="hint" style="margin-top:4px">جرّب: امسح حرف من الـ IBAN، اكتب رقم الحساب <span class="ltr">2201-3300-0099-7711</span> (موجود)، غيّر النوع لـ «جاري مدين» أو «وديعة»، أو «أختار حساب موجود» وبعدين 110201 (مربوط).</div></div></div>`);}
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("input.lv")){render();}});
+document.addEventListener("focusout",e=>{if(e.target.matches("input.lv")&&e.target.dataset.st){render();}});
+
+function m9(){
+  const a=AX[ST.s9], b=BX[a[1]];
+  const TB={mov:"حركة البنك",chk:"الشيكات",open:"رصيد أول المدة",data:"البيانات"};
+  const itabs=Object.keys(TB).map(k=>`<span class="${ST.t9===k?'on':''}" data-set="t9" data-v="${k}">${TB[k]}</span>`).join("");
+  let body="";
+  if(ST.t9==="mov"){
+    const i1=Math.round(a[13]*0.6), o1=Math.round(a[14]*0.5), o2=Math.round(a[14]*0.02);
+    const L=[["2026-11-02","تحويل من عميل — شركة النور للمقاولات",i1,0],["2026-11-05","شيك صادر لمورد — مؤسسة الأمل",0,o1],["2026-11-08","مصاريف بنكية",0,o2],["2026-11-11","إيداع من الخزينة الرئيسية",a[13]-i1,0],["2026-11-14","تحويل لمورد",0,a[14]-o1-o2]];
+    let r=a[8]-a[13]+a[14];
+    body=a[13]||a[14]?`<div class="scroll"><table class="tbl"><tr><th>التاريخ</th><th>البيان</th><th class="n">إيداع</th><th class="n">سحب</th><th class="n">الرصيد</th></tr><tr class="tot"><td></td><td>رصيد أول الشهر</td><td></td><td></td><td class="n">${m0(r)}</td></tr>${L.map(x=>{r+=x[2]-x[3];return `<tr><td class="ltr">${x[0]}</td><td>${x[1]}</td><td class="n">${x[2]?m0(x[2]):''}</td><td class="n">${x[3]?m0(x[3]):''}</td><td class="n"><b class="${r<0?'bal-n':''}">${m0(r)}</b></td></tr>`;}).join("")}</table></div><div class="hint">من القيود على حساب البنك ${a[4]} — زي FBankMO «سحب - إيداع البنوك» و mandob1 «كشف حساب بنك» (المرحلة 4 و 5) — أرقام توضيحية</div>`:'<div class="hint">مفيش حركة على الحساب ده</div>';}
+  if(ST.t9==="chk") body=`<table class="tbl"><tr><th>رقم الشيك</th><th>النوع</th><th>الطرف</th><th>الاستحقاق</th><th class="n">المبلغ</th><th>الحالة</th></tr><tr><td class="ltr">004512</td><td>وارد (قبض)</td><td>شركة النور للمقاولات</td><td class="ltr">2026-11-30</td><td class="n">75,000</td><td><span class="bdg wr">تحت التحصيل</span></td></tr><tr><td class="ltr">118803</td><td>صادر (دفع)</td><td>مؤسسة الأمل للتوريدات</td><td class="ltr">2026-12-10</td><td class="n">42,500</td><td><span class="bdg pj">لسه مااتصرفش</span></td></tr></table><div class="hint">في الأكسس الشيكات (shikatCus / shikatres) كانت مربوطة بالبنك. هنا الشيكات = أوراق قبض / دفع (قرار قديم) في مرحلة الشيكات، والتبويب ده بيعرضها بس.</div>`;
+  if(ST.t9==="open") body=`${f("السنة","2026","lock")}${f("رصيد أول المدة",`${m0(a[15])} ${a[3]}`,"lock")}<div class="hint">في الأكسس كانت خانة «رصيد أول» وتاريخ على البنك نفسه. هنا بيتسجل في «مستند الأرصدة الافتتاحية» (المرحلة 4): مدين حساب البنك / دائن حساب الأرصدة الافتتاحية — الخانة هنا للعرض (سؤال 8).</div>`;
+  if(ST.t9==="data") body=`<div class="g2">${f("البنك",b[1])+f("الفرع",b[5])+f("SWIFT",N(b[4]))+f("مسؤول الحساب",b[7]||'—')+f("النوع",TY[a[2]])+f("العملة",a[3])+f("رقم الحساب",N(a[6]))+f("الحساب",N(a[4]),"lock")}</div>${f("IBAN",ibanF(a[7]))}`;
+  return win(tb()+`<div class="content"><div class="col" style="width:34%"><div class="srch"><i>🔍 بحث…</i></div>${acTable(A,"s9","short")}</div><div class="col" style="flex:1;gap:4px"><div class="hdr"><b>${bk(b[0])} ${b[1]} — ${TY[a[2]]}</b> ${stB(a)} ${cur(a[3])} ${defB(a)}<div class="p">رقم <span class="ltr">${a[6]}</span> · حساب ${a[4]}</div></div><div class="kpis">${kp("الرصيد الحالي",m0(a[8]),a[8]<0?"r":"g")+kp("إيداعات الشهر",m0(a[13]),"b")+kp("سحب الشهر",m0(a[14]),"r")+kp("آخر حركة",a[12],"b")}</div><div class="itabs">${itabs}</div><div class="col" style="flex:1;background:#fff;border:1px solid var(--card-border);border-top:none;padding:4px;overflow:auto">${body}</div></div></div>`,"🏦 الحساب البنكي — نظرة كاملة — A-H CODE");}
+
+function m10(){
+  const i=Math.max(0,Math.min(A.length-1,ST.i10)), a=A[i], b=BX[a[1]];
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="nav"><span class="mini" data-nav="first">الأول</span><span class="mini" data-nav="prev">السابق</span><b style="font-size:9px;margin:0 6px">حساب ${i+1} من ${A.length}</b><span class="mini" data-nav="next">التالي</span><span class="mini" data-nav="last">الأخير</span></div>${gb("البنك (زي FBANK)",`<div class="g2">${f("الكود",N(a[0]),"lock")+f("اسم البنك",b[1])+f("العنوان",b[6])+f("SWIFT",N(b[4]))+f("رقم الحساب",N(a[6]))+f("العملة",a[3])}</div>${f("IBAN",ibanF(a[7]))}<div class="g2">${f("رصيد أول",m0(a[15]),"lock")+f("التاريخ","2026-01-01","lock")+f("الحساب",N(a[4]),"lock")+f("الحالة",a[9]?'نشط':'موقوف',"lock")}</div>`,"flex-shrink:0")}<div class="hint" style="margin-top:4px">سجل واحد بأزرار تنقّل زي FBANK في الأكسس بالظبط: اسم البنك والعنوان ورقم الحساب و IBAN و SWIFT ورصيد أول وتاريخه — كل سجل = بنك + حساب واحد (لو البنك عنده حسابين بيتكرر اسمه مرتين). الأرقام توضيحية.</div></div>`);}
+
+const M=[
+ ["Base Screen: فورم يمين + قائمة شمال (زي الخزائن والموردين)","نفس الشكل: القائمة متجمّعة بالبنك (سطر أخضر لكل بنك وتحته حساباته: النوع، رقم الحساب، العملة، الرصيد، الحالة) بفلتر الكل / النشطة / الموقوفة، والفورم يمين في 3 مجموعات: البنك · الحساب البنكي · الحساب في الدليل والرصيد.",m1],
+ ["بنك فوق ← حساباته تحت (مستويين)","جدول البنوك فوق (الاسم، SWIFT، الفرع، عدد الحسابات، الإجمالي)، وتحته حسابات البنك المختار، وجنبها الحساب المختار. فيه «بنك جديد» و«حساب بنكي جديد».",m2],
+ ["كروت أرقام فوق + قائمة وفورم","فوق: إجمالي البنوك بالجنيه · الحسابات النشطة · بعملة أجنبية · على التسهيلات (رصيد سالب). وتحت الفورم والقائمة المتجمّعة بالبنك.",m3],
+ ["تبويب لكل بنك","تبويب لكل بنك (وجنبه عدد حساباته)، وجوه التبويب بيانات البنك (الفرع، العنوان، SWIFT، مسؤول الحساب) وجدول حساباته بالـ IBAN، وتحت الحساب المختار.",m4],
+ ["قائمة كاملة بفلاتر وإجماليات لكل عملة","كل الحسابات في جدول واحد: البنك والنوع والعملة ورقم الحساب والدليل والتسهيلات وآخر حركة والرصيد والمقابل بالجنيه، وإجمالي لكل عملة. فلتر البنك والعملة والنوع والحالة.",m5],
+ ["كارت لكل بنك وجواه حساباته","كل بنك كارت بلونه، وجواه سطر لكل حساب (النوع والعملة والرصيد). دوس على أي حساب يظهر تحت في الشريط.",m6],
+ ["البنوك في دليل الحسابات","شمال شجرة 1102 البنوك وكل حساب تحتها مربوط بأنهي حساب بنكي (أو «مش مربوط» وزرار «اعمل حساب بنكي عليه»)، ويمين الحساب البنكي المربوط. زي النموذج 6 في الخزائن.",m7],
+ ["فورم «حساب بنكي جديد» بالتحقق","الخانات الزرقا شغالة: البنك، النوع (جاري / توفير / وديعة / جاري مدين)، العملة، رقم الحساب (مايتكررش في نفس البنك)، IBAN (شكله المصري EG + 27 رقم ومايتكررش)، حد التسهيلات للجاري المدين، تاريخ استحقاق الوديعة، والحساب في الدليل (يتعمل لوحده أو يتختار).",m8],
+ ["نظرة كاملة على الحساب البنكي","القائمة شمال، ويمين كروت (الرصيد · إيداعات الشهر · سحب الشهر · آخر حركة) وتبويبات: حركة البنك (زي FBankMO وكشف حساب بنك) · الشيكات · رصيد أول المدة · البيانات. الأرقام توضيحية.",m9],
+ ["سجل واحد زي FBANK في الأكسس","نفس خانات FBANK: اسم البنك والعنوان ورقم الحساب و IBAN و SWIFT ورصيد أول وتاريخه — سجل واحد بأزرار الأول / السابق / التالي / الأخير، وكل سجل = بنك + حساب.",m10],
+];
+
+const NOTE=`<b>الشاشة دي بتعمل إيه:</b> تعريف <b>البنوك</b> و<b>حساباتها</b>: كل بنك (الاسم، الفرع، العنوان، SWIFT، مسؤول الحساب) وتحته حساب أو أكتر، وكل <b>حساب بنكي</b> بنوعه (جاري / توفير / وديعة / جاري مدين) وعملته ورقمه والـ IBAN، و<b>حساب فرعي لوحده تحت «1102 البنوك»</b> (دور «بنك» في الدليل) — نفس فكرة الخزائن تحت 1101. الشاشة <b>للتعريف بس</b>، والإيداع والسحب والتحويل في المرحلة 5 والشيكات في مرحلتها.
+<br><b>كانت إيه في الأكسس:</b> <span class="ltr">FBANK</span> «البنوك» في قسم «الشيكات» — جدول <span class="ltr">TBANK</span> (4 بنوك): اسم البنك، العنوان، رقم الحساب، IBAN، Swift، رصيد أول وتاريخه. <b>كل سجل = بنك بحساب واحد</b>، والبنك كان مربوط بـ «سحب - إيداع البنوك» (<span class="ltr">FBankMO</span>) وبشيكات العملاء والموردين.
+<ul>
+<li><b>الحساب في الدليل:</b> الدليل فيه دلوقتي «110201 البنك الأهلي — جاري» و«110202 بنك مصر — جاري» — اقتراحي السكريبت يعمل البنكين دول بحساب جاري جنيه على كل واحد، والأهلي يبقى «البنك الافتراضي» (نفس مفتاح «البنك الافتراضي» في شاشة الحسابات الافتراضية). البنوك التانية تتضاف من الشاشة أو مع نقل بيانات الأكسس.</li>
+<li><b>الرصيد:</b> من القيود على حساب البنك (المرحلة 5) — هنا <b>توضيحي بس</b>. الرصيد السالب <b>ممنوع</b> زي الخزائن، <b>إلا الجاري المدين</b> يقدر ينزل لحد التسهيلات بتاعه (سؤال 5). ورصيد أول المدة من «مستند الأرصدة الافتتاحية» (المرحلة 4).</li>
+<li><b>الخانات المقترحة — البنك:</b> الكود (بيتولّد لوحده) · الاسم (مطلوب ومايتكررش) + EN + اسم مختصر · الفرع · العنوان · SWIFT (اختياري، 8 أو 11 حرف) · مسؤول الحساب وتليفونه (اختياري) · نشط · ملاحظات. <b>— الحساب البنكي:</b> الكود · البنك · النوع · العملة · رقم الحساب (مطلوب ومايتكررش في نفس البنك) · IBAN (اختياري) · حد التسهيلات · تاريخ استحقاق الوديعة · الحساب · الافتراضي · نشط · ملاحظات.</li>
+<li><b>الحماية:</b> الحساب البنكي اللي عليه حركة <b>مايتمسحش</b> — يتوقف بس، والبنك اللي عليه حسابات مايتمسحش · العملة ماتتغيّرش بعد أول حركة · حساب الدليل مربوط بحساب بنكي واحد بس ومايتمسحش ولا يتفرّع من شجرة الحسابات · «البنك الافتراضي» لازم يفضل حساب بنكي نشط · <span class="ltr">row_version</span> (جهازين) + سجل التعديلات · الكود والحساب الجديد جوه قفل.</li>
+<li><b>مكان الشاشة:</b> قسم «الخزينة» 💵 ← «الخزائن والبنوك» ← «البنوك» (جنب «الخزائن»).</li>
+</ul>`;
+
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>الشكل:</b> <b>بنك ← حساباته</b> (مستويين: البنك مرة واحدة وتحته حساب أو أكتر — اقتراحي، النماذج 1–9)؟ ولا سجل واحد لكل حساب فيه اسم البنك زي الأكسس (النموذج 10)؟</li>
+<li><b>حساب الدليل:</b> كل حساب بنكي حساب فرعي <b>يتعمل لوحده</b> تحت 1102 باسم «&lt;البنك&gt; — &lt;النوع&gt; &lt;العملة&gt;» (أو يتختار حساب موجود ومش مربوط) زي الخزائن (اقتراحي)؟ ولا كل بنك يبقى حساب رئيسي تحت 1102 وحساباته تحته (110201 ← 11020101) عشان يبقى فيه إجمالي لكل بنك في الميزان؟</li>
+<li><b>الكود:</b> البنك <span class="ltr">BNK-001</span> والحساب البنكي <span class="ltr">BNK-001-01</span> (رقم البنك + مسلسل جواه — اقتراحي)؟ ولا كود لوحده للحساب؟</li>
+<li><b>أنواع الحسابات:</b> جاري · توفير · وديعة لأجل · جاري مدين (تسهيلات) — كفاية كده (اقتراحي)؟ وتاريخ استحقاق للوديعة (اختياري — تنبيه قبلها)؟</li>
+<li><b>الرصيد السالب:</b> ممنوع زي الخزائن، <b>إلا الجاري المدين</b> بحد تسهيلات (يقدر ينزل لحد −الحد) — اقتراحي؟ ولا ممنوع خالص؟ (المنع نفسه وقت السند في المرحلة 5)</li>
+<li><b>IBAN:</b> اختياري، ولو اتكتب يتراجع شكله المصري (EG + 27 رقم) ومايتكررش (اقتراحي)؟ ورقم الحساب مطلوب ومايتكررش جوه نفس البنك؟</li>
+<li><b>اللي بيتعمل مع السكريبت:</b> «البنك الأهلي المصري» بحساب جاري على 110201 (الافتراضي) و«بنك مصر» بحساب جاري على 110202 (الحسابين اللي في الدليل دلوقتي — اقتراحي)؟ ولا مفيش بنوك جاهزة؟</li>
+<li><b>رصيد أول المدة:</b> يظهر للعرض بس والتسجيل من «مستند الأرصدة الافتتاحية» زي الخزائن (اقتراحي)؟ ولا خانة تتكتب هنا زي الأكسس؟</li>
+<li><b>بيانات التواصل:</b> مسؤول الحساب في البنك وتليفونه على البنك (اختياري — اقتراحي)؟ ولا مالهاش لازمة؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+document.addEventListener("change",e=>{
+  const t=e.target, k=t.dataset.st;
+  if(t.dataset.mode){ST.n8mode=t.dataset.mode;render();return;}
+  if(!k) return;
+  ST[k]=t.value;
+  render();
+});
+document.addEventListener("input",e=>{const t=e.target;if(t.matches("input.lv")&&t.dataset.st){ST[t.dataset.st]=t.value;}});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const nv=e.target.closest("[data-nav]"); if(nv){const a=nv.dataset.nav;ST.i10=a==="first"?0:a==="last"?A.length-1:a==="prev"?Math.max(0,ST.i10-1):Math.min(A.length-1,ST.i10+1);render();return;}
+  const s=e.target.closest("[data-set]");
+  if(s){ST[s.dataset.set]=s.dataset.v; render();}
+});
+render();
+</script>
+</body>
+</html>
