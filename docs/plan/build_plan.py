@@ -87,6 +87,11 @@ def load() -> dict:
                 errors.append(f"المرحلة {ph['id']} / «{it['name']}»: حالة غلط «{st}»")
             if st == "done" and not it.get("date"):
                 errors.append(f"المرحلة {ph['id']} / «{it['name']}»: خلصت من غير تاريخ")
+    items = {(ph["id"], it["name"]) for ph in data["phases"] for it in ph["items"]}
+    for group in data.get("access_main", []):
+        for entry in group["entries"]:
+            if entry.get("plan") and tuple(entry["plan"]) not in items:
+                errors.append(f"قايمة الأكسس / «{entry['label']}»: رايح لبند مش موجود {entry['plan']}")
     if errors:
         sys.exit("فيه أخطاء في plan_data.json:\n" + "\n".join(errors))
     return data
@@ -161,6 +166,11 @@ def render(data: dict) -> str:
         for i, it in enumerate(ph["items"], 1):
             note = f'<div class="note">📌 {rich(it["note"])}</div>' if it.get("note") else ""
             detail = f'<div class="detail">{rich(it.get("detail"))}</div>' if it.get("detail") else ""
+            if it.get("does"):
+                detail += f'<div class="does">🖥️ <b>بتعمل إيه:</b> {rich(it["does"])}</div>'
+            if it.get("access"):
+                new_cls = " new" if it["access"].startswith("🆕") else ""
+                detail += f'<div class="access{new_cls}">🗂️ <b>في الأكسس:</b> {rich(it["access"])}</div>'
             row_cls = f'row-{it["status"]}'
             rows.append(
                 f'<tr class="{row_cls}">'
@@ -194,6 +204,31 @@ def render(data: dict) -> str:
 </section>""")
 
     legend = " ".join(chip(k) for k in STATUS)
+
+    # ---- قايمة Main في الأكسس ← مكانها في الخطة ----
+    where = {(ph["id"], it["name"]): (ph, it) for ph in phases for it in ph["items"]}
+    main_rows = []
+    for group in data.get("access_main", []):
+        main_rows.append(f'<tr class="grp"><td colspan="3">📂 {esc(group["group"])}</td></tr>')
+        for entry in group["entries"]:
+            button = f'<b>{esc(entry["label"])}</b> <span class="ltr form">{esc(entry["form"])}</span>'
+            if entry.get("plan"):
+                ph, it = where[tuple(entry["plan"])]
+                target = (f'<span class="ph-badge" style="background:{ph["color"]}">{esc(ph["id"])}</span> '
+                          f'{rich(it["name"])}')
+                state = chip(it["status"], it.get("date", ""))
+            else:
+                target = f'<span class="broken">⚠️ {rich(entry.get("note"))}</span>'
+                state = ""
+            main_rows.append(f'<tr><td>{button}</td><td>{target}</td><td class="st">{state}</td></tr>')
+    main_html = ""
+    if main_rows:
+        main_html = f"""
+<h2 class="details">أهم الشاشات: قايمة Main في الأكسس ← مكانها في الخطة</h2>
+<div class="legend">كل زرار في الشاشة الرئيسية (Main) بتاعة برنامج الأكسس، وبيفتح أنهي شاشة، ومكانه في الخطة الجديدة وحالته.</div>
+<table class="mainmap"><thead><tr><th>الزرار في الأكسس</th><th>مكانه في الخطة</th><th style="width:150px">الحالة</th></tr></thead>
+<tbody>{''.join(main_rows)}</tbody></table>
+<div class="hidden-note">{rich(data.get("access_main_hidden"))}</div>"""
 
     return f"""<!doctype html>
 <html lang="ar" dir="rtl">
@@ -290,6 +325,18 @@ def render(data: dict) -> str:
   .item-name {{ font-weight: 700; font-size: 10pt; }}
   .detail {{ font-size: 8.8pt; color: {TEXT_MUTED}; }}
   .note {{ font-size: 8.8pt; color: #9A3412; margin-top: 2px; }}
+  .does {{ font-size: 8.8pt; color: #1E3A8A; margin-top: 2px; }}
+  .access {{ font-size: 8.8pt; color: #334155; margin-top: 1px; }}
+  .access.new {{ color: #6D28D9; }}
+  .mainmap th {{ text-align: right; font-size: 8.5pt; color: #fff; background: {GREEN}; padding: 4px 8px; }}
+  .mainmap td {{ padding: 4px 8px; border-bottom: 1px solid #EEF2F6; font-size: 9pt; vertical-align: middle; }}
+  .mainmap tr {{ break-inside: avoid; }}
+  .mainmap tr.grp td {{ background: #E8F5EC; color: {GREEN_DARK}; font-weight: 800; font-size: 9.5pt; }}
+  .mainmap .form {{ color: {TEXT_MUTED}; font-size: 8pt; }}
+  .mainmap .st {{ text-align: center; }}
+  .broken {{ color: #B91C1C; font-size: 8.8pt; }}
+  .hidden-note {{ font-size: 8.5pt; color: {TEXT_MUTED}; margin-top: 6px; border: 1px dashed {BORDER};
+                 border-radius: 8px; padding: 6px 10px; }}
   .row-done td {{ background: #F6FDF8; }}
   .row-next td {{ background: #FFFBF5; }}
   .row-doing td {{ background: #F5F9FF; }}
@@ -325,6 +372,8 @@ def render(data: dict) -> str:
 <h2>نظرة سريعة على المراحل</h2>
 <div class="legend">الحالات: {legend}</div>
 <table class="overview"><tbody>{''.join(overview_rows)}</tbody></table>
+
+{main_html}
 
 <h2 class="details">المراحل بالتفصيل</h2>
 {''.join(sections)}
