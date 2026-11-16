@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج أنواع الأصناف — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+.bal-p{color:#087443;font-weight:900}.bal-n{color:#B91C1C;font-weight:900}
+.wal{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:6px 7px;cursor:pointer;font-size:8px;line-height:1.5;border-top:4px solid var(--green)}
+.wal.usd{border-top-color:#2563EB}
+.wal.off{border-top-color:#94A3B8;background:#F8FAFC;color:#94A3B8}
+.wal.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.wal .big{font-size:12px;font-weight:900;direction:ltr;unicode-bidi:isolate;display:block;margin:2px 0}
+.wal .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.cur{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;direction:ltr;background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}
+.cur.usd{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.mainbar{background:var(--green-dark);color:#fff;display:flex;align-items:center;gap:6px;padding:5px 8px;flex-shrink:0;font-weight:800;font-size:9px}
+.mainbar .box{background:#fff;color:#111827;border-radius:4px;padding:1px 8px;font-weight:900;direction:ltr;font-size:10px}
+.mainbar .mini{background:#FDE68A;border-color:#F59E0B;color:#78350F}
+.rad{font-size:8.5px;font-weight:700;display:flex;gap:3px;align-items:center;cursor:pointer;margin-bottom:3px}
+.lim{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.lim span{display:block;height:100%;background:var(--green)}
+.lim.over span{background:#DC2626}
+</style>
+<style>
+.ico{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:5px;background:#ECFDF3;font-size:11px;flex-shrink:0}
+.ecard{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:5px 7px;cursor:pointer;font-size:8px;line-height:1.5;border-top:4px solid var(--green)}
+.ecard.g53{border-top-color:#2563EB}.ecard.g54{border-top-color:#B45309}
+.ecard.off{border-top-color:#94A3B8;background:#F8FAFC;color:#94A3B8}
+.ecard.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.ecard .big{font-size:11px;font-weight:900;direction:ltr;unicode-bidi:isolate;display:block;margin:1px 0}
+.ecard .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.grp{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;border:1px solid}
+.grp.g52{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.grp.g53{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.grp.g54{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.acc-row{display:flex;gap:4px;align-items:center}
+.rec{background:#fff;border:1px solid #94A3B8;border-radius:4px;padding:6px}
+.rec .ah{background:#1F4E79;color:#fff;font-weight:900;padding:3px 6px;border-radius:3px;font-size:9px;margin-bottom:5px}
+</style>
+<style>
+.ecard.site{border-top-color:#2563EB}.ecard.virt{border-top-color:#B45309}
+.grp.main{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.grp.site{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.grp.virt{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.def{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;background:#1A7A3C;color:#fff}
+.dim{background:#F5F3FF;border:1px dashed #C4B5FD;border-radius:6px;padding:4px 6px;font-size:8px;color:#5B21B6;font-weight:700;line-height:1.6}
+</style>
+<style>
+.cat{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;border:1px solid}
+.cat.cnt{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.cat.len{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.cat.wt{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cat.area{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.cat.vol{background:#ECFEFF;color:#0E7490;border-color:#A5F3FC}
+.cat.time{background:#FDF2F8;color:#9D174D;border-color:#FBCFE8}
+.sym{display:inline-block;min-width:26px;text-align:center;border-radius:4px;padding:0 4px;font-size:8px;font-weight:900;background:#1F2937;color:#fff;direction:ltr}
+.logo{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0;direction:ltr}
+.logo.off{background:#94A3B8}
+.bcard{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:5px 6px;cursor:pointer;font-size:8px;line-height:1.5;display:flex;gap:5px;align-items:center}
+.bcard.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.bcard.off{background:#F8FAFC;color:#94A3B8}
+.bcard .tx{min-width:0;flex:1}
+.bcard .tx b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:right}
+.az{display:flex;gap:1px;flex-wrap:wrap;flex-shrink:0}
+.az span{font-size:7.5px;font-weight:900;padding:1px 3px;border-radius:3px;background:#E2E8F0;color:#475569;cursor:pointer;direction:ltr}
+.az span.on{background:var(--green);color:#fff}
+.az span.no{opacity:.35;cursor:default}
+.split{display:flex;gap:7px;flex:1;min-height:0}
+.pane{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px}
+.pane h4{margin:0 0 4px;color:var(--green);font-size:9.5px;font-weight:900;display:flex;align-items:center;gap:4px}
+.pane h4 .btn-s:first-of-type{margin-right:auto}
+.tbl td input.cell{width:100%;height:14px;border:1px solid #2563EB;border-radius:3px;background:#F5F9FF;font:inherit;font-size:8px;font-weight:800;padding:0 3px}
+.tbl tr.new td{background:#FFFBEB}
+.arrow{color:var(--green);font-weight:900}
+</style>
+<style>
+.cc0{border-top-color:#137A38}.cc1{border-top-color:#2563EB}.cc2{border-top-color:#B45309}.cc3{border-top-color:#7C3AED}.cc4{border-top-color:#0E7490}.cc5{border-top-color:#9D174D}.cc6{border-top-color:#475569}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.acc{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:800;border:1px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;white-space:nowrap}
+.acc.df{border-color:#E2E8F0;background:#F8FAFC;color:#64748B;font-weight:700}
+.je{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.je th{background:#1F4E79;color:#fff;padding:3px;text-align:right}
+.je td{padding:3px;border-bottom:1px solid #EEF2F6}
+.je .n{text-align:left;direction:ltr}
+.path{color:var(--muted);font-size:7.5px;font-weight:700}
+.svc{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;background:#FDF2F8;color:#9D174D;border:1px solid #FBCFE8}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة أنواع الأصناف «الأقسام» (المرحلة 3د · الشاشة 3)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل «المخازن» و«الوحدات والماركات» — الفرق في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>أسماء الأقسام من الأكسس، وأعداد الأصناف تقريبية، والحسابات الفرعية الجديدة (110501…) أمثلة بس</b>. <b>الخانات الزرقا شغالة</b>: دوس على أي سطر، افتح وقفّل الشجرة، غيّر الحسابات في 5 و6، جرّب «جديد» في 8، ونضّف أقسام الأكسس في 9.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== الحسابات (الدليل المصري + أمثلة لحسابات فرعية لو اتعملت)
+const AC={
+ inv:[["","الافتراضي — 1105 المخزون"],["110501","110501 مخزون لوحات"],["110502","110502 مخزون BMS"],["110503","110503 مخزون عدد وأدوات"]],
+ sal:[["","الافتراضي — 4101 مبيعات بضاعة"],["4102","4102 إيرادات تركيبات وخدمات"],["410101","410101 مبيعات لوحات"]],
+ cog:[["","الافتراضي — 51 تكلفة المبيعات"],["5101","5101 تكلفة لوحات"],["5102","5102 تكلفة تركيبات"]],
+ ret:[["","الافتراضي — 42 مردودات المبيعات"],["4201","4201 مردودات لوحات"]],
+};
+const ACN=Object.fromEntries(Object.values(AC).flat().filter(a=>a[0]).map(a=>[a[0],a[1]]));
+const DEF={inv:"1105 المخزون",sal:"4101 مبيعات بضاعة",cog:"51 تكلفة المبيعات",ret:"42 مردودات المبيعات"};
+const ACL={inv:"المخزون",sal:"المبيعات",cog:"تكلفة المبيعات",ret:"مردودات المبيعات"};
+// ===== الأقسام — [0 الكود، 1 الاسم، 2 العربي، 3 الأب، 4 أصناف، 5 نشط، 6 حسابات {inv,sal,cog,ret}، 7 خدمي، 8 في الأكسس، 9 لون]
+const C=[
+ ["CAT-001","BMS","أنظمة إدارة المباني","",648,true,{inv:"",sal:"",cog:"",ret:""},false,"BMS",1],
+ ["CAT-002","Installation","تركيبات","",413,true,{inv:"",sal:"4102",cog:"5102",ret:""},false,"Installation",2],
+ ["CAT-003","MCC","لوحات تحكم المحركات","",1529,true,{inv:"",sal:"",cog:"",ret:""},false,"MCC",0],
+ ["CAT-004","Office","مكتب","",87,true,{inv:"",sal:"",cog:"",ret:""},false,"Office",6],
+ ["CAT-005","Panel","لوحات","",172,true,{inv:"110501",sal:"410101",cog:"5101",ret:"4201"},false,"— (جديد: أب للوحات)",3],
+ ["CAT-006","ABB","","CAT-005",48,true,{inv:"110501",sal:"410101",cog:"5101",ret:"4201"},false,"Panel/ABB",3],
+ ["CAT-007","HIMEL","","CAT-005",2,true,{inv:"110501",sal:"410101",cog:"5101",ret:"4201"},false,"Panel/HIMEL",3],
+ ["CAT-008","ide","","CAT-005",18,true,{inv:"110501",sal:"410101",cog:"5101",ret:"4201"},false,"Panel/ide",3],
+ ["CAT-009","KSA","","CAT-005",97,true,{inv:"110501",sal:"410101",cog:"5101",ret:"4201"},false,"Panel/KSA",3],
+ ["CAT-010","Nara","","CAT-005",2,true,{inv:"110501",sal:"410101",cog:"5101",ret:"4201"},false,"Panel/Nara",3],
+ ["CAT-011","Rittal","","CAT-005",5,true,{inv:"110501",sal:"410101",cog:"5101",ret:"4201"},false,"Panel/Rittal",3],
+ ["CAT-012","Workshop","الورشة","",243,true,{inv:"110503",sal:"",cog:"",ret:""},false,"Workshop",4],
+ ["CAT-013","FIRE ALARM","إنذار حريق","",1,true,{inv:"",sal:"",cog:"",ret:""},false,"FIRE ALARM",5],
+ ["CAT-014","Services","خدمات","",0,false,{inv:"",sal:"4102",cog:"",ret:""},true,"— (اقتراح: للأصناف الخدمية)",5],
+];
+const CX=Object.fromEntries(C.map(c=>[c[0],c]));
+const kids=id=>C.filter(c=>c[3]===id);
+const roots=()=>C.filter(c=>!c[3]);
+const full=c=>c[3]?`${CX[c[3]][1]} / ${c[1]}`:c[1];
+const N=c=>`<span class="ltr">${c}</span>`;
+const m0=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
+const stB=a=>a?'<span class="bdg ok">نشط</span>':'<span class="bdg x">موقوف</span>';
+const COL=["#137A38","#2563EB","#B45309","#7C3AED","#0E7490","#9D174D","#475569"];
+const dot=c=>`<span class="dot" style="background:${COL[c[9]]}"></span>`;
+const accB=(c,k)=>c[6][k]?`<span class="acc">${ACN[c[6][k]]}</span>`:`<span class="acc df">الافتراضي</span>`;
+const ownAcc=c=>Object.values(c[6]).filter(Boolean).length;
+const svcB=c=>c[7]?' <span class="svc">خدمي</span>':'';
+const totItems=()=>C.filter(c=>!c[3]).reduce((s,c)=>s+c[4],0);
+
+const ST={s1:"CAT-003", s2:"CAT-006", open2:{"CAT-005":true}, s3:"CAT-012", s4:"CAT-005", s5:"", s6:"CAT-005", q6:3, p6:2000, s7:"CAT-002", g7:"all",
+  n8:"bms ", p8:"", sv8:false, i10:0};
+// النموذج 9 — أقسام الأكسس: [0 الاسم، 1 أصناف، 2 القرار]
+const AS=[["BMS",648,"keep"],["Installation",413,"keep"],["MCC",1529,"keep"],["Office",87,"keep"],["Panel/ABB",48,"panel"],["Panel/HIMEL",2,"panel"],["Panel/ide",18,"panel"],["Panel/KSA",97,"panel"],["Panel/Nara",2,"panel"],["Panel/Rittal",5,"panel"],["Workshop",243,"keep"],["FIRE ALARM",1,"keep"],["zxxxxxxx",0,"drop"],["(أصناف من غير قسم)",24,"gen"]];
+const AS9=Object.fromEntries(AS.map((a,i)=>[i,a[2]]));
+
+function win(inner,title="🗂️ أنواع الأصناف (الأقسام) — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+function tb(word="نوع جديد",mode="عرض",extra=""){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">${word}</span>${extra}<span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-dis':'b-tog'}">إيقاف / تفعيل</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ${ed?'ed':''}">${mode}</span></div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+function sel(key,val,opts,cls=""){return `<select class="lv ${cls}" data-st="${key}">${opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return `<option value="${v}" ${v===val?'selected':''}>${t}</option>`;}).join("")}</select>`;}
+const kp=(t,v,k="")=>`<div class="kp ${k}"><small>${t}</small><b>${v}</b></div>`;
+const fa=(c,k)=>f(ACL[k],c[6][k]?ACN[c[6][k]]:`<span style="color:var(--muted)">الافتراضي (${DEF[k]})</span>`);
+
+function cTable(cs,key,opt={}){
+  const rows=cs.map(c=>`<tr class="${c[0]===ST[key]?'sel':''} ${c[5]?'':'off'}" data-set="${key}" data-v="${c[0]}" style="cursor:pointer"><td>${N(c[0])}</td><td>${c[3]?'<span style="color:#94A3B8">└ </span>':''}<b class="ltr">${c[1]}</b>${svcB(c)}${c[2]&&!opt.short?` <span style="color:var(--muted);font-size:7.5px">${c[2]}</span>`:''}</td>${opt.short?'':`<td>${ownAcc(c)?`<span class="acc">${ownAcc(c)} خاصة</span>`:'<span class="acc df">الافتراضية</span>'}</td>`}<td class="n">${m0(c[4])}</td><td>${stB(c[5])}</td></tr>`).join("");
+  return `<div class="scroll"><table class="tbl"><tr><th>الكود</th><th>النوع</th>${opt.short?'':'<th>الحسابات</th>'}<th class="n">أصناف</th><th>الحالة</th></tr>${rows}</table></div>`;}
+function cForm(c){
+  return gb("بيانات النوع",f("الكود",N(c[0]),"lock")+f("الاسم",N(c[1]))+f("الاسم العربي",c[2]||"—")+f("تحت",c[3]?N(CX[c[3]][1]):"— (رئيسي)")+f("الأصناف الجديدة",c[7]?"خدمية (مالهاش مخزون)":"بضاعة (ليها مخزون)")+f("الحالة",c[5]?"نشط":"موقوف","lock"))
+   +gb("الحسابات (الفاضي = الحساب الافتراضي)",["inv","sal","cog","ret"].map(k=>fa(c,k)).join("")+(c[3]?`<div class="hint">بتتنسخ من «${CX[c[3]][1]}» لما يتعمل تحته — وتقدر تغيّرها.</div>`:''))
+   +gb("الاستخدام",f("أصناف عليه",m0(c[4]),"lock")+f("في الأكسس",N(c[8]),"lock"));}
+const cnt=()=>`<div class="cnt">${C.length} نوع · ${C.filter(c=>c[5]).length} نشط · ${C.filter(ownAcc).length} بحسابات خاصة · الأكسس كان فيه 13 قسم</div>`;
+
+// 1) فورم يمين + قائمة شمال
+function m1(){
+  return win(tb()+`<div class="content"><div class="col" style="width:46%;overflow:auto">${cForm(CX[ST.s1])}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 اسم النوع أو الكود… (F1)</i><span class="chipf on">الكل</span><span class="chipf">نشط</span><span class="chipf">موقوف</span></div>${cTable(C,"s1")}${cnt()}</div></div>`);}
+
+// 2) شجرة (رئيسي ← فرعي)
+function m2(){
+  const c=CX[ST.s2];
+  const node=(x,lv)=>{const k=kids(x[0]),o=ST.open2[x[0]];return `<div class="${x[0]===ST.s2?'sel':''} ${x[5]?'':'off'}" data-set="s2" data-v="${x[0]}" style="padding-right:${4+lv*12}px">${k.length?`<span class="tg" data-tog="${x[0]}">${o?'▾':'◂'}</span>`:'<span class="tg"></span>'}${dot(x)}<b class="ltr">${x[1]}</b>${svcB(x)}<span style="margin-right:auto;color:var(--muted)">${m0(x[4])}</span></div>`+(o?k.map(y=>node(y,lv+1)).join(""):"");};
+  const tree=roots().map(x=>node(x,0)).join("");
+  return win(tb("نوع جديد","عرض",`<span class="bt b-new">+ فرعي تحت المحدد</span>`)+`<div class="content"><div class="col" style="width:40%"><div class="srch"><i>🔍 بحث في الشجرة…</i></div><div class="scroll tree">${tree}</div><div class="cnt">${roots().length} رئيسي · ${C.filter(x=>x[3]).length} فرعي · رقم الأب = مجموع أصناف ولاده</div></div><div class="col" style="flex:1;overflow:auto"><div class="hdr"><b class="ltr">${full(c)}</b> ${stB(c[5])}<div class="p">${N(c[0])} · ${m0(c[4])} صنف · في الأكسس: <span class="ltr">${c[8]}</span></div></div>${gb("الحسابات (بتتورث من الأب)",["inv","sal","cog","ret"].map(k=>fa(c,k)).join(""))}<div class="dim" style="margin-top:6px">في الأكسس كانت 6 أقسام اسمها «Panel/…» — هنا تبقى تحت أب واحد «Panel»، وتقرير «Panel» يجمعهم مع بعض.</div></div></div>`);}
+
+// 3) كروت أرقام فوق + قائمة وفورم
+function m3(){
+  const k=kp("أنواع نشطة",C.filter(c=>c[5]).length,"g")+kp("أصناف عليها أنواع",m0(totItems()),"g")+kp("أصناف من غير نوع","24","r")+kp("أنواع بحسابات خاصة",C.filter(ownAcc).length,"b");
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="kpis">${k}</div><div style="display:flex;gap:7px;flex:1;min-height:0"><div class="col" style="width:44%;overflow:auto">${cForm(CX[ST.s3])}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${cTable(C,"s3",{short:true})}</div></div></div>`);}
+
+// 4) كروت لكل نوع
+function m4(){
+  const c=CX[ST.s4];
+  const cards=roots().map(x=>{const k=kids(x[0]);return `<div class="ecard cc${x[9]} ${x[0]===ST.s4?'sel':''} ${x[5]?'':'off'}" data-set="s4" data-v="${x[0]}"><div class="r"><b class="ltr">${x[1]}</b>${stB(x[5])}</div><span class="big">${m0(x[4])}</span><span style="color:var(--muted)">صنف${k.length?` · ${k.length} فرعي`:''}</span><div class="r" style="margin-top:2px">${ownAcc(x)?`<span class="acc">${ownAcc(x)} حسابات خاصة</span>`:'<span class="acc df">الافتراضية</span>'}${svcB(x)}</div></div>`;}).join("");
+  const ks=kids(c[0]);
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="srch"><i>🔍 اسم النوع…</i></div><div class="scroll"><div class="cards" style="grid-template-columns:repeat(4,1fr)">${cards}</div></div><div class="hdr"><b class="ltr">${c[1]}</b> ${c[2]?`<span>${c[2]}</span>`:''} ${stB(c[5])}<div class="p">${N(c[0])} · ${["inv","sal","cog"].map(k=>`${ACL[k]}: ${c[6][k]?ACN[c[6][k]]:'الافتراضي'}`).join(" · ")}</div>${ks.length?`<div style="margin-top:3px;display:flex;gap:3px;flex-wrap:wrap">${ks.map(y=>`<span class="chipf">${y[1]} · ${y[4]}</span>`).join("")}</div>`:''}</div></div>`);}
+
+// 5) مصفوفة الحسابات (تعديل الكل مرة واحدة)
+function m5(){
+  const rows=C.map(c=>`<tr class="${c[5]?'':'off'}"><td>${c[3]?'<span style="color:#94A3B8">└ </span>':''}<b class="ltr">${c[1]}</b></td>${["inv","sal","cog","ret"].map(k=>`<td>${sel(`ac:${c[0]}:${k}`,c[6][k],AC[k].map(([v,t])=>[v,v?t:"— الافتراضي"]),"")}</td>`).join("")}</tr>`).join("");
+  const own=C.filter(ownAcc).length;
+  return win(`<div class="tb"><span class="bt b-save">حفظ التغييرات</span><span class="bt b-can">إلغاء</span><span class="bt b-ref">تحديث</span><span class="bt b-exit">خروج</span><span class="hint" style="margin:0">كل خانة = حساب · «— الافتراضي» = من شاشة الحسابات الافتراضية</span></div><div class="content" style="flex-direction:column"><div class="scroll"><table class="tbl"><tr><th>النوع</th><th>المخزون</th><th>المبيعات</th><th>تكلفة المبيعات</th><th>المردودات</th></tr>${rows}</table></div><div class="ok-line">${own} نوع بحسابات خاصة · ${C.length-own} على الافتراضي</div><div class="hint">الأسماء والكود بيتعدّلوا من الفورم العادي — المصفوفة دي للحسابات بس (زي «الحسابات الافتراضية» النموذج 10).</div></div>`,"🗂️ أنواع الأصناف — حسابات كل نوع — A-H CODE");}
+
+// 6) الحسابات + مثال القيد حي
+function m6(){
+  const c=CX[ST.s6], q=+ST.q6||0, p=+ST.p6||0, cost=Math.round(p*0.7), tot=q*p, ct=q*cost;
+  const a=k=>c[6][k]?ACN[c[6][k]]:DEF[k];
+  const rows=[["1103 العملاء",tot*1.14,0],[a("sal"),0,tot],["ض.ق.م مخرجات 14%",0,tot*0.14],[a("cog"),ct,0],[a("inv"),0,ct]];
+  const je=rows.map(r=>`<tr><td>${r[0]}</td><td class="n">${r[1]?m0(r[1]):''}</td><td class="n">${r[2]?m0(r[2]):''}</td></tr>`).join("");
+  return win(tb()+`<div class="content"><div class="col" style="width:44%;overflow:auto">${gb("النوع",`<div class="f"><label>النوع</label>${sel("s6",ST.s6,C.filter(x=>x[5]).map(x=>[x[0],full(x)]))}</div>`)}${gb("الحسابات",["inv","sal","cog","ret"].map(k=>`<div class="f"><label>${ACL[k]}</label>${sel(`ac:${c[0]}:${k}`,c[6][k],AC[k])}</div>`).join(""))}</div><div class="col" style="flex:1"><div class="rec"><div class="ah">مثال: فاتورة بيع صنف «<span class="ltr">${c[1]}</span>»</div><div class="f"><label>الكمية</label><input class="lv" data-st="q6" value="${ST.q6}"></div><div class="f"><label>سعر البيع</label><input class="lv" data-st="p6" value="${ST.p6}"></div><table class="je"><tr><th>الحساب</th><th class="n">مدين</th><th class="n">دائن</th></tr>${je}<tr><td><b>الإجمالي</b></td><td class="n"><b>${m0(tot*1.14+ct)}</b></td><td class="n"><b>${m0(tot*1.14+ct)}</b></td></tr></table><div class="hint">التكلفة متوسط مرجّح (هنا 70% من السعر كمثال) · غيّر الحسابات يمين وشوف القيد بيتغيّر.</div></div></div></div>`);}
+
+// 7) شريط جانبي (الرئيسي) + جدول + تفاصيل
+function m7(){
+  const g=ST.g7, list=g==="all"?C:C.filter(c=>c[0]===g||c[3]===g);
+  if(!list.find(c=>c[0]===ST.s7)) ST.s7=list[0][0];
+  const c=CX[ST.s7];
+  const side=`<div class="it ${g==='all'?'on':''}" data-set="g7" data-v="all">🗂️ الكل<small>${C.length}</small></div>`+roots().map(x=>`<div class="it ${g===x[0]?'on':''}" data-set="g7" data-v="${x[0]}">${dot(x)}<span class="ltr">${x[1]}</span><small>${kids(x[0]).length?kids(x[0]).length+1:''}</small></div>`).join("");
+  return win(tb()+`<div class="content"><div class="side" style="overflow:auto">${side}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${cTable(list,"s7")}<div class="hdr" style="margin-top:4px"><b class="ltr">${full(c)}</b> ${stB(c[5])}${svcB(c)}<div class="p">${N(c[0])} · ${m0(c[4])} صنف · ${["inv","sal","cog","ret"].map(k=>`${ACL[k]}: ${c[6][k]?ACN[c[6][k]]:'الافتراضي'}`).join(" · ")}</div></div></div></div>`);}
+
+// 8) فورم «جديد» بالتحقق
+const norm=s=>s.replace(/ /g," ").trim().replace(/\s+/g," ").toUpperCase();
+function m8(){
+  const nm=norm(ST.n8), dup=C.find(c=>norm(c[1])===nm&&(c[3]||"")===ST.p8), par=ST.p8?CX[ST.p8]:null;
+  const parOpts=[["","— رئيسي (مش تحت حاجة)"]].concat(roots().filter(x=>x[5]&&!x[7]).map(x=>[x[0],x[1]]));
+  const body=gb("نوع صنف جديد",f("الكود","CAT-015 (بيتولّد لوحده)","lock")+`<div class="f"><label>الاسم *</label><input class="lv ${dup||!nm?'bad':''}" data-st="n8" value="${ST.n8}"></div>${dup?`<div class="bad-line">✖ النوع ده موجود: ${N(dup[0])} «<span class="ltr">${full(dup)}</span>» — الاسم مايتكررش تحت نفس الأب (من غير حروف كبيرة/صغيرة ولا مسافات)</div>`:nm?`<div class="ok-line">✔ هيتحفظ «<span class="ltr">${par?par[1]+' / ':''}${ST.n8.trim()}</span>»</div>`:'<div class="bad-line">✖ الاسم مطلوب</div>'}<div class="f"><label>تحت</label>${sel("p8",ST.p8,parOpts)}</div>${par?`<div class="ok-line">✔ الحسابات هتتنسخ من «${par[1]}»: ${ownAcc(par)?ownAcc(par)+' حساب خاص':'الافتراضية'}</div>`:''}<label class="rad"><input type="checkbox" class="cb" data-chk="sv8" ${ST.sv8?'checked':''}> الأصناف الجديدة تحته خدمية (مالهاش مخزون)</label>`+f("الاسم العربي","—")+`<div class="hint">جرّب: mcc · Panel ← ABB · Lighting</div>`);
+  return win(tb("نوع جديد","إضافة")+`<div class="content" style="flex-direction:column"><div class="col" style="overflow:auto;max-width:360px">${body}</div><div class="hint">«حفظ» مايشتغلش غير والخانات سليمة · والقاعدة بتتأكد تاني (unique index) لو جهازين ضافوا نفس الاسم في نفس اللحظة · مستويين بس (رئيسي ← فرعي).</div></div>`);}
+
+// 9) تنظيف أقسام الأكسس
+function m9(){
+  const o={keep:"نوع زي ما هو",panel:"فرعي تحت «Panel»",drop:"ماينتقلش",gen:"نوع «عام»",none:"تفضل من غير نوع",stop:"ينتقل موقوف"};
+  const rows=AS.map((a,i)=>`<tr class="${AS9[i]==='drop'?'off':''}"><td><b class="ltr">${a[0]}</b></td><td class="n">${m0(a[1])}</td><td class="arrow">←</td><td>${sel("as:"+i,AS9[i],a[0].startsWith("Panel/")?[["panel",o.panel],["keep",o.keep]]:i===12?[["drop",o.drop],["stop",o.stop]]:i===13?[["gen",o.gen],["none",o.none]]:[["keep",o.keep],["stop",o.stop]])}</td></tr>`).join("");
+  const types=AS.filter((a,i)=>["keep","stop","panel"].includes(AS9[i])&&i<13).length, pan=AS.filter((a,i)=>AS9[i]==="panel").length;
+  return win(`<div class="tb"><span class="bt b-exp">معاينة النقل</span><span class="bt b-exit">خروج</span><span class="hint" style="margin:0">للنقل من الأكسس مرة واحدة — مع أي نموذج تاني</span></div><div class="content"><div class="col" style="flex:1"><div class="sec2">🗂️ الأقسام في الأكسس (جدول tb-Shopes) — 13 قسم</div><div class="scroll"><table class="tbl"><tr><th>القسم في الأكسس</th><th class="n">أصناف</th><th></th><th>يبقى</th></tr>${rows}</table></div></div><div class="col" style="width:36%"><div class="sec2">النتيجة</div><div class="ok-line">${types+(pan?1:0)+(AS9[13]==='gen'?1:0)} نوع${pan?` (منهم «Panel» أب جديد و${pan} فرعي)`:''}</div><div class="hint">${AS9[12]==='drop'?'«zxxxxxxx» مش عليه أصناف ← ماينتقلش.':'«zxxxxxxx» ينتقل موقوف.'}</div><div class="hint">${AS9[13]==='gen'?'الـ 24 صنف اللي من غير قسم ← نوع «عام».':'الـ 24 صنف يفضلوا من غير نوع (النوع اختياري على الصنف).'}</div><div class="dim" style="margin-top:6px">في الأكسس <b>tb-Shopes</b> كان كمان «من مخزن / إلى مخزن» في التحويلات، بس التحويلات كانت 0 والفواتير كلها على المخزن 757 ← الأقسام دي كانت على الأصناف بس.</div></div></div>`,"🧹 تنظيف أقسام الأكسس — A-H CODE");}
+
+// 10) سجل واحد + جدول (زي FShop)
+function m10(){
+  if(ST.i10>=C.length) ST.i10=0; const r=C[ST.i10];
+  const rec=gb("القسم",`<div class="g2">${f("الكود",N(r[0]),"lock")+f("الاسم",N(r[1]))+f("العربي",r[2]||"—")+f("تحت",r[3]?N(CX[r[3]][1]):"—")+f("المخزون",r[6].inv?ACN[r[6].inv]:"الافتراضي")+f("المبيعات",r[6].sal?ACN[r[6].sal]:"الافتراضي")}</div>`);
+  const nav=`<div class="nav"><span class="mini" data-nav="first">⏮ الأول</span><span class="mini" data-nav="prev">◀ السابق</span><b style="font-size:8.5px">${ST.i10+1} من ${C.length}</b><span class="mini" data-nav="next">التالي ▶</span><span class="mini" data-nav="last">الأخير ⏭</span></div>`;
+  const rows=C.map((x,i)=>`<tr class="${i===ST.i10?'sel':''} ${x[5]?'':'off'}" data-i10="${i}" style="cursor:pointer"><td>${N(x[0])}</td><td><b class="ltr">${full(x)}</b></td><td class="n">${m0(x[4])}</td><td>${stB(x[5])}</td></tr>`).join("");
+  return win(tb("قسم جديد")+`<div class="content" style="flex-direction:column">${rec}${nav}<div class="scroll"><table class="tbl"><tr><th>الكود</th><th>القسم</th><th class="n">أصناف</th><th>الحالة</th></tr>${rows}</table></div></div>`,"🗂️ الأقسام — A-H CODE");}
+
+const M=[
+ ["فورم يمين + قائمة شمال","زي باقي شاشات التعريف: الفورم يمين (البيانات + الحسابات + الاستخدام) والقائمة شمال بالبحث وفلتر الحالة.",m1],
+ ["شجرة (رئيسي ← فرعي)","الأنواع شجرة بمستويين: «Panel» أب وتحته ABB · HIMEL · KSA… والحسابات بتتورث من الأب. زرار «+ فرعي تحت المحدد» زي دليل الحسابات.",m2],
+ ["كروت أرقام فوق + قائمة وفورم","فوق: الأنواع النشطة · الأصناف اللي عليها أنواع · أصناف من غير نوع · أنواع بحسابات خاصة. وتحت الفورم والقائمة.",m3],
+ ["كارت لكل نوع","كل نوع رئيسي كارت بلونه وعدد أصنافه وحساباته، وتحت تفاصيل الكارت المختار وولاده (زي «المخازن» النموذج 2).",m4],
+ ["مصفوفة الحسابات","جدول واحد: صف لكل نوع وعمود لكل حساب (مخزون · مبيعات · تكلفة · مردودات)، تغيّر الكل مرة واحدة. الخانات الزرقا شغالة.",m5],
+ ["الحسابات + مثال القيد حي","تختار النوع وحساباته، وجنبها قيد فاتورة بيع مثال بيتغيّر قدامك (زي «الحسابات الافتراضية» النموذج 7). غيّر الكمية والسعر والحسابات.",m6],
+ ["شريط جانبي + جدول + تفاصيل","يمين الأنواع الرئيسية (دوس على «Panel» يجيب ولاده بس)، وفي النص الجدول، وتحته تفاصيل السطر المختار.",m7],
+ ["فورم «جديد» بالتحقق","الخانات الزرقا شغالة: الاسم المتكرر (bms = BMS) تحت نفس الأب، اختيار الأب ونسخ حساباته، و«الأصناف خدمية».",m8],
+ ["تنظيف أقسام الأكسس","الـ 13 قسم: الـ «Panel/…» تبقى فرعي تحت «Panel»، و«zxxxxxxx» ماينتقلش، والـ 24 صنف اللي من غير قسم ← «عام». للنقل مرة واحدة، مع أي نموذج.",m9],
+ ["سجل واحد + جدول (زي الأكسس)","فوق سجل واحد بأزرار الأول / السابق / التالي / الأخير، وتحت القائمة كلها — شبه FShop بس مضاف ليه الحسابات.",m10],
+];
+
+const NOTE=`<b>الشاشة دي بتعمل إيه:</b> تعريف <b>أنواع الأصناف</b> (جدول <span class="ltr">inv.item_categories</span>) — BMS · MCC · Installation · Panel… — وكل صنف هيتختار له نوع في شاشة الأصناف. <b>وكل نوع ممكن يبقى ليه حساباته</b> (مخزون · مبيعات · تكلفة مبيعات · مردودات)، ولو سبتها فاضية بياخد <b>الحساب الافتراضي</b> من شاشة «الحسابات الافتراضية» (1105 · 4101 · 51 · 42). كده تقدر تطلّع مبيعات وتكلفة كل نوع لوحده في قايمة الدخل.
+<br><b>كانت إيه في الأكسس:</b> <span class="ltr">FShop</span> «الأقسام» في قسم «الأصناف + المخازن» — جدول <span class="ltr">tb-Shopes</span> فيه <b>13 قسم</b> بالاسم بس (والعنوان فاضي): BMS · Installation · MCC · Office · <b>6 أقسام «Panel/…»</b> (ABB · HIMEL · ide · KSA · Nara · Rittal) · Workshop · FIRE ALARM · و«zxxxxxxx» (تجربة). كان على <b>الصنف</b> بس (<span class="ltr">TypeShop</span>) — الأكتر MCC (~1,529 صنف) وBMS (~648) وInstallation (~413)، و24 صنف من غير قسم. <b>مكانش ليه أي حسابات.</b>
+<ul>
+<li><b>الخانات المقترحة:</b> الكود (بيتولّد لوحده <span class="ltr">CAT-001</span>) · الاسم (مطلوب ومايتكررش حتى لو بحروف كبيرة/صغيرة أو مسافات) · الاسم العربي (اختياري) · <b>«تحت» (الأب — اختياري، مستويين بس)</b> · الحسابات الأربعة (اختيارية) · <b>«الأصناف الجديدة خدمية»</b> (اختياري — زي «Services») · نشط · ملاحظات.</li>
+<li><b>الحسابات لازم تكون فرعية ونشطة ومن النوع الصح</b> (المخزون أصل · المبيعات إيراد · التكلفة مصروف) — والقاعدة بتتأكد. ولو حبيت حساب خاص (زي 110501 مخزون لوحات) بتعمله الأول في دليل الحسابات.</li>
+<li><b>ملحوظة على قرارك القديم «المخزون حساب واحد + بُعد المخزن»:</b> ده لسه زي ما هو — حساب المخزون على النوع <b>اختياري</b>، ولو فاضي كله على 1105.</li>
+<li><b>الحماية:</b> النوع اللي عليه أصناف <b>مايتمسحش</b> (FK RESTRICT) — يتوقف بس · النوع اللي تحته فرعي مايتمسحش · <span class="ltr">row_version</span> (جهازين) + سجل التعديلات · الكود جوه قفل.</li>
+<li><b>مكان الشاشة:</b> قسم «الأصناف + المخازن» 📦 ← بعد «الوحدات والماركات».</li>
+</ul>`;
+
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>الـ 6 أقسام «Panel/…»:</b> تبقى <b>فرعي تحت أب واحد «Panel»</b> (اقتراحي — شجرة بمستويين، النموذج 2) ولا تفضل 6 أنواع منفصلة زي الأكسس (من غير شجرة خالص)؟</li>
+<li><b>الحسابات على النوع:</b> <b>اختيارية والفاضي = الافتراضي</b> (اقتراحي) ولا كل الأنواع على الافتراضي دلوقتي ونأجّل الحسابات (الشاشة من غير جزء الحسابات)؟</li>
+<li><b>أي حسابات بالظبط؟</b> المخزون + المبيعات + تكلفة المبيعات + مردودات المبيعات (اقتراحي) — ولا تزوّد <b>مشتريات / مردودات مشتريات</b>، ولا تكتفي بالمبيعات والتكلفة بس؟</li>
+<li><b>الأقسام تتعمل دلوقتي مع السكريبت</b> (الـ 12 من الأكسس + «Panel» أب — اقتراحي، لأنهم أسامي بس ومفيهمش بيانات عملاء) ولا تستنى «نقل بيانات الأكسس»؟ و«zxxxxxxx» ماينتقلش؟</li>
+<li><b>«النوع» على الصنف:</b> <b>اختياري</b> (اقتراحي — الـ 24 صنف اللي من غير قسم يفضلوا كده) ولا <b>إجباري</b> ونعمل نوع «عام»؟</li>
+<li><b>«الأصناف الجديدة خدمية»</b> على النوع (يعني أي صنف جديد تحته بيطلع خدمي من غير مخزون — زي التركيبات): نضيفها (اقتراحي) ولا الخدمي يتحدد على الصنف بس؟ و«Installation» نفسها بضاعة ولا خدمات؟</li>
+<li><b>الاسم:</b> الاسم الإنجليزي زي الأكسس (BMS · MCC) + عربي اختياري (اقتراحي) ولا الاسم العربي هو الأساسي؟ والكود <span class="ltr">CAT-001</span>؟</li>
+<li><b>الأقسام كانت على الفواتير في الأكسس؟</b> لقيت إن الفواتير كلها على المخزن 757 مش على قسم ← <b>النوع على الصنف بس</b> (اقتراحي)، والتقارير بتجمّع بالنوع من الأصناف. موافق؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+document.addEventListener("change",e=>{
+  const t=e.target, k=t.dataset.st;
+  if(t.dataset.chk){ST[t.dataset.chk]=t.checked;render();return;}
+  if(!k) return;
+  if(k.startsWith("ac:")){const [,id,a]=k.split(":");CX[id][6][a]=t.value;render();return;}
+  if(k.startsWith("as:")){AS9[k.slice(3)]=t.value;render();return;}
+  ST[k]=t.value; render();
+});
+document.addEventListener("input",e=>{const t=e.target;if(t.matches("input.lv")&&t.dataset.st){ST[t.dataset.st]=t.value;}});
+document.addEventListener("focusout",e=>{const t=e.target;if(t.matches("input.lv")&&t.dataset.st){render();}});
+document.addEventListener("keydown",e=>{const t=e.target;if(e.key==="Enter"&&t.matches("input.lv")&&t.dataset.st){ST[t.dataset.st]=t.value;render();}});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const tg=e.target.closest("[data-tog]"); if(tg){const id=tg.dataset.tog;ST.open2[id]=!ST.open2[id];render();return;}
+  const nv=e.target.closest("[data-nav]"); if(nv){const a=nv.dataset.nav;ST.i10=a==="first"?0:a==="last"?C.length-1:a==="prev"?Math.max(0,ST.i10-1):Math.min(C.length-1,ST.i10+1);render();return;}
+  const r=e.target.closest("[data-i10]"); if(r){ST.i10=+r.dataset.i10;render();return;}
+  const s=e.target.closest("[data-set]");
+  if(s){ST[s.dataset.set]=s.dataset.v; render();}
+});
+render();
+</script>
+</body>
+</html>

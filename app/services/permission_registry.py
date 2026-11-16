@@ -148,6 +148,9 @@ SECTIONS: tuple[Section, ...] = (
         Group("الأصناف + المخازن", (
             Target("warehouses", "المخازن", "Warehouses", icon="🏬",
                    actions=("view", "create", "edit", "save", "delete", "export")),
+            # الوحدات والماركات (2026-11-15 — النموذج 1): شاشة واحدة بتبويبين وصلاحية واحدة.
+            Target("units_brands", "الوحدات والماركات", "Units & Brands", icon="📏",
+                   actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="📦"),
     )),
     # «الخزائن والبنوك» (2026-11-15): الخزائن ← البنوك (البنوك وحساباتها — النموذج 7).

@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج الوحدات والماركات — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+.bal-p{color:#087443;font-weight:900}.bal-n{color:#B91C1C;font-weight:900}
+.wal{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:6px 7px;cursor:pointer;font-size:8px;line-height:1.5;border-top:4px solid var(--green)}
+.wal.usd{border-top-color:#2563EB}
+.wal.off{border-top-color:#94A3B8;background:#F8FAFC;color:#94A3B8}
+.wal.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.wal .big{font-size:12px;font-weight:900;direction:ltr;unicode-bidi:isolate;display:block;margin:2px 0}
+.wal .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.cur{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;direction:ltr;background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}
+.cur.usd{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.mainbar{background:var(--green-dark);color:#fff;display:flex;align-items:center;gap:6px;padding:5px 8px;flex-shrink:0;font-weight:800;font-size:9px}
+.mainbar .box{background:#fff;color:#111827;border-radius:4px;padding:1px 8px;font-weight:900;direction:ltr;font-size:10px}
+.mainbar .mini{background:#FDE68A;border-color:#F59E0B;color:#78350F}
+.rad{font-size:8.5px;font-weight:700;display:flex;gap:3px;align-items:center;cursor:pointer;margin-bottom:3px}
+.lim{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.lim span{display:block;height:100%;background:var(--green)}
+.lim.over span{background:#DC2626}
+</style>
+<style>
+.ico{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:5px;background:#ECFDF3;font-size:11px;flex-shrink:0}
+.ecard{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:5px 7px;cursor:pointer;font-size:8px;line-height:1.5;border-top:4px solid var(--green)}
+.ecard.g53{border-top-color:#2563EB}.ecard.g54{border-top-color:#B45309}
+.ecard.off{border-top-color:#94A3B8;background:#F8FAFC;color:#94A3B8}
+.ecard.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.ecard .big{font-size:11px;font-weight:900;direction:ltr;unicode-bidi:isolate;display:block;margin:1px 0}
+.ecard .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.grp{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;border:1px solid}
+.grp.g52{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.grp.g53{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.grp.g54{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.acc-row{display:flex;gap:4px;align-items:center}
+.rec{background:#fff;border:1px solid #94A3B8;border-radius:4px;padding:6px}
+.rec .ah{background:#1F4E79;color:#fff;font-weight:900;padding:3px 6px;border-radius:3px;font-size:9px;margin-bottom:5px}
+</style>
+<style>
+.ecard.site{border-top-color:#2563EB}.ecard.virt{border-top-color:#B45309}
+.grp.main{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.grp.site{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.grp.virt{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.def{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;background:#1A7A3C;color:#fff}
+.dim{background:#F5F3FF;border:1px dashed #C4B5FD;border-radius:6px;padding:4px 6px;font-size:8px;color:#5B21B6;font-weight:700;line-height:1.6}
+</style>
+<style>
+.cat{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;border:1px solid}
+.cat.cnt{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.cat.len{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.cat.wt{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cat.area{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.cat.vol{background:#ECFEFF;color:#0E7490;border-color:#A5F3FC}
+.cat.time{background:#FDF2F8;color:#9D174D;border-color:#FBCFE8}
+.sym{display:inline-block;min-width:26px;text-align:center;border-radius:4px;padding:0 4px;font-size:8px;font-weight:900;background:#1F2937;color:#fff;direction:ltr}
+.logo{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0;direction:ltr}
+.logo.off{background:#94A3B8}
+.bcard{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:5px 6px;cursor:pointer;font-size:8px;line-height:1.5;display:flex;gap:5px;align-items:center}
+.bcard.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.bcard.off{background:#F8FAFC;color:#94A3B8}
+.bcard .tx{min-width:0;flex:1}
+.bcard .tx b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:right}
+.az{display:flex;gap:1px;flex-wrap:wrap;flex-shrink:0}
+.az span{font-size:7.5px;font-weight:900;padding:1px 3px;border-radius:3px;background:#E2E8F0;color:#475569;cursor:pointer;direction:ltr}
+.az span.on{background:var(--green);color:#fff}
+.az span.no{opacity:.35;cursor:default}
+.split{display:flex;gap:7px;flex:1;min-height:0}
+.pane{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px}
+.pane h4{margin:0 0 4px;color:var(--green);font-size:9.5px;font-weight:900;display:flex;align-items:center;gap:4px}
+.pane h4 .btn-s:first-of-type{margin-right:auto}
+.tbl td input.cell{width:100%;height:14px;border:1px solid #2563EB;border-radius:3px;background:#F5F9FF;font:inherit;font-size:8px;font-weight:800;padding:0 3px}
+.tbl tr.new td{background:#FFFBEB}
+.arrow{color:var(--green);font-weight:900}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة الوحدات والماركات (المرحلة 3د · الشاشة 2)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل «المخازن» و«الخزائن» — الفرق في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>الأعداد والأمثلة توضيحية</b> (أعداد الأصناف تقريبية من الأكسس). <b>الخانات الزرقا والتبويبات شغالين</b>: بدّل بين الوحدات والماركات، دوس على أي سطر، جرّب «جديد» في النموذج 8، ونضّف بيانات الأكسس في النموذج 9.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== الوحدات (توضيحي) — [0 الرمز، 1 الاسم، 2 EN، 3 النوع، 4 يقبل كسور، 5 نشط، 6 أصناف، 7 افتراضي، 8 من الأكسس، 9 معامل للأساسية]
+const CAT={cnt:"عدد",len:"طول",wt:"وزن",area:"مساحة",vol:"حجم",time:"وقت"};
+const U=[
+ ["PCS","عدد","Unit","cnt",false,true,3083,true,"Unit · unit · ك",1],
+ ["SET","طقم","Set","cnt",false,true,0,false,"—",1],
+ ["BOX","كرتونة","Box","cnt",false,true,0,false,"—",1],
+ ["ROLL","لفة","Roll","cnt",false,true,0,false,"—",1],
+ ["M","متر","Meter","len",true,true,9,false,"Meter · meter · METER",1],
+ ["CM","سنتيمتر","Centimeter","len",true,true,0,false,"—",0.01],
+ ["KG","كيلو جرام","Kilogram","wt",true,true,24,false,"KGM · كيلو",1],
+ ["M2","متر مربع","Square meter","area",true,true,0,false,"—",1],
+ ["L","لتر","Liter","vol",true,true,0,false,"—",1],
+ ["HR","ساعة","Hour","time",true,true,0,false,"— (للخدمات)",1],
+ ["GAL","جالون","Gallon","vol",true,false,0,false,"—",3.785],
+];
+// ===== الماركات (توضيحي) — [0 الكود، 1 الاسم، 2 العربي، 3 البلد، 4 أصناف، 5 نشط، 6 من الأكسس]
+const B=[
+ ["BRD-001","SIEMENS","سيمنز","ألمانيا",718,true,"SIEMENS"],
+ ["BRD-002","Local","محلي","مصر",645,true,"Local"],
+ ["BRD-003","ABB","إيه بي بي","سويسرا",431,true,"ABB"],
+ ["BRD-004","KSA","","السعودية",138,true,"KSA"],
+ ["BRD-005","Schneider","شنايدر","فرنسا",112,true,"Schneider + SCHNEIDER"],
+ ["BRD-006","NP","","",77,true,"NP"],
+ ["BRD-007","SMART","","",66,true,"SMART"],
+ ["BRD-008","CHINT","شينت","الصين",41,true,"CHINT"],
+ ["BRD-009","Himel","هايميل","إسبانيا",36,true,"Himel + HIMEL"],
+ ["BRD-010","Kinco","","الصين",12,true,"Kinco"],
+ ["BRD-011","PETTINAROLI","","إيطاليا",8,true,"PETTINAROLI"],
+ ["BRD-012","CYLON","","أيرلندا",0,false,"CYLON (مش مستخدمة)"],
+];
+const UX=Object.fromEntries(U.map(u=>[u[0],u])), BX=Object.fromEntries(B.map(b=>[b[0],b]));
+const N=c=>`<span class="ltr">${c}</span>`;
+const m0=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:3});
+const stB=a=>a?'<span class="bdg ok">نشط</span>':'<span class="bdg x">موقوف</span>';
+const catB=u=>`<span class="cat ${u[3]}">${CAT[u[3]]}</span>`;
+const decB=u=>u[4]?'<span class="bdg pj">بكسور</span>':'<span class="bdg x">صحيح بس</span>';
+const defB=u=>u[7]?' <span class="def">★ الافتراضية</span>':'';
+const logo=b=>`<span class="logo ${b[5]?'':'off'}">${b[1].replace(/[^A-Za-z]/g,"").slice(0,2).toUpperCase()||"؟"}</span>`;
+const ini=b=>b[1].trim()[0].toUpperCase();
+
+const ST={t1:"u",s1u:"PCS",s1b:"BRD-001", s2u:"M",s2b:"BRD-003", t3:"b",s3u:"PCS",s3b:"BRD-005", s4:"u",e4:"KG",
+  c5:"len",s5:"CM", s6:"BRD-001",az6:"all", t7:"u",s7u:"KG",s7b:"BRD-009", t8:"b",n8:"himel ",n8u:"wt",n8sym:"kg",n8dec:true,
+  i10:0,t10:"b"};
+// النموذج 9 — كتابات الوحدة في الأكسس: [0 المكتوب، 1 أصناف، 2 الاقتراح]
+const AU=[["Unit",3081,"PCS"],["unit / ' unit'",2,"PCS"],["ك",1,"PCS"],["Meter / meter / METER",9,"M"],["KGM / ' KGM'",5,"KG"],["كيلو",19,"KG"],["(فاضي)",1,"PCS"]];
+const AU9=Object.fromEntries(AU.map((a,i)=>[i,a[2]]));
+// الماركات في الأكسس: [0 الاسم، 1 التفاصيل، 2 القرار]
+const AB=[["HIMEL","Himel + «Himel» بمسافة مخفية قبله","merge"],["SCHNEIDER","Schneider + SCHNEIDER","merge"],["CONTREL ELETTRONICA","نسختين بنفس الاسم","merge"],["5 ماركات مش عليها أصناف","مثلاً CYLON","stop"],["23 صنف من غير ماركة","","none"]];
+const AB9=Object.fromEntries(AB.map((a,i)=>[i,a[2]]));
+
+function win(inner,title="📏 الوحدات والماركات — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+function tb(word="جديد",mode="عرض"){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">${word}</span><span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-dis':'b-tog'}">إيقاف / تفعيل</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ${ed?'ed':''}">${mode}</span></div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+function sel(key,val,opts,cls=""){return `<select class="lv ${cls}" data-st="${key}">${opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return `<option value="${v}" ${v===val?'selected':''}>${t}</option>`;}).join("")}</select>`;}
+const kp=(t,v,k="")=>`<div class="kp ${k}"><small>${t}</small><b>${v}</b></div>`;
+function tabs(key,items){return `<div class="tabs2">${items.map(([v,t,n])=>`<span class="${ST[key]===v?'on':''}" data-set="${key}" data-v="${v}">${t}${n!==""?`<em>${n}</em>`:''}</span>`).join("")}</div>`;}
+const TABS=k=>tabs(k,[["u","📏 الوحدات",U.length],["b","🏷️ الماركات",B.length]]);
+
+function uTable(us,key,short=false){
+  const rows=us.map(u=>`<tr class="${u[0]===ST[key]?'sel':''} ${u[5]?'':'off'}" data-set="${key}" data-v="${u[0]}" style="cursor:pointer"><td><span class="sym">${u[0]}</span></td><td><b>${u[1]}</b>${defB(u)}${short?'':`<div style="color:var(--muted);font-size:7.5px">${u[2]}</div>`}</td><td>${catB(u)}</td>${short?'':`<td>${decB(u)}</td>`}<td class="n">${m0(u[6])}</td><td>${stB(u[5])}</td></tr>`).join("");
+  return `<div class="scroll"><table class="tbl"><tr><th>الرمز</th><th>الوحدة</th><th>النوع</th>${short?'':'<th>الكمية</th>'}<th class="n">أصناف</th><th>الحالة</th></tr>${rows}</table></div>`;}
+function bTable(bs,key,short=false){
+  const rows=bs.map(b=>`<tr class="${b[0]===ST[key]?'sel':''} ${b[5]?'':'off'}" data-set="${key}" data-v="${b[0]}" style="cursor:pointer"><td>${N(b[0])}</td><td><b class="ltr">${b[1]}</b>${b[2]?` <span style="color:var(--muted);font-size:7.5px">${b[2]}</span>`:''}</td>${short?'':`<td>${b[3]||'—'}</td>`}<td class="n">${m0(b[4])}</td><td>${stB(b[5])}</td></tr>`).join("");
+  return `<div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الماركة</th>${short?'':'<th>البلد</th>'}<th class="n">أصناف</th><th>الحالة</th></tr>${rows}</table></div>`;}
+function uForm(u){
+  return gb("بيانات الوحدة",f("الرمز",`<span class="sym">${u[0]}</span> (بيظهر في الفاتورة)`)+f("الاسم",u[1])+f("الاسم EN",u[2])+f("النوع",CAT[u[3]])+f("الكمية",u[4]?"تقبل كسور (2.5 متر)":"رقم صحيح بس (مفيش 1.5 عدد)")+f("الافتراضية",u[7]?"آه — بتتملى لوحدها في الصنف الجديد":"لأ")+f("الحالة",u[5]?"نشط":"موقوف","lock"))
+   +gb("الاستخدام",f("أصناف عليها",m0(u[6]),"lock")+f("كانت في الأكسس",u[8],"lock")+`<div class="hint">الوحدة اللي عليها أصناف أو حركة مابتتمسحش — تتوقف بس.</div>`);}
+function bForm(b){
+  return gb("بيانات الماركة",f("الكود",N(b[0]),"lock")+f("الاسم",N(b[1]))+f("الاسم العربي",b[2]||"—")+f("بلد المنشأ",b[3]||"—")+f("الحالة",b[5]?"نشط":"موقوف","lock")+f("ملاحظات","—"))
+   +gb("الاستخدام",f("أصناف عليها",m0(b[4]),"lock")+f("كانت في الأكسس",N(b[6]),"lock")+`<div class="hint">الاسم مايتكررش حتى لو اختلفت الحروف الكبيرة والصغيرة أو المسافات.</div>`);}
+const cntU=()=>`<div class="cnt">${U.length} وحدة · ${U.filter(u=>u[5]).length} نشطة · الأكسس كان فيه 3 وحدات بس مكتوبة نص (عدد · متر · كيلو)</div>`;
+const cntB=()=>`<div class="cnt">${B.length} من 118 ماركة في الأكسس (توضيحي) · ${B.filter(b=>b[5]).length} نشطة</div>`;
+
+// 1) تبويبين + فورم يمين وقائمة شمال
+function m1(){
+  const isU=ST.t1==="u";
+  const form=isU?uForm(UX[ST.s1u]):bForm(BX[ST.s1b]);
+  const list=isU?uTable(U,"s1u")+cntU():bTable(B,"s1b")+cntB();
+  return win(tb(isU?"وحدة جديدة":"ماركة جديدة")+`<div class="content" style="flex-direction:column">${TABS("t1")}<div style="display:flex;gap:7px;flex:1;min-height:0"><div class="col" style="width:44%;overflow:auto">${form}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 ${isU?'الرمز أو الاسم…':'اسم الماركة أو الكود…'} (F1)</i></div>${list}</div></div></div>`);}
+
+// 2) الاتنين جنب بعض
+function m2(){
+  const u=UX[ST.s2u], b=BX[ST.s2b];
+  return win(`<div class="tb"><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="hint" style="margin:0">كل جزء بأزراره</span></div><div class="content"><div class="split"><div class="pane"><h4>📏 الوحدات <small class="hint" style="margin:0">${U.length}</small><span class="btn-s">+ جديدة</span><span class="btn-s g">تعديل</span></h4><div class="srch"><i>🔍 بحث…</i></div>${uTable(U,"s2u",true)}<div class="hdr" style="margin-top:4px"><b><span class="sym">${u[0]}</span> ${u[1]}</b> ${catB(u)} ${decB(u)}<div class="p">${u[2]} · ${m0(u[6])} صنف</div></div></div><div class="pane"><h4>🏷️ الماركات <small class="hint" style="margin:0">${B.length}</small><span class="btn-s">+ جديدة</span><span class="btn-s g">تعديل</span></h4><div class="srch"><i>🔍 بحث…</i></div>${bTable(B,"s2b",true)}<div class="hdr" style="margin-top:4px"><b>${N(b[0])} <span class="ltr">${b[1]}</span></b> ${stB(b[5])}<div class="p">${b[2]||'—'} · ${b[3]||'—'} · ${m0(b[4])} صنف</div></div></div></div></div>`);}
+
+// 3) كروت أرقام فوق + تبويبين
+function m3(){
+  const isU=ST.t3==="u", noB=23, unusedB=5;
+  const k=kp("وحدات نشطة",U.filter(u=>u[5]).length,"g")+kp("ماركات نشطة",B.filter(b=>b[5]).length,"g")+kp("أصناف من غير ماركة",noB,"r")+kp("ماركات مش عليها أصناف",unusedB,"b");
+  const form=isU?uForm(UX[ST.s3u]):bForm(BX[ST.s3b]);
+  return win(tb(isU?"وحدة جديدة":"ماركة جديدة")+`<div class="content" style="flex-direction:column"><div class="kpis">${k}</div>${TABS("t3")}<div style="display:flex;gap:7px;flex:1;min-height:0"><div class="col" style="width:44%;overflow:auto">${form}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${isU?uTable(U,"s3u",true):bTable(B,"s3b",true)}</div></div></div>`);}
+
+// 4) جدول بتعديل مباشر (زي الإكسل)
+function m4(){
+  const isU=ST.s4==="u";
+  let rows;
+  if(isU) rows=U.map(u=>u[0]===ST.e4?`<tr class="sel"><td><input class="cell" value="${u[0]}"></td><td><input class="cell" value="${u[1]}"></td><td><input class="cell" value="${u[2]}"></td><td>${sel("x4c",u[3],Object.entries(CAT))}</td><td><input type="checkbox" class="cb" ${u[4]?'checked':''}></td><td class="n">${m0(u[6])}</td><td><span class="btn-s">✔ حفظ</span></td></tr>`:`<tr class="${u[5]?'':'off'}" data-set="e4" data-v="${u[0]}" style="cursor:pointer"><td><span class="sym">${u[0]}</span></td><td><b>${u[1]}</b>${defB(u)}</td><td>${u[2]}</td><td>${catB(u)}</td><td>${u[4]?'✔':'—'}</td><td class="n">${m0(u[6])}</td><td><span class="mini">✎</span></td></tr>`).join("")+`<tr class="new"><td><input class="cell" placeholder="رمز"></td><td><input class="cell" placeholder="+ وحدة جديدة…"></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+  else rows=B.map(b=>`<tr class="${b[5]?'':'off'}"><td>${N(b[0])}</td><td><b class="ltr">${b[1]}</b></td><td>${b[2]||'—'}</td><td>${b[3]||'—'}</td><td class="n">${m0(b[4])}</td><td><span class="mini">✎</span></td></tr>`).join("")+`<tr class="new"><td class="hint">تلقائي</td><td><input class="cell" placeholder="+ ماركة جديدة…"></td><td></td><td></td><td></td><td></td></tr>`;
+  const head=isU?'<tr><th>الرمز</th><th>الاسم</th><th>EN</th><th>النوع</th><th>كسور</th><th class="n">أصناف</th><th></th></tr>':'<tr><th>الكود</th><th>الماركة</th><th>العربي</th><th>البلد</th><th class="n">أصناف</th><th></th></tr>';
+  return win(`<div class="tb"><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="hint" style="margin:0">دوس على السطر يتعدّل مكانه · السطر الأصفر = إضافة</span></div><div class="content" style="flex-direction:column">${tabs("s4",[["u","📏 الوحدات",U.length],["b","🏷️ الماركات",B.length]])}<div class="scroll"><table class="tbl">${head}${rows}</table></div></div>`);}
+
+// 5) الوحدات بالنوع + معامل تحويل للأساسية
+function m5(){
+  const us=U.filter(u=>u[3]===ST.c5); if(!us.find(u=>u[0]===ST.s5)) ST.s5=us[0][0];
+  const base=us[0], u=UX[ST.s5];
+  const side=Object.keys(CAT).map(c=>`<div class="it ${ST.c5===c?'on':''}" data-set="c5" data-v="${c}"><span class="cat ${c}">${CAT[c]}</span><small>${U.filter(x=>x[3]===c).length}</small></div>`).join("");
+  const rows=us.map(x=>`<tr class="${x[0]===ST.s5?'sel':''} ${x[5]?'':'off'}" data-set="s5" data-v="${x[0]}" style="cursor:pointer"><td><span class="sym">${x[0]}</span></td><td><b>${x[1]}</b>${x===base?' <span class="def">الأساسية</span>':''}</td><td>${x===base?'1':`1 ${x[1]} = <span class="ltr">${m0(x[9])}</span> ${base[1]}`}</td><td class="n">${m0(x[6])}</td></tr>`).join("");
+  return win(tb("وحدة جديدة")+`<div class="content"><div class="side">${side}<div class="hint">نوع الوحدة = مجموعة، وكل نوع ليه وحدة أساسية.</div></div><div class="col" style="flex:1"><div class="scroll"><table class="tbl"><tr><th>الرمز</th><th>الوحدة</th><th>التحويل للأساسية</th><th class="n">أصناف</th></tr>${rows}</table></div>${gb("الوحدة المختارة",f("الرمز",`<span class="sym">${u[0]}</span>`)+f("الاسم",u[1])+f("المعامل",u===base?'1 (الأساسية)':`<span class="ltr">${m0(u[9])}</span> ${base[1]}`))}<div class="dim">⚠ ده تحويل <b>ثابت</b> (السنتي = 0.01 متر). أما «البكرة = 100 متر» أو «الكرتونة = 12 عدد» فبيختلف من صنف لصنف ← مكانه شاشة الأصناف.</div></div></div>`);}
+
+// 6) الماركات كروت + فهرس حروف
+function m6(){
+  const letters=[..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"], has=new Set(B.map(ini));
+  const bs=B.filter(b=>ST.az6==="all"||ini(b)===ST.az6);
+  if(bs.length&&!bs.find(b=>b[0]===ST.s6)) ST.s6=bs[0][0];
+  const b=BX[ST.s6];
+  const az=`<div class="az"><span class="${ST.az6==='all'?'on':''}" data-set="az6" data-v="all">الكل</span>${letters.map(l=>has.has(l)?`<span class="${ST.az6===l?'on':''}" data-set="az6" data-v="${l}">${l}</span>`:`<span class="no">${l}</span>`).join("")}</div>`;
+  const cards=bs.map(x=>`<div class="bcard ${x[0]===ST.s6?'sel':''} ${x[5]?'':'off'}" data-set="s6" data-v="${x[0]}">${logo(x)}<div class="tx"><b>${x[1]}</b><span style="color:var(--muted)">${x[3]||'—'} · ${m0(x[4])} صنف</span></div></div>`).join("");
+  return win(tb("ماركة جديدة")+`<div class="content" style="flex-direction:column"><div class="srch"><i>🔍 اسم الماركة…</i></div>${az}<div class="scroll"><div class="cards">${cards}</div></div><div class="hdr" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${logo(b)}<b class="ltr">${b[1]}</b>${b[2]?`<span>${b[2]}</span>`:''}${stB(b[5])}<span class="hint" style="margin:0">${N(b[0])} · ${b[3]||'—'} · ${m0(b[4])} صنف</span><span class="btn-s" style="margin-right:auto">أصناف الماركة</span><span class="btn-s g">فتح الفورم</span></div><div class="hint">الوحدات في تبويب تاني بنفس الشكل (كارت لكل وحدة برمزها).</div></div>`,"🏷️ الماركات — كروت — A-H CODE");}
+
+// 7) شريط جانبي + جدول + تفاصيل
+function m7(){
+  const isU=ST.t7==="u";
+  const side=`<div class="it ${isU?'on':''}" data-set="t7" data-v="u">📏 الوحدات<small>${U.length}</small></div>${isU?Object.keys(CAT).map(c=>`<div class="it" style="padding-right:14px;font-size:8px"><span class="cat ${c}">${CAT[c]}</span><small>${U.filter(x=>x[3]===c).length}</small></div>`).join(""):''}<div class="it ${!isU?'on':''}" data-set="t7" data-v="b">🏷️ الماركات<small>${B.length}</small></div><div class="hint" style="margin-top:auto">نفس فكرة «الحسابات الافتراضية».</div>`;
+  const det=isU?(u=>`<div class="hdr"><b><span class="sym">${u[0]}</span> ${u[1]}</b> ${catB(u)} ${decB(u)} ${stB(u[5])}${defB(u)}<div class="p">${u[2]} · ${m0(u[6])} صنف · من الأكسس: ${u[8]}</div></div>`)(UX[ST.s7u]):(b=>`<div class="hdr"><b>${N(b[0])} <span class="ltr">${b[1]}</span></b> ${stB(b[5])}<div class="p">${b[2]||'—'} · ${b[3]||'—'} · ${m0(b[4])} صنف · من الأكسس: <span class="ltr">${b[6]}</span></div></div>`)(BX[ST.s7b]);
+  return win(tb(isU?"وحدة جديدة":"ماركة جديدة")+`<div class="content"><div class="side">${side}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${isU?uTable(U,"s7u"):bTable(B,"s7b")}${det}</div></div>`);}
+
+// 8) فورم «جديد» بالتحقق
+const normB=s=>s.replace(/ /g," ").trim().replace(/\s+/g," ").toUpperCase();
+function m8(){
+  const isU=ST.t8==="u"; let body;
+  if(isU){
+    const sym=ST.n8sym.trim().toUpperCase(), dup=U.find(u=>u[0]===sym);
+    body=gb("وحدة جديدة",`<div class="f"><label>الرمز *</label><input class="lv ${dup||!sym?'bad':''}" data-st="n8sym" value="${ST.n8sym}"></div>${dup?`<div class="bad-line">✖ الرمز «${sym}» موجود (${dup[1]}) — الرمز مايتكررش</div>`:sym?`<div class="ok-line">✔ هيتحفظ «${sym}» (بيتحوّل حروف كبيرة لوحده)</div>`:'<div class="bad-line">✖ الرمز مطلوب</div>'}<div class="f"><label>الاسم *</label><i>كيلو جرام صافي</i></div><div class="f"><label>النوع</label>${sel("n8u",ST.n8u,Object.entries(CAT))}</div><label class="rad"><input type="checkbox" class="cb" data-chk="n8dec" ${ST.n8dec?'checked':''}> الكمية تقبل كسور</label><div class="hint">${ST.n8dec?'هيقبل 2.5 في الفواتير':'هيرفض 1.5 — رقم صحيح بس'} · جرّب الرمز: m · pcs · TON</div>`);
+  }else{
+    const nm=normB(ST.n8), dup=B.find(b=>normB(b[1])===nm);
+    body=gb("ماركة جديدة",f("الكود","BRD-013 (بيتولّد لوحده)","lock")+`<div class="f"><label>الاسم *</label><input class="lv ${dup||!nm?'bad':''}" data-st="n8" value="${ST.n8}"></div>${dup?`<div class="bad-line">✖ الماركة دي موجودة: ${N(dup[0])} «<span class="ltr">${dup[1]}</span>» — الاسم بيتقارن من غير حروف كبيرة/صغيرة ولا مسافات</div><div style="margin-top:3px"><span class="btn-s">افتح الموجودة</span></div>`:nm?`<div class="ok-line">✔ مفيش ماركة بالاسم ده — هتتحفظ «${ST.n8.trim()}»</div>`:'<div class="bad-line">✖ الاسم مطلوب</div>'}`+f("الاسم العربي","—")+f("بلد المنشأ","—")+`<div class="hint">جرّب تكتب: abb · Siemens · NEW BRAND</div>`);
+  }
+  return win(tb(isU?"وحدة جديدة":"ماركة جديدة","إضافة")+`<div class="content" style="flex-direction:column">${tabs("t8",[["u","📏 وحدة",""],["b","🏷️ ماركة",""]])}<div class="col" style="overflow:auto;max-width:340px">${body}</div><div class="hint">«حفظ» مايشتغلش غير والخانات سليمة · والقاعدة بتتأكد تاني (unique index) لو جهازين ضافوا نفس الاسم في نفس اللحظة.</div></div>`);}
+
+// 9) تنظيف بيانات الأكسس
+function m9(){
+  const uo=U.filter(u=>u[5]).map(u=>[u[0],`${u[0]} ${u[1]}`]);
+  const ur=AU.map((a,i)=>`<tr><td><span class="ltr">${a[0]}</span></td><td class="n">${m0(a[1])}</td><td class="arrow">←</td><td>${sel("au:"+i,AU9[i],uo)}</td></tr>`).join("");
+  const tot={};AU.forEach((a,i)=>tot[AU9[i]]=(tot[AU9[i]]||0)+a[1]);
+  const res=Object.entries(tot).map(([k,v])=>`<span class="sym">${k}</span> ${m0(v)}`).join(" · ");
+  const bo={merge:"دمج في واحدة",keep:"تفضل منفصلة",stop:"تتنقل موقوفة",drop:"ماتتنقلش",none:"تفضل من غير ماركة",local:"تتحط على «Local»"};
+  const br=AB.map((a,i)=>`<tr><td><b class="ltr">${a[0]}</b>${a[1]?`<div style="color:var(--muted);font-size:7.5px;white-space:normal">${a[1]}</div>`:''}</td><td>${sel("ab:"+i,AB9[i],i<3?[["merge",bo.merge],["keep",bo.keep]]:i===3?[["stop",bo.stop],["drop",bo.drop]]:[["none",bo.none],["local",bo.local]])}</td></tr>`).join("");
+  const merged=[0,1,2].filter(i=>AB9[i]==="merge").length, dropped=AB9[3]==="drop"?5:0;
+  return win(`<div class="tb"><span class="bt b-exp">معاينة النقل</span><span class="bt b-exit">خروج</span><span class="hint" style="margin:0">للنقل من الأكسس مرة واحدة — مع أي نموذج تاني</span></div><div class="content"><div class="col" style="flex:1"><div class="sec2">📏 الوحدة في الأكسس كانت نص على الصنف (اتكتبت بـ 9 أشكال)</div><div class="scroll"><table class="tbl"><tr><th>المكتوب في الأكسس</th><th class="n">أصناف</th><th></th><th>تبقى</th></tr>${ur}</table></div><div class="ok-line">النتيجة: ${res}</div></div><div class="col" style="flex:1"><div class="sec2">🏷️ الماركات: 118 في الأكسس</div><div class="scroll"><table class="tbl"><tr><th>الحالة</th><th>القرار</th></tr>${br}</table></div><div class="ok-line">هيتنقل ${118-merged-dropped} ماركة${merged?` (اتدمج ${merged})`:''}${dropped?` · اتشال ${dropped}`:''}</div><div class="hint">الأسماء بتتنضف: المسافات المخفية والزيادة بتتشال.</div></div></div>`,"🧹 تنظيف وحدات وماركات الأكسس — A-H CODE");}
+
+// 10) سجل واحد + جدول (زي FCompany)
+function m10(){
+  const isU=ST.t10==="u", L=isU?U:B; if(ST.i10>=L.length) ST.i10=0; const r=L[ST.i10];
+  const rec=isU?gb("الوحدة",`<div class="g2">${f("الرمز",`<span class="sym">${r[0]}</span>`)+f("الاسم",r[1])+f("EN",r[2])+f("النوع",CAT[r[3]])}</div>`):gb("الشركة المصنعة / الماركة",`<div class="g2">${f("الكود",N(r[0]),"lock")+f("الاسم",N(r[1]))+f("العربي",r[2]||"—")+f("البلد",r[3]||"—")}</div>`);
+  const nav=`<div class="nav"><span class="mini" data-nav="first">⏮ الأول</span><span class="mini" data-nav="prev">◀ السابق</span><b style="font-size:8.5px">${ST.i10+1} من ${L.length}</b><span class="mini" data-nav="next">التالي ▶</span><span class="mini" data-nav="last">الأخير ⏭</span></div>`;
+  const rows=L.map((x,i)=>`<tr class="${i===ST.i10?'sel':''} ${x[5]?'':'off'}" data-i10="${i}" style="cursor:pointer"><td>${isU?`<span class="sym">${x[0]}</span>`:N(x[0])}</td><td><b class="${isU?'':'ltr'}">${x[1]}</b></td><td class="n">${m0(isU?x[6]:x[4])}</td><td>${stB(x[5])}</td></tr>`).join("");
+  return win(tb(isU?"وحدة جديدة":"ماركة جديدة")+`<div class="content" style="flex-direction:column">${tabs("t10",[["b","🏷️ الشركات المصنعة",B.length],["u","📏 الوحدات",U.length]])}${rec}${nav}<div class="scroll"><table class="tbl"><tr><th>${isU?'الرمز':'الكود'}</th><th>الاسم</th><th class="n">أصناف</th><th>الحالة</th></tr>${rows}</table></div></div>`);}
+
+const M=[
+ ["تبويبين + فورم وقائمة","تبويب «الوحدات» وتبويب «الماركات» في شاشة واحدة، وجوه كل تبويب الفورم يمين والقائمة شمال (زي باقي شاشات التعريف).",m1],
+ ["الاتنين جنب بعض","الشاشة متقسمة نصين: الوحدات يمين والماركات شمال، كل نص بقايمته وأزراره وتفاصيل السطر المختار تحته — من غير تبويبات.",m2],
+ ["كروت أرقام فوق + تبويبين","فوق: الوحدات النشطة · الماركات النشطة · أصناف من غير ماركة · ماركات مش عليها أصناف. وتحت تبويبين بالفورم والقائمة.",m3],
+ ["جدول بتعديل مباشر (زي الإكسل)","جدول واحد لكل تبويب، تدوس على السطر يتعدّل مكانه، والسطر الأصفر تحت للإضافة — أسرع حاجة للبيانات الصغيرة دي.",m4],
+ ["الوحدات بأنواعها + التحويل","شريط بأنواع الوحدات (عدد · طول · وزن · مساحة · حجم · وقت)، وكل نوع ليه وحدة أساسية والباقي بمعامل ثابت (سنتي = 0.01 متر).",m5],
+ ["الماركات كروت + فهرس حروف","كل ماركة كارت بلوجو حروفها والبلد وعدد الأصناف، وفوق فهرس A–Z للبحث السريع (118 ماركة). الوحدات بنفس الشكل في تبويب.",m6],
+ ["شريط جانبي + جدول + تفاصيل","زي «الحسابات الافتراضية»: يمين شريط (الوحدات بأنواعها · الماركات)، وفي النص الجدول، وتحته تفاصيل السطر المختار.",m7],
+ ["فورم «جديد» بالتحقق","الخانات الزرقا شغالة: رمز الوحدة المتكرر، «تقبل كسور»، واسم الماركة المتكرر حتى لو بحروف صغيرة أو مسافات (himel = HIMEL).",m8],
+ ["تنظيف بيانات الأكسس","الوحدة كانت نص اتكتب بـ 9 أشكال ← تتوحد في 3، والماركات المتكررة تندمج، واللي مش مستخدمة تتنقل موقوفة. ده للنقل مرة واحدة، مع أي نموذج.",m9],
+ ["سجل واحد + جدول (زي الأكسس)","فوق سجل واحد بأزرار الأول / السابق / التالي / الأخير، وتحت القائمة كلها — شبه FCompany بس مضاف ليه الوحدات.",m10],
+];
+
+const NOTE=`<b>الشاشة دي بتعمل إيه:</b> تعريف <b>وحدات القياس</b> (جدول <span class="ltr">inv.units</span>) و<b>الماركات / الشركات المصنّعة</b> (جدول <span class="ltr">inv.item_brands</span>) اللي هتتختار على كل صنف في شاشة الأصناف بعدين. الشاشة <b>للتعريف بس</b> — مفيش أي أثر محاسبي.
+<br><b>كانت إيه في الأكسس:</b> <span class="ltr">FCompany</span> «الشركات المصنعة» في قسم «الأصناف + المخازن» — جدول <span class="ltr">tb-Company</span> فيه <b>118 ماركة</b> بالاسم بس (والأكتر استخدام SIEMENS · Local · ABB · KSA · Schneider). أما <b>الوحدة فمكانش ليها جدول</b> — كانت نص بيتكتب بإيد على كل صنف: «Unit» على 3,081 صنف من 3,117، و«Meter» و«KGM» و«كيلو» على الباقي (يعني 3 وحدات بس مكتوبة بـ 9 أشكال).
+<ul>
+<li><b>خانات الوحدة المقترحة:</b> الرمز (قصير ويظهر في الفاتورة — <span class="ltr">PCS · M · KG</span> — مطلوب ومايتكررش) · الاسم (مطلوب ومايتكررش) + EN · النوع (عدد / طول / وزن / مساحة / حجم / وقت) · <b>«الكمية تقبل كسور»</b> (المتر والكيلو آه، العدد لأ ← الفاتورة ترفض 1.5 عدد) · <b>الوحدة الافتراضية</b> (واحدة بس — بتتملى في الصنف الجديد) · نشط · ملاحظات.</li>
+<li><b>خانات الماركة المقترحة:</b> الكود (بيتولّد لوحده <span class="ltr">BRD-001</span>) · الاسم (مطلوب ومايتكررش <b>حتى لو بحروف كبيرة/صغيرة أو مسافات</b> — في الأكسس كان فيه HIMEL مرتين وSCHNEIDER مرتين) · الاسم العربي (اختياري) · بلد المنشأ (اختياري) · نشط · ملاحظات.</li>
+<li><b>الوحدات المتعددة للصنف</b> (كرتونة = 12 عدد · بكرة = 100 متر): بتختلف من صنف لصنف، فاقتراحي إنها تتعمل <b>على الصنف نفسه في شاشة الأصناف</b> (زي E3marEG: وحدة أساسية + وحدات تانية بمعامل)، والشاشة دي تعرّف أسامي الوحدات بس. المخزون بيتحسب دايماً بالوحدة الأساسية.</li>
+<li><b>الحماية:</b> الوحدة أو الماركة اللي عليها أصناف <b>ماتتمسحش</b> (FK RESTRICT) — تتوقف بس، والموقوفة ماتتختارش في صنف جديد · الاسم والرمز مايتكرروش (unique index على الاسم بعد التنضيف) · <span class="ltr">row_version</span> (جهازين) + سجل التعديلات · الكود جوه قفل.</li>
+<li><b>مكان الشاشة:</b> قسم «الأصناف + المخازن» 📦 ← بعد «المخازن».</li>
+</ul>`;
+
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>شاشة واحدة بتبويبين</b> «الوحدات» و«الماركات» (اقتراحي — زي اسم البند) ولا <b>زرارين منفصلين</b> في القايمة (شاشة لكل واحدة)؟</li>
+<li><b>الوحدات اللي تتعمل مع السكريبت:</b> اللي كانت في الأكسس (<b>عدد · متر · كيلو جرام</b>) + <b>طقم · كرتونة · لفة · سنتيمتر · متر مربع · لتر · ساعة</b> (اقتراحي) — ولا تشيل/تزوّد حاجة؟ والافتراضية = <b>«عدد»</b>؟</li>
+<li><b>الوحدات المتعددة للصنف</b> (كرتونة = 12 عدد): <b>تتعمل على الصنف في شاشة الأصناف</b> (اقتراحي) ولا تحويل عام ثابت هنا (النموذج 5) ولا <b>وحدة واحدة لكل صنف</b> زي الأكسس؟</li>
+<li><b>«الكمية تقبل كسور»</b> على الوحدة (المتر آه والعدد لأ): نضيفها (اقتراحي)؟</li>
+<li><b>نوع الوحدة</b> (عدد / طول / وزن…): نضيفه (اقتراحي — للترتيب والفلترة) ولا مالوش لازمة؟</li>
+<li><b>الماركات الـ 118 من الأكسس:</b> تتنقل مع <b>«نقل بيانات الأكسس»</b> في الآخر بعد التنضيف ودمج المكرر (اقتراحي — النموذج 9) ولا تتعمل دلوقتي مع السكريبت؟</li>
+<li><b>«Local» (645 صنف) و«KSA» (138 صنف):</b> تفضل ماركات زي ما هي (اقتراحي — Local = «محلي») ولا الأصناف دي تبقى من غير ماركة؟</li>
+<li><b>خانات الماركة:</b> الاسم + العربي + بلد المنشأ + ملاحظات (اقتراحي) ولا الاسم بس زي الأكسس؟ والكود <span class="ltr">BRD-001</span>؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+document.addEventListener("change",e=>{
+  const t=e.target, k=t.dataset.st;
+  if(t.dataset.chk){ST[t.dataset.chk]=t.checked;render();return;}
+  if(!k) return;
+  if(k.startsWith("au:")){AU9[k.slice(3)]=t.value;render();return;}
+  if(k.startsWith("ab:")){AB9[k.slice(3)]=t.value;render();return;}
+  ST[k]=t.value; render();
+});
+document.addEventListener("input",e=>{const t=e.target;if(t.matches("input.lv")&&t.dataset.st){ST[t.dataset.st]=t.value;}});
+document.addEventListener("focusout",e=>{const t=e.target;if(t.matches("input.lv")&&t.dataset.st){render();}});
+document.addEventListener("keydown",e=>{const t=e.target;if(e.key==="Enter"&&t.matches("input.lv")&&t.dataset.st){ST[t.dataset.st]=t.value;render();}});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const nv=e.target.closest("[data-nav]"); if(nv){const L=ST.t10==="u"?U:B,a=nv.dataset.nav;ST.i10=a==="first"?0:a==="last"?L.length-1:a==="prev"?Math.max(0,ST.i10-1):Math.min(L.length-1,ST.i10+1);render();return;}
+  const r=e.target.closest("[data-i10]"); if(r){ST.i10=+r.dataset.i10;render();return;}
+  const s=e.target.closest("[data-set]");
+  if(s){ST[s.dataset.set]=s.dataset.v; if(s.dataset.set==="t10") ST.i10=0; render();}
+});
+render();
+</script>
+</body>
+</html>
