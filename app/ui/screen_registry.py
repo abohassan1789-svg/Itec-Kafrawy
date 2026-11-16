@@ -97,6 +97,12 @@ def _item_categories() -> QWidget:
     return ItemCategoriesScreen()
 
 
+def _items() -> QWidget:
+    from app.ui.screens.items_screen import ItemsScreen
+
+    return ItemsScreen()
+
+
 def _customers() -> QWidget:
     from app.ui.screens.customers_screen import CustomersScreen
 
@@ -175,6 +181,7 @@ SCREEN_FACTORIES: dict[str, ScreenFactory] = {
     "warehouses": _warehouses,
     "units_brands": _units_brands,
     "item_categories": _item_categories,
+    "items": _items,
     "company": _company,
     "fiscal_years": _fiscal_years,
     "currencies": _currencies,

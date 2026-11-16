@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج الأصناف — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+.bal-p{color:#087443;font-weight:900}.bal-n{color:#B91C1C;font-weight:900}
+.wal{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:6px 7px;cursor:pointer;font-size:8px;line-height:1.5;border-top:4px solid var(--green)}
+.wal.usd{border-top-color:#2563EB}
+.wal.off{border-top-color:#94A3B8;background:#F8FAFC;color:#94A3B8}
+.wal.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.wal .big{font-size:12px;font-weight:900;direction:ltr;unicode-bidi:isolate;display:block;margin:2px 0}
+.wal .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.cur{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;direction:ltr;background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}
+.cur.usd{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.mainbar{background:var(--green-dark);color:#fff;display:flex;align-items:center;gap:6px;padding:5px 8px;flex-shrink:0;font-weight:800;font-size:9px}
+.mainbar .box{background:#fff;color:#111827;border-radius:4px;padding:1px 8px;font-weight:900;direction:ltr;font-size:10px}
+.mainbar .mini{background:#FDE68A;border-color:#F59E0B;color:#78350F}
+.rad{font-size:8.5px;font-weight:700;display:flex;gap:3px;align-items:center;cursor:pointer;margin-bottom:3px}
+.lim{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.lim span{display:block;height:100%;background:var(--green)}
+.lim.over span{background:#DC2626}
+</style>
+<style>
+.ico{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:5px;background:#ECFDF3;font-size:11px;flex-shrink:0}
+.ecard{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:5px 7px;cursor:pointer;font-size:8px;line-height:1.5;border-top:4px solid var(--green)}
+.ecard.g53{border-top-color:#2563EB}.ecard.g54{border-top-color:#B45309}
+.ecard.off{border-top-color:#94A3B8;background:#F8FAFC;color:#94A3B8}
+.ecard.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.ecard .big{font-size:11px;font-weight:900;direction:ltr;unicode-bidi:isolate;display:block;margin:1px 0}
+.ecard .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.grp{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;border:1px solid}
+.grp.g52{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.grp.g53{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.grp.g54{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.acc-row{display:flex;gap:4px;align-items:center}
+.rec{background:#fff;border:1px solid #94A3B8;border-radius:4px;padding:6px}
+.rec .ah{background:#1F4E79;color:#fff;font-weight:900;padding:3px 6px;border-radius:3px;font-size:9px;margin-bottom:5px}
+</style>
+<style>
+.ecard.site{border-top-color:#2563EB}.ecard.virt{border-top-color:#B45309}
+.grp.main{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.grp.site{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.grp.virt{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.def{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;background:#1A7A3C;color:#fff}
+.dim{background:#F5F3FF;border:1px dashed #C4B5FD;border-radius:6px;padding:4px 6px;font-size:8px;color:#5B21B6;font-weight:700;line-height:1.6}
+</style>
+<style>
+.cat{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;border:1px solid}
+.cat.cnt{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.cat.len{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.cat.wt{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cat.area{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.cat.vol{background:#ECFEFF;color:#0E7490;border-color:#A5F3FC}
+.cat.time{background:#FDF2F8;color:#9D174D;border-color:#FBCFE8}
+.sym{display:inline-block;min-width:26px;text-align:center;border-radius:4px;padding:0 4px;font-size:8px;font-weight:900;background:#1F2937;color:#fff;direction:ltr}
+.logo{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0;direction:ltr}
+.logo.off{background:#94A3B8}
+.bcard{background:#fff;border:1px solid var(--card-border);border-radius:8px;padding:5px 6px;cursor:pointer;font-size:8px;line-height:1.5;display:flex;gap:5px;align-items:center}
+.bcard.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.bcard.off{background:#F8FAFC;color:#94A3B8}
+.bcard .tx{min-width:0;flex:1}
+.bcard .tx b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:right}
+.az{display:flex;gap:1px;flex-wrap:wrap;flex-shrink:0}
+.az span{font-size:7.5px;font-weight:900;padding:1px 3px;border-radius:3px;background:#E2E8F0;color:#475569;cursor:pointer;direction:ltr}
+.az span.on{background:var(--green);color:#fff}
+.az span.no{opacity:.35;cursor:default}
+.split{display:flex;gap:7px;flex:1;min-height:0}
+.pane{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px}
+.pane h4{margin:0 0 4px;color:var(--green);font-size:9.5px;font-weight:900;display:flex;align-items:center;gap:4px}
+.pane h4 .btn-s:first-of-type{margin-right:auto}
+.tbl td input.cell{width:100%;height:14px;border:1px solid #2563EB;border-radius:3px;background:#F5F9FF;font:inherit;font-size:8px;font-weight:800;padding:0 3px}
+.tbl tr.new td{background:#FFFBEB}
+.arrow{color:var(--green);font-weight:900}
+</style>
+<style>
+.cc0{border-top-color:#137A38}.cc1{border-top-color:#2563EB}.cc2{border-top-color:#B45309}.cc3{border-top-color:#7C3AED}.cc4{border-top-color:#0E7490}.cc5{border-top-color:#9D174D}.cc6{border-top-color:#475569}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.acc{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:800;border:1px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;white-space:nowrap}
+.acc.df{border-color:#E2E8F0;background:#F8FAFC;color:#64748B;font-weight:700}
+.je{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.je th{background:#1F4E79;color:#fff;padding:3px;text-align:right}
+.je td{padding:3px;border-bottom:1px solid #EEF2F6}
+.je .n{text-align:left;direction:ltr}
+.path{color:var(--muted);font-size:7.5px;font-weight:700}
+.svc{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;background:#FDF2F8;color:#9D174D;border:1px solid #FBCFE8}
+</style>
+<style>
+.ucard{display:inline-flex;gap:3px;align-items:center;border:1px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;direction:ltr}
+.svc{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;background:#FDF2F8;color:#9D174D;border:1px solid #FBCFE8}
+.brand{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;background:#F1F5F9;color:#334155;border:1px solid #E2E8F0;direction:ltr}
+.catp{display:inline-block;border-radius:4px;padding:0 4px;font-size:7.5px;font-weight:900;background:#ECFDF3;color:#087443;border:1px solid #B7E4C7;direction:ltr}
+.pn{direction:ltr;unicode-bidi:isolate;font-family:Consolas,monospace;font-size:8px;color:#1F2937}
+.soon{background:repeating-linear-gradient(45deg,#F8FAFC,#F8FAFC 6px,#F1F5F9 6px,#F1F5F9 12px);border:1px dashed #94A3B8;border-radius:6px;padding:4px 6px;font-size:8px;color:#475569;font-weight:700}
+.warn{background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;padding:4px 6px;font-size:8px;color:#92400E;font-weight:800}
+.pager{display:flex;gap:3px;align-items:center;justify-content:flex-end;margin-top:3px;font-size:8px;color:var(--muted);font-weight:700}
+.pager .mini.on{background:var(--green);color:#fff;border-color:var(--green)}
+.facet{font-size:8px;font-weight:800;color:#334155;margin:4px 0 2px}
+.facet label{display:flex;gap:3px;align-items:center;font-weight:700;cursor:pointer;padding:1px 0}
+.facet label small{margin-right:auto;color:var(--muted)}
+.dlg{position:absolute;inset:40px 50px 30px;background:#fff;border:1px solid #64748B;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;flex-direction:column;z-index:3}
+.dlg .dt{background:var(--green);color:#fff;font-weight:900;padding:4px 8px;border-radius:7px 7px 0 0;font-size:9.5px;display:flex;justify-content:space-between}
+.shade{position:absolute;inset:20px 0 0;background:rgba(15,23,42,.35);z-index:2}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة الأصناف (المرحلة 3د · الشاشة 4 والأخيرة)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل «المخازن» و«الوحدات والماركات» و«أنواع الأصناف» — الفرق في الترتيب. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>الأصناف والأرقام هنا أمثلة وهمية</b> (مش من بيانات الأكسس)، والأنواع والماركات من الشاشات اللي خلصت. <b>الخانات الزرقا شغالة</b>: دوس على أي سطر، غيّر التبويبات والفلاتر، جرّب «جديد» في 8.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== الأنواع (من شاشة أنواع الأصناف) والماركات والوحدات والمخازن
+const CATS={1:["BMS",""],2:["Installation",""],3:["MCC",""],4:["Office",""],5:["Panel",""],6:["ABB",5],7:["HIMEL",5],12:["Workshop",""]};
+const catPath=id=>CATS[id][1]?`${CATS[CATS[id][1]][0]} / ${CATS[id][0]}`:CATS[id][0];
+const CAT_SVC={2:false};
+const ACC={1:{inv:"1105",sal:"4101",cog:"51"},2:{inv:"1105",sal:"4102",cog:"51"},3:{inv:"1105",sal:"4101",cog:"51"},4:{inv:"1105",sal:"4101",cog:"51"},5:{inv:"1105",sal:"4102",cog:"51"},6:{inv:"1105",sal:"4102",cog:"51"},7:{inv:"1105",sal:"4102",cog:"51"},12:{inv:"1105",sal:"4101",cog:"51"}};
+const UNITS={PCS:"عدد",M:"متر",KG:"كيلو جرام",BOX:"كرتونة",ROLL:"لفة",SET:"طقم",HR:"ساعة"};
+const WHS=["المخزن الرئيسي","مخزن الموقع","المخزن الوهمي"];
+// ===== الأصناف (أمثلة وهمية):
+// [0 الكود، 1 الاسم، 2 رقم الكتالوج، 3 النوع، 4 الماركة، 5 الوحدة، 6 خدمي، 7 المخزن، 8 سعر البيع، 9 حد الطلب، 10 نشط، 11 الوصف، 12 وحدات تانية [[وحدة، معامل]]، 13 الرصيد (بعد دفتر المخزون)]
+const I=[
+ ["ITM-0001","Contactor 3P 9A 220V","CT-0903-220","3","Schneider","PCS",false,0,850,10,true,"كونتاكتور 3 بول 9 أمبير ملف 220 فولت",[["BOX",10]],42],
+ ["ITM-0002","MCB 1P 16A C-Curve","MB-1P16C","6","ABB","PCS",false,0,165,50,true,"قاطع صغير 1 بول 16 أمبير منحنى C",[["BOX",12]],310],
+ ["ITM-0003","MCCB 3P 250A 36kA","MC-3P250-36","6","ABB","PCS",false,0,14500,2,true,"قاطع مقولب 3 بول 250 أمبير",[],5],
+ ["ITM-0004","Cable 4x16 mm² Cu/XLPE","CB-4X16-XL","2","El Sewedy","M",false,1,420,100,true,"كابل نحاس 4×16 مم معزول XLPE",[["ROLL",100]],860],
+ ["ITM-0005","Enclosure 600x800x250 IP55","EN-608025","7","HIMEL","PCS",false,0,6200,1,true,"صندوق لوحة معدني 60×80×25",[],3],
+ ["ITM-0006","DDC Controller 24 I/O","DDC-24IO","1","Honeywell","PCS",false,0,22000,1,true,"كنترولر BMS عدد 24 مدخل/مخرج",[],2],
+ ["ITM-0007","Temperature Sensor Duct","TS-DUCT-10K","1","Honeywell","PCS",false,0,1350,5,true,"حساس حرارة دكت NTC 10K",[["BOX",20]],18],
+ ["ITM-0008","Installation labor (hour)","","2","","HR",true,0,350,0,true,"ساعة تركيب فني — خدمي من غير مخزون",[],null],
+ ["ITM-0009","Busbar Cu 30x5 mm","BB-CU-3005","5","","KG",false,0,610,25,true,"بسبار نحاس 30×5 بالكيلو",[["M",0.445]],140.5],
+ ["ITM-0010","Printer paper A4","","4","","BOX",false,0,240,5,true,"ورق طباعة A4 — كرتونة 5 رزم",[],12],
+ ["ITM-0011","Cable lug 16 mm²","LG-16","12","","PCS",false,0,6,200,true,"وش كابل 16 مم",[["BOX",100]],1450],
+ ["ITM-0012","PLC CPU 1214C","PLC-1214C","3","Siemens","PCS",false,0,18500,1,false,"PLC — موقوف (اتغيّر الموديل)",[],0],
+];
+const BRANDS=[...new Set(I.map(x=>x[4]).filter(Boolean))].sort();
+const IX=Object.fromEntries(I.map(x=>[x[0],x]));
+const N=c=>`<span class="ltr">${c}</span>`;
+const m0=n=>n==null?"—":Number(n).toLocaleString("en-US",{maximumFractionDigits:3});
+const stB=a=>a?'<span class="bdg ok">نشط</span>':'<span class="bdg x">موقوف</span>';
+const svcB=x=>x[6]?' <span class="svc">خدمي</span>':'';
+const catB=x=>`<span class="catp">${catPath(x[3])}</span>`;
+const brB=x=>x[4]?`<span class="brand">${x[4]}</span>`:'<span style="color:#94A3B8">—</span>';
+const uB=x=>`<span class="sym">${x[5]}</span>`;
+const pn=x=>x[2]?`<span class="pn">${x[2]}</span>`:'<span style="color:#94A3B8">—</span>';
+const balB=x=>x[6]?'<span style="color:#94A3B8">خدمي</span>':(x[13]<=x[9]?`<span class="bal-n">${m0(x[13])}</span>`:`<span class="bal-p">${m0(x[13])}</span>`);
+
+const ST={s1:"ITM-0002",s2:"ITM-0004",c2:"",s3:"ITM-0001",s4:"ITM-0009",t4:0,s5:"ITM-0003",dlg5:true,s6:"ITM-0004",
+  s7:"ITM-0006",fc7:"",fb7:"",fs7:"",s9:0,i10:1,
+  n8:"contactor 3p 9a 220v",p8:"CT-0903-220",c8:"3",b8:"Schneider",u8:"PCS",x8:"BOX",f8:"10",sv8:false};
+
+function win(inner,title="📦 الأصناف — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+function tb(word="صنف جديد",mode="عرض",extra=""){const ed=mode!=="عرض";return `<div class="tb"><span class="bt ${ed?'b-dis':'b-new'}">${word}</span>${extra}<span class="bt ${ed?'b-dis':'b-edit'}">تعديل</span><span class="bt ${ed?'b-save':'b-dis'}">حفظ</span><span class="bt ${ed?'b-can':'b-dis'}">إلغاء</span><span class="bt ${ed?'b-dis':'b-del'}">حذف</span><span class="bt ${ed?'b-dis':'b-tog'}">إيقاف / تفعيل</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span><span class="mode ${ed?'ed':''}">${mode}</span></div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+function sel(key,val,opts,cls=""){return `<select class="lv ${cls}" data-st="${key}">${opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return `<option value="${v}" ${String(v)===String(val)?'selected':''}>${t}</option>`;}).join("")}</select>`;}
+const kp=(t,v,k="")=>`<div class="kp ${k}"><small>${t}</small><b>${v}</b></div>`;
+const unitsTxt=x=>`${UNITS[x[5]]} (${x[5]})`+(x[12].length?" · "+x[12].map(u=>`${UNITS[u[0]]} = ${m0(u[1])} ${UNITS[x[5]]}`).join(" · "):"");
+const accTxt=x=>{const a=ACC[x[3]];return `${N(a.inv)} مخزون · ${N(a.sal)} مبيعات · ${N(a.cog)} تكلفة`;};
+const pager=(n=3117)=>`<div class="pager">${m0(n)} صنف · صفحة <span class="mini on">1</span><span class="mini">2</span><span class="mini">3</span>… <span class="mini">32</span> (100 في الصفحة)</div>`;
+
+function iTable(rows,key,cols){
+  const C={code:["الكود",x=>N(x[0])],name:["الصنف",x=>`<b class="ltr">${x[1]}</b>${svcB(x)}`],pn:["رقم الكتالوج",pn],cat:["النوع",catB],br:["الماركة",brB],u:["الوحدة",uB],
+    pr:["سعر البيع",x=>`<span class="n">${m0(x[8])}</span>`],bal:["الرصيد",balB],st:["الحالة",x=>stB(x[10])]};
+  const h=cols.map(c=>`<th>${C[c][0]}</th>`).join("");
+  const b=rows.map(x=>`<tr class="${x[0]===ST[key]?'sel':''} ${x[10]?'':'off'}" data-set="${key}" data-v="${x[0]}" style="cursor:pointer">${cols.map(c=>`<td>${C[c][1](x)}</td>`).join("")}</tr>`).join("");
+  return `<div class="scroll"><table class="tbl"><tr>${h}</tr>${b}</table></div>`;}
+function iForm(x){
+  return gb("بيانات الصنف",f("الكود",N(x[0]),"lock")+f("الاسم",N(x[1]))+f("رقم الكتالوج",x[2]?`<span class="pn">${x[2]}</span>`:"—")+f("الوصف",x[11])+f("النوع",`<span class="ltr">${catPath(x[3])}</span>`)+f("الماركة",x[4]||"—")+f("الحالة",x[10]?"نشط":"موقوف","lock"))
+   +gb("الوحدات والبيع",f("الوحدة",unitsTxt(x))+f("نوع الصنف",x[6]?"خدمي (من غير مخزون)":"بضاعة (ليها مخزون)")+f("المخزن الافتراضي",WHS[x[7]])+f("كود الضريبة","ض.ق.م 14% (الافتراضي)")+f("سعر البيع",m0(x[8]))+f("حد الطلب",x[6]?"—":m0(x[9])))
+   +gb("الحسابات (من النوع)",f("الحسابات",accTxt(x),"lock"));}
+const cnt=n=>`<div class="cnt">${n??I.length} صنف ظاهر · ${I.filter(x=>x[10]).length} نشط · ${I.filter(x=>x[6]).length} خدمي — في الأكسس 3,117 صنف</div>`;
+
+// 1) فورم يمين + قائمة شمال
+function m1(){
+  return win(tb()+`<div class="content"><div class="col" style="width:47%;overflow:auto">${iForm(IX[ST.s1])}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 الاسم أو الكود أو رقم الكتالوج… (F1)</i><span class="chipf on">الكل</span><span class="chipf">نشط</span><span class="chipf">موقوف</span></div>${iTable(I,"s1",["code","name","cat","u","st"])}${pager()}</div></div>`);}
+
+// 2) شجرة الأنواع + جدول + تفاصيل تحت
+function m2(){
+  const x=IX[ST.s2];
+  const roots=Object.entries(CATS).filter(([,c])=>!c[1]);
+  const n=id=>I.filter(y=>y[3]===id||CATS[y[3]][1]==id).length;
+  const node=(id,lv)=>`<div class="${ST.c2===id?'sel':''}" data-set="c2" data-v="${id}" style="padding-right:${4+lv*10}px"><span class="tg">${lv?'':'▾'}</span><b class="ltr">${CATS[id][0]}</b><span style="margin-right:auto;color:var(--muted)">${n(+id)}</span></div>`;
+  const tree=`<div class="${ST.c2===''?'sel':''}" data-set="c2" data-v=""><b>كل الأنواع</b><span style="margin-right:auto;color:var(--muted)">${I.length}</span></div>`+roots.map(([id])=>node(id,0)+Object.entries(CATS).filter(([,c])=>c[1]==id).map(([k])=>node(k,1)).join("")).join("");
+  const rows=ST.c2?I.filter(y=>y[3]===ST.c2||CATS[y[3]][1]==ST.c2):I;
+  return win(tb()+`<div class="content"><div class="col" style="width:24%"><div class="srch"><i>🔍 نوع…</i></div><div class="scroll tree">${tree}</div><div class="cnt">الأب بيجيب ولاده</div></div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث في الأصناف…</i></div>${iTable(rows,"s2",["code","name","br","u","st"])}<div class="hdr" style="margin-top:4px"><b class="ltr">${x[1]}</b> ${stB(x[10])}${svcB(x)}<div class="p">${N(x[0])} · ${x[2]?`<span class="pn">${x[2]}</span> · `:''}${catB(x)} · ${brB(x)} · ${unitsTxt(x)} · سعر البيع ${m0(x[8])}</div></div></div></div>`);}
+
+// 3) كروت أرقام فوق + قائمة وفورم
+function m3(){
+  const k=kp("أصناف نشطة",I.filter(x=>x[10]).length,"g")+kp("أصناف خدمية",I.filter(x=>x[6]).length,"b")+kp("تحت حد الطلب",I.filter(x=>!x[6]&&x[10]&&x[13]<=x[9]).length,"r")+kp("من غير نوع","24","r");
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="kpis">${k}</div><div style="display:flex;gap:7px;flex:1;min-height:0"><div class="col" style="width:45%;overflow:auto">${iForm(IX[ST.s3])}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${iTable(I,"s3",["code","name","u","bal"])}</div></div></div>`);}
+
+// 4) كارت الصنف بتبويبات
+function m4(){
+  const x=IX[ST.s4], T=["البيانات","الوحدات","البيع والضريبة","الحسابات","الرصيد والحركة"];
+  const tabs=`<div class="itabs">${T.map((t,i)=>`<span class="${ST.t4===i?'on':''}" data-set="t4" data-v="${i}" data-num="1">${t}</span>`).join("")}</div>`;
+  const ut=`<table class="tbl"><tr><th>الوحدة</th><th>الرمز</th><th class="n">= كام ${UNITS[x[5]]}</th><th>للبيع</th><th>للشراء</th></tr><tr class="sec"><td>${UNITS[x[5]]} (الأساسية)</td><td>${uB(x)}</td><td class="n">1</td><td>✔</td><td>✔</td></tr>${x[12].map(u=>`<tr><td>${UNITS[u[0]]}</td><td><span class="sym">${u[0]}</span></td><td class="n">${m0(u[1])}</td><td>✔</td><td>✔</td></tr>`).join("")}</table><div class="hint">المخزون والتكلفة دايماً بالوحدة الأساسية — الفاتورة بتحوّل لوحدها.</div>`;
+  const pages=[gb("البيانات",f("الكود",N(x[0]),"lock")+f("الاسم",N(x[1]))+f("رقم الكتالوج",x[2]?`<span class="pn">${x[2]}</span>`:"—")+f("الوصف",x[11])+f("النوع",`<span class="ltr">${catPath(x[3])}</span>`)+f("الماركة",x[4]||"—")),
+    gb("الوحدات",ut),
+    gb("البيع والضريبة",f("نوع الصنف",x[6]?"خدمي":"بضاعة")+f("كود الضريبة","ض.ق.م 14%")+f("سعر البيع",m0(x[8]))+f("حد الطلب",m0(x[9]))+f("المخزن الافتراضي",WHS[x[7]])),
+    gb("الحسابات (بتيجي من النوع — تتغيّر من «أنواع الأصناف»)",f("المخزون",N(ACC[x[3]].inv),"lock")+f("المبيعات",N(ACC[x[3]].sal),"lock")+f("التكلفة",N(ACC[x[3]].cog),"lock")),
+    `<div class="soon" style="margin-top:6px">بعد «دفتر المخزون» (المرحلة 6): الرصيد في كل مخزن (فاتورة / بيان) · متوسط التكلفة · آخر شراء وآخر بيع · كارت الصنف.<br>مثال: المخزن الرئيسي ${m0(x[13])} ${UNITS[x[5]]} · متوسط التكلفة —</div>`];
+  return win(tb()+`<div class="content"><div class="col" style="width:52%"><div class="hdr"><b class="ltr">${x[1]}</b> ${stB(x[10])}${svcB(x)}<div class="p">${N(x[0])} · ${catB(x)} · ${brB(x)}</div></div>${tabs}<div class="scroll">${pages[ST.t4]}</div></div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${iTable(I,"s4",["code","name","u"])}${pager()}</div></div>`);}
+
+// 5) جدول كبير + نافذة منبثقة للتعديل
+function m5(){
+  const x=IX[ST.s5];
+  const dlg=ST.dlg5?`<div class="shade"></div><div class="dlg"><div class="dt"><span>تعديل صنف — ${x[0]}</span><span data-set="dlg5" data-v="" style="cursor:pointer">✕</span></div><div style="padding:6px;overflow:auto;flex:1"><div class="g2">${f("الاسم",N(x[1]))+f("رقم الكتالوج",x[2]?`<span class="pn">${x[2]}</span>`:"—")+f("النوع",`<span class="ltr">${catPath(x[3])}</span>`)+f("الماركة",x[4]||"—")+f("الوحدة",unitsTxt(x))+f("سعر البيع",m0(x[8]))+f("الضريبة","ض.ق.م 14%")+f("المخزن",WHS[x[7]])}</div>${f("الوصف",x[11])}</div><div class="tb" style="justify-content:flex-start"><span class="bt b-save">حفظ</span><span class="bt b-can">إلغاء</span></div></div>`:'';
+  return win(`<div class="tb"><span class="bt b-new">صنف جديد</span><span class="bt b-edit" data-set="dlg5" data-v="1" style="cursor:pointer">تعديل (Enter)</span><span class="bt b-del">حذف</span><span class="bt b-tog">إيقاف / تفعيل</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span></div><div class="content" style="flex-direction:column"><div class="srch"><i>🔍 بحث…</i><span class="chipf on">كل الأنواع ▾</span><span class="chipf">كل الماركات ▾</span><span class="chipf">نشط</span></div>${iTable(I,"s5",["code","name","pn","cat","br","u","pr","st"])}${pager()}</div>${dlg}`);}
+
+// 6) قائمة + لوحة جانبية بالرصيد في كل مخزن
+function m6(){
+  const x=IX[ST.s6];
+  const rows=x[6]?'<tr><td colspan="3" style="color:#94A3B8">صنف خدمي — مالوش مخزون</td></tr>':`<tr><td>المخزن الرئيسي</td><td class="n">${m0(x[13]*0.8)}</td><td class="n">${m0(x[13]*0.1)}</td></tr><tr><td>مخزن الموقع</td><td class="n">${m0(x[13]*0.1)}</td><td class="n">0</td></tr><tr class="tot"><td>الإجمالي</td><td class="n">${m0(x[13]*0.9)}</td><td class="n">${m0(x[13]*0.1)}</td></tr>`;
+  return win(tb()+`<div class="content"><div class="col" style="width:42%;overflow:auto"><div class="hdr"><b class="ltr">${x[1]}</b> ${stB(x[10])}${svcB(x)}<div class="p">${N(x[0])} · ${pn(x)} · ${catB(x)} · ${brB(x)}</div></div>${gb("الوحدات والسعر",f("الوحدة",unitsTxt(x))+f("سعر البيع",m0(x[8]))+f("حد الطلب",m0(x[9])))}${gb("الرصيد في المخازن (مثال — بعد دفتر المخزون)",`<table class="tbl"><tr><th>المخزن</th><th class="n">فاتورة</th><th class="n">بيان</th></tr>${rows}</table>`)}<div class="soon" style="margin-top:5px">آخر حركة · متوسط التكلفة · كارت الصنف — بيشتغلوا مع المرحلة 6</div></div><div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${iTable(I,"s6",["code","name","u","bal","st"])}${pager()}</div></div>`);}
+
+// 7) شريط فلاتر جانبي + جدول + تفاصيل
+function m7(){
+  const x=IX[ST.s7];
+  const cats=Object.keys(CATS).filter(id=>I.some(y=>y[3]===id));
+  const rows=I.filter(y=>(!ST.fc7||y[3]===ST.fc7)&&(!ST.fb7||y[4]===ST.fb7)&&(!ST.fs7||(ST.fs7==="svc"?y[6]:!y[6])));
+  const facet=(t,key,opts)=>`<div class="facet">${t}${opts.map(([v,l,n])=>`<label data-set="${key}" data-v="${v}"><input type="radio" class="cb" ${ST[key]===v?'checked':''}> ${l}<small>${n}</small></label>`).join("")}</div>`;
+  const side=`<div class="side" style="width:128px;overflow:auto">${facet("النوع","fc7",[["","الكل",I.length],...cats.map(id=>[id,catPath(id),I.filter(y=>y[3]===id).length])])}${facet("الماركة","fb7",[["","الكل",I.length],...BRANDS.map(b=>[b,b,I.filter(y=>y[4]===b).length])])}${facet("نوع الصنف","fs7",[["","الكل",I.length],["goods","بضاعة",I.filter(y=>!y[6]).length],["svc","خدمي",I.filter(y=>y[6]).length]])}</div>`;
+  return win(tb()+`<div class="content">${side}<div class="col" style="flex:1"><div class="srch"><i>🔍 بحث…</i></div>${iTable(rows,"s7",["code","name","br","u","st"])}<div class="cnt">${rows.length} من ${I.length} صنف</div><div class="hdr" style="margin-top:4px"><b class="ltr">${x[1]}</b> ${stB(x[10])}${svcB(x)}<div class="p">${N(x[0])} · ${pn(x)} · ${catB(x)} · ${unitsTxt(x)} · سعر البيع ${m0(x[8])} · ${WHS[x[7]]}</div></div></div></div>`);}
+
+// 8) «جديد» بالتحقق
+function m8(){
+  const name=ST.n8.trim(), dup=I.find(y=>y[1].toLowerCase()===name.toLowerCase());
+  const pdup=ST.p8.trim()&&I.find(y=>y[2]&&y[2].toLowerCase()===ST.p8.trim().toLowerCase()&&y[4]===ST.b8);
+  const fac=Number(ST.f8), badF=!(fac>0)||ST.x8===ST.u8;
+  const svc=ST.sv8;
+  const catOpts=Object.keys(CATS).map(id=>[id,catPath(id)]);
+  const lines=[];
+  if(!name) lines.push(['bad','الاسم مطلوب.']);
+  else if(dup) lines.push(['warn',`⚠ فيه صنف بنفس الاسم: ${dup[0]} «${dup[1]}» — تقدر تكمّل (الاسم مش لازم يبقى فريد) بس اتأكد إنه مش نفس الصنف.`]);
+  else lines.push(['ok','✔ الاسم مفيش زيه.']);
+  if(pdup) lines.push(['warn',`⚠ رقم الكتالوج ده موجود على ${pdup[0]} بنفس الماركة ${pdup[4]}.`]);
+  if(ST.x8&&badF) lines.push(['bad','المعامل لازم أكبر من صفر والوحدة التانية غير الأساسية.']);
+  if(ST.c8==="2"&&!svc) lines.push(['warn','نوع «Installation» — لو الصنف ده شغل تركيب علّمه «خدمي».']);
+  const ln=lines.map(([k,t])=>k==='ok'?`<div class="ok-line">${t}</div>`:k==='bad'?`<div class="bad-line">${t}</div>`:`<div class="warn" style="margin-top:2px">${t}</div>`).join("");
+  return win(tb("صنف جديد","جديد")+`<div class="content"><div class="col" style="flex:1;overflow:auto">${gb("صنف جديد",f("الكود","ITM-0013 (مقترح)","lock")+`<div class="f"><label>الاسم *</label><input class="lv" data-st="n8" value="${ST.n8}" dir="ltr"></div><div class="f"><label>رقم الكتالوج</label><input class="lv" data-st="p8" value="${ST.p8}" dir="ltr"></div><div class="f"><label>النوع</label>${sel("c8",ST.c8,catOpts)}</div><div class="f"><label>الماركة</label>${sel("b8",ST.b8,[["","—"],...BRANDS.map(b=>[b,b])])}</div><div class="f"><label>الوحدة الأساسية</label>${sel("u8",ST.u8,Object.entries(UNITS).map(([k,v])=>[k,`${v} (${k})`]))}</div><div class="f"><label>وحدة تانية</label>${sel("x8",ST.x8,[["","— مفيش —"],...Object.entries(UNITS).map(([k,v])=>[k,`${v} (${k})`])])}${ST.x8?`<span style="font-size:8px;font-weight:800">= </span><input class="lv" data-st="f8" value="${ST.f8}" style="max-width:40px" dir="ltr"><span style="font-size:8px;font-weight:800">${UNITS[ST.u8]}</span>`:''}</div><div class="f"><label>خدمي</label><input type="checkbox" class="cb" data-chk="sv8" ${svc?'checked':''}> <span style="font-size:8px">من غير مخزون (بياخدها من النوع لو النوع «خدمي»)</span></div>`)}</div><div class="col" style="width:44%;overflow:auto">${gb("التحقق وقت الكتابة",ln)}${gb("هياخد من النوع",`<div class="f"><label>الحسابات</label><i class="lock">${accTxt(["","","",ST.c8])}</i></div>`+f("المخزن الافتراضي","المخزن الرئيسي (الافتراضي)")+f("الضريبة","ض.ق.م 14% (الافتراضي)"))}<div class="hint">جرّب: غيّر الاسم لحاجة جديدة · امسح رقم الكتالوج · خلّي المعامل 0 · اختار Installation.</div></div></div>`);}
+
+// 9) تنظيف أصناف الأكسس
+function m9(){
+  const T=[["الوحدات","9 كتابات للوحدة (Unit · unit · ك · Meter · KGM · كيلو…)","← 3 وحدات: عدد (PCS) · متر (M) · كيلو جرام (KG)",3117],
+    ["الاسم الفاضي","18 صنف من غير اسم","← ياخدوا الوصف كاسم، ولو الوصف فاضي كمان ← «صنف بدون اسم» + الكود القديم",18],
+    ["الأسماء المتكررة","حوالي 18 اسم متكرر","← يتنقلوا زي ما هم (التكرار تنبيه بس) + تقرير بيهم تراجعه",18],
+    ["خانة code القديمة","1,765 صنف فيها نص (كتير منها نفس الاسم)","← لو غير الاسم تتحط في «الملاحظات» — والكود الجديد ITM-0001 بالترتيب",1765],
+    ["number1","3,112 صنف — أرقام زي 1203 أو أكواد مصنّع زي ABB","← «رقم الكتالوج» (مش فريد — فيه «1» على 113 صنف)",3112],
+    ["القسم (TypeShop)","13 قسم + 24 صنف من غير قسم","← أنواع الأصناف (Panel/ABB ← Panel / ABB) · اللي من غير قسم ← من غير نوع",3117],
+    ["الشركة المصنعة","114 ماركة مستخدمة","← الماركات بعد التنضيف (HIMEL المكرر ← واحدة)",3094],
+    ["DateAdd","تاريخ الإضافة على 1,351 صنف","← تاريخ الإنشاء",1351]];
+  const rows=T.map((t,i)=>`<tr class="${ST.s9===i?'sel':''}" data-set="s9" data-v="${i}" data-num="1" style="cursor:pointer"><td><b>${t[0]}</b></td><td style="white-space:normal">${t[1]}</td><td style="white-space:normal;color:#087443;font-weight:800">${t[2]}</td><td class="n">${m0(t[3])}</td></tr>`).join("");
+  return win(`<div class="tb"><span class="bt b-save">معاينة النقل</span><span class="bt b-ref">تقرير المشاكل (إكسل)</span><span class="bt b-exit">خروج</span><span class="hint" style="margin:0">بيشتغل مرة واحدة مع «نقل بيانات الأكسس» — مع أي نموذج</span></div><div class="content" style="flex-direction:column"><div class="scroll"><table class="tbl"><tr><th>الخانة</th><th>في الأكسس</th><th>هتبقى</th><th class="n">صنف</th></tr>${rows}</table></div><div class="ok-line">الأرصدة الافتتاحية بتتنقل مع «دفتر المخزون» (لكل مخزن + فاتورة / بيان) — مش على كارت الصنف.</div></div>`,"🧹 نقل أصناف الأكسس — A-H CODE");}
+
+// 10) سجل واحد زي FProduct + جدول
+function m10(){
+  const x=I[ST.i10];
+  return win(tb()+`<div class="content" style="flex-direction:column"><div class="nav"><span class="mini" data-set="i10" data-v="0" data-num="1">⏮ الأول</span><span class="mini" data-set="i10" data-v="${Math.max(0,ST.i10-1)}" data-num="1">◀ السابق</span><b style="font-size:9px">${ST.i10+1} من ${I.length}</b><span class="mini" data-set="i10" data-v="${Math.min(I.length-1,ST.i10+1)}" data-num="1">التالي ▶</span><span class="mini" data-set="i10" data-v="${I.length-1}" data-num="1">الأخير ⏭</span></div><div class="g2" style="background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:6px;margin-top:4px">${f("الكود",N(x[0]),"lock")+f("الاسم",N(x[1]))+f("رقم الكتالوج",x[2]?`<span class="pn">${x[2]}</span>`:"—")+f("النوع",`<span class="ltr">${catPath(x[3])}</span>`)+f("الماركة",x[4]||"—")+f("الوحدة",unitsTxt(x))+f("الوصف",x[11])+f("سعر البيع",m0(x[8]))}</div><div class="scroll" style="margin-top:4px">${iTable(I,"i10x",["code","name","cat","br","u"]).replace(/data-set="i10x" data-v="(ITM-\d+)"/g,(m,c)=>`data-set="i10" data-v="${I.findIndex(y=>y[0]===c)}" data-num="1"`).replace(new RegExp(`(<tr class=")([^"]*)(" data-set="i10" data-v="${ST.i10}")`),"$1sel $2$3")}</div></div>`);}
+
+const M=[
+ ["فورم يمين + قائمة شمال","زي باقي شاشات التعريف: الفورم يمين (البيانات + الوحدات والبيع + الحسابات من النوع) والقائمة شمال بالبحث وفلتر الحالة وصفحات (3,117 صنف).",m1],
+ ["شجرة الأنواع + جدول + تفاصيل","يمين شجرة «أنواع الأصناف» (دوس على Panel يجيب ABB وHIMEL معاه)، وفي النص الأصناف، وتحت تفاصيل الصنف المختار.",m2],
+ ["كروت أرقام فوق + قائمة وفورم","فوق: النشطة · الخدمية · تحت حد الطلب · من غير نوع. وتحت الفورم والقائمة (زي «المخازن» النموذج 2).",m3],
+ ["كارت الصنف بتبويبات","الصنف في تبويبات: البيانات · الوحدات (أساسية + وحدات بمعامل) · البيع والضريبة · الحسابات · الرصيد والحركة. دوس على التبويبات.",m4],
+ ["جدول كبير + نافذة للتعديل","الجدول بعرض الشاشة بكل الأعمدة (زي الإكسل)، و«تعديل» بيفتح نافذة صغيرة فوقه. دوس ✕ أو «تعديل».",m5],
+ ["قائمة + الرصيد في كل مخزن","جنب الصنف رصيده في كل مخزن (فاتورة / بيان) — الرصيد بيشتغل مع «دفتر المخزون»، والشاشة جاهزة له.",m6],
+ ["شريط فلاتر + جدول + تفاصيل","يمين فلاتر بالنوع والماركة وبضاعة/خدمي (الخانات شغالة)، وفي النص الجدول، وتحته تفاصيل الصنف.",m7],
+ ["فورم «جديد» بالتحقق","الخانات الزرقا شغالة: الاسم المتكرر (تنبيه)، رقم الكتالوج المتكرر مع نفس الماركة، الوحدة التانية بمعامل، وإيه اللي جاي من النوع.",m8],
+ ["تنظيف أصناف الأكسس","الوحدات (9 كتابات ← 3) · الأسماء الفاضية والمتكررة · خانة code القديمة · number1 ← رقم الكتالوج · الأقسام والماركات. للنقل مرة واحدة، مع أي نموذج.",m9],
+ ["سجل واحد + جدول (زي الأكسس)","فوق سجل واحد بأزرار الأول / السابق / التالي / الأخير، وتحت القائمة كلها — شبه FProduct بس مضاف ليه الوحدات والسعر.",m10],
+];
+
+const NOTE=`<b>الشاشة دي بتعمل إيه:</b> <b>كارت الصنف</b> (جدول <span class="ltr">inv.items</span>) — أي حاجة بتتباع أو تتشترى أو تتصرف من المخزن: الكود والاسم ورقم الكتالوج والنوع (من «أنواع الأصناف») والماركة والوحدة (ووحدات تانية بمعامل) وبضاعة ولا خدمي والمخزن الافتراضي وكود الضريبة. <b>الحسابات بتيجي من النوع</b> (المخزون · المبيعات · التكلفة). الفواتير والتحويلات والجرد كلها هتختار الصنف من هنا.
+<br><b>كانت إيه في الأكسس:</b> <span class="ltr">FProduct</span> «الأصناف» في قسم «الأصناف + المخازن» — جدول <span class="ltr">pruduct</span> فيه <b>3,117 صنف</b>: الاسم (<span class="ltr">matrialname</span>) · الوصف · <span class="ltr">number1</span> (أرقام زي 1203 أو أكواد مصنّع، ومش فريد) · <span class="ltr">code</span> (على 1,765 صنف بس وفيه أسامي) · الوحدة نص (9 كتابات) · القسم · الشركة المصنعة · تاريخ الإضافة. <b>مكانش فيه سعر ولا حد طلب ولا حسابات ولا ضريبة على الصنف</b> — والسعر كان بيتكتب في الفاتورة. خانة <span class="ltr">CodeINvoice</span> (كود الفاتورة) فاضية على كل الأصناف.
+<ul>
+<li><b>الخانات المقترحة:</b> الكود (بيتولّد لوحده <span class="ltr">ITM-0001</span>) · الاسم (مطلوب) · الاسم العربي (اختياري) · الوصف · رقم الكتالوج · النوع · الماركة · الوحدة الأساسية + وحدات تانية بمعامل · خدمي · المخزن الافتراضي · كود الضريبة · سعر البيع (اختياري) · حد الطلب (اختياري) · نشط · ملاحظات.</li>
+<li><b>من النوع:</b> الحسابات الأربعة · و«الأصناف الجديدة خدمية» (لو النوع خدمي، الصنف الجديد تحته بيطلع خدمي) — وتقدر تغيّر «خدمي» على الصنف.</li>
+<li><b>المخزون:</b> دايماً بالوحدة الأساسية · متوسط مرجّح على مستوى الشركة لكل (صنف + فاتورة/بيان) · الرصيد السالب ممنوع (قراراتك القديمة) — ده كله مع «دفتر المخزون» (المرحلة 6)، والكارت هنا بيوريه بس.</li>
+<li><b>الحماية:</b> الصنف اللي عليه حركة <b>مايتمسحش</b> — يتوقف بس · الخدمي مالوش رصيد · الوحدة الأساسية ماتتغيّرش بعد أول حركة · <span class="ltr">row_version</span> (جهازين) + سجل التعديلات · الكود جوه قفل · القائمة بصفحات (3,117 صنف).</li>
+<li><b>مكان الشاشة:</b> قسم «الأصناف + المخازن» 📦 ← بعد «أنواع الأصناف».</li>
+</ul>`;
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>كود الصنف:</b> <b>بيتولّد لوحده <span class="ltr">ITM-0001</span> وثابت</b> (اقتراحي) ولا تكتبه بإيدك؟ و<span class="ltr">number1</span> بتاع الأكسس يبقى <b>«رقم الكتالوج»</b> اختياري ويتبحث بيه (اقتراحي)؟</li>
+<li><b>الاسم المتكرر:</b> <b>تنبيه بس</b> (اقتراحي — في الأكسس فيه أسماء متكررة) ولا ممنوع؟ ورقم الكتالوج المتكرر مع نفس الماركة: تنبيه برضه؟</li>
+<li><b>الوحدات المتعددة:</b> وحدة أساسية + <b>وحدات تانية بمعامل</b> (كرتونة = 12 عدد، لفة = 100 متر) على الصنف (اقتراحي) — ولا وحدة واحدة بس دلوقتي ونزوّدها بعدين؟</li>
+<li><b>الحسابات:</b> <b>من النوع بس</b> (اقتراحي) ولا كمان ينفع حساب خاص على الصنف نفسه؟</li>
+<li><b>السعر:</b> خانة <b>«سعر البيع»</b> اختيارية بتتملى في الفاتورة وتتغيّر (اقتراحي) ولا مفيش سعر على الكارت زي الأكسس؟ و<b>«حد الطلب»</b> (تنبيه لما الرصيد يقل) اختياري؟</li>
+<li><b>الضريبة:</b> كود الضريبة <b>افتراضي ض.ق.م 14%</b> ويتغيّر للصنف (اقتراحي)؟ وبتستخدموا <b>الفاتورة الإلكترونية</b> (محتاجين خانة كود <span class="ltr">EGS / GS1</span> لكل صنف) ولا لأ دلوقتي؟</li>
+<li><b>المخزن الافتراضي:</b> <b>اختياري والفاضي = «المخزن الافتراضي» العام</b> (اقتراحي)؟ و<b>«الاسم العربي»</b> خانة لوحدها ولا الاسم والوصف كفاية؟</li>
+<li><b>نقل الأكسس:</b> الـ 3,117 صنف يتنقلوا مع «نقل بيانات الأكسس» بالتنضيف اللي في النموذج 9 (اقتراحي) — موافق؟ وخانة <span class="ltr">code</span> القديمة تروح «الملاحظات»؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.dataset.chk){ST[t.dataset.chk]=t.checked;render();return;}
+  if(t.dataset.st){ST[t.dataset.st]=t.value;render();}
+});
+document.addEventListener("focusout",e=>{const t=e.target;if(t.matches("input.lv")&&t.dataset.st){ST[t.dataset.st]=t.value;render();}});
+document.addEventListener("keydown",e=>{const t=e.target;if(e.key==="Enter"&&t.matches("input.lv")&&t.dataset.st){ST[t.dataset.st]=t.value;render();}});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const el=e.target.closest("[data-set]"); if(!el) return;
+  const k=el.dataset.set; let v=el.dataset.v;
+  if(el.dataset.num) v=Number(v);
+  if(k==="dlg5") v=!!v;
+  ST[k]=v; render();
+});
+render();
+</script>
+</body>
+</html>

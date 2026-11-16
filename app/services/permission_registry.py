@@ -154,6 +154,9 @@ SECTIONS: tuple[Section, ...] = (
             # أنواع الأصناف «الأقسام» (2026-11-16 — النموذج 2 «شجرة»): لحد 5 مستويات + 4 حسابات اختيارية.
             Target("item_categories", "أنواع الأصناف", "Item Categories", icon="🗂️",
                    actions=("view", "create", "edit", "save", "delete", "export")),
+            # الأصناف (2026-11-16 — النموذج 3 «كروت أرقام فوق + قائمة وفورم»).
+            Target("items", "الأصناف", "Items", icon="📦",
+                   actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="📦"),
     )),
     # «الخزائن والبنوك» (2026-11-15): الخزائن ← البنوك (البنوك وحساباتها — النموذج 7).
