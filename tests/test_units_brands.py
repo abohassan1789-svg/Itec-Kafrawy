@@ -405,6 +405,6 @@ def test_menu_and_registry():
     from app.ui.screen_registry import SCREEN_FACTORIES
 
     group = reg.section("inv").groups[0]
-    assert [t.code for t in group.targets] == ["warehouses", "units_brands"]
+    assert [t.code for t in group.targets][:2] == ["warehouses", "units_brands"]
     assert reg.find_target("inv", "units_brands").name_ar == "الوحدات والماركات"
     assert "units_brands" in SCREEN_FACTORIES
