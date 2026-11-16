@@ -105,6 +105,11 @@ SECTIONS: tuple[Section, ...] = (
             Target("cost_centers", "مراكز التكلفة", "Cost Centers", icon="🎯",
                    actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="🗂"),
+        # القيود اليومية (2026-11-16 — النموذج 1): حفظ مسودة · ترحيل · إلغاء ترحيل بالصلاحية بس · مفيش عكس.
+        Group("القيود اليومية", (
+            Target("journal_entries", "القيود اليومية", "Journal Entries", icon="📒",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
+        ), icon="📒"),
         # الشركاء تحت «الحسابات» لأنها حقوق ملكية (31 رأس المال · 32 جاري الشركاء) — 2026-11-14.
         Group("حقوق الملكية", (
             Target("partners", "الشركاء", "Partners", icon="🤝",

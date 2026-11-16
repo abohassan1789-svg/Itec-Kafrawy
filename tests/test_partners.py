@@ -375,7 +375,7 @@ def test_menu_and_registry():
     from app.services import permission_registry as reg
     from app.ui.screen_registry import SCREEN_FACTORIES
 
-    group = reg.section("acc").groups[1]
+    group = reg.section("acc").groups[2]
     assert group.title == "حقوق الملكية" and [t.code for t in group.targets] == ["partners"]
     target = reg.find_target("acc", "partners")
     assert target.name_ar == "الشركاء"

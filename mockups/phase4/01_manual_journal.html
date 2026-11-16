@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج القيد اليدوي — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+/* ===== إضافات شاشة القيد ===== */
+.st{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.st.draft{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.st.posted{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.st.reversed{background:#F1F5F9;color:#64748B;border-color:#CBD5E1;text-decoration:line-through}
+.st.rev{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.st.auto{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.b-post{background:#137A38}.b-unp{background:#B45309}.b-rvs{background:#7C3AED}.b-cpy{background:#0E7490}.b-prn{background:#1F4E79}
+.bal{display:flex;gap:8px;align-items:center;justify-content:flex-end;font-size:9px;font-weight:900;padding:3px 6px;border-radius:5px;flex-shrink:0}
+.bal.ok{background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}
+.bal.bad{background:#FEE2E2;color:#B91C1C;border:1px solid #FECACA}
+.bal b{direction:ltr;unicode-bidi:isolate}
+.jl td.acc-c{white-space:nowrap}
+.jl td.acc-c b{direction:ltr;unicode-bidi:isolate;color:#1F4E79;margin-left:3px}
+.tbl td input.amt{width:62px;height:14px;border:1px solid #2563EB;border-radius:3px;background:#F5F9FF;font:inherit;font-size:8px;font-weight:800;padding:0 3px;direction:ltr;text-align:left}
+.tbl td input.txt{width:100%;min-width:70px;height:14px;border:1px solid #2563EB;border-radius:3px;background:#F5F9FF;font:inherit;font-size:8px;padding:0 3px}
+.tbl td select.lv{min-width:90px}
+.stepper{display:flex;align-items:center;gap:4px;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.stp{display:flex;align-items:center;gap:3px;font-size:8.5px;font-weight:800;color:#94A3B8}
+.stp i{font-style:normal;display:inline-flex;width:16px;height:16px;border-radius:50%;background:#E2E8F0;color:#64748B;align-items:center;justify-content:center;font-size:8px}
+.stp.on{color:var(--green)}.stp.on i{background:var(--green);color:#fff}
+.stp.cur i{box-shadow:0 0 0 3px #BBF7D0}
+.stp.red.on{color:#7C3AED}.stp.red.on i{background:#7C3AED}
+.sline{flex:1;height:2px;background:#E2E8F0;min-width:14px}.sline.on{background:var(--green)}
+.tl{font-size:8px;line-height:1.6;border-right:2px solid #CBD5E1;padding-right:6px;margin-right:4px}
+.tl div{position:relative}
+.tl div:before{content:"";position:absolute;right:-10px;top:4px;width:6px;height:6px;border-radius:50%;background:var(--green)}
+.tl small{color:var(--muted);font-weight:700}
+.paper{background:#fff;border:1px solid #94A3B8;border-radius:4px;padding:8px 10px;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.paper .ph{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #1F4E79;padding-bottom:4px;margin-bottom:5px}
+.paper .ph b{font-size:12px;color:#1F4E79}
+.paper .sig{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;font-size:8px;font-weight:800;color:#334155;text-align:center}
+.paper .sig div{border-top:1px dashed #94A3B8;padding-top:2px}
+.t-acc{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1;min-height:0}
+.t-side{background:#fff;border:1px solid var(--card-border);border-radius:7px;display:flex;flex-direction:column;min-height:0}
+.t-side h5{margin:0;padding:4px 6px;font-size:9.5px;font-weight:900;color:#fff;border-radius:6px 6px 0 0;display:flex;justify-content:space-between}
+.t-side.dr h5{background:#137A38}.t-side.cr h5{background:#1F4E79}
+.t-row{display:flex;justify-content:space-between;gap:4px;padding:3px 6px;border-bottom:1px solid #F1F5F9;font-size:8.5px}
+.t-row b{direction:ltr;unicode-bidi:isolate}
+.t-row small{display:block;color:var(--muted);font-size:7.5px}
+.tpl{background:#fff;border:1px solid var(--card-border);border-right:3px solid #0E7490;border-radius:6px;padding:4px 6px;font-size:8px;cursor:pointer;margin-bottom:4px;line-height:1.5}
+.tpl.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.tpl b{font-size:8.5px}
+.tpl small{display:block;color:var(--muted)}
+.dimrow td{background:#FAF5FF !important;border-bottom:1px dashed #DDD6FE}
+.dimbox{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:8px;font-weight:700;color:#5B21B6}
+.dimbox label{display:flex;gap:3px;align-items:center}
+.dimbox select.lv{min-width:110px;flex:0 0 auto}
+.need{color:#B91C1C;font-weight:900}
+.day{background:#fff;border:1px solid var(--card-border);border-radius:6px;margin-bottom:5px;overflow:hidden;cursor:pointer}
+.day.sel{outline:2px solid #2563EB}
+.day .dh{display:flex;gap:6px;align-items:center;background:#F8FAFC;padding:3px 6px;font-size:8.5px;font-weight:800;border-bottom:1px solid var(--card-border)}
+.day .dh .ltr{color:#1F4E79}
+.day .dh span:last-child{margin-right:auto}
+.day table{width:100%;border-collapse:collapse;font-size:8.5px}
+.day td{padding:2px 6px;border-bottom:1px solid #F8FAFC}
+.day td.n{text-align:left;direction:ltr;width:70px}
+.day tr.cr td:first-child{padding-right:22px;color:#334155}
+.lock-msg{background:#F5F3FF;border:1px solid #DDD6FE;color:#5B21B6;border-radius:6px;padding:4px 6px;font-size:8px;font-weight:800}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة «القيد اليدوي» (المرحلة 4 · أول شاشة في القيود اليومية)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل الشاشات اللي خلصت — الفرق في الترتيب وطريقة كتابة السطور. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>القيود والمبالغ والأسماء هنا أمثلة وهمية</b> (مش من الأكسس — الأكسس مكانش فيه قيود أصلاً)، والحسابات من الدليل المصري اللي في البرنامج. <b>الحاجات الزرقا شغالة</b>: اكتب مبالغ في 2، دوس على الأزرار في 7، غيّر الحساب في 9، دوس على الكروت والتبويبات والسطور.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== الحسابات الفرعية (من الدليل المصري في البرنامج) + دورها (اللي بيطلب طرف)
+const A={"110101":"الخزينة الرئيسية","110102":"خزينة النثريات","110201":"البنك الأهلي — جاري","110202":"بنك مصر — جاري","1103":"العملاء","1107":"عهد الموظفين",
+ "110601":"ض.ق.م — مدخلات","2101":"الموردين","2104":"خصم من المنبع (مستحق)","32":"جاري الشركاء","4102":"إيرادات تركيبات وخدمات","4301":"فروق عملة دائنة",
+ "5201":"المرتبات والأجور","5202":"الإيجار","5203":"كهرباء ومياه","5204":"مصروفات نثرية","5207":"تليفونات وإنترنت","5208":"انتقالات ومواصلات","5301":"نقل ومشال","5402":"مصاريف بنكية","5403":"فروق التقريب"};
+const ROLE={"1103":"cus","2101":"sup","1107":"emp","32":"prt"};
+const ROLE_N={cus:"العميل",sup:"المورد",emp:"الموظف",prt:"الشريك"};
+const PARTY={cus:[["","— اختار العميل —"],["1","1 — شركة المستقبل للمقاولات"],["2","2 — مجموعة الأفق الهندسية"],["0","0 — عميل نقدي"]],
+ sup:[["","— اختار المورد —"],["SUB-001","SUB-001 — مورد الأجهزة الكهربائية"],["SUB-002","SUB-002 — شركة الكابلات الحديثة"]],
+ emp:[["","— اختار الموظف —"],["EMP-001","EMP-001 — موظف (1)"],["EMP-003","EMP-003 — موظف (3)"]],
+ prt:[["","— اختار الشريك —"],["PRT-001","PRT-001 — الشريك (1)"],["PRT-002","PRT-002 — الشريك (2)"]]};
+const CC=[["","—"],["101","101 الإدارة"],["201","201 المشروعات"],["202","202 التركيبات"]];
+const PRJ=[["","—"],["Itec-014","Itec-014"],["Itec-015","Itec-015"]];
+const isExp=c=>c[0]==="5";
+
+// ===== القيود (أمثلة وهمية): no, date, desc, ref, st (draft/posted/reversed/rev/auto), by, lines [acc, بيان, مدين, دائن, مركز تكلفة, أمر توريد, طرف]
+const E=[
+ {no:"JV-2025-00231",date:"2025-12-28",desc:"استحقاق إيجار ديسمبر 2025",ref:"عقد 12/2024",st:"posted",by:"user",year:"2025",
+  lines:[["5202","إيجار ديسمبر",15000,0,"101","",""],["110101","",0,15000,"","",""]]},
+ {no:"JV-2026-00010",date:"2026-10-05",desc:"مصاريف نقل لموقع العميل (اتسجلت غلط)",ref:"",st:"reversed",by:"user",year:"2026",rv:"JV-2026-00011",
+  lines:[["5301","نقل معدات",2400,0,"201","Itec-014",""],["110102","",0,2400,"","",""]]},
+ {no:"JV-2026-00011",date:"2026-10-06",desc:"عكس القيد JV-2026-00010",ref:"JV-2026-00010",st:"rev",by:"user",year:"2026",
+  lines:[["110102","",2400,0,"","",""],["5301","نقل معدات",0,2400,"201","Itec-014",""]]},
+ {no:"JV-2026-00012",date:"2026-10-31",desc:"استحقاق إيجار أكتوبر 2026",ref:"عقد 12/2024",st:"posted",by:"user",year:"2026",
+  lines:[["5202","إيجار أكتوبر",15000,0,"101","",""],["110101","",0,15000,"","",""]]},
+ {no:"JV-2026-00013",date:"2026-10-31",desc:"مرتبات أكتوبر 2026",ref:"كشف 10/2026",st:"posted",by:"user",year:"2026",
+  lines:[["5201","مرتبات الإدارة",52000,0,"101","",""],["5201","مرتبات الفنيين",34500,0,"202","",""],["2104","خصم ضريبة كسب عمل",0,4300,"","",""],["110201","",0,82200,"","",""]]},
+ {no:"JV-2026-00014",date:"2026-11-02",desc:"مصاريف بنكية — كشف أكتوبر",ref:"كشف البنك",st:"posted",by:"user",year:"2026",
+  lines:[["5402","عمولة تحويلات",350,0,"101","",""],["110201","",0,350,"","",""]]},
+ {no:"",tmp:"مسودة 7",date:"2026-11-12",desc:"تسوية عهدة موظف — مصاريف موقع",ref:"إيصالات",st:"draft",by:"user",year:"2026",
+  lines:[["5208","انتقالات للموقع",1200,0,"201","Itec-015",""],["5204","أدوات بسيطة",800,0,"201","Itec-015",""],["1107","",0,2000,"","","EMP-003"]]},
+ {no:"",tmp:"مسودة 8",date:"2026-11-14",desc:"تسوية رصيد عميل — خصم اتفاق",ref:"",st:"draft",by:"user",year:"2026",
+  lines:[["5204","خصم اتفاق",500,0,"","",""],["1103","",0,450,"","","1"]]},
+ {no:"PUR-2026-00031",date:"2026-11-10",desc:"قيد فاتورة شراء (أوتوماتيك)",ref:"PUR-2026-00031",st:"auto",by:"user",year:"2026",
+  lines:[["1105","",20000,0,"","",""],["110601","",2800,0,"","",""],["2101","",0,22800,"","","SUB-001"]]},
+];
+A["1105"]="المخزون";
+const STN={draft:"مسودة",posted:"مرحّل",reversed:"معكوس",rev:"قيد عكسي",auto:"أوتوماتيك"};
+const N=c=>`<span class="ltr">${c}</span>`;
+const m2=n=>n?Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):"";
+const tot=e=>[e.lines.reduce((s,l)=>s+(+l[2]||0),0),e.lines.reduce((s,l)=>s+(+l[3]||0),0)];
+const stB=s=>`<span class="st ${s}">${STN[s]}</span>`;
+const noOf=e=>e.no?N(e.no):`<span style="color:#92400E;font-weight:800">${e.tmp}</span>`;
+const accC=c=>`<b class="ltr">${c}</b> ${A[c]||""}`;
+const pName=(r,v)=>{if(!v)return"";const p=PARTY[r].find(x=>x[0]===v);return p?p[1]:v;};
+const dimTxt=l=>{const r=ROLE[l[0]];const a=[];if(l[6]&&r)a.push(`<span class="acc" title="${pName(r,l[6])}">${ROLE_N[r]} ${N(l[6])}</span>`);if(l[4])a.push(`<span class="acc df">م.ت ${l[4]}</span>`);if(l[5])a.push(`<span class="acc df">${N(l[5])}</span>`);return a.join(" ");};
+
+const ST={s1:6,s3:4,t3:0,s4:4,f4:"",s5:4,s6:4,s7:"draft",cl7:false,s8:0,s10:4,
+  l2:[["5203","كهرباء الإدارة","1850","","101"],["5207","إنترنت أكتوبر","650","","101"],["110102","","","2400",""]],
+  l9:[["5301","نقل لموقع العميل","3200","","201","Itec-014",""],["1103","","","3200","","",""]]};
+
+function win(inner,title="📒 القيود اليومية — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+// الأزرار حسب حالة القيد
+function tbJ(st="posted",yearClosed=false,extra=""){
+  const on={new:1,edit:st==="draft",save:st==="draft",post:st==="draft",unp:st==="posted"&&!yearClosed,rvs:st==="posted",cpy:st!=="new",del:st==="draft",prn:1};
+  const b=(k,cls,t)=>`<span class="bt ${on[k]?cls:'b-dis'}">${t}</span>`;
+  return `<div class="tb">${b("new","b-new","قيد جديد")}${b("edit","b-edit","تعديل")}${b("save","b-save","حفظ مسودة")}${b("post","b-post","ترحيل ✔")}${b("unp","b-unp","إلغاء الترحيل")}${b("rvs","b-rvs","عكس ↺")}${b("cpy","b-cpy","نسخ")}${b("del","b-del","حذف")}${b("prn","b-prn","طباعة")}<span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span>${extra}</div>`;}
+function f(l,v="",c=""){return `<div class="f"><label>${l}</label><i class="${c}">${v}</i></div>`;}
+function gb(t,c,st=""){return `<div class="gb" style="${st}"><span class="t">${t}</span>${c}</div>`;}
+function sel(key,val,opts,cls="",extra=""){return `<select class="lv ${cls}" ${key?`data-st="${key}"`:""} ${extra}>${opts.map(o=>{const [v,t]=Array.isArray(o)?o:[o,o];return `<option value="${v}" ${String(v)===String(val)?'selected':''}>${t}</option>`;}).join("")}</select>`;}
+const kp=(t,v,k="")=>`<div class="kp ${k}"><small>${t}</small><b>${v}</b></div>`;
+function balBar(d,c){const df=Math.round((d-c)*100)/100;return df===0&&d>0?`<div class="bal ok">✔ متوازن · مدين <b>${m2(d)}</b> = دائن <b>${m2(c)}</b></div>`:`<div class="bal bad">✖ مش متوازن · مدين <b>${m2(d)||"0.00"}</b> · دائن <b>${m2(c)||"0.00"}</b> · الفرق <b>${m2(Math.abs(df))||"0.00"}</b> — مايترحّلش</div>`;}
+function linesT(e,cols=["acc","desc","dr","cr","dim"]){
+  const C={acc:["الحساب",l=>`<td class="acc-c">${accC(l[0])}</td>`],desc:["البيان",l=>`<td>${l[1]||'<span style="color:#94A3B8">'+e.desc+'</span>'}</td>`],
+    dr:["مدين",l=>`<td class="n">${m2(l[2])}</td>`],cr:["دائن",l=>`<td class="n">${m2(l[3])}</td>`],dim:["الأبعاد",l=>`<td>${dimTxt(l)}</td>`]};
+  const [d,c]=tot(e);
+  const h=cols.map(k=>`<th>${C[k][0]}</th>`).join("");
+  const b=e.lines.map(l=>`<tr>${cols.map(k=>C[k][1](l)).join("")}</tr>`).join("");
+  const t=`<tr class="tot">${cols.map(k=>k==="dr"?`<td class="n">${m2(d)}</td>`:k==="cr"?`<td class="n">${m2(c)}</td>`:k==="acc"?`<td>الإجمالي</td>`:`<td></td>`).join("")}</tr>`;
+  return `<table class="tbl jl"><tr>${h}</tr>${b}${t}</table>`;}
+function listT(key,rows=E,cols=["no","date","desc","tot","st"]){
+  const C={no:["رقم القيد",e=>noOf(e)],date:["التاريخ",e=>N(e.date)],desc:["البيان",e=>`<span style="white-space:normal">${e.desc}</span>`],tot:["المبلغ",e=>`<span class="n">${m2(tot(e)[0])}</span>`],st:["الحالة",e=>stB(e.st)]};
+  return `<table class="tbl"><tr>${cols.map(c=>`<th>${C[c][0]}</th>`).join("")}</tr>${rows.map(e=>{const i=E.indexOf(e);return `<tr class="${ST[key]===i?'sel':''}" data-set="${key}" data-v="${i}" data-num="1" style="cursor:pointer">${cols.map(c=>`<td>${C[c][1](e)}</td>`).join("")}</tr>`;}).join("")}</table>`;}
+function headF(e){return f("رقم القيد",e.no?N(e.no):`${e.tmp} — الرقم الرسمي بيتاخد مع الترحيل`,"lock")+f("التاريخ",N(e.date))+f("البيان",e.desc)+f("المرجع",e.ref||"—")+f("الحالة",stB(e.st)+(e.rv?` ← اتعكس بـ ${N(e.rv)}`:"")+(e.st==="rev"?` ← بيعكس ${N(e.ref)}`:""),"lock");}
+const filt=`<div class="srch"><i>🔍 رقم القيد / البيان / المرجع</i>${sel("","",["كل الحالات","مسودة","مرحّل","معكوس"])}${sel("","",["من 2026-10-01 إلى 2026-11-30","الشهر ده","السنة 2026"])}</div>`;
+const pager=`<div class="pager">14 قيد في الفترة · صفحة <span class="mini on">1</span><span class="mini">2</span> (50 في الصفحة)</div>`;
+const yearMsg=e=>e.year==="2025"?`<div class="lock-msg">🔒 السنة المالية 2025 مقفولة — «إلغاء الترحيل» مقفول، والتصحيح بـ «عكس ↺» (قيد جديد بتاريخ في 2026).</div>`:"";
+
+// 1) فورم فوق + سطور + قائمة شمال
+function m1(){const e=E[ST.s1];
+  return win(tbJ(e.st,e.year==="2025")+`<div class="content"><div class="col" style="flex:1.7">${gb("رأس القيد",`<div class="g2">${headF(e)}</div>`)}${yearMsg(e)}<div class="gb" style="flex:1;display:flex;flex-direction:column;min-height:0"><span class="t">سطور القيد</span><div class="scroll">${linesT(e)}</div></div>${balBar(...tot(e))}</div><div class="col" style="flex:1"><div class="srch"><i>🔍 رقم / بيان</i></div><div class="srch">${sel("","",["من 2026-10-01 إلى 2026-11-30","الشهر ده","السنة 2026"])}${sel("","",["كل الحالات","مسودة","مرحّل","معكوس"])}</div><div class="scroll" style="margin-top:4px">${listT("s1",E,["no","date","tot","st"])}</div>${pager}</div></div>`);}
+
+// 2) جدول زي الإكسل — الكتابة في الخلايا
+function m2v(){
+  const L=ST.l2;const d=L.reduce((s,l)=>s+(+l[2]||0),0),c=L.reduce((s,l)=>s+(+l[3]||0),0);
+  const accOpts=Object.keys(A).map(k=>[k,`${k} ${A[k]}`]);
+  const rows=L.map((l,i)=>`<tr><td style="color:var(--muted)">${i+1}</td><td>${sel("",l[0],accOpts,"",`data-ln2="${i}" data-col="0"`)}</td><td><input class="txt" value="${l[1]}" data-ln2="${i}" data-col="1"></td><td><input class="amt" value="${l[2]}" data-ln2="${i}" data-col="2"></td><td><input class="amt" value="${l[3]}" data-ln2="${i}" data-col="3"></td><td>${sel("",l[4],CC,"",`data-ln2="${i}" data-col="4"`)}</td><td><span class="mini" data-del2="${i}">✕</span></td></tr>`).join("");
+  return win(tbJ("draft")+`<div class="content" style="flex-direction:column"><div class="g2" style="background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:5px">${f("رقم القيد","مسودة 9 — الرقم الرسمي مع الترحيل","lock")+f("التاريخ",N("2026-11-16"))+f("البيان","كهرباء وإنترنت الإدارة — أكتوبر")+f("المرجع","فواتير الشركات")}</div><div class="scroll"><table class="tbl"><tr><th>#</th><th>الحساب (F1 للبحث)</th><th>البيان</th><th>مدين</th><th>دائن</th><th>مركز التكلفة</th><th></th></tr>${rows}<tr class="tot"><td></td><td><span class="mini" data-add2="1">+ سطر</span></td><td>الإجمالي</td><td class="n">${m2(d)||"0.00"}</td><td class="n">${m2(c)||"0.00"}</td><td></td><td></td></tr></table><div class="hint">Enter ينقل للخانة اللي بعدها · السطر الجديد بيتعمل لوحده · السطر الأخير بيقترح «الفرق» في الدائن/المدين · البيان الفاضي = بيان القيد</div></div>${balBar(d,c)}</div>`,"📒 قيد جديد — A-H CODE");}
+
+// 3) تبويبين: القائمة / القيد
+function m3(){const e=E[ST.s3];
+  const tabs=`<div class="itabs"><span class="${ST.t3===0?'on':''}" data-set="t3" data-v="0" data-num="1">📋 القيود (${E.length})</span><span class="${ST.t3===1?'on':''}" data-set="t3" data-v="1" data-num="1">📄 القيد ${e.no||e.tmp}</span></div>`;
+  const body=ST.t3===0?`${filt}<div class="scroll">${listT("s3",E,["no","date","desc","tot","st"])}</div>${pager}<div class="hint">دبل كليك على قيد ← يفتح في تبويب «القيد»</div>`
+   :`<div class="g2" style="background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:5px">${headF(e)}</div>${yearMsg(e)}<div class="scroll" style="margin-top:4px">${linesT(e)}</div>${balBar(...tot(e))}`;
+  return win(tbJ(e.st,e.year==="2025")+`<div class="content" style="flex-direction:column;gap:3px">${tabs}${body}</div>`);}
+
+// 4) كروت أرقام فوق + قائمة + القيد
+function m4(){const e=E[ST.s4];
+  const cnt=s=>E.filter(x=>x.st===s).length;
+  const card=(k,t,v,c)=>`<div class="kp ${c}" data-set="f4" data-v="${k}" style="cursor:pointer;${ST.f4===k?'outline:2px solid #2563EB':''}"><small>${t}</small><b>${v}</b></div>`;
+  const rows=ST.f4?E.filter(x=>x.st===ST.f4||(ST.f4==="reversed"&&x.st==="rev")):E;
+  return win(tbJ(e.st,e.year==="2025")+`<div class="content" style="flex-direction:column"><div class="kpis">${card("draft","مسودات مستنية ترحيل",cnt("draft"),"r")}${card("posted","مرحّلة (الفترة)",cnt("posted"),"g")}${card("reversed","معكوسة + عكسية",cnt("reversed")+cnt("rev"),"b")}${card("","الكل — إجمالي المدين",m2(E.reduce((s,x)=>s+tot(x)[0],0)),"")}</div><div style="display:flex;gap:6px;flex:1;min-height:0"><div class="col" style="flex:1"><div class="scroll">${listT("s4",rows,["no","date","tot","st"])}</div><div class="cnt">${rows.length} قيد ظاهر — دوس على كارت للفلترة</div></div><div class="col" style="flex:1.4"><div class="hdr"><b>${e.no||e.tmp}</b> ${stB(e.st)}<div class="p">${e.date} · ${e.desc}</div></div><div class="scroll" style="margin-top:4px">${linesT(e,["acc","dr","cr","dim"])}</div>${balBar(...tot(e))}</div></div></div>`);}
+
+// 5) سند قيد ورقي
+function m5(){const e=E[ST.s5];const [d,c]=tot(e);
+  const dr=e.lines.filter(l=>l[2]),cr=e.lines.filter(l=>l[3]);
+  const row=(l,side)=>`<tr><td class="n">${side==="d"?m2(l[2]):""}</td><td class="n">${side==="c"?m2(l[3]):""}</td><td style="${side==="c"?'padding-right:18px':''}">${side==="d"?"من حـ/ ":"إلى حـ/ "}${accC(l[0])} ${dimTxt(l)}</td><td>${l[1]||""}</td></tr>`;
+  return win(tbJ(e.st,e.year==="2025")+`<div class="content"><div class="col" style="width:150px;flex-shrink:0"><div class="scroll">${listT("s5",E,["no","st"])}</div></div><div class="col" style="flex:1"><div class="scroll"><div class="paper"><div class="ph"><div><b>سند قيد يومية</b><div style="font-size:8px;color:var(--muted);font-weight:700">ITEC · A-H CODE</div></div><div style="font-size:8.5px;font-weight:800;text-align:left">رقم ${e.no||e.tmp}<br>${e.date}<br>${stB(e.st)}</div></div><div style="font-size:8.5px;margin-bottom:4px"><b>البيان:</b> ${e.desc} ${e.ref?`· <b>المرجع:</b> ${e.ref}`:""}</div><table class="tbl"><tr><th>مدين</th><th>دائن</th><th>الحساب</th><th>البيان</th></tr>${dr.map(l=>row(l,"d")).join("")}${cr.map(l=>row(l,"c")).join("")}<tr class="tot"><td class="n">${m2(d)}</td><td class="n">${m2(c)}</td><td colspan="2">الإجمالي ${d===c?"✔":"✖ الفرق "+m2(Math.abs(d-c))}</td></tr></table><div class="sig"><div>المحاسب<br><small>user</small></div><div>المراجع</div><div>المدير المالي</div></div></div></div></div></div>`);}
+
+// 6) جانبين: من حـ (مدين) يمين — إلى حـ (دائن) شمال
+function m6(){const e=E[ST.s6];const [d,c]=tot(e);
+  const side=(arr,k)=>arr.map(l=>`<div class="t-row"><span>${accC(l[0])}<small>${l[1]||""} ${dimTxt(l)}</small></span><b>${m2(l[k])}</b></div>`).join("");
+  return win(tbJ(e.st,e.year==="2025")+`<div class="content" style="flex-direction:column"><div class="g2" style="background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:5px">${f("رقم القيد",noOf(e),"lock")+f("التاريخ",N(e.date))+f("البيان",e.desc)+f("الحالة",stB(e.st),"lock")}</div><div style="display:flex;gap:4px;flex-shrink:0">${E.map((x,i)=>`<span class="chipf ${ST.s6===i?'on':''}" data-set="s6" data-v="${i}" data-num="1">${x.no?x.no.slice(-5):x.tmp}</span>`).join("")}</div><div class="t-acc"><div class="t-side dr"><h5><span>من حـ/ (مدين)</span><span class="ltr">${m2(d)}</span></h5><div class="scroll">${side(e.lines.filter(l=>l[2]),2)}<div class="t-row"><span class="mini">+ حساب مدين</span></div></div></div><div class="t-side cr"><h5><span>إلى حـ/ (دائن)</span><span class="ltr">${m2(c)}</span></h5><div class="scroll">${side(e.lines.filter(l=>l[3]),3)}<div class="t-row"><span class="mini">+ حساب دائن</span></div></div></div></div>${balBar(d,c)}</div>`);}
+
+// 7) شريط الحالة + الأزرار بتتغيّر + سجل القيد
+function m7(){const s=ST.s7,cl=ST.cl7;
+  const e={...E[4],st:s,no:s==="draft"?"":"JV-2026-00013",tmp:"مسودة 5",year:"2026"};
+  const step=(k,t,n,on,cur,red)=>`<span class="stp ${on?'on':''} ${cur?'cur':''} ${red?'red':''}"><i>${n}</i>${t}</span>`;
+  const st=`<div class="stepper">${step("d","مسودة","1",1,s==="draft")}<span class="sline ${s!=="draft"?'on':''}"></span>${step("p","مرحّل","2",s!=="draft",s==="posted")}<span class="sline ${s==="reversed"?'on':''}"></span>${step("r","معكوس بقيد جديد","3",s==="reversed",s==="reversed",1)}</div>`;
+  const act=s==="draft"&&cl?`<span class="btn-s d">ترحيل ✔</span> <span class="need">السنة 2026 مقفولة — مفيش ترحيل فيها (غيّر التاريخ لسنة مفتوحة)</span>`
+   :s==="draft"?`<span class="btn-s" data-set="s7" data-v="posted">ترحيل ✔</span> <span class="hint">بيتأكد: متوازن · السنة مفتوحة · كل الحسابات فرعية نشطة · الطرف موجود</span>`
+   :s==="posted"?(cl?`<span class="btn-s d">إلغاء الترحيل</span> <span class="btn-s" style="background:#7C3AED" data-set="s7" data-v="reversed">عكس ↺</span> <span class="hint">السنة مقفولة ← عكس بس</span>`:`<span class="btn-s" style="background:#B45309" data-set="s7" data-v="draft">إلغاء الترحيل 🔑</span> <span class="btn-s" style="background:#7C3AED" data-set="s7" data-v="reversed">عكس ↺</span> <span class="hint">إلغاء الترحيل بكلمة سر الإجراء + سبب</span>`)
+   :`<span class="hint">القيد اتقفل — اتعمل JV-2026-00016 بعكسه بتاريخ 2026-11-16. </span><span class="btn-s g" data-set="s7" data-v="draft">↻ ابدأ التجربة تاني</span>`;
+  const log=[["2026-11-01 10:12","user","حفظ مسودة"]];
+  if(s!=="draft")log.push(["2026-11-01 10:20","user","ترحيل ← JV-2026-00013"]);
+  if(s==="reversed")log.push(["2026-11-16 09:05","user","عكس ← JV-2026-00016 (السبب: كشف المرتبات اتعدّل)"]);
+  return win(tbJ(s,cl)+`<div class="content" style="flex-direction:column">${st}<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap">${act}<label class="rad" style="margin:0 auto 0 0"><input type="checkbox" class="cb" data-chk="cl7" ${cl?'checked':''}> السنة 2026 مقفولة (جرّب)</label></div><div style="display:flex;gap:6px;flex:1;min-height:0"><div class="col" style="flex:2"><div class="hdr"><b>${e.no||e.tmp}</b> ${stB(s)} <span class="p" style="display:inline">${e.date} · ${e.desc}</span></div><div class="scroll" style="margin-top:4px">${linesT(e,["acc","desc","dr","cr"])}</div></div><div class="col" style="flex:1">${gb("سجل القيد",`<div class="tl">${log.map(x=>`<div><b>${x[2]}</b><br><small>${x[0]} · ${x[1]}</small></div>`).join("")}</div>`)}</div></div></div>`,"📒 القيد JV — دورة الحالة — A-H CODE");}
+
+// 8) قوالب قيود متكررة + نسخ
+function m8(){
+  const T=[["إيجار شهري","5202 ← 110101 · 15,000 · مركز 101",[["5202","إيجار الشهر",15000,0,"101","",""],["110101","",0,15000,"","",""]]],
+    ["مرتبات شهرية","5201 (إدارة + فنيين) ← 2104 + 110201",[["5201","مرتبات الإدارة",0,0,"101","",""],["5201","مرتبات الفنيين",0,0,"202","",""],["2104","كسب عمل",0,0,"","",""],["110201","",0,0,"","",""]]],
+    ["مصاريف بنكية","5402 ← 110201",[["5402","مصاريف بنكية",0,0,"101","",""],["110201","",0,0,"","",""]]],
+    ["تمويل خزينة النثريات","110102 ← 110101",[["110102","",5000,0,"","",""],["110101","",0,5000,"","",""]]]];
+  const t=T[ST.s8];const e={desc:t[0],lines:t[2]};
+  return win(tbJ("draft")+`<div class="content"><div class="col" style="width:150px;flex-shrink:0"><div class="sec2">📑 قوالب جاهزة</div><div class="scroll">${T.map((x,i)=>`<div class="tpl ${ST.s8===i?'sel':''}" data-set="s8" data-v="${i}" data-num="1"><b>${x[0]}</b><small>${x[1]}</small></div>`).join("")}<span class="mini">+ احفظ القيد الحالي كقالب</span><div class="sec2" style="margin-top:6px">↺ أو انسخ قيد</div><div class="hint">«نسخ» على أي قيد قديم ← مسودة جديدة بنفس السطور وتاريخ النهارده</div></div></div><div class="col" style="flex:1"><div class="g2" style="background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:5px">${f("رقم القيد","مسودة جديدة","lock")+f("التاريخ",N("2026-11-16"))+f("البيان",t[0]+" — نوفمبر 2026")+f("من قالب",`<b>${t[0]}</b>`,"lock")}</div><div class="scroll" style="margin-top:4px">${linesT(e,["acc","desc","dr","cr","dim"])}</div>${tot(e)[0]?balBar(...tot(e)):`<div class="bal bad">اكتب المبالغ — القالب شايل الحسابات والمراكز بس</div>`}</div></div>`,"📒 قيد من قالب — A-H CODE");}
+
+// 9) الأبعاد على السطر بالتحقق
+function m9(){
+  const L=ST.l9;const d=L.reduce((s,l)=>s+(+l[2]||0),0),c=L.reduce((s,l)=>s+(+l[3]||0),0);
+  const accOpts=Object.keys(A).map(k=>[k,`${k} ${A[k]}`]);
+  let errs=0;
+  const rows=L.map((l,i)=>{const r=ROLE[l[0]];const need=r&&!l[6];if(need)errs++;
+    const dims=`<div class="dimbox">${r?`<label>${ROLE_N[r]} <span class="need">*</span> ${sel("",l[6],PARTY[r],need?"bad":"",`data-ln9="${i}" data-col="6"`)}</label>`:""}<label>مركز التكلفة ${sel("",l[4],CC,"",`data-ln9="${i}" data-col="4"`)}</label><label>أمر التوريد ${sel("",l[5],PRJ,"",`data-ln9="${i}" data-col="5"`)}</label>${need?`<span class="need">لازم تختار ${ROLE_N[r]} — الحساب ${l[0]} حساب رقابة</span>`:""}</div>`;
+    return `<tr><td>${sel("",l[0],accOpts,"",`data-ln9="${i}" data-col="0"`)}</td><td><input class="txt" value="${l[1]}" data-ln9="${i}" data-col="1"></td><td><input class="amt" value="${l[2]}" data-ln9="${i}" data-col="2"></td><td><input class="amt" value="${l[3]}" data-ln9="${i}" data-col="3"></td></tr><tr class="dimrow"><td colspan="4">${dims}</td></tr>`;}).join("");
+  const ok=errs===0&&Math.round((d-c)*100)===0&&d>0;
+  return win(tbJ("draft")+`<div class="content" style="flex-direction:column"><div class="g2" style="background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:5px">${f("رقم القيد","مسودة 10","lock")+f("التاريخ",N("2026-11-16"))+f("البيان","نقل معدات لموقع العميل على حسابه")+f("العملة","EGP — جنيه")}</div><div class="scroll"><table class="tbl"><tr><th>الحساب</th><th>البيان</th><th>مدين</th><th>دائن</th></tr>${rows}<tr class="tot"><td><span class="mini" data-add9="1">+ سطر</span></td><td>الإجمالي</td><td class="n">${m2(d)||"0.00"}</td><td class="n">${m2(c)||"0.00"}</td></tr></table><div class="hint">جرّب: غيّر الحساب لـ 2101 الموردين أو 1107 العهد أو 32 جاري الشركاء ← بيطلب الطرف. الحساب العادي ← مركز التكلفة وأمر التوريد اختياريين.</div></div>${errs?`<div class="bal bad">✖ فيه ${errs} سطر ناقصه الطرف — مايترحّلش</div>`:balBar(d,c)}${ok?'<div class="ok-line">✔ جاهز للترحيل</div>':''}</div>`,"📒 قيد بالأبعاد — A-H CODE");}
+
+// 10) دفتر اليومية — كل القيود ورا بعض
+function m10(){
+  const day=(e,i)=>{const [d]=tot(e);return `<div class="day ${ST.s10===i?'sel':''}" data-set="s10" data-v="${i}" data-num="1"><div class="dh">${noOf(e)} <span class="ltr" style="color:var(--muted)">${e.date}</span> ${e.desc} ${stB(e.st)}<span class="ltr">${m2(d)}</span></div><table>${e.lines.filter(l=>l[2]).map(l=>`<tr><td>من حـ/ ${accC(l[0])} ${dimTxt(l)}</td><td class="n">${m2(l[2])}</td><td class="n"></td></tr>`).join("")}${e.lines.filter(l=>l[3]).map(l=>`<tr class="cr"><td>إلى حـ/ ${accC(l[0])} ${dimTxt(l)}</td><td class="n"></td><td class="n">${m2(l[3])}</td></tr>`).join("")}</table></div>`;};
+  const e=E[ST.s10];
+  return win(tbJ(e.st,e.year==="2025")+`<div class="content" style="flex-direction:column">${filt}<div class="scroll">${E.map(day).join("")}</div><div class="hint">زي دفتر اليومية الورقي — كل قيد بسطوره ورا التاني. القيد المختار: «تعديل» يفتحه في نافذة (لو مسودة).</div></div>`,"📒 دفتر اليومية — A-H CODE");}
+
+const M=[
+ ["رأس القيد فوق + السطور + قائمة القيود شمال","زي باقي الشاشات: يمين رأس القيد (الرقم، التاريخ، البيان، المرجع، الحالة) وتحته السطور وشريط التوازن، وشمال القائمة بفلتر فترة وصفحات. دوس على أي قيد (جرّب قيد 2025 المقفول).",m1],
+ ["جدول زي الإكسل — الكتابة في الخلايا","السطور بتتكتب مباشرة في الجدول (الحساب · البيان · مدين · دائن · مركز التكلفة) وشريط التوازن بيتحسب وانت بتكتب. <b>جرّب: غيّر المبالغ أو زوّد سطر.</b>",m2v],
+ ["تبويبين: القيود / القيد","تبويب «القيود» فيه القائمة بالفلاتر (الحالة + الفترة) والصفحات، وتبويب «القيد» بالتفاصيل كاملة بعرض الشاشة. دوس على التبويبات والسطور.",m3],
+ ["كروت أرقام فوق + قائمة + القيد","فوق: المسودات اللي مستنية ترحيل · المرحّلة · المعكوسة · الإجمالي (دوس على كارت يفلتر). تحت: القائمة يمين والقيد المختار شمال (زي «المخازن» و«الأصناف»).",m4],
+ ["سند قيد ورقي","القيد معروض زي السند المطبوع: «من حـ/ … إلى حـ/ …» والتوقيعات تحت — نفس اللي بيطلع في «طباعة». القائمة الصغيرة يمين.",m5],
+ ["جانبين: من حـ (مدين) / إلى حـ (دائن)","المدين في عمود يمين والدائن في عمود شمال وإجمالي كل جانب فوقه، وشريط التوازن تحت. دوس على أرقام القيود فوق.",m6],
+ ["شريط الحالة + الأزرار حسب الحالة","مسودة ← مرحّل ← معكوس، والأزرار بتتفتح وتتقفل حسب الحالة، وسجل القيد (مين عمل إيه وإمتى). <b>جرّب: ترحيل ← إلغاء الترحيل أو عكس، وعلّم «السنة مقفولة».</b>",m7],
+ ["قوالب قيود متكررة + نسخ","قوالب جاهزة (إيجار · مرتبات · مصاريف بنكية · تمويل نثريات) بتملى الحسابات والمراكز وانت تكتب المبالغ، و«نسخ» أي قيد قديم لمسودة جديدة. دوس على القوالب.",m8],
+ ["السطر بالأبعاد والتحقق","تحت كل سطر أبعاده: الطرف (إجباري لو الحساب رقابة: العملاء / الموردين / العهد / جاري الشركاء) + مركز التكلفة + أمر التوريد. <b>جرّب: غيّر الحساب أو امسح الطرف.</b>",m9],
+ ["دفتر اليومية (كل القيود ورا بعض)","كل قيد بسطوره «من حـ / إلى حـ» ورا التاني زي الدفتر الورقي بالفلاتر، والتعديل في نافذة. مناسب للمراجعة.",m10],
+];
+
+const NOTE=`<b>الشاشة دي بتعمل إيه:</b> <b>قيد يومية بالإيد</b> (جدولين: رأس القيد <span class="ltr">acc.journal_entries</span> + سطوره <span class="ltr">acc.journal_lines</span>) — أي تسوية مالهاش مستند: استحقاق إيجار أو مرتبات · مصاريف بنكية من الكشف · تسوية عهدة · تصحيح غلط · تحويل بين خزنة وبنك. كل سطر: <b>حساب فرعي نشط + مدين أو دائن</b> (مش الاتنين) + بيان + أبعاد (الطرف · مركز التكلفة · أمر التوريد). <b>دورة القيد:</b> مسودة (تتعدّل وتتمسح) ← <b>ترحيل</b> (لازم متوازن وفي سنة مفتوحة — بعدها مايتعدّلش) ← <b>إلغاء الترحيل</b> بصلاحية لو السنة لسه مفتوحة ← أو <b>عكس</b> بقيد جديد معكوس (إجباري بعد قفل السنة). <b>دفتر اليومية هو مصدر الحقيقة</b>: كشف الحساب وميزان المراجعة والقوائم كلها هتتحسب من القيود المرحّلة بس.
+<br><b>كانت إيه في الأكسس:</b> 🆕 <b>مكانتش موجودة خالص</b> — الأكسس (44 جدول) مكانش فيه دليل حسابات ولا قيود: كل شاشة (سند، فاتورة، مصروف، سحب شريك) كانت بتسجّل في جدولها بس، والأرصدة بتتحسب باستعلامات من الجداول دي. يعني مفيش حاجة تتنقل من الأكسس للشاشة دي.
+<ul>
+<li><b>من E3marEG (فكرة بس):</b> رأس + سطور ورقم <span class="ltr">JV</span> من عدّاد بقفل · المسودة والترحيل · العكس بقيد جديد والأصلي مايتلمسش. <b>ومش هناخد عيوبه:</b> كان بيسمح بمسح أي قيد (حتى المرحّل والأوتوماتيك) وفيه زرار «حذف كل القيود»، وكان بيسكت لو القيد مش متوازن.</li>
+<li><b>الرقم:</b> <span class="ltr">JV-2026-00001</span> (من ترقيم المستندات اللي خلص في 1ب — بيبدأ من 1 كل سنة مالية، جوه قفل عشان جهازين مايخدوش نفس الرقم).</li>
+<li><b>الحماية في القاعدة نفسها</b> (البند «حماية القاعدة» في نفس المرحلة): المرحّل لازم متوازن · مايترحّلش في سنة مقفولة ولا على حساب رئيسي أو موقوف · المرحّل مايتعدّلش ولا يتمسح غير بإلغاء الترحيل · <span class="ltr">row_version</span> (جهازين فاتحين نفس القيد) · سجل التعديلات قبل/بعد بالسطور.</li>
+<li><b>مكان الشاشة:</b> قسم «الحسابات» 📒 ← «القيود اليومية» (جنب شجرة الحسابات ومراكز التكلفة) · صلاحيات: عرض · إضافة · تعديل · حذف (المسودة) · <b>ترحيل</b> · <b>إلغاء الترحيل</b> 🔑 · <b>عكس</b>.</li>
+</ul>`;
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>الحفظ والترحيل:</b> زرارين <b>«حفظ مسودة»</b> و<b>«ترحيل»</b> (اقتراحي — زي قرارك «اعتماد = ترحيل خطوة واحدة») والمسودة <b>تتحفظ حتى لو مش متوازنة</b> بس ماتترحّلش؟ ولا مفيش مسودة غير متوازنة خالص؟</li>
+<li><b>رقم القيد:</b> الرقم الرسمي <span class="ltr">JV-2026-00001</span> <b>بيتاخد وقت الترحيل</b> (اقتراحي — عشان المسودات اللي تتمسح ماتعملش فجوات في الأرقام، والمسودة رقمها مؤقت «مسودة 7») ولا بيتاخد من أول حفظ؟ ولو اتلغى ترحيله بيفضل محتفظ برقمه (اقتراحي)؟</li>
+<li><b>إلغاء الترحيل:</b> في السنة المفتوحة القيد <b>بيرجع مسودة بسطوره</b> بصلاحية «إلغاء الترحيل» + <b>كلمة سر الإجراء 🔑 + سبب إجباري</b> بيتسجل في السجل (اقتراحي)؟ ولا الصلاحية بس من غير كلمة سر؟</li>
+<li><b>العكس:</b> متاح <b>في السنة المفتوحة كمان</b> (مش بعد القفل بس) والقيد العكسي <b>بتاريخ النهارده ويتغيّر</b> (لازم في سنة مفتوحة) — اقتراحي؟ والعكس بيترحّل لوحده على طول (اقتراحي) ولا بيطلع مسودة الأول؟</li>
+<li><b>الطرف على السطر:</b> <b>إجباري</b> لو الحساب رقابة (العملاء ← عميل · الموردين ← مورد · العهد ← موظف · جاري الشركاء ← شريك) زي النموذج 9 (اقتراحي)؟ و<b>مركز التكلفة</b> على حسابات المصروفات: اختياري (اقتراحي) ولا إجباري؟</li>
+<li><b>العملة:</b> القيد اليدوي <b>بالجنيه بس دلوقتي</b> والعملات الأجنبية تيجي مع السندات والفواتير (اقتراحي) — ولا عايز من دلوقتي عملة وسعر صرف على القيد (المبلغ بالدولار وبالجنيه)؟</li>
+<li><b>القيود الأوتوماتيك</b> (من الفواتير والسندات — لما ييجوا): تظهر في نفس الشاشة <b>للقراية بس</b> بفلتر «يدوي / أوتوماتيك» وزرار «افتح المستند» (اقتراحي)؟ ولا الشاشة دي لليدوي بس وفيه شاشة «دفتر اليومية» لوحدها للكل؟</li>
+<li><b>الإضافات:</b> <b>«نسخ قيد»</b> و<b>«طباعة سند القيد» PDF</b> زي النموذج 5 دلوقتي (اقتراحي)، و<b>القوالب المتكررة</b> (النموذج 8) و<b>المرفقات</b> (صورة الإيصال) بعدين — موافق؟ ولا عايز القوالب دلوقتي كمان؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+function setLine(arr,t){const i=+(t.dataset.ln2??t.dataset.ln9),c=+t.dataset.col;arr[i][c]=t.value;
+  if(c===2&&t.value)arr[i][3]="";if(c===3&&t.value)arr[i][2]="";
+  if(arr===ST.l9&&c===0&&!ROLE[t.value])arr[i][6]="";}
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.dataset.ln2!==undefined){setLine(ST.l2,t);render();return;}
+  if(t.dataset.ln9!==undefined){setLine(ST.l9,t);render();return;}
+  if(t.dataset.chk){ST[t.dataset.chk]=t.checked;if(t.checked&&ST.s7==="draft"){} render();return;}
+  if(t.dataset.st){ST[t.dataset.st]=t.value;render();}
+});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const a2=e.target.closest("[data-add2]");if(a2){ST.l2.push(["5204","","","",""]);render();return;}
+  const d2=e.target.closest("[data-del2]");if(d2){ST.l2.splice(+d2.dataset.del2,1);render();return;}
+  const a9=e.target.closest("[data-add9]");if(a9){ST.l9.push(["2101","","","","","",""]);render();return;}
+  const el=e.target.closest("[data-set]"); if(!el) return;
+  const k=el.dataset.set; let v=el.dataset.v;
+  if(el.dataset.num) v=Number(v);
+  if(k==="f4"&&ST.f4===v) v="";
+  ST[k]=v; render();
+});
+render();
+</script>
+</body>
+</html>
