@@ -73,6 +73,12 @@ def _banks() -> QWidget:
     return BanksScreen()
 
 
+def _cash_transfers() -> QWidget:
+    from app.ui.screens.cash_transfers_screen import CashTransfersScreen
+
+    return CashTransfersScreen()
+
+
 def _customer_receipts() -> QWidget:
     from app.ui.screens.vouchers_screen import ReceiptsScreen
 
@@ -217,6 +223,7 @@ SCREEN_FACTORIES: dict[str, ScreenFactory] = {
     "partners": _partners,
     "treasuries": _treasuries,
     "banks": _banks,
+    "cash_transfers": _cash_transfers,
     "customer_receipts": _customer_receipts,
     "supplier_payments": _supplier_payments,
     "expense_types": _expense_types,

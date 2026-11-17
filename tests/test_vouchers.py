@@ -174,9 +174,9 @@ def test_database_rules(env):
     db.execute("UPDATE party.suppliers SET is_active = true WHERE id = %s", [stopped])
     ins(customer_id=other)
     ins("supplier_payments", supplier_id=stopped)
-    with pytest.raises(psycopg.errors.ForeignKeyViolation):                # العميل اللي عليه سندات مايتمسحش
+    with pytest.raises((psycopg.errors.ForeignKeyViolation, psycopg.errors.RestrictViolation)):  # العميل اللي عليه سندات مايتمسحش
         db.execute("DELETE FROM party.customers WHERE id = %s", [other])
-    with pytest.raises(psycopg.errors.ForeignKeyViolation):                # والمورد كمان
+    with pytest.raises((psycopg.errors.ForeignKeyViolation, psycopg.errors.RestrictViolation)):  # والمورد كمان
         db.execute("DELETE FROM party.suppliers WHERE id = %s", [stopped])
 
 

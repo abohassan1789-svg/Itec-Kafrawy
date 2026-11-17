@@ -181,6 +181,10 @@ SECTIONS: tuple[Section, ...] = (
                    actions=("view", "create", "edit", "save", "delete", "export")),
             Target("banks", "البنوك", "Banks", icon="🏦",
                    actions=("view", "create", "edit", "save", "delete", "export")),
+            # حركات الخزائن والبنوك (2026-11-17 — النموذج 2 «تبويب لكل نوع»): إيداع · سحب · بين خزنتين · بين بنكين ·
+            # مسودة + ترحيل زي السندات (رد المستخدم) · صلاحية واحدة للشاشة.
+            Target("cash_transfers", "حركات الخزائن والبنوك", "Cash & Bank Transfers", icon="🔁",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
         ), icon="💵"),
         # السندات (2026-11-17 — النموذج 5): شاشتين منفصلين وجدولين منفصلين وصلاحية لكل واحدة —
         # «سند القبض للعميل وسند الصرف للمورد» (قرار المستخدم؛ «سند صرف العملاء» القديم اتشال).
