@@ -259,7 +259,7 @@ def test_roles_permissions_and_overrides(sec_db):
 
 def test_grouped_matrix_follows_sidebar(sec_db):
     entries = PermissionService(sec_db).grouped_matrix()
-    assert entries[0] == {"kind": "header", "gid": "acc", "level": 0, "title": "📒  الحسابات", "count": 7}
+    assert entries[0] == {"kind": "header", "gid": "acc", "level": 0, "title": "📒  الحسابات", "count": 8}
     sys_header = next(e for e in entries if e["kind"] == "header" and e["gid"] == "sys")
     assert sys_header == {"kind": "header", "gid": "sys", "level": 0, "title": "🔐  النظام والصلاحيات", "count": 8}
     targets = [e["row"]["target_code"] for e in entries if e["kind"] == "target"]
@@ -267,7 +267,7 @@ def test_grouped_matrix_follows_sidebar(sec_db):
     assert sales_header["count"] == 3
     purch_header = next(e for e in entries if e["kind"] == "header" and e["gid"] == "purch")
     assert purch_header["count"] == 2
-    assert targets == ["chart_of_accounts", "default_accounts", "cost_centers", "journal_entries", "opening_balances", "partners", "expense_types", "customer_groups", "customers", "projects", "supplier_groups", "suppliers", "employees", "warehouses", "units_brands", "item_categories", "items", "treasuries", "banks", "company", "fiscal_years", "currencies", "tax_codes", "users", "roles", "user_permissions", "login_logs"]
+    assert targets == ["chart_of_accounts", "default_accounts", "cost_centers", "journal_entries", "opening_balances", "account_statement", "partners", "expense_types", "customer_groups", "customers", "projects", "supplier_groups", "suppliers", "employees", "warehouses", "units_brands", "item_categories", "items", "treasuries", "banks", "company", "fiscal_years", "currencies", "tax_codes", "users", "roles", "user_permissions", "login_logs"]
 
 
 def test_action_password(sec_db, monkeypatch):

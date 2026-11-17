@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج كشف الحساب ودفتر الأستاذ — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+/* ===== إضافات شاشة كشف الحساب ===== */
+.b-run{background:#137A38}.b-prn{background:#1F4E79}.b-pdf{background:#B91C1C}
+.tbl tr.prev td{background:#EFF6FF !important;color:#1D4ED8;font-weight:900}
+.tbl tr.end td{background:#ECFDF3 !important;color:#087443;font-weight:900}
+.tbl tr.grp td{background:#E8F5EC !important;color:var(--green);font-weight:900}
+.tbl tr.sub td{background:#FFFBEB !important;color:#78350F;font-size:8px}
+.tbl tr.clk{cursor:pointer}
+.tbl td.wrap{white-space:normal;min-width:90px}
+.bl{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.bl small{font-size:7px;font-weight:900;margin-left:3px}
+.bl.bd small{color:#087443}.bl.bc small{color:#1D4ED8}
+.flt{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px;display:flex;gap:4px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.flt label{font-size:8.5px;font-weight:800;color:#334155}
+.flt select.lv,.flt input.lv{flex:0 0 auto}
+input.lv[type=date]{width:96px;direction:ltr}
+.tgl{font-size:8.5px;font-weight:900;color:var(--green);display:inline-block;width:10px}
+.paper{background:#fff;width:94%;margin:6px auto;box-shadow:0 2px 8px rgba(15,23,42,.25);padding:10px 12px;font-size:8.5px}
+.paper .ph{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--green);padding-bottom:5px;margin-bottom:5px}
+.paper .lg{background:var(--green);color:#fff;font-weight:900;font-size:12px;border-radius:5px;padding:4px 8px;letter-spacing:1px}
+.paper h4{margin:0;font-size:12px;color:var(--green)}
+.paper .inf{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;margin:4px 0 6px;font-size:8.5px}
+.paper .inf b{color:#334155}
+.paper .due{margin-top:6px;border:1px dashed var(--green);border-radius:5px;padding:4px 6px;font-weight:900;color:#087443;display:flex;justify-content:space-between}
+.paper .sig{display:flex;justify-content:space-between;margin-top:12px;color:var(--muted);font-weight:700}
+.paper .sig span{border-top:1px solid #94A3B8;padding-top:2px;min-width:80px;text-align:center}
+.paper .ft{margin-top:6px;color:#94A3B8;font-size:7.5px;display:flex;justify-content:space-between}
+.spark{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 6px;flex-shrink:0}
+.spark small{color:var(--muted);font-size:7.5px;font-weight:800}
+.agebar{display:flex;height:10px;border-radius:5px;overflow:hidden;margin:4px 0;background:#E2E8F0}
+.agebar span{display:block;height:100%}
+.bs{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1;min-height:0}
+.bs .sd{background:#fff;border:1px solid var(--card-border);border-radius:7px;display:flex;flex-direction:column;min-height:0;overflow:auto}
+.bs h5{margin:0;padding:4px 6px;font-size:9.5px;font-weight:900;color:#fff;display:flex;justify-content:space-between;position:sticky;top:0}
+.bs .a h5{background:#137A38}.bs .l h5{background:#1F4E79}
+.bs .r{display:flex;justify-content:space-between;align-items:center;padding:2px 6px;border-bottom:1px solid #F1F5F9;font-size:8.5px}
+.bs .r b{direction:ltr;unicode-bidi:isolate}
+.bs .r.h{background:#F8FAFC;font-weight:900;color:var(--green);margin-top:auto}
+.bs .r.pl{background:#EFF6FF;color:#1D4ED8;font-weight:900}
+.legend{display:flex;gap:4px;flex-wrap:wrap;font-size:7.5px;color:var(--muted);font-weight:700;flex-shrink:0;align-items:center}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة «كشف الحساب ودفتر الأستاذ» (المرحلة 4 · برصيد سابق · كله من سطور القيود المرحّلة)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل الشاشات اللي خلصت — الفرق في طريقة العرض والاختيار. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>الأسماء والمبالغ هنا وهمية</b> (مش من الأكسس)، وأكواد الحسابات من الدليل اللي في البرنامج، والقيود مثال على شكل الفواتير والسندات اللي جاية. <b>الحاجات الزرقا شغالة وكلها مربوطة ببعض</b>: غيّر الطرف أو تاريخ «من» في أي نموذج ← الرصيد السابق والرصيد الجاري بيتحسبوا من جديد في الكل.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== الدليل (الكود: [الاسم، الأب]) — الكود الفرعي بيبدأ بكود أبوه
+const A={"1":["الأصول",null],"11":["الأصول المتداولة","1"],"1101":["النقدية بالخزائن","11"],"110101":["الخزينة الرئيسية","1101"],"110102":["خزينة النثريات","1101"],
+ "1102":["البنوك","11"],"110201":["البنك الأهلي — جاري","1102"],"110202":["بنك مصر — جاري","1102"],"1103":["العملاء","11"],"110301":["العملاء — عام","1103"],"110302":["عملاء محلين 1","1103"],
+ "1104":["أوراق القبض (شيكات)","11"],"1105":["المخزون","11"],"1106":["ضرايب لينا","11"],"110601":["ض.ق.م — مدخلات","1106"],"1107":["عهد الموظفين","11"],
+ "2":["الخصوم",null],"21":["الخصوم المتداولة","2"],"2101":["الموردين","21"],"2103":["ض.ق.م — مخرجات","21"],
+ "3":["حقوق الملكية",null],"32":["جاري الشركاء","3"],"34":["أرصدة افتتاحية","3"],
+ "4":["الإيرادات",null],"41":["المبيعات","4"],"4101":["مبيعات بضاعة","41"],"42":["مردودات المبيعات","4"],
+ "5":["المصروفات",null],"51":["تكلفة المبيعات","5"],"52":["مصروفات عمومية وإدارية","5"],"5203":["كهرباء ومياه","52"],"5204":["مصروفات نثرية","52"],
+ "53":["مصروفات بيع وتوزيع","5"],"5303":["خصم مسموح به","53"],"54":["مصروفات تمويلية","5"],"5402":["مصاريف بنكية","54"]};
+const isLeaf=c=>!Object.keys(A).some(k=>k!==c&&k.startsWith(c));
+const lvl=c=>({1:0,2:1,4:2,6:3})[c.length];
+// ===== الأطراف (وهمية)
+const P={customer:[[1,"1","شركة المستقبل للمقاولات"],[2,"2","مجموعة الأفق الهندسية"],[3,"3","مؤسسة النور للتجارة"]],
+ supplier:[[1,"SUB-001","مورد الأجهزة الكهربائية"],[2,"SUB-002","شركة الكابلات الحديثة"]],
+ employee:[[3,"EMP-003","موظف (3) — مهندس موقع"]],partner:[[1,"PRT-001","الشريك (1)"]]};
+const KD={customer:["عميل","العملاء","👥"],supplier:["مورد","الموردين","🚚"],employee:["موظف (عهدة)","عهد الموظفين","🧑‍🔧"],partner:["شريك","الشركاء","🤝"],
+ treasury:["خزنة","الخزائن","💵",["110101","110102"]],bank:["بنك","البنوك","🏦",["110201","110202"]],account:["حساب (دفتر الأستاذ)","دفتر الأستاذ","📒"]};
+const PARTY=["customer","supplier","employee","partner"];
+const DT={OB:["أرصدة افتتاحية","sy"],INV:["فاتورة بيع","ok"],SR:["مردود بيع","no"],PI:["فاتورة شراء","pj"],RV:["سند قبض","ty"],PV:["سند صرف","cc"],JV:["قيد يدوي","x"]};
+// ===== القيود المرحّلة (مثال): [التاريخ، النوع، الرقم، البيان، السطور: [الحساب، الطرف، مدين، دائن، أمر التوريد]]
+const J=[
+["2026-01-01","OB","OB-2026","أرصدة افتتاحية",[["110101",0,24300],["110201",0,312000],["110301","customer:1",185000],["110301","customer:2",42500],["110302","customer:3",0,3200],["2101","supplier:1",0,96000],["2101","supplier:2",0,38750],["1107","employee:3",5000],["32","partner:1",0,50000],["34",0,0,380850]]],
+["2026-01-12","INV","INV-2026-00001","فاتورة بيع — لوحة توزيع رئيسية",[["110301","customer:1",57000],["4101",0,0,50000],["2103",0,0,7000],["51",0,36000],["1105",0,0,36000]]],
+["2026-01-20","RV","RV-2026-00001","تحصيل نقدي — دفعة من الحساب",[["110101",0,100000],["110301","customer:1",0,100000]]],
+["2026-02-03","INV","INV-2026-00002","فاتورة بيع — كابلات",[["110301","customer:2",22800],["4101",0,0,20000],["2103",0,0,2800],["51",0,15000],["1105",0,0,15000]]],
+["2026-02-10","PI","PI-2026-00001","فاتورة شراء — قواطع ولوحات",[["1105",0,40000],["110601",0,5600],["2101","supplier:1",0,45600]]],
+["2026-02-15","SR","SR-2026-00001","مردود بيع — من INV-2026-00001",[["42",0,5000],["2103",0,700],["110301","customer:1",0,5700],["1105",0,3600],["51",0,0,3600]]],
+["2026-02-25","PV","PV-2026-00001","سداد للمورد — تحويل بنكي",[["2101","supplier:1",60000],["110201",0,0,60000]]],
+["2026-03-05","RV","RV-2026-00002","تحصيل — تحويل على البنك الأهلي",[["110201",0,80000],["110301","customer:1",0,80000]]],
+["2026-03-09","JV","JV-2026-00004","خصم مسموح به — تسوية حساب",[["5303",0,2000],["110301","customer:1",0,2000]]],
+["2026-03-18","INV","INV-2026-00003","فاتورة بيع — تركيب لوحات",[["110301","customer:1",114000,0,"Itec-007"],["4101",0,0,100000,"Itec-007"],["2103",0,0,14000],["51",0,70000,0,"Itec-007"],["1105",0,0,70000]]],
+["2026-03-22","PV","PV-2026-00002","عهدة نقدية لموقع",[["1107","employee:3",8000,0,"Itec-007"],["110101",0,0,8000]]],
+["2026-03-28","JV","JV-2026-00006","تسوية عهدة — فواتير نثرية",[["5204",0,6500,0,"Itec-007"],["1107","employee:3",0,6500,"Itec-007"]]],
+["2026-04-02","RV","RV-2026-00003","تحصيل نقدي",[["110101",0,30000],["110301","customer:1",0,30000]]],
+["2026-04-10","JV","JV-2026-00008","إيداع الشريك في البنك",[["110201",0,100000],["32","partner:1",0,100000]]],
+["2026-04-15","PI","PI-2026-00002","فاتورة شراء — كابلات",[["1105",0,25000],["110601",0,3500],["2101","supplier:2",0,28500]]],
+["2026-04-20","PV","PV-2026-00003","سداد نقدي للمورد",[["2101","supplier:2",20000],["110101",0,0,20000]]],
+["2026-04-28","PV","PV-2026-00004","فاتورة كهرباء أبريل",[["5203",0,3400],["110101",0,0,3400]]],
+["2026-05-06","INV","INV-2026-00004","فاتورة بيع — قواطع",[["110302","customer:3",11400],["4101",0,0,10000],["2103",0,0,1400],["51",0,7000],["1105",0,0,7000]]],
+["2026-05-12","RV","RV-2026-00004","تحصيل بشيك — يستحق 2026-06-15",[["1104",0,50000],["110301","customer:1",0,50000]]],
+["2026-05-20","JV","JV-2026-00011","مصاريف بنكية — مايو",[["5402",0,150],["110201",0,0,150]]],
+["2026-05-27","RV","RV-2026-00005","تحصيل نقدي",[["110101",0,15000],["110301","customer:2",0,15000]]]];
+// أصناف الفواتير (للنموذج 9 — بتيجي من الفاتورة نفسها مش من القيد)
+const ITEMS={"INV-2026-00001":[["لوحة توزيع رئيسية 400A",1,40000],["قاطع 250A",2,5000]],"INV-2026-00002":[["كابل 4×10 مم (متر)",500,40]],
+ "INV-2026-00003":[["تركيب لوحات — مصنعية",1,40000],["لوحة فرعية 100A",4,12500],["كابل 4×16 مم (متر)",200,50]],"INV-2026-00004":[["قاطع 63A",20,500]],
+ "SR-2026-00001":[["قاطع 250A",1,5000]],"PI-2026-00001":[["قاطع 250A",6,4000],["لوحة فرعية 100A",2,8000]],"PI-2026-00002":[["كابل 4×16 مم (متر)",1000,25]]};
+
+const ST={kind:"customer",pid:"1",from:"2026-03-01",to:"2026-05-31",pjc:false,m4:"1101",m5:"cash",m7:"2026-03",x9:{"INV-2026-00003":1},t10:"mov"};
+const N=c=>`<span class="ltr">${c}</span>`;
+const m2=n=>(+n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const bl=v=>Math.abs(v)<0.005?`<span class="bl">0.00</span>`:`<span class="bl ${v>0?'bd':'bc'}">${m2(Math.abs(v))}<small>${v>0?'مدين':'دائن'}</small></span>`;
+const pname=p=>{if(!p)return `<span style="color:#94A3B8">—</span>`;const [k,id]=p.split(":");const x=P[k].find(r=>String(r[0])===id);return `${N(x[1])} ${x[2]}`;};
+const listOf=k=>PARTY.includes(k)?P[k].map(r=>[String(r[0]),r[1],r[2]]):k==="account"?Object.keys(A).sort().map(c=>[c,c,A[c][0]]):KD[k][3].map(c=>[c,c,A[c][0]]);
+const firstId=k=>k==="account"?"110101":listOf(k)[0][0];
+const tgtOf=(k,id)=>PARTY.includes(k)?{party:k+":"+id}:{acc:id};
+const tgt=()=>tgtOf(ST.kind,ST.pid);
+function tname(k=ST.kind,id=ST.pid){const r=listOf(k).find(x=>x[0]===String(id));return `${N(r[1])} ${r[2]}`;}
+function rowsOf(tg){const out=[];J.forEach(e=>e[4].forEach(l=>{const [acc,p,dr=0,cr=0,pj=""]=l;if(tg.party?p===tg.party:acc.startsWith(tg.acc))out.push({d:e[0],t:e[1],no:e[2],ds:e[3],acc,p,dr,cr,pj});}));return out;}
+function stmt(tg,from=ST.from,to=ST.to){const all=rowsOf(tg);let prev=0;all.filter(r=>r.d<from).forEach(r=>prev+=r.dr-r.cr);let run=prev,D=0,C=0;
+  const rows=all.filter(r=>r.d>=from&&r.d<=to).map(r=>{run+=r.dr-r.cr;D+=r.dr;C+=r.cr;return {...r,bal:run};});return {prev,rows,D,C,end:run};}
+const docB=r=>`<span class="bdg ${DT[r.t][1]}" title="${DT[r.t][0]}">${N(r.no)}</span>`;
+const legend=()=>`<div class="legend">${Object.keys(DT).map(k=>`<span class="bdg ${DT[k][1]}">${DT[k][0]}</span>`).join("")}<span>· دبل كليك على السطر = يفتح المستند</span></div>`;
+
+function win(inner,title="📒 كشف الحساب ودفتر الأستاذ — A-H CODE"){return `<div class="win"><div class="wt"><span>${title}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+const tbS=(extra="")=>`<div class="tb"><span class="bt b-run">عرض ▶</span><span class="bt b-prn">طباعة</span><span class="bt b-pdf">PDF</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-ref">تحديث</span><span class="bt b-exit">خروج</span>${extra}</div>`;
+const kp=(t,v,k="")=>`<div class="kp ${k}"><small>${t}</small><b>${v}</b></div>`;
+const selKind=()=>`<select class="lv" data-k="kind" style="width:100px">${Object.keys(KD).map(k=>`<option value="${k}" ${ST.kind===k?"selected":""}>${KD[k][2]} ${KD[k][0]}</option>`).join("")}</select>`;
+const selPid=(w=150)=>`<select class="lv" data-k="pid" style="width:${w}px">${listOf(ST.kind).map(r=>`<option value="${r[0]}" ${r[0]===String(ST.pid)?"selected":""}>${r[1]} — ${r[2]}${ST.kind==="account"&&!isLeaf(r[0])?" (رئيسي)":""}</option>`).join("")}</select>`;
+const dIn=k=>`<input type="date" class="lv" data-k="${k}" value="${ST[k]}">`;
+const per=()=>`<span class="chipf ${ST.from==="2026-05-01"?'on':''}" data-per="2026-05-01">الشهر ده</span><span class="chipf ${ST.from==="2026-03-01"?'on':''}" data-per="2026-03-01">آخر 3 شهور</span><span class="chipf ${ST.from==="2026-01-01"?'on':''}" data-per="2026-01-01">من أول السنة</span>`;
+const filters=(more="")=>`<div class="flt"><label>النوع</label>${selKind()}<label>الاسم</label>${selPid()}<label>من</label>${dIn("from")}<label>إلى</label>${dIn("to")}${per()}${more}</div>`;
+
+// جدول الكشف (رصيد سابق ← الحركات بالرصيد الجاري ← إجمالي الفترة ← الرصيد آخر المدة)
+function stTable(s,cols=["d","doc","ds","dr","cr","bal"],o={}){
+  const H={d:"التاريخ",doc:"المستند",ds:"البيان",acc:"الحساب",who:"الطرف",pj:"أمر التوريد",dr:"مدين",cr:"دائن",bal:"الرصيد"};
+  const cell=(c,r)=>c==="d"?`<td>${N(r.d)}</td>`:c==="doc"?`<td>${docB(r)}</td>`:c==="ds"?`<td class="wrap">${r.ds}</td>`:c==="acc"?`<td>${N(r.acc)} ${A[r.acc][0]}</td>`:c==="who"?`<td>${pname(r.p)}</td>`:c==="pj"?`<td>${r.pj?N(r.pj):""}</td>`:c==="dr"?`<td class="n">${r.dr?m2(r.dr):""}</td>`:c==="cr"?`<td class="n">${r.cr?m2(r.cr):""}</td>`:`<td class="n">${bl(r.bal)}</td>`;
+  const span=cols.indexOf("dr");
+  const prev=`<tr class="prev"><td colspan="${span}">⏮ رصيد سابق (قبل ${N(ST.from)})</td><td class="n">${s.prev>0?m2(s.prev):""}</td><td class="n">${s.prev<0?m2(-s.prev):""}</td><td class="n">${bl(s.prev)}</td></tr>`;
+  const body=s.rows.map(r=>(o.rowHook?o.rowHook(r,cols):"")||`<tr class="clk">${cols.map(c=>cell(c,r)).join("")}</tr>`).join("")||`<tr><td colspan="${cols.length}" style="color:var(--muted);text-align:center">مفيش حركات في الفترة دي</td></tr>`;
+  const tot=`<tr class="tot"><td colspan="${span}">إجمالي حركة الفترة (${s.rows.length} سطر)</td><td class="n">${m2(s.D)}</td><td class="n">${m2(s.C)}</td><td></td></tr>`;
+  const end=`<tr class="end"><td colspan="${span}">⏭ الرصيد آخر المدة (${N(ST.to)})</td><td colspan="2"></td><td class="n">${bl(s.end)}</td></tr>`;
+  return `<table class="tbl"><tr>${cols.map(c=>`<th>${H[c]}</th>`).join("")}</tr>${prev}${body}${tot}${end}</table>`;}
+
+// 1) فلاتر فوق + جدول
+function m1(){const s=stmt(tgt());const cols=ST.pjc?["d","doc","ds","pj","dr","cr","bal"]:["d","doc","ds","dr","cr","bal"];
+  return win(tbS()+`<div class="content" style="flex-direction:column;gap:4px">${filters(`<label><input type="checkbox" class="cb" data-k="pjc" ${ST.pjc?"checked":""}> عمود أمر التوريد</label>`)}<div class="hdr"><b>${KD[ST.kind][2]} ${tname()}</b><div class="p">من ${N(ST.from)} إلى ${N(ST.to)} · المرحّل بس · رصيد سابق ${bl(s.prev)} ← رصيد آخر المدة ${bl(s.end)}</div></div><div class="scroll">${stTable(s,cols)}</div>${legend()}</div>`);}
+
+// 2) شريط الأنواع + قايمة بالأرصدة + الكشف
+function m2v(){const k=ST.kind==="account"?"treasury":ST.kind;
+  const side=`<div class="side" style="width:100px">${Object.keys(KD).filter(x=>x!=="account").map(x=>`<div class="it ${k===x?'on':''}" data-kd="${x}">${KD[x][2]} ${KD[x][1]}<small>${listOf(x).length}</small></div>`).join("")}<div class="hint" style="margin-top:auto">الرصيد = لحد ${N(ST.to)}</div></div>`;
+  const lst=listOf(k).map(r=>{const e=stmt(tgtOf(k,r[0]),"0000-00-00",ST.to).end;return `<tr class="clk ${k===ST.kind&&r[0]===String(ST.pid)?'sel':''}" data-kd="${k}" data-pid="${r[0]}"><td>${N(r[1])}</td><td>${r[2]}</td><td class="n">${bl(e)}</td></tr>`;}).join("");
+  const s=stmt(tgt());
+  return win(tbS()+`<div class="content">${side}<div class="col" style="flex:1"><div class="srch"><i>🔍 كود / اسم</i></div><div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الاسم</th><th>الرصيد</th></tr>${lst}</table></div></div><div class="col" style="flex:1.6"><div class="flt"><label>من</label>${dIn("from")}<label>إلى</label>${dIn("to")}</div><div class="hdr" style="margin-top:3px"><b>${tname()}</b><div class="p">سابق ${bl(s.prev)} · مدين ${N(m2(s.D))} · دائن ${N(m2(s.C))}</div></div><div class="scroll" style="margin-top:3px">${stTable(s,["d","doc","dr","cr","bal"])}</div></div></div>`);}
+
+// 3) كروت أرقام + خط الرصيد + جدول
+function m3(){const s=stmt(tgt());const pts=[s.prev,...s.rows.map(r=>r.bal)];const mx=Math.max(...pts.map(Math.abs),1);
+  const W=300,H=34,step=pts.length>1?W/(pts.length-1):W;const y=v=>(H/2-(v/mx)*(H/2-3)).toFixed(1);
+  const svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" height="34" preserveAspectRatio="none"><line x1="0" y1="${H/2}" x2="${W}" y2="${H/2}" stroke="#CBD5E1" stroke-dasharray="3 3"/><polyline points="${pts.map((v,i)=>`${(i*step).toFixed(1)},${y(v)}`).join(" ")}" fill="none" stroke="#137A38" stroke-width="2"/>${pts.map((v,i)=>`<circle cx="${(i*step).toFixed(1)}" cy="${y(v)}" r="2.5" fill="${i?'#137A38':'#2563EB'}"/>`).join("")}</svg>`;
+  const sd=v=>m2(Math.abs(v))+(v>=0?" مدين":" دائن");
+  return win(tbS()+`<div class="content" style="flex-direction:column;gap:4px">${filters()}<div class="kpis">${kp("⏮ رصيد سابق",sd(s.prev),"b")}${kp("مدين الفترة",m2(s.D),"g")}${kp("دائن الفترة",m2(s.C),"r")}${kp("⏭ آخر المدة",sd(s.end),"g")}</div><div class="spark"><small>حركة الرصيد في الفترة (النقطة الزرقا = الرصيد السابق · الخط المتقطع = صفر)</small>${svg}</div><div class="scroll">${stTable(s)}</div></div>`);}
+
+// 4) شجرة الدليل + دفتر الأستاذ (الرئيسي بيجمع اللي تحته)
+const CTRL=["110301","110302","2101","1107","32"];
+function m4(){const c=ST.m4;
+  const tree=Object.keys(A).sort().map(k=>{const e=stmt({acc:k},"0000-00-00",ST.to).end;return `<div class="${c===k?'sel':''}" data-set="m4" data-v="${k}" style="padding-right:${4+lvl(k)*9}px;${isLeaf(k)?'':'font-weight:900;color:var(--green)'}">${isLeaf(k)?'':'<span class="tg">▾</span>'}<b class="ltr" style="color:#1F4E79">${k}</b> ${A[k][0]}<span style="margin-right:auto">${e?bl(e):""}</span></div>`;}).join("");
+  const s=stmt({acc:c});const cols=!isLeaf(c)?["d","doc","acc","dr","cr","bal"]:CTRL.includes(c)?["d","doc","who","dr","cr","bal"]:["d","doc","ds","dr","cr","bal"];
+  const hint=!isLeaf(c)?"حساب رئيسي ← بيجمع كل الفرعيين تحته (عمود «الحساب»)":CTRL.includes(c)?"حساب رقابة ← كل الأطراف (عمود «الطرف») — كشف طرف لوحده من «النوع»":"حساب فرعي عادي";
+  return win(tbS()+`<div class="content"><div class="col" style="flex:1"><div class="srch"><i>🔍 كود / اسم حساب</i></div><div class="tree scroll">${tree}</div></div><div class="col" style="flex:1.5"><div class="flt"><label>من</label>${dIn("from")}<label>إلى</label>${dIn("to")}</div><div class="hdr" style="margin-top:3px"><b>${N(c)} ${A[c][0]}</b><div class="p">${hint}</div></div><div class="scroll" style="margin-top:3px">${stTable(s,cols)}</div></div></div>`);}
+
+// 5) دفتر الأستاذ العام (كل حساب ورا التاني)
+const G5={cash:["النقدية والبنوك",k=>k.startsWith("1101")||k.startsWith("1102")],cus:["العملاء",k=>k.startsWith("1103")],rev:["الإيرادات والمصروفات",k=>"45".includes(k[0])],all:["كل الحسابات",()=>true]};
+function m5(){const g=G5[ST.m5];const accs=Object.keys(A).sort().filter(k=>isLeaf(k)&&g[1](k));
+  const blocks=accs.map(k=>{const s=stmt({acc:k});if(!s.rows.length&&!s.prev)return "";
+    return `<tr class="grp"><td colspan="6">📒 ${N(k)} ${A[k][0]}</td></tr><tr class="prev"><td colspan="3">⏮ رصيد سابق</td><td class="n">${s.prev>0?m2(s.prev):""}</td><td class="n">${s.prev<0?m2(-s.prev):""}</td><td class="n">${bl(s.prev)}</td></tr>`+s.rows.map(r=>`<tr class="clk"><td>${N(r.d)}</td><td>${docB(r)}</td><td class="wrap">${r.ds}</td><td class="n">${r.dr?m2(r.dr):""}</td><td class="n">${r.cr?m2(r.cr):""}</td><td class="n">${bl(r.bal)}</td></tr>`).join("")+`<tr class="end"><td colspan="3">⏭ آخر المدة · حركة ${N(m2(s.D))} / ${N(m2(s.C))}</td><td colspan="2"></td><td class="n">${bl(s.end)}</td></tr>`;}).join("");
+  const chips=Object.keys(G5).map(x=>`<span class="chipf ${ST.m5===x?'on':''}" data-set="m5" data-v="${x}">${G5[x][0]}</span>`).join("");
+  return win(tbS()+`<div class="content" style="flex-direction:column;gap:4px"><div class="flt"><label>الحسابات</label>${chips}<label>من</label>${dIn("from")}<label>إلى</label>${dIn("to")}</div><div class="scroll"><table class="tbl"><tr><th>التاريخ</th><th>المستند</th><th>البيان</th><th>مدين</th><th>دائن</th><th>الرصيد</th></tr>${blocks}</table></div><div class="hint">الحساب اللي مالوش رصيد ولا حركة في الفترة مش بيظهر · بيتطبع كل حساب ورا التاني.</div></div>`,"📚 دفتر الأستاذ العام — A-H CODE");}
+
+// 6) شكل T
+function m6(){const s=stmt(tgt());const D=s.rows.filter(r=>r.dr),C=s.rows.filter(r=>r.cr);
+  const it=(r,v)=>`<div class="r"><span>${N(r.d)} ${docB(r)}</span><b>${m2(v)}</b></div>`;
+  const dTot=s.D+Math.max(0,s.prev),cTot=s.C+Math.max(0,-s.prev);const big=Math.max(dTot,cTot);
+  const dr=`${s.prev>0?`<div class="r pl"><span>⏮ رصيد سابق</span><b>${m2(s.prev)}</b></div>`:""}${D.map(r=>it(r,r.dr)).join("")}${cTot>dTot?`<div class="r pl"><span>⏭ رصيد آخر المدة (دائن)</span><b>${m2(cTot-dTot)}</b></div>`:""}<div class="r h"><span>الإجمالي</span><b>${m2(big)}</b></div>`;
+  const cr=`${s.prev<0?`<div class="r pl"><span>⏮ رصيد سابق</span><b>${m2(-s.prev)}</b></div>`:""}${C.map(r=>it(r,r.cr)).join("")}${dTot>cTot?`<div class="r pl"><span>⏭ رصيد آخر المدة (مدين)</span><b>${m2(dTot-cTot)}</b></div>`:""}<div class="r h"><span>الإجمالي</span><b>${m2(big)}</b></div>`;
+  return win(tbS()+`<div class="content" style="flex-direction:column;gap:4px">${filters()}<div class="hdr"><b>ح/ ${tname()}</b><div class="p">الشكل المحاسبي «حرف T» — المدين يمين والدائن شمال، والرصيد بيقفل الجنب الأصغر</div></div><div class="bs"><div class="sd a"><h5><span>مدين (منه)</span><span class="ltr">${m2(s.D)}</span></h5>${dr}</div><div class="sd l"><h5><span>دائن (له)</span><span class="ltr">${m2(s.C)}</span></h5>${cr}</div></div></div>`,"📒 حساب T — A-H CODE");}
+
+// 7) ملخص بالشهور + تفصيل
+const MN=["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+function m7(){const tg=tgt();const last=+ST.to.slice(5,7);let html="";
+  for(let m=1;m<=last;m++){const mm=String(m).padStart(2,"0");const s=stmt(tg,`2026-${mm}-01`,`2026-${mm}-31`);const key=`2026-${mm}`;const on=ST.m7===key;
+    html+=`<tr class="${on?'sel':''} clk" data-set="m7" data-v="${on?'':key}"><td><span class="tgl">${s.rows.length?(on?'▾':'▸'):''}</span>${MN[m-1]} ${N(2026)}</td><td class="n">${bl(s.prev)}</td><td class="n">${s.D?m2(s.D):""}</td><td class="n">${s.C?m2(s.C):""}</td><td class="n">${bl(s.end)}</td><td>${s.rows.length||""}</td></tr>`;
+    if(on) html+=s.rows.map(r=>`<tr class="sub"><td>&nbsp;&nbsp;${N(r.d.slice(8))} · ${docB(r)}</td><td class="wrap">${r.ds}</td><td class="n">${r.dr?m2(r.dr):""}</td><td class="n">${r.cr?m2(r.cr):""}</td><td class="n">${bl(r.bal)}</td><td></td></tr>`).join("");}
+  const y=stmt(tg,"2026-01-01",ST.to);
+  return win(tbS()+`<div class="content" style="flex-direction:column;gap:4px"><div class="flt"><label>النوع</label>${selKind()}<label>الاسم</label>${selPid()}<label>السنة</label><select class="lv" style="width:60px"><option>2026</option></select><label>لحد</label>${dIn("to")}</div><div class="scroll"><table class="tbl"><tr><th>الشهر</th><th>رصيد أول الشهر</th><th>مدين</th><th>دائن</th><th>رصيد آخر الشهر</th><th>حركات</th></tr>${html}<tr class="tot"><td>إجمالي السنة لحد ${N(ST.to)}</td><td></td><td class="n">${m2(y.D)}</td><td class="n">${m2(y.C)}</td><td class="n">${bl(y.end)}</td><td>${y.rows.length}</td></tr></table></div><div class="hint">دوس على شهر ← حركاته تتفتح تحته · دوس تاني ← تتقفل.</div></div>`,"🗓️ كشف الحساب بالشهور — A-H CODE");}
+
+// 8) معاينة الطباعة / PDF
+function m8(){const s=stmt(tgt());const k=ST.kind;
+  const title=k==="account"?"كشف حساب (دفتر الأستاذ)":`كشف حساب ${KD[k][0].replace(" (عهدة)"," — عهدة")}`;
+  const due=s.end>0?(k==="customer"?"الرصيد المستحق عليكم":"الرصيد المدين"):(k==="supplier"?"الرصيد المستحق لكم":"الرصيد الدائن");
+  const acc=PARTY.includes(k)?(rowsOf(tgt())[0]||{}).acc||"":ST.pid;
+  return win(tbS(`<span class="bt b-tog">🖨️ A4 طولي</span>`)+`<div class="content" style="flex-direction:column;gap:3px"><div class="flt"><label>النوع</label>${selKind()}<label>الاسم</label>${selPid(130)}<label>من</label>${dIn("from")}<label>إلى</label>${dIn("to")}</div><div class="scroll" style="background:#94A3B8;border-radius:6px"><div class="paper"><div class="ph"><div><h4>${title}</h4><div style="color:var(--muted);font-weight:700">من ${N(ST.from)} إلى ${N(ST.to)}</div></div><div class="lg">ITEC</div></div><div class="inf"><div><b>الاسم:</b> ${tname()}</div><div><b>العملة:</b> جنيه مصري</div><div><b>الحساب:</b> ${N(acc)} ${A[acc]?A[acc][0]:""}</div><div><b>تاريخ الطباعة:</b> ${N("2026-05-31 10:42")}</div></div>${stTable(s)}<div class="due"><span>${due} حتى ${N(ST.to)}</span><span class="ltr">${m2(Math.abs(s.end))} ج.م</span></div><div class="hint" style="margin-top:4px">برجاء مراجعة الكشف والرد خلال 15 يوم من تاريخه، وإلا يُعتبر الرصيد صحيح (مصادقة رصيد).</div><div class="sig"><span>المحاسب</span><span>المراجع</span><span>توقيع وختم ${k==="customer"?"العميل":k==="supplier"?"المورد":"المستلم"}</span></div><div class="ft"><span>بيانات الشركة واللوجو من «بيانات الشركة»</span><span>طُبع بواسطة: admin · صفحة 1 من 1</span></div></div></div></div>`,"🖨️ معاينة الطباعة — كشف الحساب");}
+
+// 9) زي الأكسس: تفصيل الأصناف تحت الفاتورة
+function m9(){const s=stmt(tgt());
+  const hook=r=>{const it=ITEMS[r.no];if(!it)return "";const on=ST.x9[r.no];
+    let h=`<tr class="clk" data-x9="${r.no}"><td>${N(r.d)}</td><td><span class="tgl">${on?'▾':'▸'}</span>${docB(r)}</td><td class="wrap">${r.ds}</td><td class="n">${r.dr?m2(r.dr):""}</td><td class="n">${r.cr?m2(r.cr):""}</td><td class="n">${bl(r.bal)}</td></tr>`;
+    if(on){const net=it.reduce((a,x)=>a+x[1]*x[2],0);h+=it.map(x=>`<tr class="sub"><td></td><td colspan="2">• ${x[0]} — ${N(x[1])} × ${N(m2(x[2]))}</td><td colspan="2" class="n">${m2(x[1]*x[2])}</td><td></td></tr>`).join("")+`<tr class="sub"><td></td><td colspan="2">• ض.ق.م 14%</td><td colspan="2" class="n">${m2(net*0.14)}</td><td></td></tr>`;}
+    return h;};
+  return win(tbS(`<span class="mini" data-x9all="1">فتح / قفل الكل</span>`)+`<div class="content" style="flex-direction:column;gap:4px">${filters()}<div class="scroll">${stTable(s,["d","doc","ds","dr","cr","bal"],{rowHook:hook})}</div><div class="hint">زي كشف الأكسس: الفاتورة بتفرد أصنافها (الصنف · الكمية × السعر) — بس هنا تحت سطر واحد للفاتورة بيتفتح ويتقفل، والرصيد بيمشي على إجمالي الفاتورة. <b>دوس على ▸.</b></div></div>`);}
+
+// 10) تبويبات: الحركات · ملخص بنوع المستند · أعمار الرصيد
+function aging(tg,to){const all=rowsOf(tg).filter(r=>r.d<=to);const bal=all.reduce((a,r)=>a+r.dr-r.cr,0);const sgn=bal>=0?1:-1;
+  const opens=all.filter(r=>(sgn>0?r.dr:r.cr)>0).map(r=>({d:r.d,no:r.no,t:r.t,v:sgn>0?r.dr:r.cr}));let pay=all.reduce((a,r)=>a+(sgn>0?r.cr:r.dr),0);
+  opens.forEach(o=>{const x=Math.min(o.v,pay);o.left=o.v-x;pay-=x;});
+  const B=[["0–30",0,30,"#137A38"],["31–60",31,60,"#2563EB"],["61–90",61,90,"#F59E0B"],["+90",91,1e9,"#DC2626"]];
+  const days=d=>Math.round((new Date(to)-new Date(d))/864e5);
+  const left=opens.filter(o=>o.left>0.005).map(o=>({...o,age:days(o.d)}));
+  return {bal,left,B:B.map(b=>({n:b[0],c:b[3],v:left.filter(o=>o.age>=b[1]&&o.age<=b[2]).reduce((a,o)=>a+o.left,0)}))};}
+function m10(){const tg=tgt();const s=stmt(tg);const t=ST.t10;
+  const tabs=`<div class="itabs">${[["mov","📄 الحركات"],["sum","🧾 ملخص بنوع المستند"],["age","⏳ أعمار الرصيد"]].map(x=>`<span class="${t===x[0]?'on':''}" data-set="t10" data-v="${x[0]}">${x[1]}</span>`).join("")}</div>`;
+  let body;
+  if(t==="mov") body=stTable(s);
+  else if(t==="sum"){const g={};s.rows.forEach(r=>{g[r.t]=g[r.t]||{n:0,d:0,c:0};g[r.t].n++;g[r.t].d+=r.dr;g[r.t].c+=r.cr;});
+    body=`<table class="tbl"><tr><th>نوع المستند</th><th>العدد</th><th>مدين</th><th>دائن</th></tr><tr class="prev"><td>⏮ رصيد سابق</td><td></td><td class="n">${s.prev>0?m2(s.prev):""}</td><td class="n">${s.prev<0?m2(-s.prev):""}</td></tr>${Object.keys(g).map(k=>`<tr><td><span class="bdg ${DT[k][1]}">${DT[k][0]}</span></td><td>${g[k].n}</td><td class="n">${g[k].d?m2(g[k].d):""}</td><td class="n">${g[k].c?m2(g[k].c):""}</td></tr>`).join("")}<tr class="end"><td>⏭ آخر المدة</td><td></td><td colspan="2" class="n">${bl(s.end)}</td></tr></table>`;}
+  else{const a=aging(tg,ST.to);const tot=a.B.reduce((x,b)=>x+b.v,0)||1;
+    body=`<div style="padding:5px"><div class="hint" style="margin:0">الرصيد ${bl(a.bal)} لحد ${N(ST.to)} متوزّع على المستندات اللي لسه ماتسددتش (الأقدم يتسدد الأول):</div><div class="agebar">${a.B.map(b=>`<span style="width:${b.v/tot*100}%;background:${b.c}"></span>`).join("")}</div><div class="kpis">${a.B.map(b=>`<div class="kp" style="border-right:3px solid ${b.c}"><small>${b.n} يوم</small><b>${m2(b.v)}</b></div>`).join("")}</div><table class="tbl" style="margin-top:4px"><tr><th>المستند</th><th>التاريخ</th><th>عمره</th><th>الباقي منه</th></tr>${a.left.map(o=>`<tr><td><span class="bdg ${DT[o.t][1]}">${N(o.no)}</span></td><td>${N(o.d)}</td><td>${o.age} يوم</td><td class="n">${m2(o.left)}</td></tr>`).join("")||`<tr><td colspan="4" style="color:var(--muted)">مفيش رصيد مفتوح</td></tr>`}</table><div class="hint">العمر هنا من تاريخ المستند — لما الفواتير ييجي فيها «تاريخ استحقاق» بيبقى منه (قرارك: 0–30 / 31–60 / 61–90 / +90 من الاستحقاق).</div></div>`;}
+  return win(tbS()+`<div class="content" style="flex-direction:column;gap:3px">${filters()}${tabs}<div class="scroll" style="background:#fff;border:1px solid var(--card-border);border-radius:0 0 6px 6px">${body}</div></div>`);}
+
+const M=[
+ ["فلاتر فوق + جدول (الكلاسيك)","النوع (عميل / مورد / موظف / شريك / خزنة / بنك / أي حساب) والاسم والفترة فوق، وتحت: <b>رصيد سابق ← الحركات بالرصيد الجاري ← إجمالي الفترة ← رصيد آخر المدة</b>. <b>غيّر «من» وشوف الرصيد السابق بيتغيّر.</b>",m1],
+ ["شريط الأنواع + قايمة بالأرصدة + الكشف","يمين الأنواع، وفي النص كل العملاء (أو الموردين…) <b>برصيد كل واحد</b>، وشمال كشف اللي اخترته. <b>دوس على نوع وبعدين على اسم.</b>",m2v],
+ ["كروت أرقام + خط الرصيد + جدول","فوق: الرصيد السابق ومدين ودائن الفترة والرصيد الأخير، وتحتهم خط صغير بيبيّن الرصيد طالع ولا نازل، وبعدين الجدول.",m3],
+ ["شجرة الدليل + دفتر الأستاذ","الدليل كشجرة برصيد كل حساب، ودوس على أي حساب ← كشفه. <b>الرئيسي بيجمع كل اللي تحته</b> (عمود «الحساب»)، وحساب الرقابة بيبيّن الطرف. <b>دوس على 1101 ثم 110301.</b>",m4],
+ ["دفتر الأستاذ العام (كل حساب ورا التاني)","مجموعة حسابات في الفترة: لكل حساب رصيد سابق وحركاته ورصيد آخر المدة — للطباعة والمراجعة. <b>دوس على الشرايح.</b>",m5],
+ ["حساب «حرف T»","الشكل المحاسبي: المدين يمين والدائن شمال، والرصيد السابق في جنبه، و«رصيد آخر المدة» بيقفل الجنب الأصغر فالجنبين يتساووا.",m6],
+ ["ملخص بالشهور + تفصيل","سطر لكل شهر (رصيد أول الشهر · مدين · دائن · رصيد آخر الشهر)، ودوس على الشهر ← حركاته تتفتح تحته. <b>دوس على يناير أو مايو.</b>",m7],
+ ["معاينة الطباعة / PDF (يتبعت للعميل)","الكشف على ورقة A4 بلوجو الشركة وبيانات الطرف والفترة والرصيد المستحق وجملة «مصادقة رصيد» وأماكن التوقيع.",m8],
+ ["زي الأكسس: أصناف الفاتورة تحت سطرها","زي كشف الأكسس اللي كان بيفرد أصناف الفاتورة — هنا الفاتورة سطر واحد و<b>▸ بيفتح أصنافها</b> (الكمية × السعر + الضريبة). <b>دوس على ▸.</b>",m9],
+ ["تبويبات: الحركات · ملخص · أعمار الرصيد","نفس الكشف + تبويب ملخص بنوع المستند (كام فاتورة وكام سند) + تبويب <b>أعمار الرصيد</b> (0–30 / 31–60 / 61–90 / +90). <b>دوس على التبويبات.</b>",m10],
+];
+
+const NOTE=`<b>الشاشة دي بتعمل إيه:</b> <b>شاشة واحدة لكل الكشوف</b>: تختار <b>النوع</b> (عميل · مورد · عهدة موظف · شريك · خزنة · بنك · أو <b>أي حساب في الدليل</b> = دفتر الأستاذ) والاسم والفترة ← بيطلع <b>رصيد سابق</b> (كل اللي قبل «من») ← كل حركة بتاريخها ومستندها وبيانها ومدين/دائن و<b>الرصيد الجاري</b> بعدها ← إجمالي حركة الفترة ← <b>الرصيد آخر المدة</b>. <b>كله محسوب من سطور القيود المرحّلة بس</b> (القيد اليدوي ✅ · الأرصدة الافتتاحية <span class="ltr">OB</span> ✅ · وبعدين الفواتير والسندات من محرك الترحيل) — مفيش رصيد بيتكتب أو بيتخزن لوحده، فالكشف وميزان المراجعة (الشاشة الجاية) دايماً متطابقين. كشف العميل = سطور حساب الرقابة اللي عليها العميل ده · كشف الخزنة أو البنك = سطور الحساب بتاعها · الحساب الرئيسي = مجموع كل اللي تحته.
+<br><b>كانت إيه في الأكسس (قريته قراية بس):</b> <b>كل كشف كان استعلام لوحده</b> بيلمّ الحركات من الجداول بـ <span class="ltr">UNION</span>: «كشف حساب عميل / مورد / الخزينة» من شاشة <b>«التقارير»</b> (<span class="ltr">HissapCUSTOMER</span> ← بيع أجل بأصنافه سطر سطر · مرتجع · سند قبض · سند صرف · رصيد أول المدة · الشيكات المحصّلة · البيع النقدي سطرين بيلغوا بعض) و<span class="ltr">HissaSUPPP</span> للمورد و<span class="ltr">q-khazina</span> للخزينة (والـ dr/cr فيه معكوس)، و<b>mandob4</b> «كشف حساب موظف» (عهدة − تسوية) و<b>mandob</b> «كشف حساب شريك» (رصيد أول + إيداع − سحب) و<b>mandob1</b> «كشف حساب بنك» (رصيد أول + إيداع − سحب + شيكات العملاء − شيكات الموردين). <b>العيوب:</b> فلتر التاريخ <b>بيشيل كل اللي قبل «من» خالص — مفيش رصيد سابق</b> (الرصيد في الكشف = حركات الفترة بس) · مفيش كشف لأي حساب تاني (مفيش دليل حسابات أصلاً) · أي نوع حركة جديد لازم يتضاف في الاستعلامات الستة.
+<ul>
+<li><b>من E3marEG (فكرة بس):</b> الرصيد السابق + الرصيد الجاري · كشف الحساب الرئيسي بيجمع اللي تحته. <b>ومش هناخد عيوبه:</b> كان بيحسب الرصيد في الكود سطر سطر بعد ما يجيب كل الحركات (بطيء مع الحجم).</li>
+<li><b>السرعة والشبكة:</b> الكشف قراية بس (مابيقفلش حاجة على الأجهزة التانية) · الرصيد السابق بيتحسب في القاعدة بـ <span class="ltr">SUM</span> واحد على index (الحساب/الطرف + التاريخ) مش بجلب كل الحركات · الحركات بصفحات لو الفترة كبيرة · والقراية في لقطة واحدة (snapshot) عشان الرصيد السابق والحركات يبقوا من نفس اللحظة لو جهاز تاني بيرحّل في نفس الوقت.</li>
+<li><b>مكان الشاشة:</b> قسم «الحسابات» 📒 ← «كشف الحساب ودفتر الأستاذ» + زرار <b>«كشف حساب»</b> في شاشات العملاء والموردين والموظفين والشركاء والخزائن والبنوك بيفتحها على الطرف ده · صلاحيات: عرض · طباعة · تصدير.</li>
+</ul>`;
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>شاشة واحدة</b> لكل الكشوف بـ «النوع» (اقتراحي) + زرار «كشف حساب» في شاشة كل طرف بيفتحها عليه؟ ولا شاشة لكل نوع زي الأكسس (كشف عميل لوحده، كشف مورد لوحده…)؟</li>
+<li><b>الفترة الافتراضية:</b> من <b>أول السنة المالية</b> لحد <b>النهارده</b> (اقتراحي)؟ و<b>الرصيد السابق</b> للعملاء والموردين والخزائن والبنوك (حسابات الميزانية) = كل اللي قبل «من» حتى لو من سنين قبل كده، أما <b>الإيرادات والمصروفات</b> فرصيدها السابق يبدأ من أول السنة المالية بتاعة «من» (لأنها بتتقفل كل سنة)؟</li>
+<li><b>المسودات:</b> الكشف = <b>المرحّل بس</b> (اقتراحي)؟ ولا تشيك بوكس «اعرض المسودات» بلون مختلف للمراجعة (ومابتدخلش في الرصيد)؟</li>
+<li><b>أصناف الفاتورة جوه الكشف</b> زي الأكسس (النموذج 9): نعملها لما الفواتير تتعمل في المرحلة 5 (اقتراحي)، ودلوقتي كل مستند سطر واحد ببيانه؟ ولا مش عايزها خالص؟</li>
+<li><b>الحساب الرئيسي</b> (زي 1101 النقدية أو 1103 العملاء) يجمع كل الفرعيين تحته بعمود «الحساب»، و<b>حساب الرقابة من غير ما تختار طرف</b> = كل الأطراف بعمود «الطرف» (النموذج 4) — موافق؟</li>
+<li><b>الأعمدة:</b> التاريخ · المستند · البيان · مدين · دائن · الرصيد، و<b>أمر التوريد / مركز التكلفة</b> عمود اختياري يظهر ويستخبى (النموذج 1)؟ والرصيد يتكتب <b>«88,300.00 مدين»</b> (اقتراحي) ولا بالسالب للدائن؟</li>
+<li><b>فلاتر زيادة:</b> مركز تكلفة · أمر توريد · نوع المستند — <b>دلوقتي</b> ولا بعدين؟</li>
+<li><b>الطباعة:</b> PDF A4 بلوجو الشركة وبياناتها + «مصادقة رصيد» وأماكن توقيع (النموذج 8) + تصدير إكسل — كفاية كده؟ ولا عايز حاجة زيادة (طباعة كشوف كل العملاء مرة واحدة مثلاً)؟</li>
+<li><b>دبل كليك على السطر يفتح المستند</b> (القيد اليدوي / الأرصدة الافتتاحية دلوقتي، والفواتير والسندات لما ييجوا) — موافق؟</li>
+<li><b>الصلاحيات:</b> صلاحية لكل نوع (كشف العملاء · الموردين · عهد الموظفين · الشركاء · الخزائن والبنوك · دفتر الأستاذ) عشان مثلاً المندوب يشوف كشف العملاء بس (اقتراحي)؟ ولا صلاحية واحدة للشاشة؟</li>
+<li><b>أعمار الرصيد</b> (النموذج 10): تبويب جوه الكشف دلوقتي (من تاريخ المستند، وبعدين من الاستحقاق)؟ ولا تقرير لوحده بعدين مع تقارير العملاء؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+document.addEventListener("change",e=>{
+  const t=e.target;const k=t.dataset.k;if(!k)return;
+  if(k==="pjc"){ST.pjc=t.checked;render();return;}
+  if(!t.value)return;
+  ST[k]=t.value;if(k==="kind")ST.pid=firstId(t.value);
+  if(ST.from>ST.to){if(k==="from")ST.to=ST.from;else ST.from=ST.to;}
+  render();
+});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option")) return;
+  const kd=e.target.closest("[data-kd]");if(kd){ST.kind=kd.dataset.kd;ST.pid=kd.dataset.pid||firstId(kd.dataset.kd);render();return;}
+  const pr=e.target.closest("[data-per]");if(pr){ST.from=pr.dataset.per;ST.to="2026-05-31";render();return;}
+  const x9=e.target.closest("[data-x9]");if(x9){const n=x9.dataset.x9;if(ST.x9[n])delete ST.x9[n];else ST.x9[n]=1;render();return;}
+  if(e.target.closest("[data-x9all]")){const any=Object.keys(ST.x9).length;ST.x9={};if(!any)Object.keys(ITEMS).forEach(n=>ST.x9[n]=1);render();return;}
+  const el=e.target.closest("[data-set]"); if(!el) return;
+  ST[el.dataset.set]=el.dataset.v; render();
+});
+render();
+</script>
+</body>
+</html>

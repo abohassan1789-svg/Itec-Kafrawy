@@ -113,6 +113,11 @@ SECTIONS: tuple[Section, ...] = (
             Target("opening_balances", "الأرصدة الافتتاحية", "Opening Balances", icon="🏁",
                    actions=("view", "edit", "save", "export", "post", "unpost")),
         ), icon="📒"),
+        # كشف الحساب ودفتر الأستاذ (2026-11-17 — النموذج 1): شاشة واحدة لكل الكشوف · المرحّل بس · صلاحية واحدة (عرض).
+        Group("الكشوف", (
+            Target("account_statement", "كشف الحساب ودفتر الأستاذ", "Account Statement & Ledger", icon="📑",
+                   actions=("view",)),
+        ), icon="📑"),
         # الشركاء تحت «الحسابات» لأنها حقوق ملكية (31 رأس المال · 32 جاري الشركاء) — 2026-11-14.
         Group("حقوق الملكية", (
             Target("partners", "الشركاء", "Partners", icon="🤝",

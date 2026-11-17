@@ -115,6 +115,12 @@ def _opening_balances() -> QWidget:
     return OpeningBalancesScreen()
 
 
+def _account_statement() -> QWidget:
+    from app.ui.screens.account_statement_screen import AccountStatementScreen
+
+    return AccountStatementScreen()
+
+
 def _customers() -> QWidget:
     from app.ui.screens.customers_screen import CustomersScreen
 
@@ -182,6 +188,7 @@ SCREEN_FACTORIES: dict[str, ScreenFactory] = {
     "cost_centers": _cost_centers,
     "journal_entries": _journal_entries,
     "opening_balances": _opening_balances,
+    "account_statement": _account_statement,
     "customer_groups": _customer_groups,
     "customers": _customers,
     "projects": _projects,
