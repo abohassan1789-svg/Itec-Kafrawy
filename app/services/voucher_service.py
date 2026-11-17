@@ -1,11 +1,13 @@
-"""«سند قبض العملاء» و«سند صرف العملاء» (المرحلة 5 — النموذج 5، اختيار المستخدم 2026-11-17 + ردوده).
+"""«سند قبض» (للعميل) و«سند صرف» (للمورد) — المرحلة 5، النموذج 5، اختيار المستخدم 2026-11-17 + ردوده.
 
 * **شاشتين وجدولين منفصلين** — الـ Service واحد بـ ``kind`` (``receipt`` / ``payment``) وصلاحية لكل شاشة.
-* السند **سطر واحد**: عميل + خزنة أو حساب بنك + المبلغ + البيان (+ أمر التوريد ورقم الدفتر الورقي اختياري) ·
+  قرار المستخدم: «سند القبض للعميل وسند الصرف للمورد» (هما دول سندات العملاء والموردين — مفيش تكرار).
+  الطرف في البيانات اسمه ``party_id`` للنوعين (عميل في القبض · مورد في الصرف).
+* السند **سطر واحد**: الطرف + خزنة أو حساب بنك + المبلغ + البيان (+ أمر التوريد ورقم الدفتر الورقي اختياري) ·
   **مفيش خصم منبع ولا خصم مسموح / مكتسب** (رد المستخدم).
 * **«حفظ مسودة»** · **«ترحيل»** (أو حفظ + ترحيل في نفس الـ transaction) ← القاعدة بتصرف رقم ``RV/PV-2026-00001``
   **أول مرة بس** جوه قفل العدّاد، و**محرك الترحيل** بيعمل القيد ويرحّله في نفس الـ transaction:
-  القبض = مدين الخزنة / البنك · دائن العملاء · الصرف = العكس.
+  القبض = مدين الخزنة / البنك · دائن العملاء · الصرف = مدين الموردين · دائن الخزنة / البنك.
 * **«إلغاء الترحيل»** بالصلاحية في السنة المفتوحة: القيد بيتمسح والسند يرجع مسودة **برقمه** ويتعدّل.
 * الحذف للمسودة اللي **ماخدتش رقم** بس · كل حاجة في ``sec.audit_log`` قبل/بعد + ``row_version``.
 * **الخزنة مش مكفية** (سند الصرف): ``funds_warning`` بيرجّع رسالة تحذير **بس** — الشاشة بتسأل والمستخدم يكمّل
@@ -22,7 +24,7 @@ from typing import Any
 import psycopg
 
 from app.database.db import Database, Executor, get_db
-from app.repositories.customer_voucher_repository import STATUSES, CustomerVoucherRepository
+from app.repositories.voucher_repository import STATUSES, VoucherRepository
 from app.security.session import SESSION
 from app.services.audit_service import AuditService
 from app.services.concurrency import ConcurrencyGuard
@@ -42,11 +44,14 @@ class VoucherKind:
     doc_type: str        # نوع المستند في الترقيم وقواعد الترحيل
     entity: str          # الجدول (سجل التعديلات + الصلاحية)
     target: str          # الشاشة في الصلاحيات
-    title: str           # «سند قبض العملاء»
+    title: str           # «سند قبض» / «سند صرف»
     short: str           # «سند القبض»
     prefix: str          # RV / PV
     party_verb: str      # «استلمنا من» / «صرفنا إلى»
     source_verb: str     # «في» / «من»
+    party: str           # customer / supplier (بُعد الطرف في سطر القيد)
+    party_label: str     # «العميل» / «المورد»
+    party_role: str      # receivable / payable (دور سطر الطرف في قواعد الترحيل)
 
     @property
     def perm(self) -> str:
@@ -55,9 +60,9 @@ class VoucherKind:
 
 KINDS = {
     "receipt": VoucherKind("receipt", "customer_receipt", "cash.customer_receipts", "customer_receipts",
-                           "سند قبض العملاء", "سند القبض", "RV", "استلمنا من", "في"),
-    "payment": VoucherKind("payment", "customer_payment", "cash.customer_payments", "customer_payments",
-                           "سند صرف العملاء", "سند الصرف", "PV", "صرفنا إلى", "من"),
+                           "سند قبض", "سند القبض", "RV", "استلمنا من", "في", "customer", "العميل", "receivable"),
+    "payment": VoucherKind("payment", "supplier_payment", "cash.supplier_payments", "supplier_payments",
+                           "سند صرف", "سند الصرف", "PV", "صرفنا إلى", "من", "supplier", "المورد", "payable"),
 }
 
 
@@ -75,14 +80,14 @@ def fmt(amount: Decimal) -> str:
     return f"{amount:,.2f}"
 
 
-class CustomerVoucherService:
-    def __init__(self, kind: str, db: Database | None = None, repository: CustomerVoucherRepository | None = None,
+class VoucherService:
+    def __init__(self, kind: str, db: Database | None = None, repository: VoucherRepository | None = None,
                  audit: AuditService | None = None, posting: PostingService | None = None) -> None:
         if kind not in KINDS:
             raise ValueError(f"نوع سند مش معروف: {kind}")
         self.kind = KINDS[kind]
         self.db = db or get_db()
-        self.repository = repository or CustomerVoucherRepository(self.db)
+        self.repository = repository or VoucherRepository(self.db)
         self.audit = audit or AuditService(self.db)
         self.posting = posting or PostingService(self.db)
         self.guard = ConcurrencyGuard(self.db)
@@ -113,8 +118,9 @@ class CustomerVoucherService:
         return row
 
     def choices(self) -> dict[str, Any]:
-        """العملاء · الخزائن · الحسابات البنكية · أوامر التوريد (الموقوف بيرجع عشان السند القديم يتعرض)."""
-        return {"customers": self.repository.customer_choices(),
+        """العملاء (القبض) أو الموردين (الصرف) · الخزائن · الحسابات البنكية · أوامر التوريد
+        (الموقوف بيرجع عشان السند القديم يتعرض)."""
+        return {"parties": self.repository.party_choices(self.kind.code),
                 "treasuries": self.repository.treasury_choices(),
                 "banks": self.repository.bank_account_choices(),
                 "projects": self.repository.project_choices()}
@@ -130,9 +136,9 @@ class CustomerVoucherService:
             voucher_date = voucher_date.date()
         if not isinstance(voucher_date, dt.date):
             raise BusinessError("تاريخ السند مطلوب.")
-        customer_id = self._id(data.get("customer_id"))
-        if customer_id is None:
-            raise BusinessError("اختار العميل.")
+        party_id = self._id(data.get("party_id"))
+        if party_id is None:
+            raise BusinessError(f"اختار {self.kind.party_label}.")
         source_kind = data.get("source_kind") or "treasury"
         if source_kind not in SOURCE_KINDS:
             raise BusinessError("اختار خزنة أو بنك.")
@@ -153,14 +159,14 @@ class CustomerVoucherService:
         paper_no = " ".join(str(data.get("paper_no") or "").split()) or None
         if paper_no and len(paper_no) > 30:
             raise BusinessError("«رقم الدفتر الورقي» أطول من المسموح (30 حرف).")
-        return {"voucher_date": voucher_date, "customer_id": customer_id, "source_kind": source_kind,
+        return {"voucher_date": voucher_date, "party_id": party_id, "source_kind": source_kind,
                 "treasury_id": treasury_id, "bank_account_id": bank_account_id, "amount": amount,
                 "description": description, "paper_no": paper_no, "project_id": self._id(data.get("project_id"))}
 
     def _posting_lines(self, v: dict[str, Any]) -> list[PostingLine]:
         source = (PostingLine("cash", v["amount"], treasury_id=v["treasury_id"]) if v["source_kind"] == "treasury"
                   else PostingLine("bank", v["amount"], bank_account_id=v["bank_account_id"]))
-        party = PostingLine("receivable", v["amount"], party=("customer", int(v["customer_id"])))
+        party = PostingLine(self.kind.party_role, v["amount"], party=(self.kind.party, int(v["party_id"])))
         return [source, party] if self.is_receipt else [party, source]
 
     # ---- معاينة القيد والأرصدة (للشاشة وهي بتكتب — من غير كتابة) -----------------------------
@@ -179,21 +185,23 @@ class CustomerVoucherService:
         rows = self.repository.treasury_choices() if source_kind == "treasury" else self.repository.bank_account_choices()
         return next((r for r in rows if r["id"] == int(source_id)), None)
 
-    def balances(self, customer_id: Any, source_kind: str, source_id: Any, amount: Any,
+    def balances(self, party_id: Any, source_kind: str, source_id: Any, amount: Any,
                  posted: bool = False) -> dict[str, Any]:
-        """رصيد العميل والخزنة / البنك **دلوقتي** وبعد السند (``posted`` = السند نفسه مرحّل وجوه الرصيد خلاص)."""
+        """رصيد الطرف والخزنة / البنك **دلوقتي** وبعد السند (``posted`` = السند نفسه مرحّل وجوه الرصيد خلاص).
+
+        رصيد الطرف بجنبه الطبيعي: العميل = عليه لينا كام (القبض بينقّصه) · المورد = ليه علينا كام (الصرف بينقّصه)."""
         try:
             value = parse_money(amount, "المبلغ")
         except BusinessError:
             value = ZERO
         effect = ZERO if posted else value
-        out: dict[str, Any] = {"amount": value, "customer": None, "customer_after": None, "source": None,
+        out: dict[str, Any] = {"amount": value, "party": None, "party_after": None, "source": None,
                                "source_after": None, "available_after": None, "source_name": "", "overdraft": None}
-        cid = self._id(customer_id)
-        if cid:
-            bal = self.repository.customer_balance(cid)
-            out["customer"] = bal
-            out["customer_after"] = bal - effect if self.is_receipt else bal + effect
+        pid = self._id(party_id)
+        if pid:
+            bal = self.repository.party_balance(self.kind.code, pid)
+            out["party"] = bal
+            out["party_after"] = bal - effect
         source = self._source(source_kind, self._id(source_id))
         if source:
             bal = self.repository.account_balance(int(source["account_id"]))
@@ -210,7 +218,7 @@ class CustomerVoucherService:
             return None
         v = self._clean(data)
         source_id = v["treasury_id"] or v["bank_account_id"]
-        b = self.balances(v["customer_id"], v["source_kind"], source_id, v["amount"])
+        b = self.balances(v["party_id"], v["source_kind"], source_id, v["amount"])
         if b["source"] is None or b["available_after"] >= 0:
             return None
         what = "الخزنة" if v["source_kind"] == "treasury" else "الحساب البنكي"
@@ -237,7 +245,7 @@ class CustomerVoucherService:
         row = after or before or {}
         self.audit.record(tx, action=action, entity=self.kind.entity, entity_id=voucher_id,
                           entity_label=self.kind.title,
-                          record_label=f"{voucher_label(row)} — {row.get('customer_name') or ''} — "
+                          record_label=f"{voucher_label(row)} — {row.get('party_name') or ''} — "
                                        f"{fmt(Decimal(row.get('amount') or 0))}",
                           before=before, after=after)
 
@@ -250,7 +258,7 @@ class CustomerVoucherService:
         v = self.repository.get_voucher(self.kind.code, voucher_id, ex=tx)
         self.posting.post_document(tx, doc_type=self.kind.doc_type, source_id=voucher_id,
                                    source_no=v["voucher_no"], entry_date=v["voucher_date"],
-                                   description=f"{v['description']} — {v['customer_name']}",
+                                   description=f"{v['description']} — {v['party_name']}",
                                    reference=v["paper_no"], lines=self._posting_lines(v),
                                    project_id=v["project_id"])
         self._record(tx, "post", voucher_id, before, v)

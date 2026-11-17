@@ -1,10 +1,12 @@
-"""SQL «سند قبض العملاء» و«سند صرف العملاء» (``cash.customer_receipts`` / ``cash.customer_payments`` — سكريبت 0035).
+"""SQL «سند قبض» (العملاء — ``cash.customer_receipts``، سكريبت 0035) و«سند صرف» (الموردين —
+``cash.supplier_payments``، سكريبت 0036).
 
-* الجدولين نفس الشكل بالظبط — كل دالة بتاخد ``kind`` (``receipt`` / ``payment``) والجدول من ``TABLES`` بس
-  (عمره ما بييجي من برّا).
+* الجدولين نفس الشكل بالظبط غير عمود الطرف (``customer_id`` / ``supplier_id``) — كل دالة بتاخد ``kind``
+  (``receipt`` / ``payment``) والجدول والطرف من ``TABLES`` / ``PARTIES`` بس (عمرهم ما بييجوا من برّا).
+* في الـ Python الطرف اسمه ``party_id`` (والاسم ``party_code`` / ``party_name``) للنوعين.
 * القائمة **بفلتر فترة وصفحات** (الـ index على ``voucher_date DESC, id DESC``) · رقم السند الكامل من الـ unique index.
 * الترحيل وإلغاؤه = تغيير ``status`` بس، والقاعدة بتصرف رقم RV / PV جوه قفل العدّاد وبتتأكد من السنة والعميل والخزنة.
-* أرصدة العميل والخزنة / البنك **من سطور القيود المرحّلة** (الـ indexes بتوع 0031 / 0034).
+* أرصدة الطرف والخزنة / البنك **من سطور القيود المرحّلة** (الـ indexes بتوع 0031 / 0034).
 كل دالة بتاخد ``ex`` اختياري (``Tx`` من ``db.atomic()``).
 """
 
@@ -18,25 +20,27 @@ from typing import Any
 from app.database.db import Database, Executor, get_db
 from app.repositories.versioning import version_clause
 
-TABLES = {"receipt": "cash.customer_receipts", "payment": "cash.customer_payments"}
+TABLES = {"receipt": "cash.customer_receipts", "payment": "cash.supplier_payments"}
+# الطرف: (عموده في السند وفي سطر القيد، جدوله)
+PARTIES = {"receipt": ("customer_id", "party.customers"), "payment": ("supplier_id", "party.suppliers")}
 _FULL_NO = re.compile(r"^(RV|PV)-\d{4}-\d+$", re.IGNORECASE)
 STATUSES = ("all", "draft", "posted")
-FIELDS = ("voucher_date", "customer_id", "source_kind", "treasury_id", "bank_account_id", "amount", "description",
+FIELDS = ("voucher_date", "party_id", "source_kind", "treasury_id", "bank_account_id", "amount", "description",
           "paper_no", "project_id")
 
 _SELECT = """
-    SELECT v.id, v.voucher_no, v.draft_no, v.voucher_date, v.fiscal_year_id, v.customer_id, v.source_kind,
+    SELECT v.id, v.voucher_no, v.draft_no, v.voucher_date, v.fiscal_year_id, v.{party} AS party_id, v.source_kind,
            v.treasury_id, v.bank_account_id, v.amount, v.description, v.paper_no, v.project_id, v.status,
            v.created_by, v.posted_at, v.posted_by, v.created_at, v.updated_at, v.row_version,
            y.year_code, y.status AS year_status,
-           c.code AS customer_code, c.name_ar AS customer_name,
+           c.code AS party_code, c.name_ar AS party_name,
            t.code AS treasury_code, t.name_ar AS treasury_name, t.account_id AS treasury_account_id,
            ba.code AS bank_code, b.name_ar AS bank_name, ba.account_id AS bank_account_account_id,
            p.code AS project_code, p.name AS project_name,
            cu.username AS created_by_name, pu.username AS posted_by_name
     FROM {table} v
     JOIN core.fiscal_years y ON y.id = v.fiscal_year_id
-    JOIN party.customers c ON c.id = v.customer_id
+    JOIN {party_table} c ON c.id = v.{party}
     LEFT JOIN cash.treasuries t ON t.id = v.treasury_id
     LEFT JOIN cash.bank_accounts ba ON ba.id = v.bank_account_id
     LEFT JOIN cash.banks b ON b.id = ba.bank_id
@@ -47,17 +51,27 @@ _SELECT = """
 
 _LIST = """
     SELECT v.id, v.voucher_no, v.draft_no, v.voucher_date, v.amount, v.status, v.description, v.paper_no,
-           v.source_kind, c.code AS customer_code, c.name_ar AS customer_name,
+           v.source_kind, c.code AS party_code, c.name_ar AS party_name,
            coalesce(t.name_ar, b.name_ar) AS source_name
     FROM {table} v
-    JOIN party.customers c ON c.id = v.customer_id
+    JOIN {party_table} c ON c.id = v.{party}
     LEFT JOIN cash.treasuries t ON t.id = v.treasury_id
     LEFT JOIN cash.bank_accounts ba ON ba.id = v.bank_account_id
     LEFT JOIN cash.banks b ON b.id = ba.bank_id
 """
 
 
-class CustomerVoucherRepository:
+def _sql(template: str, kind: str) -> str:
+    party, party_table = PARTIES[kind]
+    return template.format(table=TABLES[kind], party=party, party_table=party_table)
+
+
+def _cols(kind: str) -> list[str]:
+    """أسماء الأعمدة الحقيقية بترتيب ``FIELDS`` (``party_id`` ← عمود الطرف)."""
+    return [PARTIES[kind][0] if k == "party_id" else k for k in FIELDS]
+
+
+class VoucherRepository:
     def __init__(self, db: Database | None = None) -> None:
         self.db = db or get_db()
 
@@ -93,7 +107,7 @@ class CustomerVoucherRepository:
                       keyword: str = "", limit: int | None = None, offset: int = 0,
                       ex: Executor | None = None) -> list[dict]:
         where, params = self._where(date_from, date_to, status, keyword)
-        sql = _LIST.format(table=TABLES[kind]) + where + " ORDER BY v.voucher_date DESC, v.id DESC"
+        sql = _sql(_LIST, kind) + where + " ORDER BY v.voucher_date DESC, v.id DESC"
         if limit is not None:
             sql += " LIMIT %s OFFSET %s"
             params += [limit, offset]
@@ -106,17 +120,17 @@ class CustomerVoucherRepository:
             "SELECT count(*) AS total, count(*) FILTER (WHERE v.status = 'draft') AS drafts, "
             "count(*) FILTER (WHERE v.status = 'posted') AS posted, "
             "coalesce(sum(v.amount) FILTER (WHERE v.status = 'posted'), 0) AS posted_amount "
-            f"FROM {TABLES[kind]} v JOIN party.customers c ON c.id = v.customer_id" + where, params)
+            + _sql("FROM {table} v JOIN {party_table} c ON c.id = v.{party}", kind) + where, params)
 
     # ---- السند ------------------------------------------------------------------
     def get_voucher(self, kind: str, voucher_id: int, ex: Executor | None = None,
                     for_update: bool = False) -> dict | None:
         return self._x(ex).fetch_one(
-            _SELECT.format(table=TABLES[kind]) + " WHERE v.id = %s" + (" FOR UPDATE OF v" if for_update else ""),
+            _sql(_SELECT, kind) + " WHERE v.id = %s" + (" FOR UPDATE OF v" if for_update else ""),
             [voucher_id])
 
     def insert_voucher(self, kind: str, data: dict[str, Any], ex: Executor) -> int:
-        cols = ", ".join((*FIELDS, "fiscal_year_id", "created_by"))
+        cols = ", ".join((*_cols(kind), "fiscal_year_id", "created_by"))
         marks = ", ".join(["%s"] * len(FIELDS))
         return int(ex.fetch_value(
             f"INSERT INTO {TABLES[kind]} ({cols}) VALUES ({marks}, "
@@ -126,7 +140,7 @@ class CustomerVoucherRepository:
     def update_voucher(self, kind: str, voucher_id: int, data: dict[str, Any], ex: Executor,
                        expected_version: int | None = None) -> int:
         clause, extra = version_clause(expected_version)
-        sets = ", ".join(f"{k} = %s" for k in FIELDS)
+        sets = ", ".join(f"{k} = %s" for k in _cols(kind))
         return ex.execute(f"UPDATE {TABLES[kind]} SET {sets} WHERE id = %s AND status = 'draft'" + clause,
                           [*[data[k] for k in FIELDS], voucher_id, *extra])
 
@@ -141,7 +155,9 @@ class CustomerVoucherRepository:
         return ex.execute(f"DELETE FROM {TABLES[kind]} WHERE id = %s" + clause, [voucher_id, *extra])
 
     # ---- الاختيارات -------------------------------------------------------------
-    def customer_choices(self, ex: Executor | None = None) -> list[dict]:
+    def party_choices(self, kind: str, ex: Executor | None = None) -> list[dict]:
+        if kind == "payment":
+            return self._x(ex).fetch_all("SELECT id, code, name_ar, is_active FROM party.suppliers ORDER BY seq")
         return self._x(ex).fetch_all(
             "SELECT id, code, name_ar, is_active FROM party.customers "
             "ORDER BY CASE WHEN code ~ '^[0-9]+$' THEN lpad(code, 10, '0') ELSE code END")
@@ -164,12 +180,14 @@ class CustomerVoucherRepository:
             "SELECT id, code, name, status FROM acc.projects ORDER BY order_date DESC NULLS LAST, id DESC")
 
     # ---- الأرصدة (من القيود المرحّلة) ------------------------------------------------
-    def customer_balance(self, customer_id: int, ex: Executor | None = None) -> Decimal:
-        """رصيد العميل على حسابات الرقابة (مدين − دائن)."""
+    def party_balance(self, kind: str, party_id: int, ex: Executor | None = None) -> Decimal:
+        """رصيد الطرف على حسابات الرقابة بجنبه الطبيعي: العميل (مدين − دائن) = عليه لينا كام ·
+        المورد (دائن − مدين) = ليه علينا كام."""
+        side = "l.debit - l.credit" if kind == "receipt" else "l.credit - l.debit"
         return Decimal(self._x(ex).fetch_value(
-            "SELECT coalesce(sum(l.debit - l.credit), 0) FROM acc.journal_lines l "
-            "JOIN acc.journal_entries e ON e.id = l.entry_id AND e.status = 'posted' WHERE l.customer_id = %s",
-            [customer_id]))
+            f"SELECT coalesce(sum({side}), 0) FROM acc.journal_lines l "
+            "JOIN acc.journal_entries e ON e.id = l.entry_id AND e.status = 'posted' "
+            f"WHERE l.{PARTIES[kind][0]} = %s", [party_id]))
 
     def account_balance(self, account_id: int, ex: Executor | None = None) -> Decimal:
         """رصيد حساب الخزنة / البنك (مدين − دائن)."""
