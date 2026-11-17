@@ -41,7 +41,9 @@ CENT = Decimal("0.01")
 
 
 def entry_label(row: dict[str, Any]) -> str:
-    """«JV-2026-00012» أو «مسودة 7»."""
+    """«JV-2026-00012» أو «مسودة 7» — والأوتوماتيك برقم المستند (مالوش رقم JV — 0032)."""
+    if row.get("source_type") not in (None, "manual"):
+        return row.get("source_no") or f"قيد {row.get('draft_no')}"
     return row.get("entry_no") or f"مسودة {row.get('draft_no')}"
 
 
