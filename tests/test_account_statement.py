@@ -12,6 +12,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from decimal import Decimal
 
 import pytest
+from PySide6.QtCore import QCoreApplication, QEvent
 from PySide6.QtWidgets import QApplication
 
 from app.database import migrator
@@ -366,6 +367,12 @@ def test_opens_from_menu_and_double_click_opens_entry(env, monkeypatch):
 
     db, ids, e = env["db"], env["ids"], env["e"]
     monkeypatch.setattr(mw, "_info", lambda *_a: None)
+    # واجهة رئيسية قديمة من اختبار تاني لسه عايشة ← الشاشة كانت بتفتح فيها هي (topLevelWidgets)
+    for old in QApplication.topLevelWidgets():
+        if hasattr(old, "open_windows"):
+            old.close()
+            old.deleteLater()
+    QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
     window = mw.MainWindow(FakeAuth(), photo_provider=lambda: None, factories={
         "account_statement": lambda: AccountStatementScreen(StatementService(db)),
         "journal_entries": lambda: JournalEntriesScreen(JournalService(db))})
@@ -385,3 +392,5 @@ def test_opens_from_menu_and_double_click_opens_entry(env, monkeypatch):
             w.close()
         window.close()
         window.deleteLater()
+        # يتمسح دلوقتي — عشان الاختبار اللي بعده مايلاقيش الواجهة الرئيسية القديمة في topLevelWidgets
+        QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)

@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج الشيكات — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+/* ===== إضافات شاشة السندات ===== */
+.b-post{background:#137A38}.b-unpost{background:#B45309}.b-draft{background:#2563EB}
+.tg2{display:flex;border:1px solid var(--input);border-radius:6px;overflow:hidden;flex-shrink:0}
+.tg2 span{flex:1;text-align:center;padding:4px 8px;font-weight:900;font-size:9px;cursor:pointer;background:#fff;color:#475569}
+.tg2 span.rv.on{background:#137A38;color:#fff}.tg2 span.pv.on{background:#B91C1C;color:#fff}
+.amt{font-size:13px !important;font-weight:900;direction:ltr;text-align:left}
+.je{background:#fff;border:1px dashed #94A3B8;border-radius:6px;padding:4px 5px;flex-shrink:0}
+.je h6{margin:0 0 3px;font-size:8.5px;color:#334155;font-weight:900;display:flex;justify-content:space-between}
+.bal{display:flex;justify-content:space-between;gap:4px;font-size:8px;font-weight:800;background:#F8FAFC;border:1px solid var(--card-border);border-radius:5px;padding:3px 5px;margin-bottom:4px}
+.bal b{direction:ltr;unicode-bidi:isolate}
+.bl{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.bl small{font-size:7px;font-weight:900;margin-left:3px}
+.bl.bd small{color:#087443}.bl.bc small{color:#1D4ED8}
+.vc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px;font-size:8px;cursor:pointer;border-right:4px solid #137A38}
+.vc.pv{border-right-color:#B91C1C}.vc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.vc .r{display:flex;justify-content:space-between;gap:4px;align-items:center}
+.vc b.m{direction:ltr;font-size:10px}
+.vc.rv b.m{color:#087443}.vc.pv b.m{color:#B91C1C}
+.steps{display:flex;gap:3px;flex-shrink:0}
+.steps span{flex:1;text-align:center;font-size:8px;font-weight:900;padding:4px 2px;border-radius:5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.steps span.on{background:var(--green);color:#fff}.steps span.done{background:#DDF3E6;color:#087443}
+.paperv{background:#fff;width:96%;margin:4px auto;box-shadow:0 2px 8px rgba(15,23,42,.25);padding:8px 10px;font-size:8.5px;border-top:5px solid #137A38}
+.paperv.pv{border-top-color:#B91C1C}
+.paperv .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.paperv .lg{background:var(--green);color:#fff;font-weight:900;font-size:11px;border-radius:5px;padding:3px 7px}
+.paperv h4{margin:0;font-size:13px}
+.paperv .ln{display:flex;gap:5px;align-items:center;border-bottom:1px dotted #CBD5E1;padding:4px 0}
+.paperv .ln label{width:80px;font-weight:900;color:#334155;flex-shrink:0}
+.paperv .ln .v{flex:1}
+.paperv .box{border:2px solid #137A38;border-radius:6px;padding:3px 8px;font-weight:900;font-size:13px;direction:ltr}
+.paperv.pv .box{border-color:#B91C1C}
+.paperv .sig{display:flex;justify-content:space-between;margin-top:10px;color:var(--muted);font-weight:700}
+.paperv .sig span{border-top:1px solid #94A3B8;padding-top:2px;min-width:70px;text-align:center}
+.inl{width:100%;height:15px;border:1px solid #2563EB;border-radius:3px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 3px;direction:ltr;text-align:left}
+</style>
+<style>
+/* ===== إضافات شاشة حركات الخزائن والبنوك ===== */
+.flt{display:flex;gap:4px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.flt label{font-size:8.5px;font-weight:800;color:#334155}
+.ty{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;color:#fff;white-space:nowrap}
+.ft{display:flex;gap:6px;align-items:stretch;flex-shrink:0}
+.ft .bx{flex:1;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:6px;border-top:4px solid #B91C1C}
+.ft .bx.to{border-top-color:#137A38}
+.ft .bx h5{margin:0 0 4px;font-size:9.5px;font-weight:900}
+.ft .bx .bb{font-size:8.5px;font-weight:800;margin-top:4px;display:flex;justify-content:space-between}
+.ft .bx .bb b{direction:ltr;unicode-bidi:isolate}
+.arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:70px}
+.arrow .am{font-size:12px;font-weight:900;direction:ltr;color:#111827}
+.arrow .ar{font-size:22px;color:var(--green);line-height:1}
+.accs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;flex-shrink:0}
+.ac{background:#fff;border:1px solid var(--card-border);border-right:4px solid #0E7490;border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;position:relative}
+.ac.t{border-right-color:#137A38}
+.ac.f{outline:2px solid #B91C1C;background:#FEF2F2}.ac.d{outline:2px solid #137A38;background:#ECFDF3}
+.ac b{display:block;font-size:8.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac .v{direction:ltr;unicode-bidi:isolate;font-weight:900;font-size:10px}
+.ac .lb{position:absolute;left:4px;top:3px;font-size:7.5px;font-weight:900;border-radius:7px;padding:0 5px;color:#fff}
+.ac .lb.f{background:#B91C1C}.ac .lb.d{background:#137A38}
+.paperv.cm{border-top-color:#2563EB}.paperv.cm .box{border-color:#2563EB}
+.tstat{display:flex;gap:4px;flex-shrink:0}
+.tstat span{flex:1;text-align:center;padding:5px 3px;border-radius:6px;font-size:8.5px;font-weight:900;background:#E2E8F0;color:#475569;cursor:pointer}
+.tstat span.done{background:#DDF3E6;color:#087443}.tstat span.on{background:#FEF3C7;color:#92400E;outline:1px solid #FDE68A}
+</style>
+<style>
+/* ===== إضافات شاشة الشيكات ===== */
+.st{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;color:#fff;white-space:nowrap}
+.acts{display:flex;gap:3px;flex-wrap:wrap;align-items:center;flex-shrink:0}
+.acb{border-radius:5px;padding:3px 7px;font-size:8.5px;font-weight:900;cursor:pointer;border:1px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;white-space:nowrap}
+.acb.on{background:#2563EB;color:#fff;border-color:#2563EB}
+.acb.go{background:#137A38;color:#fff;border-color:#137A38}
+.acb.off{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0;cursor:default}
+.kb{display:grid;gap:4px;flex:1;min-height:0}
+.kc{background:#E2E8F0;border-radius:6px;padding:3px;display:flex;flex-direction:column;min-height:0;overflow:auto}
+.kc h6{margin:0 0 3px;font-size:8.5px;font-weight:900;color:#fff;border-radius:4px;padding:2px 4px;display:flex;justify-content:space-between}
+.kq{background:#fff;border:1px solid var(--card-border);border-radius:5px;padding:3px 4px;margin-bottom:3px;font-size:7.5px;cursor:pointer;line-height:1.45}
+.kq.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.kq b{display:block;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kq .v{direction:ltr;unicode-bidi:isolate;font-weight:900}
+.due{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;white-space:nowrap}
+.due.od{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.due.td{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.due.tm{background:#FFF7ED;color:#C2410C;border-color:#FED7AA}
+.due.wk{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.due.lt{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.kp.o{border-right:3px solid #F59E0B}.kp.o b{color:#B45309}
+.kp.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;flex-shrink:0}
+.cal .h{text-align:center;font-size:7.5px;font-weight:900;color:#fff;background:var(--green);border-radius:3px;padding:1px}
+.cal .d{background:#fff;border:1px solid var(--card-border);border-radius:4px;min-height:34px;padding:1px 2px;font-size:7px;cursor:pointer;line-height:1.35}
+.cal .d.x{background:transparent;border:none;cursor:default}
+.cal .d.t{outline:2px solid #F59E0B}
+.cal .d.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.cal .d b{font-size:8px}
+.cal .d .i{color:#087443;font-weight:900;direction:ltr;display:block}
+.cal .d .o{color:#B91C1C;font-weight:900;direction:ltr;display:block}
+.chq{background:linear-gradient(135deg,#F0FDF4,#ECFEFF);border:1px solid #94A3B8;border-radius:8px;width:97%;margin:4px auto;padding:7px 9px;font-size:8.5px;box-shadow:0 2px 8px rgba(15,23,42,.2);position:relative}
+.chq.out{background:linear-gradient(135deg,#FFF7ED,#FEF2F2)}
+.chq .r{display:flex;gap:6px;align-items:center;margin-bottom:5px}
+.chq .r label{font-weight:900;color:#334155;white-space:nowrap}
+.chq .ln2{border-bottom:1px dotted #64748B;flex:1;padding-bottom:1px}
+.chq .bx2{border:2px solid #137A38;border-radius:5px;padding:2px 6px;font-weight:900;font-size:12px;direction:ltr;background:#fff;min-width:110px;text-align:left}
+.chq.out .bx2{border-color:#B91C1C}
+.chq .mc{font-family:Consolas,monospace;letter-spacing:2px;color:#475569;font-size:9px;direction:ltr;text-align:center;margin-top:4px}
+.tl{position:relative;padding-right:14px}
+.tl:before{content:"";position:absolute;right:5px;top:4px;bottom:4px;width:2px;background:#CBD5E1}
+.tli{position:relative;margin-bottom:5px}
+.tli .dot{position:absolute;right:-13px;top:3px;width:10px;height:10px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #94A3B8}
+.tli .cd{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px}
+.tli.nx .cd{border-style:dashed;background:#F8FAFC}
+.msg{border-radius:5px;padding:3px 6px;font-size:8.5px;font-weight:800;flex-shrink:0}
+.msg.ok{background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}
+.msg.bad{background:#FEE2E2;color:#B91C1C;border:1px solid #FECACA}
+.msg.wr{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+.slip{background:#fff;border-top:5px solid #2563EB;box-shadow:0 2px 8px rgba(15,23,42,.25);padding:6px 8px;font-size:8px;width:96%;margin:4px auto}
+.slip h4{margin:0 0 3px;font-size:11px;color:#1D4ED8}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة «الشيكات» (المرحلة 5 · أوراق قبض ودفع · دورة الشيك · قيد لكل خطوة · تنبيهات الاستحقاق)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل شاشات السندات وحركات الخزائن اللي خلصت — الفرق في طريقة الإدخال والعرض. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>كل الشيكات والعملاء والموردين والمبالغ هنا وهمية</b> (مش من الأكسس)، وأكواد الحسابات والبنوك من اللي في البرنامج. النهارده في النماذج = <b class="ltr">31/05/2026</b>. <b>الحاجات الزرقا شغالة وكلها مربوطة ببعض</b>: بدّل «وارد / صادر»، اختار شيك ودوس خطوة (إيداع · تحصيل · رجوع · تظهير · صرف…) و«✔ نفّذ» ← حالته وقيده بيتغيّروا في كل النماذج، وشيك جديد بيتضاف للكل.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== البيانات (وهمية)
+const TODAY="2026-05-31";
+const CUS=[["CUS-001","شركة المستقبل للمقاولات"],["CUS-002","مؤسسة النور للتوريدات"],["CUS-003","شركة الأمل للتجارة"],["CUS-004","مصنع الفجر"]];
+const SUP=[["SUB-001","شركة الكابلات المتحدة"],["SUB-002","مؤسسة الإنشاءات الحديثة"],["SUB-003","شركة المعدات الهندسية"]];
+const DBANKS=["البنك الأهلي المصري","بنك مصر","بنك القاهرة","البنك التجاري الدولي","بنك قطر الوطني"];
+// حساباتنا البنكية: [الكود، الاسم، الحساب، الرصيد]
+const BA=[["BNK-001-01","البنك الأهلي — جاري","110201",431850],["BNK-002-01","بنك مصر — جاري","110202",25000]];
+const ACC={"1103":"العملاء","1104":"أوراق القبض (شيكات)","1108":"شيكات تحت التحصيل 🆕","2101":"الموردين","2102":"أوراق الدفع (شيكات)","5402":"مصاريف بنكية","110101":"الخزينة الرئيسية"};
+BA.forEach(b=>ACC[b[2]]=b[1]);
+const ORD=["","Itec-014","Itec-017","Itec-021"];
+// الحالات: [الاسم، اللون، الأيقونة]
+const ST={portfolio:["في الحافظة","#2563EB","📥"],under:["تحت التحصيل","#B45309","⏳"],collected:["اتحصّل","#137A38","✔"],bounced:["رجع من البنك","#B91C1C","↩"],endorsed:["اتظهّر لمورد","#6D28D9","✍"],returned:["اترد للعميل","#64748B","🔙"],
+ issued:["صادر للمورد","#2563EB","📤"],cleared:["اتصرف","#137A38","✔"],cancelled:["رجع / اتلغى","#B91C1C","✖"]};
+const FLOW={in:["portfolio","under","collected","bounced","endorsed","returned"],out:["issued","cleared","cancelled"]};
+const OPEN=["portfolio","under","bounced","issued"];
+// الانتقالات المسموحة
+const TR={
+ deposit:{from:["portfolio","bounced"],to:"under",lbl:"⬇🏦 إيداع للتحصيل"},
+ collect:{from:["under"],to:"collected",lbl:"✔ اتحصّل"},
+ bounce:{from:["under"],to:"bounced",lbl:"↩ رجع من البنك"},
+ endorse:{from:["portfolio"],to:"endorsed",lbl:"✍ تظهير لمورد"},
+ giveback:{from:["portfolio","bounced"],to:"returned",lbl:"🔙 رد للعميل"},
+ clear:{from:["issued"],to:"cleared",lbl:"✔ اتصرف من البنك"},
+ cancel:{from:["issued"],to:"cancelled",lbl:"✖ رجع / اتلغى"}};
+const V={dir:"in",sel:"CHR-2026-00004",tab:"all",act:"",bank:"BNK-001-01",sup:"SUB-001",adate:TODAY,fee:0,batch:[],mon:"2026-06",day:"2026-06-01",alf:"all",pay:"cheque",msg:"",
+ f:{party:"CUS-002",no:"556301",dbank:"بنك مصر",bank:"BNK-001-01",amt:50000,date:TODAY,due:"2026-06-30",ord:"",desc:"دفعة من الحساب"}};
+let JV=118;
+const CH=[];
+function mk(id,dir,no,party,bank,amt,date,due,ord,desc,steps){
+  const c={id,dir,no,party,bank,dep:"",amt,date,due,ord,desc,st:dir==="in"?"portfolio":"issued",endSup:"",h:[]};
+  c.h.push([date,c.st,"JV-2026-"+String(++JV).padStart(5,"0"),dir==="in"?"استلام الشيك":"إصدار الشيك",journal(c,"start")]);
+  CH.push(c);(steps||[]).forEach(s=>{if(s[2])c.dep=s[2];if(s[3])c.endSup=s[3];apply(c,s[0],s[1],true);});return c;}
+// ===== القيود
+const pAcc=c=>c.dir==="in"?["1103",pName(c)]:["2101",pName(c)];
+const pName=c=>(c.dir==="in"?CUS:SUP).find(p=>p[0]===c.party)[1];
+const sName=id=>SUP.find(p=>p[0]===id)[1];
+const ba=id=>BA.find(b=>b[0]===id)||BA[0];
+function journal(c,k,o={}){const P=c.dir==="in"?"1103":"2101",pn=pName(c),a=c.amt,L=[];
+  const dep=o.bank||c.dep||V.bank,fee=o.fee||0;
+  if(k==="start"){if(c.dir==="in"){L.push(["1104",pn,a,0],["1103",pn,0,a]);}else{L.push(["2101",pn,a,0],["2102",pn,0,a]);}}
+  else if(k==="deposit"){L.push(["1108",ba(dep)[1],a,0]);L.push(c.st==="bounced"?["1103",pn,0,a]:["1104",pn,0,a]);}
+  else if(k==="collect"){L.push([ba(c.dep)[2],"",a-fee,0]);if(fee)L.push(["5402","",fee,0]);L.push(["1108",ba(c.dep)[1],0,a]);}
+  else if(k==="bounce"){L.push(["1103",pn,a,0],["1108",ba(c.dep)[1],0,a]);if(fee)L.push(["5402","",fee,0],[ba(c.dep)[2],"",0,fee]);}
+  else if(k==="endorse"){const s=o.sup||c.endSup||V.sup;L.push(["2101",sName(s),a,0],["1104",pn,0,a]);}
+  else if(k==="giveback"){if(c.st!=="bounced")L.push(["1103",pn,a,0],["1104",pn,0,a]);}
+  else if(k==="clear"){L.push(["2102",pn,a,0],[ba(c.bank)[2],"",0,a]);}
+  else if(k==="cancel"){L.push(["2102",pn,a,0],["2101",pn,0,a]);}
+  return L;}
+function apply(c,k,date,seed){const t=TR[k];if(!t||!t.from.includes(c.st))return;
+  if(k==="deposit"&&!seed)c.dep=V.bank;if(k==="endorse"&&!seed)c.endSup=V.sup;
+  const L=journal(c,k,seed?{}:{fee:V.fee});c.st=t.to;c.h.push([date,c.st,L.length?"JV-2026-"+String(++JV).padStart(5,"0"):"—",t.lbl.replace(/^\S+\s/,""),L]);}
+// الشيكات الواردة (من العملاء)
+mk("CHR-2026-00001","in","10045871","CUS-001","بنك مصر",120000,"2026-04-10","2026-04-25","Itec-014","دفعة مستخلص 3",[["deposit","2026-04-26","BNK-001-01"],["collect","2026-04-29"]]);
+mk("CHR-2026-00002","in","556201","CUS-002","البنك الأهلي المصري",45000,"2026-04-15","2026-05-15","","فاتورة 1045",[["deposit","2026-05-16","BNK-001-01"],["bounce","2026-05-20"]]);
+mk("CHR-2026-00003","in","300177","CUS-003","البنك التجاري الدولي",80000,"2026-05-02","2026-05-28","Itec-017","دفعة مقدمة",[["deposit","2026-05-28","BNK-002-01"]]);
+mk("CHR-2026-00004","in","10045902","CUS-001","بنك مصر",150000,"2026-05-05","2026-05-31","Itec-014","دفعة مستخلص 4");
+mk("CHR-2026-00005","in","7781","CUS-004","بنك القاهرة",32500,"2026-05-10","2026-06-01","","فاتورة 1052");
+mk("CHR-2026-00006","in","556240","CUS-002","البنك الأهلي المصري",60000,"2026-05-12","2026-06-05","","فاتورة 1049");
+mk("CHR-2026-00007","in","300190","CUS-003","البنك التجاري الدولي",95000,"2026-05-20","2026-06-20","Itec-017","الدفعة التانية");
+mk("CHR-2026-00008","in","10046010","CUS-001","بنك مصر",200000,"2026-05-25","2026-07-15","Itec-021","دفعة مستخلص 1");
+mk("CHR-2026-00009","in","7702","CUS-004","بنك قطر الوطني",18000,"2026-04-01","2026-05-10","","فاتورة 1031");
+mk("CHR-2026-00010","in","556188","CUS-002","البنك الأهلي المصري",25000,"2026-04-05","2026-04-30","","فاتورة 1040",[["endorse","2026-05-03","","SUB-002"]]);
+// الشيكات الصادرة (للموردين)
+mk("CHP-2026-00001","out","0012001","SUB-001","BNK-001-01",70000,"2026-04-20","2026-05-05","","كابلات أبريل",[["clear","2026-05-06"]]);
+mk("CHP-2026-00002","out","0012002","SUB-001","BNK-001-01",70000,"2026-04-20","2026-06-05","","كابلات أبريل — القسط التاني");
+mk("CHP-2026-00003","out","0045001","SUB-002","BNK-002-01",40000,"2026-05-01","2026-05-30","Itec-017","توريد حديد");
+mk("CHP-2026-00004","out","0012003","SUB-003","BNK-001-01",55000,"2026-05-15","2026-06-15","","إيجار معدات");
+mk("CHP-2026-00005","out","0012004","SUB-003","BNK-001-01",12000,"2026-05-10","2026-05-20","","صيانة",[["cancel","2026-05-22"]]);
+mk("CHP-2026-00006","out","0045002","SUB-002","BNK-002-01",90000,"2026-05-28","2026-06-01","Itec-021","توريد أسمنت");
+
+// ===== أدوات
+const N=c=>`<span class="ltr">${c}</span>`;
+const m2=n=>(+n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const m0=n=>(+n||0).toLocaleString("en-US");
+const dd=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
+const dm=d=>N(d.slice(8)+"/"+d.slice(5,7));
+const ch=id=>CH.find(c=>c.id===id);
+const cur=()=>{let c=ch(V.sel);if(!c||c.dir!==V.dir){c=CH.find(x=>x.dir===V.dir&&OPEN.includes(x.st))||CH.find(x=>x.dir===V.dir);V.sel=c.id;}return c;};
+const mine=(f=()=>true)=>CH.filter(c=>c.dir===V.dir&&f(c));
+const stB=s=>`<span class="st" style="background:${ST[s][1]}">${ST[s][2]} ${ST[s][0]}</span>`;
+const isOpen=c=>OPEN.includes(c.st);
+function dueCat(c){if(!isOpen(c))return "";const d=dd(TODAY,c.due);return d<0?"od":d===0?"td":d===1?"tm":d<=7?"wk":"lt";}
+function dueB(c){const k=dueCat(c);if(!k)return "";const d=dd(TODAY,c.due);
+  const t={od:`متأخر ${-d} يوم`,td:"النهارده",tm:"بكرة",wk:`بعد ${d} أيام`,lt:`بعد ${d} يوم`}[k];return `<span class="due ${k}">${t}</span>`;}
+const nextNo=dir=>(dir==="in"?"CHR":"CHP")+"-2026-"+String(CH.filter(c=>c.dir===dir).length+1).padStart(5,"0");
+const acts=c=>Object.keys(TR).filter(k=>TR[k].from.includes(c.st));
+const bankTxt=c=>c.dir==="in"?c.bank:ba(c.bank)[1];
+const partyLbl=()=>V.dir==="in"?"العميل":"المورد";
+// القيد
+const jeTable=(L,t,empty)=>{const d=L.reduce((a,l)=>a+l[2],0),c=L.reduce((a,l)=>a+l[3],0);
+  if(!L.length)return `<div class="je"><h6><span>📒 ${t}</span></h6><div class="hint">${empty||`مفيش قيد — العميل اتحمّل الشيك من يوم ما رجع من البنك، ورده للعميل تسليم ورقة بس.`}</div></div>`;
+  return `<div class="je"><h6><span>📒 ${t}</span><span class="${Math.abs(d-c)<.005?'ok-line':'bad-line'}">${Math.abs(d-c)<.005?'✔ متوازن':'✖ مش متوازن'}</span></h6><table class="tbl"><tr><th>الحساب</th><th>البُعد</th><th>مدين</th><th>دائن</th></tr>${L.map(l=>`<tr><td>${N(l[0])} ${ACC[l[0]]}</td><td>${l[1]}</td><td class="n">${l[2]?m2(l[2]):""}</td><td class="n">${l[3]?m2(l[3]):""}</td></tr>`).join("")}</table></div>`;};
+const actJe=c=>{if(V.act&&TR[V.act]&&TR[V.act].from.includes(c.st))return jeTable(journal(c,V.act,{bank:V.bank,sup:V.sup,fee:V.fee}),`القيد اللي هيتعمل لما «${TR[V.act].lbl.replace(/^\S+\s/,"")}» يتنفّذ`);
+  const h=c.h[c.h.length-1];return jeTable(h[4],`آخر قيد: ${h[3]} · ${h[2]}`);};
+// أزرار الانتقال للشيك المحدد
+function actBar(c,o={}){const A=acts(c);if(!A.length)return `<div class="msg ok">${stB(c.st)} — الشيك ده خلص دورته، مفيش خطوات تانية.</div>`;
+  const k=V.act&&A.includes(V.act)?V.act:"";
+  const extra=k==="deposit"?`<label class="hint" style="margin:0">في بنك</label>${selBA("bank",120)}`:k==="endorse"?`<label class="hint" style="margin:0">للمورد</label>${selSup()}`:(k==="collect"||k==="bounce")?`<label class="hint" style="margin:0">مصاريف</label><input class="lv" data-k="fee" type="number" min="0" value="${V.fee}" style="width:50px;flex:none;direction:ltr">`:"";
+  return `<div class="acts">${o.lbl===false?"":`<span class="hint" style="margin:0">الخطوة الجاية:</span>`}${A.map(a=>`<span class="acb ${k===a?'on':''}" data-act="${a}">${TR[a].lbl}</span>`).join("")}${k?`${extra}<input type="date" class="lv" data-k="adate" value="${V.adate}" style="width:92px;flex:none"><span class="acb go" data-do="${c.id}">✔ نفّذ</span>`:""}</div>`;}
+const selBA=(k,w,fk)=>`<select class="lv" ${fk?`data-f="${fk}"`:`data-k="${k}"`} ${w?`style="width:${w}px;flex:none"`:""}>${BA.map(b=>`<option value="${b[0]}" ${(fk?V.f[fk]:V[k])===b[0]?"selected":""}>${b[1]}</option>`).join("")}</select>`;
+const selSup=()=>`<select class="lv" data-k="sup" style="width:130px;flex:none">${SUP.map(s=>`<option value="${s[0]}" ${V.sup===s[0]?"selected":""}>${s[1]}</option>`).join("")}</select>`;
+const selParty=(w)=>`<select class="lv" data-f="party" ${w?`style="width:${w}px;flex:none"`:""}>${(V.dir==="in"?CUS:SUP).map(p=>`<option value="${p[0]}" ${V.f.party===p[0]?"selected":""}>${p[0]} — ${p[1]}</option>`).join("")}</select>`;
+const selDB=()=>`<select class="lv" data-f="dbank">${DBANKS.map(b=>`<option ${V.f.dbank===b?"selected":""}>${b}</option>`).join("")}</select>`;
+const inF=(k,t="text",x="")=>`<input class="lv" data-f="${k}" type="${t}" value="${V.f[k]}" ${x}>`;
+const selOrd=()=>`<select class="lv" data-f="ord">${ORD.map(o=>`<option value="${o}" ${V.f.ord===o?"selected":""}>${o||"— من غير أمر توريد —"}</option>`).join("")}</select>`;
+const fld=(l,w)=>`<div class="f"><label>${l}</label>${w}</div>`;
+const lock=(l,v)=>`<div class="f"><label>${l}</label><i class="lock">${v}</i></div>`;
+// التحقق من الشيك الجديد
+function vErr(){const f=V.f,E=[],W=[];
+  if(!String(f.no).trim())E.push("رقم الشيك مطلوب");
+  const bk=V.dir==="in"?f.dbank:f.bank;
+  const dup=CH.find(c=>c.dir===V.dir&&c.no===String(f.no).trim()&&(V.dir==="in"?c.bank:c.bank)===bk);
+  if(dup)E.push(`رقم الشيك ${f.no} متسجل قبل كده على نفس البنك (${dup.id})`);
+  if(!(+f.amt>0))E.push("المبلغ لازم أكبر من صفر");
+  if(f.due<f.date)W.push("تاريخ الاستحقاق قبل تاريخ "+(V.dir==="in"?"الاستلام":"الإصدار")+" — اتأكد");
+  if(V.dir==="out"){const b=ba(f.bank);const due=CH.filter(c=>c.dir==="out"&&c.st==="issued"&&c.bank===f.bank).reduce((s,c)=>s+c.amt,0);if(b[3]-due-(+f.amt)<0)W.push(`رصيد ${b[1]} (${m0(b[3])}) مش هيكفي الشيكات الصادرة عليه (${m0(due+(+f.amt))}) — تحذير بس`);}
+  return [E,W];}
+const msgs=()=>{const [E,W]=vErr();return (V.msg?`<div class="msg ok">${V.msg}</div>`:"")+E.map(e=>`<div class="msg bad">✖ ${e}</div>`).join("")+W.map(w=>`<div class="msg wr">⚠️ ${w}</div>`).join("");};
+function formCore(t){const f=V.f;return `<div class="gb"><span class="t">${t||(V.dir==="in"?"📥 شيك وارد جديد":"📤 شيك صادر جديد")}</span>${lock("رقم المستند",N(nextNo(V.dir))+" (لوحده)")}${fld(partyLbl(),selParty())}${fld("رقم الشيك",inF("no","text",'placeholder="زي ما هو على الشيك" style="direction:ltr"'))}${V.dir==="in"?fld("بنك الساحب",selDB()):fld("من حسابنا",selBA("",0,"bank"))}${fld("المبلغ",inF("amt","number",'min="0" step="500" style="direction:ltr;text-align:left"'))}${fld(V.dir==="in"?"تاريخ الاستلام":"تاريخ الإصدار",inF("date","date"))}${fld("تاريخ الاستحقاق",inF("due","date"))}${fld("أمر التوريد",selOrd())}${fld("البيان",inF("desc"))}</div>`;}
+const newJe=()=>{const f=V.f;const fake={dir:V.dir,party:f.party,amt:+f.amt||0,st:"",bank:f.bank};return jeTable(journal(fake,"start"),V.dir==="in"?"القيد اللي هيتعمل مع الاستلام":"القيد اللي هيتعمل مع الإصدار");};
+const tbF=(extra="")=>`<div class="tb"><span class="bt b-new">جديد</span><span class="bt b-edit">تعديل</span><span class="bt b-draft">حفظ مسودة</span><span class="bt b-post" data-add="1" style="cursor:pointer">${V.dir==="in"?"استلام ✔":"إصدار ✔"}</span><span class="bt b-unpost">تراجع عن آخر خطوة</span><span class="bt b-del">حذف</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span>${extra}</div>`;
+const dirT=()=>`<div class="tg2" style="width:170px"><span class="rv ${V.dir==='in'?'on':''}" data-dir="in">📥 وارد (عملاء)</span><span class="pv ${V.dir==='out'?'on':''}" data-dir="out">📤 صادر (موردين)</span></div>`;
+function win(inner,title){return `<div class="win"><div class="wt"><span>${title||(V.dir==="in"?"📥 شيكات العملاء":"📤 شيكات الموردين")+" — A-H CODE"}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+const chList=(f=()=>true,o={})=>`<table class="tbl"><tr>${o.cb?"<th></th>":""}<th>المستند</th><th>رقم الشيك</th><th>${partyLbl()}</th><th>البنك</th><th>الاستحقاق</th><th>المبلغ</th><th>الحالة</th></tr>${mine(f).map(c=>`<tr class="${V.sel===c.id?'sel':''}" data-sel="${c.id}" style="cursor:pointer">${o.cb?`<td><input type="checkbox" class="cb" data-bt="${c.id}" ${V.batch.includes(c.id)?"checked":""}></td>`:""}<td><b class="ltr">${c.id.slice(4)}</b></td><td>${N(c.no)}</td><td>${pName(c)}</td><td>${bankTxt(c)}</td><td>${dm(c.due)} ${dueB(c)}</td><td class="n">${m2(c.amt)}</td><td>${stB(c.st)}</td></tr>`).join("")}</table>`;
+const hdrC=c=>`<div class="hdr" style="border-right-color:${ST[c.st][1]}"><b>${N(c.id)} · شيك ${N(c.no)} · ${m2(c.amt)} ج.م</b> ${stB(c.st)} ${dueB(c)}<div class="p">${partyLbl()}: ${pName(c)} · ${c.dir==="in"?"بنك الساحب: "+c.bank+(c.dep?" · اتودع في "+ba(c.dep)[1]:""):"من حساب "+ba(c.bank)[1]} · الاستحقاق ${dm(c.due)}${c.ord?" · أمر التوريد "+N(c.ord):""}${c.endSup?" · اتظهّر لـ "+sName(c.endSup):""}</div></div>`;
+const kp=(t,v,k="",x="")=>`<div class="kp ${k}" ${x}><small>${t}</small><b>${v}</b></div>`;
+const sum=a=>a.reduce((s,c)=>s+c.amt,0);
+
+// 1) الكلاسيك: القائمة + الشيك المحدد وخطواته + فورم الجديد
+function m1(){const c=cur();return win(tbF()+`<div class="content"><div class="col" style="width:42%"><div class="scroll">${formCore()}</div>${msgs()}${newJe()}</div><div class="col" style="flex:1;gap:4px"><div class="flt">${dirT()}<span class="chipf on">أبريل – يونيو 2026</span><span class="chipf">المفتوحة بس</span></div><div class="scroll">${chList()}</div>${hdrC(c)}${actBar(c)}${actJe(c)}</div></div>`);}
+
+// 2) تبويب لكل حالة
+function m2v(){const c0=cur();const tabs=`<div class="tabs2"><span class="${V.tab==='all'?'on':''}" data-tab="all">الكل<em>${mine().length}</em></span>${FLOW[V.dir].map(s=>`<span class="${V.tab===s?'on':''}" data-tab="${s}" style="${V.tab===s?'background:'+ST[s][1]:''}">${ST[s][2]} ${ST[s][0]}<em>${mine(c=>c.st===s).length}</em></span>`).join("")}</div>`;
+  const list=mine(c=>V.tab==="all"||c.st===V.tab);const c=list.includes(c0)?c0:(list[0]||c0);if(c)V.sel=c.id;
+  const col=V.tab==="all"?"var(--green)":ST[V.tab][1];
+  return win(tbF()+`<div class="content" style="flex-direction:column;gap:3px"><div class="flt">${dirT()}<span class="hint" style="margin:0">مجموع التبويب: <b class="ltr">${m2(sum(list))}</b></span></div>${tabs}<div style="display:flex;gap:6px;flex:1;min-height:0;border-top:3px solid ${col};padding-top:4px"><div class="col" style="width:55%"><div class="scroll">${chList(x=>V.tab==="all"||x.st===V.tab)}</div></div><div class="col" style="flex:1;gap:4px">${hdrC(c)}${actBar(c)}<div class="scroll">${actJe(c)}</div></div></div></div>`);}
+
+// 3) لوحة الحالات (كانبان)
+function m3(){const c=cur();const F=FLOW[V.dir];
+  const cols=F.map(s=>{const L=mine(x=>x.st===s);return `<div class="kc"><h6 style="background:${ST[s][1]}"><span>${ST[s][2]} ${ST[s][0]}</span><span>${L.length}</span></h6>${L.map(x=>`<div class="kq ${V.sel===x.id?'sel':''}" data-sel="${x.id}"><b>${pName(x)}</b><span class="v">${m0(x.amt)}</span> · ${N(x.no)}<br>${dm(x.due)} ${dueB(x)}</div>`).join("")}<div class="hint" style="margin-top:auto">${m0(sum(L))}</div></div>`;}).join("");
+  return win(tbF()+`<div class="content" style="flex-direction:column;gap:4px"><div class="flt">${dirT()}<span class="hint" style="margin:0">دوس على كارت ← تحت الخطوات اللي ممكن تتعمل عليه</span></div><div class="kb" style="grid-template-columns:repeat(${F.length},1fr)">${cols}</div><div style="flex-shrink:0;display:flex;flex-direction:column;gap:3px">${actBar(c)}${V.act?actJe(c):""}</div></div>`);}
+
+// 4) زي الأكسس Fshikat: العميل ← شيكاته ومدفوع / غير مدفوع
+function m4(){const P=V.dir==="in"?CUS:SUP;const L=mine(c=>c.party===V.f.party);
+  const paid=c=>c.st==="collected"||c.st==="cleared";const can=c=>["portfolio","under","issued"].includes(c.st);
+  const rows=L.map(c=>`<tr class="${V.sel===c.id?'sel':''}" data-sel="${c.id}" style="cursor:pointer"><td>${dm(c.date)}</td><td>${dm(c.due)}</td><td>${N(c.no)}</td><td>${bankTxt(c)}</td><td class="n">${m2(c.amt)}</td><td>${paid(c)?'<span class="bdg ok">مدفوع</span>':can(c)?'<span class="bdg wr">غير مدفوع</span>':stB(c.st)}</td><td style="text-align:center"><input type="checkbox" class="cb" data-paid="${c.id}" ${paid(c)?"checked disabled":can(c)?"":"disabled"}></td></tr>`).join("");
+  return win(tbF()+`<div class="content" style="flex-direction:column;gap:4px"><div class="flt">${dirT()}<label>${partyLbl()}</label>${selParty(190)}</div><div class="hdr"><b>${P.find(p=>p[0]===V.f.party)[1]}</b><div class="p">${L.length} شيك · مدفوع <b class="ltr">${m0(sum(L.filter(paid)))}</b> · لسه <b class="ltr">${m0(sum(L.filter(can)))}</b></div></div><div class="scroll"><table class="tbl"><tr><th>التاريخ</th><th>تاريخ الصرف</th><th>رقم الشيك</th><th>البنك</th><th>المبلغ</th><th>الحالة</th><th>مدفوع</th></tr>${rows||'<tr><td colspan="7">مفيش شيكات</td></tr>'}</table></div><div class="hint">زي شاشة الأكسس (العميل ← شيكاته ← علامة «مدفوع») — بس علامة «مدفوع» هنا بتعمل خطوات الدورة كلها بقيودها بتاريخ النهارده (${V.dir==="in"?"إيداع في "+ba(V.bank)[1]+" ← اتحصّل":"اتصرف من البنك"}). <b>علّم على شيك «غير مدفوع».</b></div></div>`,`${V.dir==="in"?"شيكات العملاء":"شيكات الموردين"} — زي Fshikat — A-H CODE`);}
+
+// 5) تنبيهات الاستحقاق
+function m5(){const O=CH.filter(isOpen);const cats=[["od","⛔ متأخر","r"],["td","📅 النهارده","o"],["tm","⏰ بكرة","o"],["wk","🗓 خلال أسبوع","b"]];
+  const L=O.filter(c=>V.alf==="all"||dueCat(c)===V.alf).sort((a,b)=>a.due<b.due?-1:1);
+  const hint=c=>c.dir==="in"?(c.st==="portfolio"?"لازم يتودع":c.st==="under"?"مستني البنك يأكّد":"رجع — اتصرف مع العميل"):(ba(c.bank)[3]<c.amt?`⚠️ رصيد ${ba(c.bank)[1]} مش مكفي`:"وفّر رصيد في البنك");
+  const c=ch(V.sel)&&isOpen(ch(V.sel))?ch(V.sel):L[0];
+  return win(`<div class="content" style="flex-direction:column;gap:4px"><div class="kpis">${cats.map(k=>{const A=O.filter(c=>dueCat(c)===k[0]);return kp(`${k[1]} (${A.length})`,m0(sum(A)),k[2]+(V.alf===k[0]?" sel":""),`data-alf="${k[0]}" style="cursor:pointer"`);}).join("")}</div><div class="flt"><span class="chipf ${V.alf==='all'?'on':''}" data-alf="all">كل المفتوح (${O.length})</span><span class="hint" style="margin:0">وارد: في الحافظة / تحت التحصيل / راجع · صادر: لسه ماتصرفش — مرتّبين بالاستحقاق</span></div><div class="scroll"><table class="tbl"><tr><th></th><th>الاستحقاق</th><th>المستند</th><th>العميل / المورد</th><th>المبلغ</th><th>الحالة</th><th>المطلوب</th></tr>${L.map(x=>`<tr class="${c&&c.id===x.id?'sel':''}" data-sel="${x.id}" data-sdir="${x.dir}" style="cursor:pointer"><td>${x.dir==="in"?"📥":"📤"}</td><td>${dm(x.due)} ${dueB(x)}</td><td>${N(x.id.slice(4))}</td><td>${pName(x)}</td><td class="n" style="color:${x.dir==='in'?'#087443':'#B91C1C'}">${m2(x.amt)}</td><td>${stB(x.st)}</td><td>${hint(x)}</td></tr>`).join("")}</table></div>${c?`<div style="flex-shrink:0">${actBar(c)}</div>`:""}<div class="hint">نفس الكروت دي تطلع في «شاشة المعلومات» على الواجهة الرئيسية، وتنبيه أول ما البرنامج يتفتح لو فيه متأخر أو النهارده.</div></div>`,"🔔 تنبيهات استحقاق الشيكات — A-H CODE");}
+
+// 6) تقويم الاستحقاق
+function m6(){const [y,mo]=V.mon.split("-").map(Number);const first=new Date(y,mo-1,1),days=new Date(y,mo,0).getDate();const off=(first.getDay()+1)%7;
+  const O=CH.filter(c=>isOpen(c)||c.st==="collected"||c.st==="cleared");
+  const cell=d=>{const iso=`${V.mon}-${String(d).padStart(2,"0")}`;const L=O.filter(c=>c.due===iso&&isOpen(c));const i=sum(L.filter(c=>c.dir==="in")),o=sum(L.filter(c=>c.dir==="out"));
+    return `<div class="d ${iso===TODAY?'t':''} ${V.day===iso?'sel':''}" data-day="${iso}"><b>${d}</b>${i?`<span class="i">+${m0(i)}</span>`:""}${o?`<span class="o">−${m0(o)}</span>`:""}</div>`;};
+  const hd=["سبت","حد","اتنين","تلات","أربع","خميس","جمعة"].map(h=>`<div class="h">${h}</div>`).join("");
+  const grid=hd+Array(off).fill('<div class="d x"></div>').join("")+Array.from({length:days},(_,i)=>cell(i+1)).join("");
+  const L=CH.filter(c=>c.due===V.day);const mn={"2026-05":"مايو 2026","2026-06":"يونيو 2026","2026-07":"يوليو 2026"}[V.mon];
+  const inM=CH.filter(c=>isOpen(c)&&c.due.startsWith(V.mon));const ti=sum(inM.filter(c=>c.dir==="in")),to=sum(inM.filter(c=>c.dir==="out"));
+  return win(`<div class="content" style="flex-direction:column;gap:3px"><div class="flt"><span class="mini" data-mon="-1">›</span><b style="font-size:10px">${mn}</b><span class="mini" data-mon="1">‹</span><span class="hint" style="margin:0">المفتوح في الشهر: داخل <b class="ltr" style="color:#087443">${m0(ti)}</b> · خارج <b class="ltr" style="color:#B91C1C">${m0(to)}</b> · الصافي <b class="ltr">${m0(ti-to)}</b></span></div><div class="cal">${grid}</div><div class="scroll"><table class="tbl"><tr><th></th><th>المستند</th><th>العميل / المورد</th><th>المبلغ</th><th>الحالة</th></tr>${L.length?L.map(x=>`<tr data-sel="${x.id}" data-sdir="${x.dir}" style="cursor:pointer"><td>${x.dir==="in"?"📥":"📤"}</td><td>${N(x.id)}</td><td>${pName(x)}</td><td class="n">${m2(x.amt)}</td><td>${stB(x.st)}</td></tr>`).join(""):`<tr><td colspan="5">مفيش شيكات مستحقة يوم ${dm(V.day)}</td></tr>`}</table></div></div>`,"📅 تقويم استحقاق الشيكات — A-H CODE");}
+
+// 7) حافظة إيداع: كذا شيك مرة واحدة
+function m7(){const P=CH.filter(c=>c.dir==="in"&&(c.st==="portfolio"||c.st==="bounced"));V.batch=V.batch.filter(id=>P.find(c=>c.id===id));const B=P.filter(c=>V.batch.includes(c.id));const tot=sum(B);
+  const L=B.length?[["1108",ba(V.bank)[1],tot,0],...B.map(c=>[c.st==="bounced"?"1103":"1104",pName(c)+" · "+c.no,0,c.amt])]:[];
+  return win(`<div class="tb"><span class="bt b-new">حافظة جديدة</span><span class="bt b-post" data-batchdo="1" style="cursor:pointer">إيداع الحافظة ✔</span><span class="bt b-ref">طباعة الحافظة</span><span class="bt b-exit">خروج</span></div><div class="content"><div class="col" style="width:55%;gap:3px"><div class="flt"><label>البنك</label>${selBA("bank",130)}<label>التاريخ</label><input type="date" class="lv" data-k="adate" value="${V.adate}" style="width:92px;flex:none"></div><div class="scroll"><table class="tbl"><tr><th></th><th>الاستحقاق</th><th>رقم الشيك</th><th>العميل</th><th>المبلغ</th></tr>${P.map(c=>`<tr class="${V.batch.includes(c.id)?'sel':''}"><td><input type="checkbox" class="cb" data-bt="${c.id}" ${V.batch.includes(c.id)?"checked":""}></td><td>${dm(c.due)} ${dueB(c)}</td><td>${N(c.no)}</td><td>${pName(c)}</td><td class="n">${m2(c.amt)}</td></tr>`).join("")}</table></div><div class="cnt">في الحافظة ${P.length} شيك · اخترت ${B.length} بإجمالي <b class="ltr">${m2(tot)}</b> · <span class="mini" data-ball="1">اختار المستحق لحد النهارده</span></div></div><div class="col" style="flex:1;gap:3px"><div class="scroll" style="background:#94A3B8;border-radius:6px"><div class="slip"><h4>🏦 حافظة إيداع شيكات — ${ba(V.bank)[1]}</h4><div class="hint" style="margin:0 0 3px">رقم ${N("DS-2026-00004")} · ${dm(V.adate)} · ${B.length} شيك</div><table class="tbl"><tr><th>م</th><th>رقم الشيك</th><th>بنك الساحب</th><th>المبلغ</th></tr>${B.map((c,i)=>`<tr><td>${i+1}</td><td>${N(c.no)}</td><td>${c.bank}</td><td class="n">${m2(c.amt)}</td></tr>`).join("")}<tr class="tot"><td colspan="3">الإجمالي</td><td class="n">${m2(tot)}</td></tr></table></div></div>${jeTable(L,"قيد واحد للحافظة كلها","علّم على شيك أو أكتر ← القيد بيظهر هنا")}</div></div>`,"🏦 حافظة إيداع شيكات — A-H CODE");}
+
+// 8) شكل الشيك الورقي (الإدخال على الشيك نفسه) + التفقيط
+const ONES=["","واحد","اتنين","تلاتة","أربعة","خمسة","ستة","سبعة","تمانية","تسعة","عشرة","حداشر","اتناشر","تلتاشر","أربعتاشر","خمستاشر","ستاشر","سبعتاشر","تمنتاشر","تسعتاشر"];
+const TENS=["","","عشرين","تلاتين","أربعين","خمسين","ستين","سبعين","تمانين","تسعين"];
+const HUN=["","مية","ميتين","تلتمية","ربعمية","خمسمية","ستمية","سبعمية","تمنمية","تسعمية"];
+function w999(n){const h=Math.floor(n/100),r=n%100;const p=[];if(h)p.push(HUN[h]);if(r<20){if(r)p.push(ONES[r]);}else{const o=r%10;p.push((o?ONES[o]+" و":"")+TENS[Math.floor(r/10)]);}return p.join(" و");}
+function words(n){n=Math.floor(n);if(!n)return "صفر";const m=Math.floor(n/1e6),t=Math.floor(n%1e6/1000),r=n%1000;const p=[];
+  if(m)p.push(m===1?"مليون":m===2?"مليونين":w999(m)+" مليون");if(t)p.push(t===1?"ألف":t===2?"ألفين":t<=10?w999(t)+" آلاف":w999(t)+" ألف");if(r)p.push(w999(r));return p.join(" و")+" جنيه مصري لا غير";}
+function m8(){const f=V.f,o=V.dir==="out";const bank=o?ba(f.bank)[1]:f.dbank;
+  return win(tbF()+`<div class="content" style="flex-direction:column;gap:3px"><div class="flt">${dirT()}<label>${partyLbl()}</label>${selParty(160)}<label>أمر التوريد</label><span style="width:110px">${selOrd()}</span></div><div class="chq ${o?'out':''}"><div class="r"><b style="font-size:11px">🏦 ${o?selBA("",120,"bank"):`<span style="display:inline-block;width:130px">${selDB()}</span>`}</b><span style="margin-right:auto" class="hint">${o?"شيك صادر من حسابنا":"شيك وارد — بنك الساحب"}</span><label>التاريخ</label><span style="width:96px">${inF("due","date")}</span></div><div class="r"><label>ادفعوا لأمر</label><span class="ln2">${o?SUP.find(s=>s[0]===f.party)[1]:"شركة آي تك (إحنا)"}</span><span class="bx2">${m2(f.amt)}</span></div><div class="r"><label>مبلغ وقدره</label><span class="ln2" style="font-weight:900">${words(+f.amt||0)}</span></div><div class="r"><label>المبلغ</label><span style="width:100px">${inF("amt","number",'min="0" step="500" style="direction:ltr"')}</span><label>رقم الشيك</label><span style="width:90px">${inF("no","text",'style="direction:ltr" placeholder="رقم الشيك"')}</span><span style="margin-right:auto" class="hint">${o?"التوقيع":"الساحب: "+CUS.find(s=>s[0]===f.party)[1]}</span></div><div class="mc">⑈${f.no||"000000"}⑈ ${o?ba(f.bank)[2]:"0000"}⑆ ${N(nextNo(V.dir))}</div></div>${msgs()}<div class="scroll">${newJe()}</div></div>`,`🧾 ${o?"إصدار شيك":"استلام شيك"} — A-H CODE`);}
+
+// 9) كارت الشيك + خط زمني بقيد كل خطوة
+function m9(){const c=cur();
+  const items=c.h.map((h,i)=>`<div class="tli"><span class="dot" style="background:${ST[h[1]][1]}"></span><div class="cd"><div style="display:flex;justify-content:space-between;gap:4px"><b>${i+1}. ${h[3]} ← ${stB(h[1])}</b><span>${dm(h[0])} · <b class="ltr" style="color:#2563EB">${h[2]}</b></span></div>${h[4].length?`<div class="hint" style="margin:1px 0 0">${h[4].map(l=>`${l[2]?"مدين":"دائن"} ${N(l[0])} ${ACC[l[0]].replace(" 🆕","")} ${N(m0(l[2]||l[3]))}`).join(" · ")}</div>`:`<div class="hint" style="margin:1px 0 0">مفيش قيد</div>`}</div></div>`).join("");
+  const nx=acts(c).length?`<div class="tli nx"><span class="dot" style="background:#CBD5E1"></span><div class="cd">${actBar(c,{lbl:false})}</div></div>`:"";
+  return win(`<div class="content" style="flex-direction:column;gap:4px"><div class="flt">${dirT()}<label>الشيك</label><select class="lv" data-k="sel" style="width:240px;flex:none">${mine().map(x=>`<option value="${x.id}" ${x.id===c.id?"selected":""}>${x.id} · ${N(x.no)} · ${pName(x)} · ${ST[x.st][0]}</option>`).join("")}</select></div>${hdrC(c)}<div class="scroll"><div class="tl">${items}${nx}</div>${V.act?actJe(c):""}</div><div class="hint">كل خطوة = سطر في «سجل الشيك» بتاريخها ومين عملها ورقم قيدها — وتدوس على رقم القيد ← يفتح القيد.</div></div>`,`🧾 دورة الشيك ${c.id} — A-H CODE`);}
+
+// 10) الشيك من سند القبض / الصرف (طريقة الدفع)
+function m10(){const o=V.dir==="out",f=V.f,P=V.pay;
+  const pt=`<div class="tg2" style="width:220px"><span class="${P==='cash'?'rv on':''}" data-pay="cash">💵 نقدي</span><span class="${P==='bank'?'rv on':''}" data-pay="bank">🏦 تحويل بنكي</span><span class="${P==='cheque'?'rv on':''}" data-pay="cheque">🧾 شيك</span></div>`;
+  const fake={dir:V.dir,party:f.party,amt:+f.amt||0,st:"",bank:f.bank};const pn=pName(fake);
+  const L=P==="cheque"?journal(fake,"start"):o?[["2101",pn,+f.amt,0],[P==="cash"?"110101":"110201","",0,+f.amt]]:[[P==="cash"?"110101":"110201","",+f.amt,0],["1103",pn,0,+f.amt]];
+  const chq=P==="cheque"?`<div class="gb"><span class="t">🧾 بيانات الشيك — بيتسجّل في «الشيكات» لوحده ${stB(o?"issued":"portfolio")}</span>${fld("رقم الشيك",inF("no","text",'style="direction:ltr"'))}${o?fld("من حسابنا",selBA("",0,"bank")):fld("بنك الساحب",selDB())}${fld("الاستحقاق",inF("due","date"))}</div>`:"";
+  return win(`<div class="tb"><span class="bt b-new">جديد</span><span class="bt b-draft">حفظ مسودة</span><span class="bt b-post" ${P==="cheque"?'data-add="1" style="cursor:pointer"':""}>ترحيل ✔</span><span class="bt b-exit">خروج</span></div><div class="content"><div class="col" style="width:52%"><div class="flt">${dirT()}</div><div class="scroll"><div class="gb"><span class="t">${o?"سند صرف للمورد":"سند قبض من العميل"}</span>${lock("الرقم",N(o?"PV-2026-00006":"RV-2026-00006"))}${fld(partyLbl(),selParty())}${fld("المبلغ",inF("amt","number",'min="0" style="direction:ltr;text-align:left"'))}<div class="f"><label>طريقة الدفع</label>${pt}</div>${fld("البيان",inF("desc"))}</div>${chq}</div></div><div class="col" style="flex:1;gap:4px">${P==="cheque"?msgs():""}${jeTable(L,"قيد السند")}<div class="hint">${P==="cheque"?"السند بالشيك مابيلمسش الخزنة ولا البنك — بيروح على "+(o?"2102 أوراق الدفع":"1104 أوراق القبض")+"، والشيك بيكمّل دورته في شاشة الشيكات.":"نقدي / تحويل = زي السند اللي اتعمل بالظبط."}</div></div></div>`,`${o?"📤 سند صرف":"📥 سند قبض"} بطريقة الدفع — A-H CODE`);}
+
+const M=[
+ ["الكلاسيك: القائمة + الشيك المحدد وخطواته","فوق زرار <b>وارد / صادر</b>، شمال قائمة الشيكات بحالتها واستحقاقها، وتحتها الشيك المحدد و<b>الخطوات المسموحة بس</b> (إيداع · تحصيل · رجوع · تظهير…) والقيد اللي هيتعمل، ويمين فورم الشيك الجديد. <b>دوس «إيداع للتحصيل» ← «✔ نفّذ».</b>",m1],
+ ["تبويب لكل حالة","تبويبات: <b>الكل · في الحافظة · تحت التحصيل · اتحصّل · رجع · اتظهّر · اترد</b> (وللصادر: صادر · اتصرف · رجع) كل واحد بلونه وعدده ومجموعه، وجنبها الشيك المحدد وخطواته. <b>دوس على التبويبات.</b>",m2v],
+ ["لوحة الحالات (كل حالة عمود)","كل حالة <b>عمود</b> والشيكات كروت فيه بالمبلغ والاستحقاق، تدوس كارت ← الخطوات الجاية تحت، ولما تنفّذ <b>الكارت بينقل للعمود الجديد</b>. <b>دوس كارت في «تحت التحصيل» ← «اتحصّل».</b>",m3],
+ ["زي الأكسس: العميل ← شيكاته ← «مدفوع»","زي <span class='ltr'>Fshikat</span> / <span class='ltr'>Fshikat1</span>: تختار العميل أو المورد ← جدول شيكاته بعلامة <b>«مدفوع»</b> — بس العلامة هنا بتعمل خطوات الدورة بقيودها. <b>علّم على شيك.</b>",m4],
+ ["تنبيهات الاستحقاق","كروت: <b>متأخر · النهارده · بكرة · خلال أسبوع</b> (الوارد والصادر مع بعض) بعددها ومبالغها، وتحتها المفتوح مرتّب بالاستحقاق و«المطلوب» قصاد كل شيك (يتودع / رصيد البنك مش مكفي…). <b>دوس على كارت «متأخر».</b>",m5],
+ ["تقويم الاستحقاق","شهر بأيامه: كل يوم عليه <b style='color:#087443'>الداخل</b> و<b style='color:#B91C1C'>الخارج</b> من الشيكات المفتوحة، وفوق صافي الشهر، وتدوس يوم ← شيكاته. <b>دوس على يوم 1 أو 5 أو غيّر الشهر.</b>",m6],
+ ["حافظة إيداع (كذا شيك مرة واحدة)","تعلّم على الشيكات اللي في الحافظة ← تختار البنك ← <b>«إيداع الحافظة»</b>: كلهم يبقوا «تحت التحصيل» <b>بقيد واحد</b> وورقة حافظة الإيداع للبنك جاهزة. <b>علّم على شيكين ودوس «إيداع الحافظة ✔».</b>",m7],
+ ["الشيك الورقي نفسه","الفورم شكل الشيك: البنك والتاريخ و«ادفعوا لأمر» والمبلغ في مربع و<b>بالحروف</b> ورقم الشيك — والقيد تحت. <b>غيّر المبلغ أو بدّل لصادر.</b>",m8],
+ ["دورة الشيك على خط زمني","تختار شيك ← <b>كل خطوة عدّى بيها</b> (استلام ← إيداع ← رجوع…) بتاريخها ورقم قيدها ومدين ودائن، وآخر الخط الخطوة الجاية. <b>اختار CHR-00002 (اللي رجع) ← «إيداع للتحصيل» تاني.</b>",m9],
+ ["الشيك من السند (طريقة الدفع)","سند القبض / الصرف فيه <b>طريقة الدفع: نقدي · تحويل بنكي · شيك</b> — ولو «شيك» تظهر بيانات الشيك والقيد يروح على أوراق القبض / الدفع، والشيك بيكمّل في شاشة الشيكات. <b>بدّل طريقة الدفع.</b>",m10],
+];
+
+const NOTE=`<b>الشاشة دي بتعمل إيه:</b> بتسجّل <b>شيكات العملاء (وارد = أوراق قبض)</b> و<b>شيكات الموردين (صادر = أوراق دفع)</b> وبتمشّي كل شيك في <b>دورته لحد ما يخلص</b> — و<b>كل خطوة بقيد أوتوماتيك</b> بمحرك الترحيل (قرار سابق — ملف 03 السؤال 3):
+<table class="tbl" style="font-size:12px;margin:6px 0;max-width:980px"><tr><th>الخطوة</th><th>من حالة ← لحالة</th><th>القيد</th></tr>
+<tr><td>📥 استلام شيك من عميل</td><td>— ← في الحافظة</td><td>مدين <span class="ltr">1104</span> أوراق القبض / دائن <span class="ltr">1103</span> العميل (ببُعد العميل)</td></tr>
+<tr><td>⬇🏦 إيداع للتحصيل</td><td>في الحافظة ← تحت التحصيل</td><td>مدين <span class="ltr">1108</span> شيكات تحت التحصيل 🆕 / دائن <span class="ltr">1104</span></td></tr>
+<tr><td>✔ اتحصّل</td><td>تحت التحصيل ← اتحصّل</td><td>مدين البنك (+ <span class="ltr">5402</span> مصاريف لو فيه) / دائن <span class="ltr">1108</span></td></tr>
+<tr><td>↩ رجع من البنك</td><td>تحت التحصيل ← رجع</td><td>مدين <span class="ltr">1103</span> العميل / دائن <span class="ltr">1108</span> — والعميل يرجع مديون، ومنها «إيداع تاني» أو «رد للعميل»</td></tr>
+<tr><td>✍ تظهير لمورد</td><td>في الحافظة ← اتظهّر</td><td>مدين <span class="ltr">2101</span> المورد / دائن <span class="ltr">1104</span></td></tr>
+<tr><td>🔙 رد للعميل</td><td>في الحافظة ← اترد</td><td>مدين <span class="ltr">1103</span> العميل / دائن <span class="ltr">1104</span></td></tr>
+<tr><td>📤 إصدار شيك لمورد</td><td>— ← صادر</td><td>مدين <span class="ltr">2101</span> المورد / دائن <span class="ltr">2102</span> أوراق الدفع (ببُعد المورد)</td></tr>
+<tr><td>✔ اتصرف من البنك</td><td>صادر ← اتصرف</td><td>مدين <span class="ltr">2102</span> / دائن البنك بتاعنا</td></tr>
+<tr><td>✖ رجع / اتلغى</td><td>صادر ← رجع</td><td>مدين <span class="ltr">2102</span> / دائن <span class="ltr">2101</span> — والمورد يرجع ليه الفلوس</td></tr></table>
+وكمان: <b>تنبيهات الاستحقاق</b> (متأخر · النهارده · بكرة · خلال أسبوع) · رقم الشيك <b>مايتكررش على نفس البنك</b> · رصيد البنك مش مكفي للشيكات الصادرة ← تحذير · الحسابين <span class="ltr">1104</span> و<span class="ltr">2102</span> موجودين في الدليل من المرحلة 2، و<span class="ltr">1108</span> «شيكات تحت التحصيل» حساب جديد (اقتراح). الرقم أوتوماتيك: <span class="ltr">CHR-2026-00001</span> للوارد و<span class="ltr">CHP-2026-00001</span> للصادر (اقتراح).
+<br><b>كانت إيه في الأكسس (من الدراسة — قراية بس):</b> شاشتين في قسم «الشيكات»: <span class="ltr">Fshikat</span> «شيكات العملاء» (جدول <span class="ltr">shikatCus</span> — <b>396 سطر</b>) و<span class="ltr">Fshikat1</span> «شيكات الموردين» (جدول <span class="ltr">shikatres</span> — <b>171 سطر</b>) + تقريرين <span class="ltr">REPCHCUS</span> / <span class="ltr">REPCHRES</span>. الأعمدة اللي فيها بيانات: العميل / المورد · التاريخ · «تاريخ الصرف» · المبلغ · «رقم الشيك» · البنك (من بنوكنا في <span class="ltr">TBANK</span> — اللي اتودع فيه أو اتصرف منه) · <b>مدفوع / غير مدفوع</b> · شيك / تحويل. و6 أعمدة فاضية خالص (<span class="ltr">san_id · dafe3 · qaped · adress · type2 · sira</span>). <b>المدفوع بس</b> هو اللي كان بيأثر على رصيد البنك والعميل (<span class="ltr">HissapBank</span>).
+<ul>
+<li><b>شكل البيانات:</b> العملاء: 365 مدفوع + <b>31 غير مدفوع</b> · الموردين: 164 مدفوع + <b>7 غير مدفوع</b> — و<b>كل الغير مدفوع تاريخ صرفه عدّى</b> (آخر تاريخ في الجدولين سبتمبر 2026). تقريباً <b>تلتين الشيكات «تاريخ الصرف» = نفس التاريخ</b> (يعني كانت بتتسجل لما تتصرف مش لما تتستلم).</li>
+<li><b>العيوب:</b> حالتين بس (مفيش «تحت التحصيل» ولا «رجع») · مفيش قيد · <b>«رقم الشيك» نص حر</b> بيتكتب فيه «شيك رقم … - أمر التوريد / رقم الفاتورة» مع بعض · <b>التحويلات البنكية متسجلة في نفس الجدول</b> (85 عند العملاء و27 عند الموردين متعلّمين «تحويل»، وتلت السطور نوعها فاضي) · رقم متكرر على نفس البنك (13 + 4) · مبلغ صفر (14 + 6) · من غير عميل / مورد (11 + 3) · استحقاق قبل الاستلام (3 + 6) · مفيش تنبيهات.</li>
+<li><b>من E3marEG (فكرة بس):</b> دورة حياة بحالات وانتقالات مسموحة · رقم الشيك فريد لكل بنك · تنبيهات (بكرة / النهارده / متأخر) · المرتجع قيد لوحده والأصلي يفضل. <b>ومش هناخد عيوبه:</b> الشيكات هناك مالهاش قيود خالص، ونظامين شيكات مش مربوطين، وتغيير الحالة بـ <span class="ltr">force</span> من غير تحقق.</li>
+<li><b>الشبكة:</b> كل خطوة بتقفل الشيك (<span class="ltr">FOR UPDATE</span>) وتتأكد من حالته جوه نفس الـ transaction — فلو جهازين داسوا «اتحصّل» في نفس اللحظة، واحد بس اللي يعدّي والتاني ياخد رسالة «الشيك اتغيّر من جهاز تاني» · الحفظ بـ <span class="ltr">row_version</span> · الرقم بقفل صف · <span class="ltr">UNIQUE</span> (البنك، رقم الشيك) في القاعدة · index على الاستحقاق والحالة والعميل والمورد · القائمة بفترة وصفحات.</li>
+<li><b>مكان الشاشة:</b> قسم «الخزينة» ← «الشيكات» (اقتراح) + صلاحيات: عرض · جديد · تعديل · حذف المسودة · استلام / إصدار · إيداع · تحصيل · رجوع · تظهير · صرف · تراجع عن آخر خطوة · تصدير.</li>
+</ul>`;
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>شكل الشاشة:</b> تبويب لكل حالة (النموذج 2 — اقتراحي) وفوقه كروت التنبيهات من النموذج 5؟ ولا الكلاسيك (1)؟ ولا لوحة الحالات (3)؟ ولا زي الأكسس (4)؟</li>
+<li><b>شاشة ولا اتنين:</b> في القايمة <b>«شيكات العملاء» و«شيكات الموردين»</b> زي الأكسس، والاتنين نفس الشاشة ونفس الجدول من جوه (اقتراحي)؟ ولا شاشة واحدة بزرار وارد / صادر؟</li>
+<li><b>حساب «شيكات تحت التحصيل» <span class="ltr">1108</span>:</b> نعمله (اقتراحي — عشان تعرف من الميزانية قد إيه في الحافظة وقد إيه في البنك مستني)؟ ولا الإيداع من غير قيد والتحصيل يبقى مدين البنك / دائن <span class="ltr">1104</span> على طول؟</li>
+<li><b>الدورة والقيود</b> اللي في الجدول فوق — موافق؟ ولو فيه خطوة زيادة أو ناقصة قولّي.</li>
+<li><b>الشيك اللي رجع من البنك:</b> يرجع على العميل (مدين العميل) ومنه «إيداع تاني» أو «رد للعميل» (اقتراحي)؟ ومصاريف البنك على الشيك الراجع تتسجل في نفس الخطوة على <span class="ltr">5402</span> (اختياري)؟</li>
+<li><b>تظهير شيك عميل لمورد</b> (تدّي شيك العميل للمورد بدل ما تودعه): نعمله (اقتراحي)؟ ولا مش بيحصل عندكم؟</li>
+<li><b>الشيك من شاشة الشيكات بس</b> (اقتراحي — والسند يفضل نقدي / تحويل بنكي زي ما اتعمل)؟ ولا «طريقة الدفع: شيك» جوه سند القبض والصرف (النموذج 10)؟</li>
+<li><b>الحفظ:</b> الشيك الجديد «حفظ مسودة» ولما يترحّل = استلام / إصدار بقيده، وكل خطوة بعد كده قيد مرحّل على طول بتاريخها، و<b>«تراجع عن آخر خطوة»</b> بالصلاحية (بيلغي آخر قيد) — اقتراحي؟</li>
+<li><b>الترقيم:</b> <span class="ltr">CHR-2026-00001</span> للوارد و<span class="ltr">CHP-2026-00001</span> للصادر ويبدأ من 1 كل سنة (اقتراحي)؟ و<b>رقم الشيك نفسه</b> مطلوب ومايتكررش على نفس البنك (اقتراحي)؟</li>
+<li><b>البنك:</b> الوارد = «بنك الساحب» من قايمة بنوك مصر، وبنكنا اللي اتودع فيه بيتحدد وقت الإيداع (اقتراحي) · الصادر = من حساب بنكي بتاعنا · <b>«دفتر الشيكات»</b> (أرقام الدفتر وأول وآخر رقم) يتأجل (اقتراحي)؟</li>
+<li><b>التنبيهات:</b> متأخر · النهارده · بكرة · خلال 7 أيام (اقتراحي) في الشاشة + رسالة أول ما البرنامج يتفتح لو فيه متأخر + في «شاشة المعلومات» بعدين؟ ورصيد البنك مش مكفي للصادر ← تحذير بس (زي السندات)؟</li>
+<li><b>أمر التوريد اختياري</b> على الشيك (زي السندات) و«البيان» لرقم الفاتورة (اقتراحي)؟ — في الأكسس كانوا مكتوبين جوه خانة رقم الشيك.</li>
+<li><b>حافظة الإيداع</b> (كذا شيك مرة واحدة بقيد واحد — النموذج 7): تبقى زرار جوه الشاشة (اقتراحي)؟ ولا مش محتاجها؟</li>
+<li><b>نقل الأكسس:</b> (أ) <b>«التحويلات»</b> اللي في الجدولين مش شيكات ← مابتتنقلش هنا (اقتراحي). (ب) <b>الغير مدفوع (31 عميل + 7 مورد)</b> يتنقلوا «في الحافظة» / «صادر» كـ<b>أرصدة افتتاحية</b> على <span class="ltr">1104</span> / <span class="ltr">2102</span> — بعد ما تراجعهم لأن تاريخهم كله عدّى (اقتراحي)؟ (ج) <b>المدفوع (365 + 164)</b> مايتنقلش (الأرصدة الافتتاحية مغطياه) — ولا يتنقل أرشيف للاطلاع بس من غير قيود؟ (د) المتكرر والصفر واللي من غير عميل / مورد ← تقرير بيهم ومايتنقلوش.</li>
+<li><b>التقارير</b> (<span class="ltr">REPCHCUS</span> / <span class="ltr">REPCHRES</span>): تبقى «تقرير الشيكات» بفلتر (وارد / صادر · الحالة · الفترة · العميل / المورد · البنك) + تصدير إكسل <b>مع الشاشة</b> (اقتراحي)؟ ولا مع مرحلة التقارير؟</li>
+<li><b>الطباعة</b> (الشيك الصادر على الورقة نفسها — النموذج 8 · حافظة الإيداع — النموذج 7) مع مرحلة الطباعة (اقتراحي)؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+function setDir(d){if(V.dir===d)return;V.dir=d;V.tab="all";V.act="";V.msg="";V.f.party=(d==="in"?CUS:SUP)[0][0];V.f.no="";}
+function addCheque(){const [E]=vErr();if(E.length){V.msg="";render();return;}const f=V.f;const id=nextNo(V.dir);
+  mk(id,V.dir,String(f.no).trim(),f.party,V.dir==="in"?f.dbank:f.bank,+f.amt,f.date,f.due,f.ord,f.desc);
+  V.sel=id;V.act="";V.msg=`✔ ${id} اتسجّل ${V.dir==="in"?"«في الحافظة»":"«صادر»"} واتعمله قيد — ظهر في كل النماذج`;f.no="";render();}
+document.addEventListener("change",e=>{const t=e.target;
+  if(t.dataset.f){const k=t.dataset.f;V.f[k]=k==="amt"?Math.max(0,+t.value||0):t.value;V.msg="";render();return;}
+  if(t.dataset.bt){const id=t.dataset.bt;V.batch=t.checked?[...V.batch,id]:V.batch.filter(x=>x!==id);render();return;}
+  if(t.dataset.paid){const c=ch(t.dataset.paid);if(c.dir==="in"){if(c.st==="portfolio"){c.dep=V.bank;apply(c,"deposit",TODAY,true);}apply(c,"collect",TODAY,true);}else apply(c,"clear",TODAY,true);V.sel=c.id;render();return;}
+  const k=t.dataset.k;if(!k)return;V[k]=k==="fee"?Math.max(0,+t.value||0):t.value;if(k==="sel")V.act="";render();});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option"))return;
+  const d=e.target.closest("[data-dir]");if(d){setDir(d.dataset.dir);render();return;}
+  const ad=e.target.closest("[data-add]");if(ad){addCheque();return;}
+  const dn=e.target.closest("[data-do]");if(dn){const c=ch(dn.dataset.do);apply(c,V.act,V.adate);V.act="";V.fee=0;render();return;}
+  const a=e.target.closest("[data-act]");if(a){V.act=V.act===a.dataset.act?"":a.dataset.act;render();return;}
+  const bd=e.target.closest("[data-batchdo]");if(bd){CH.filter(c=>V.batch.includes(c.id)).forEach(c=>{c.dep=V.bank;apply(c,"deposit",V.adate,true);});V.batch=[];render();return;}
+  const ba2=e.target.closest("[data-ball]");if(ba2){V.batch=CH.filter(c=>c.dir==="in"&&(c.st==="portfolio"||c.st==="bounced")&&c.due<=TODAY).map(c=>c.id);render();return;}
+  const tb=e.target.closest("[data-tab]");if(tb){V.tab=tb.dataset.tab;V.act="";render();return;}
+  const al=e.target.closest("[data-alf]");if(al){V.alf=V.alf===al.dataset.alf?"all":al.dataset.alf;render();return;}
+  const mo=e.target.closest("[data-mon]");if(mo){const L=["2026-05","2026-06","2026-07"];V.mon=L[Math.min(2,Math.max(0,L.indexOf(V.mon)+(+mo.dataset.mon)))];render();return;}
+  const dy=e.target.closest("[data-day]");if(dy){V.day=dy.dataset.day;render();return;}
+  const py=e.target.closest("[data-pay]");if(py){V.pay=py.dataset.pay;render();return;}
+  const s=e.target.closest("[data-sel]");if(s){if(s.dataset.sdir)setDir(s.dataset.sdir);V.sel=s.dataset.sel;V.act="";render();return;}
+});
+render();
+</script>
+</body>
+</html>

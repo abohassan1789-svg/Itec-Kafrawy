@@ -194,6 +194,14 @@ SECTIONS: tuple[Section, ...] = (
             Target("supplier_payments", "سند صرف", "Payment Voucher", icon="📤",
                    actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
         ), icon="🧾"),
+        # الشيكات (2026-11-17 — النموذج 1 «الكلاسيك» + كارت تنبيهات الاستحقاق): شاشتين زي الأكسس (قرار المستخدم)
+        # وجدول واحد من جوه · «ترحيل» = استلام / إصدار وكل خطوة بعده · «إلغاء الترحيل» = «تراجع عن آخر خطوة».
+        Group("الشيكات", (
+            Target("customer_cheques", "شيكات العملاء", "Customer Cheques", icon="📩",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
+            Target("supplier_cheques", "شيكات الموردين", "Supplier Cheques", icon="📨",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
+        ), icon="🎫"),
     )),
     Section("rep", "التقارير", "Reports", "📈"),
     Section("sys", "النظام والصلاحيات", "System & Security", "🔐", bottom=True, groups=(

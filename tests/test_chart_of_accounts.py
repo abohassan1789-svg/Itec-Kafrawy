@@ -67,7 +67,7 @@ def row(db, code):
 # ---- الدليل الجاهز ----------------------------------------------------------
 def test_seeded_chart_shape(env):
     db, ids = env["db"], env["ids"]
-    assert len(ids) == 61                       # 51 من 0009 + 5 من 0012 (الحسابات الافتراضية) + 5 من 0025 (المصروفات)
+    assert len(ids) == 62                       # 51 من 0009 + 5 من 0012 (الحسابات الافتراضية) + 5 من 0025 (المصروفات) + 1108 (0038)
     roots = db.fetch_all("SELECT code, account_type, statement FROM acc.accounts WHERE parent_id IS NULL ORDER BY code")
     assert [(r["code"], r["account_type"], r["statement"]) for r in roots] == [
         ("1", "asset", "bs"), ("2", "liability", "bs"), ("3", "equity", "bs"),
@@ -88,7 +88,7 @@ def test_seeded_chart_shape(env):
         "ORDER BY role_code, length(code)")}
     assert roles["customers"] == "1103" and roles["suppliers"] == "2101" and roles["vat_in"] == "110601"
     assert roles["vat_out"] == "2103" and roles["partner"] == "32" and roles["cash"] == "1101"
-    assert db.fetch_value("SELECT count(*) FROM acc.account_roles") == 28           # 23 + 5 من 0012
+    assert db.fetch_value("SELECT count(*) FROM acc.account_roles") == 29           # 23 + 5 من 0012 + شيكات تحت التحصيل (0038)
     assert row(db, "1103")["party_kind"] == "customer" and row(db, "2101")["party_kind"] == "supplier"
     assert row(db, "1103")["is_system"] and row(db, "1")["is_system"] and not row(db, "110101")["is_system"]
     assert row(db, "1209")["nature"] == "cr" and row(db, "42")["nature"] == "dr"            # مجمع إهلاك / مردودات
@@ -238,7 +238,7 @@ def test_service_defaults_save_and_rules(env):
     assert logs[0]["record_label"] == "110203 بنك القاهرة — جاري"
     assert set(logs[1]["details"]["changed"]) >= {"name_ar", "nature"}
     totals = service.summary(service.list_accounts())
-    assert totals["asset"] == {"total": 20, "leaf": 14, "main": 6, "inactive": 0}
+    assert totals["asset"] == {"total": 21, "leaf": 15, "main": 6, "inactive": 0}
     assert totals["expense"]["inactive"] == 1
 
 
@@ -291,12 +291,12 @@ def tab_counts(screen) -> list[str]:
 
 def test_screen_tabs_tree_and_expand_collapse(env):
     screen = make_screen(env["db"])
-    assert tab_counts(screen) == ["1 الأصول (19)", "2 الخصوم (7)", "3 حقوق الملكية (5)",
+    assert tab_counts(screen) == ["1 الأصول (20)", "2 الخصوم (7)", "3 حقوق الملكية (5)",
                                   "4 الإيرادات (8)", "5 المصروفات (22)"]
     assert screen.current_type == "asset" and screen.type_tabs["asset"].isChecked()
     assert screen.code_edit.text() == "1" and screen.type_edit.text().startswith("أصول")
     assert screen.statement_edit.text().startswith("الميزانية") and screen.system_label.isVisibleTo(screen)
-    assert screen.tree.topLevelItemCount() == 1 and len(screen.items) == 19
+    assert screen.tree.topLevelItemCount() == 1 and len(screen.items) == 20
     ids = env["ids"]
     item = screen.items[ids["1103"]]
     assert "1103" in item.text(0) and "العملاء" in item.text(0) and "📄" in item.text(0)
@@ -334,7 +334,7 @@ def test_screen_new_under_selected_save_and_delete(env):
     new_id = screen.current_id
     assert service.get_account(new_id)["code"] == "110203" and new_id in screen.items
     assert screen.tree.currentItem() is screen.items[new_id] and screen.items[ids["1102"]].isExpanded()
-    assert tab_counts(screen)[0] == "1 الأصول (20)"
+    assert tab_counts(screen)[0] == "1 الأصول (21)"
     # فرعي محدد ← الجديد جنبه (تحت أبوه)
     screen.new_record()
     assert screen.parent_combo.currentData() == ids["1102"] and screen.code_edit.text() == "110204"
@@ -386,7 +386,7 @@ def test_screen_f1_and_search(env, monkeypatch):
 
     class FakeLookup:
         def __init__(self, _title, _columns, rows, _fmt, _parent):
-            assert len(rows) == 61                               # الدليل كله
+            assert len(rows) == 62                               # الدليل كله
             self.selected_id = ids["2103"]
 
         def exec(self):
@@ -405,7 +405,7 @@ def test_screen_f1_and_search(env, monkeypatch):
     assert "نتايج البحث" in screen.count_label.text()
     # F1 لحساب مش ظاهر في البحث ← البحث بيتمسح
     screen.load(ids["1103"])
-    assert screen.search.text() == "" and ids["1103"] in screen.items and len(screen.items) == 19
+    assert screen.search.text() == "" and ids["1103"] in screen.items and len(screen.items) == 20
 
 
 def test_menu_and_registry():
