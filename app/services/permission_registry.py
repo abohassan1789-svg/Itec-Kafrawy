@@ -182,6 +182,13 @@ SECTIONS: tuple[Section, ...] = (
             Target("banks", "البنوك", "Banks", icon="🏦",
                    actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="💵"),
+        # سندات العملاء (2026-11-17 — النموذج 5): شاشتين منفصلين وجدولين منفصلين وصلاحية لكل واحدة.
+        Group("سندات العملاء", (
+            Target("customer_receipts", "سند قبض العملاء", "Customer Receipts", icon="📥",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
+            Target("customer_payments", "سند صرف العملاء", "Customer Payments", icon="📤",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
+        ), icon="🧾"),
     )),
     Section("rep", "التقارير", "Reports", "📈"),
     Section("sys", "النظام والصلاحيات", "System & Security", "🔐", bottom=True, groups=(
