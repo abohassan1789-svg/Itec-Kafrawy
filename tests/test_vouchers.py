@@ -1,5 +1,6 @@
-"""اختبارات «سند قبض العملاء» و«سند صرف العملاء» (0035: جدولين منفصلين · الحماية في القاعدة · الترقيم RV / PV من أول
-ترحيل · القيد بمحرك الترحيل · إلغاء الترحيل · تحذير الخزنة مش مكفية · الصلاحيات · جهازين · الشاشتين)."""
+"""اختبارات «سند قبض» (للعميل — 0035) و«سند صرف» (للمورد — 0036): جدولين منفصلين · الحماية في القاعدة · الترقيم
+RV / PV من أول ترحيل · القيد بمحرك الترحيل · إلغاء الترحيل · تحذير الخزنة مش مكفية · الصلاحيات · جهازين · الشاشتين ·
+وشيل «سند صرف العملاء» القديم (فاضي ← بيتمسح · فيه سندات ← بيفضل قديم بـ CPV)."""
 
 from __future__ import annotations
 
@@ -20,7 +21,7 @@ from app.database import migrator
 from app.database.db import Database
 from app.security.session import SESSION
 from app.services.auth_service import DEFAULT_ADMIN_PASSWORD, DEFAULT_ADMIN_USERNAME, AuthService
-from app.services.customer_voucher_service import CustomerVoucherService
+from app.services.voucher_service import VoucherService
 from app.services.errors import BusinessError, ConcurrentEditError, PermissionDenied
 from app.services.permissions_sync_service import PermissionsSyncService
 from app.services.trial_balance_service import TrialBalanceService
@@ -52,7 +53,7 @@ def env(qapp, temp_db, monkeypatch):
     monkeypatch.setattr(messages, "warn", lambda _p, _t, text: shown.append(text))
     monkeypatch.setattr(messages, "info", lambda _p, _t, text: shown.append(text))
     yield {"db": temp_db, "shown": shown, "asked": asked,
-           "rv": CustomerVoucherService("receipt", temp_db), "pv": CustomerVoucherService("payment", temp_db)}
+           "rv": VoucherService("receipt", temp_db), "pv": VoucherService("payment", temp_db)}
     SESSION.clear()
     gc.collect()
 
@@ -69,6 +70,10 @@ def customer(db, code="0"):
     return one(db, "SELECT id FROM party.customers WHERE code = %s", code)
 
 
+def supplier(db):
+    return one(db, "SELECT id FROM party.suppliers ORDER BY seq LIMIT 1")      # المورد النقدي
+
+
 def treasury(db, code="TRS-001"):
     return one(db, "SELECT id FROM cash.treasuries WHERE code = %s", code)
 
@@ -78,12 +83,18 @@ def bank(db, code="BNK-001-01"):
 
 
 def data(db, amount="5000", source="treasury", d=D, **extra):
-    out = {"voucher_date": d, "customer_id": customer(db), "source_kind": source,
+    """بيانات سند قبض (الطرف = العميل النقدي)."""
+    out = {"voucher_date": d, "party_id": customer(db), "source_kind": source,
            "treasury_id": treasury(db) if source == "treasury" else None,
            "bank_account_id": bank(db) if source == "bank" else None,
            "amount": amount, "description": "تحصيل دفعة من الحساب"}
     out.update(extra)
     return out
+
+
+def pdata(db, amount="5000", source="treasury", d=D, **extra):
+    """بيانات سند صرف (الطرف = المورد النقدي)."""
+    return data(db, amount, source, d, **{"party_id": supplier(db), "description": "سداد دفعة للمورد", **extra})
 
 
 def row(db, table, vid):
@@ -92,7 +103,7 @@ def row(db, table, vid):
 
 def entry_lines(db, doc, vid):
     return db.fetch_all(
-        "SELECT a.code, l.debit, l.credit, l.customer_id, l.project_id FROM acc.journal_lines l "
+        "SELECT a.code, l.debit, l.credit, l.customer_id, l.supplier_id, l.project_id FROM acc.journal_lines l "
         "JOIN acc.journal_entries e ON e.id = l.entry_id JOIN acc.accounts a ON a.id = l.account_id "
         "WHERE e.source_type = %s AND e.source_id = %s ORDER BY l.line_no", [doc, vid])
 
@@ -101,12 +112,19 @@ def entry_lines(db, doc, vid):
 def test_database_rules(env):
     db = env["db"]
     # الترقيم وقواعد الترحيل
-    assert db.fetch_all("SELECT code, prefix FROM core.document_types WHERE code LIKE 'customer_%%' ORDER BY code") == [
-        {"code": "customer_payment", "prefix": "PV"}, {"code": "customer_receipt", "prefix": "RV"}]
-    assert one(db, "SELECT count(*) FROM acc.posting_rules WHERE doc_type IN ('customer_receipt', 'customer_payment')") == 6
+    assert db.fetch_all("SELECT code, prefix FROM core.document_types WHERE code IN "
+                        "('customer_receipt', 'supplier_payment', 'customer_payment') ORDER BY code") == [
+        {"code": "customer_receipt", "prefix": "RV"}, {"code": "supplier_payment", "prefix": "PV"}]
+    assert db.fetch_all("SELECT doc_type, role, side, party_kind FROM acc.posting_rules "
+                        "WHERE doc_type IN ('supplier_payment', 'customer_payment') ORDER BY sort_order") == [
+        {"doc_type": "supplier_payment", "role": "payable", "side": "dr", "party_kind": "supplier"},
+        {"doc_type": "supplier_payment", "role": "cash", "side": "cr", "party_kind": None},
+        {"doc_type": "supplier_payment", "role": "bank", "side": "cr", "party_kind": None}]
+    assert one(db, "SELECT to_regclass('cash.customer_payments')") is None    # «سند صرف العملاء» اتشال (0036)
 
     def ins(table="customer_receipts", **kw):
-        vals = {"voucher_date": D, "customer_id": customer(db), "source_kind": "treasury",
+        party = {"supplier_id": supplier(db)} if table == "supplier_payments" else {"customer_id": customer(db)}
+        vals = {"voucher_date": D, **party, "source_kind": "treasury",
                 "treasury_id": treasury(db), "amount": 100, "description": "x", **kw}
         cols = ", ".join(vals)
         return one(db, f"INSERT INTO cash.{table} ({cols}) VALUES ({', '.join(['%s'] * len(vals))}) RETURNING id",
@@ -140,21 +158,33 @@ def test_database_rules(env):
         db.execute("UPDATE core.fiscal_years SET status = 'closed', closed_at = now() WHERE year_code = '2026'")
     with pytest.raises(psycopg.errors.RaiseException, match="برّا المدة"):
         db.execute("UPDATE core.fiscal_years SET start_date = '2026-04-01' WHERE year_code = '2026'")
-    # المسودة من غير رقم بتتمسح · الجدول التاني لوحده
-    pid = ins("customer_payments")
+    # سند الصرف: المورد بدل العميل (نفس الحماية) · المسودة من غير رقم بتتمسح · الجدول التاني لوحده
+    pid = ins("supplier_payments")
     db.execute("DELETE FROM cash.customer_receipts WHERE id = %s", [vid])
-    assert row(db, "customer_payments", pid) is not None
+    with pytest.raises(psycopg.errors.RaiseException, match="فيها 1 سند مسودة"):   # مسودة الصرف بتتعدّ برضه
+        db.execute("UPDATE core.fiscal_years SET status = 'closed', closed_at = now() WHERE year_code = '2026'")
+    assert row(db, "supplier_payments", pid) is not None
+    stopped = one(db, "INSERT INTO party.suppliers (seq, name_ar, group_id, currency_code, is_active) "
+                      "SELECT 7, 'مورد موقوف', group_id, 'EGP', false FROM party.suppliers WHERE seq = 0 RETURNING id")
+    with pytest.raises(psycopg.errors.RaiseException, match="المورد «SUB-007 مورد موقوف» موقوف"):
+        ins("supplier_payments", supplier_id=stopped)
+    with pytest.raises(psycopg.errors.RaiseException, match="مرحّل من غير قيد"):
+        db.execute("UPDATE cash.supplier_payments SET status = 'posted' WHERE id = %s", [pid])
     db.execute("UPDATE party.customers SET is_active = true WHERE id = %s", [other])
-    ins("customer_payments", customer_id=other)
+    db.execute("UPDATE party.suppliers SET is_active = true WHERE id = %s", [stopped])
+    ins(customer_id=other)
+    ins("supplier_payments", supplier_id=stopped)
     with pytest.raises(psycopg.errors.ForeignKeyViolation):                # العميل اللي عليه سندات مايتمسحش
         db.execute("DELETE FROM party.customers WHERE id = %s", [other])
+    with pytest.raises(psycopg.errors.ForeignKeyViolation):                # والمورد كمان
+        db.execute("DELETE FROM party.suppliers WHERE id = %s", [stopped])
 
 
 # ---- الـ Service -------------------------------------------------------------
 def test_receipt_flow(env):
     db, rv = env["db"], env["rv"]
     with pytest.raises(BusinessError, match="اختار العميل"):
-        rv.save_draft(None, data(db, customer_id=None))
+        rv.save_draft(None, data(db, party_id=None))
     with pytest.raises(BusinessError, match="اكتب مبلغ"):
         rv.save_draft(None, data(db, amount="0"))
     with pytest.raises(BusinessError, match="بقرشين"):
@@ -169,7 +199,7 @@ def test_receipt_flow(env):
     vid = rv.save_draft(None, data(db, paper_no="  دفتر 12  "))
     v = rv.get_voucher(vid)
     assert v["status"] == "draft" and v["voucher_no"] is None and v["label"] == f"مسودة {v['draft_no']}"
-    assert v["paper_no"] == "دفتر 12" and v["customer_name"] == "عميل نقدي"
+    assert v["paper_no"] == "دفتر 12" and v["party_name"] == "عميل نقدي" and v["party_id"] == customer(db)
     assert entry_lines(db, "customer_receipt", vid) == []
     no = rv.post(vid, v["row_version"])
     assert no == "RV-2026-00001"
@@ -181,7 +211,7 @@ def test_receipt_flow(env):
     assert entry["source_no"] == "RV-2026-00001" and entry["reference"] == "دفتر 12" and entry["entry_no"] is None
     # الأرصدة: العميل دائن 5,000 · الخزنة مدين 5,000
     b = rv.balances(customer(db), "treasury", treasury(db), "1000")
-    assert (b["customer"], b["customer_after"], b["source"], b["source_after"]) == (
+    assert (b["party"], b["party_after"], b["source"], b["source_after"]) == (
         Decimal("-5000.00"), Decimal("-6000.00"), Decimal("5000.00"), Decimal("6000.00"))
     # المرحّل مايتعدّلش ولا يتمسح
     with pytest.raises(BusinessError, match="مرحّل"):
@@ -227,31 +257,52 @@ def test_receipt_flow(env):
 def test_payment_and_funds_warning(env):
     db, rv, pv = env["db"], env["rv"], env["pv"]
     rv.save_draft(None, data(db, amount="3000"), post=True)
-    assert pv.funds_warning(data(db, amount="3000")) is None
-    warning = pv.funds_warning(data(db, amount="3500", description="رد مبلغ للعميل"))
+    with pytest.raises(BusinessError, match="اختار المورد"):
+        pv.save_draft(None, pdata(db, party_id=None))
+    # فاتورة مورد (قيد يدوي على حساب رقابة الموردين ببُعد المورد) ← المورد ليه 4,000
+    payable = one(db, "SELECT a.code FROM party.supplier_groups g JOIN acc.accounts a ON a.id = g.control_account_id "
+                      "JOIN party.suppliers s ON s.group_id = g.id WHERE s.id = %s", supplier(db))
+    assert pv.balances(supplier(db), "treasury", None, "1000")["party"] == Decimal("0")
+    assert pv.preview(pdata(db, amount="10"))[0]["account_code"] == payable
+    assert pv.funds_warning(pdata(db, amount="3000")) is None
+    warning = pv.funds_warning(pdata(db, amount="3500"))
     assert "3,000.00" in warning and "-500.00" in warning and "الخزنة" in warning
     assert rv.funds_warning(data(db, amount="999999")) is None              # القبض مالوش تحذير
-    # تحذير بس — الترحيل بيعدّي والخزنة بالسالب
-    pid = pv.save_draft(None, data(db, amount="3500", description="رد مبلغ للعميل"), post=True)
+    # تحذير بس — الترحيل بيعدّي والخزنة بالسالب · القيد: مدين الموردين ببُعد المورد · دائن الخزنة
+    pid = pv.save_draft(None, pdata(db, amount="3500"), post=True)
     p = pv.get_voucher(pid)
-    assert p["voucher_no"] == "PV-2026-00001"
-    assert [(ln["code"], ln["debit"], ln["credit"]) for ln in entry_lines(db, "customer_payment", pid)] == [
-        ("1103", Decimal("3500.00"), Decimal("0.00")), ("110101", Decimal("0.00"), Decimal("3500.00"))]
-    b = pv.balances(customer(db), "treasury", treasury(db), "0", posted=True)
-    assert b["source"] == Decimal("-500.00") and b["customer"] == Decimal("500.00")
+    assert p["voucher_no"] == "PV-2026-00001" and p["party_name"] == "مورد نقدي"
+    lines = entry_lines(db, "supplier_payment", pid)
+    assert [(ln["code"], ln["debit"], ln["credit"]) for ln in lines] == [
+        (payable, Decimal("3500.00"), Decimal("0.00")), ("110101", Decimal("0.00"), Decimal("3500.00"))]
+    assert lines[0]["supplier_id"] == supplier(db) and lines[0]["customer_id"] is None
+    assert pv.entry_for(pid)["source_no"] == "PV-2026-00001"
+    # رصيد المورد بجنبه الطبيعي (دائن − مدين): الصرف بينقّصه ← -3,500 (دفعنا له قبل الفاتورة)
+    b = pv.balances(supplier(db), "treasury", treasury(db), "0", posted=True)
+    assert b["source"] == Decimal("-500.00") and b["party"] == Decimal("-3500.00")
+    b = pv.balances(supplier(db), "treasury", treasury(db), "500")
+    assert b["party_after"] == Decimal("-4000.00") and b["source_after"] == Decimal("-1000.00")
+    # الترقيم لوحده: القبض RV والصرف PV كل واحد من 1
+    assert rv.save_draft(None, data(db, amount="1"), post=True) and \
+        db.fetch_value("SELECT max(voucher_no) FROM cash.customer_receipts") == "RV-2026-00002"
+    pv.unpost(pid)
+    assert pv.get_voucher(pid)["voucher_no"] == "PV-2026-00001" and entry_lines(db, "supplier_payment", pid) == []
+    pv.post(pid)
     # الجاري المدين: حد التسهيلات بيدخل في الحساب
     db.execute("UPDATE cash.bank_accounts SET account_type = 'overdraft', overdraft_limit = 10000 WHERE code = 'BNK-001-01'")
-    assert pv.funds_warning(data(db, amount="9000", source="bank")) is None
-    assert "حد الجاري المدين" in pv.funds_warning(data(db, amount="12000", source="bank"))
+    assert pv.funds_warning(pdata(db, amount="9000", source="bank")) is None
+    assert "حد الجاري المدين" in pv.funds_warning(pdata(db, amount="12000", source="bank"))
     # أمر التوريد على كل سطور القيد · المقفول بيترفض
     center = one(db, "SELECT id FROM acc.cost_centers WHERE is_leaf AND is_active ORDER BY code LIMIT 1")
     project = one(db, "INSERT INTO acc.projects (code, name, cost_center_id, currency_code) "
                       "VALUES ('Itec-900', 'تجربة', %s, 'EGP') RETURNING id", center)
-    pid2 = pv.save_draft(None, data(db, amount="100", project_id=project), post=True)
-    assert {ln["project_id"] for ln in entry_lines(db, "customer_payment", pid2)} == {project}
+    pid2 = pv.save_draft(None, pdata(db, amount="100", project_id=project), post=True)
+    assert {ln["project_id"] for ln in entry_lines(db, "supplier_payment", pid2)} == {project}
     db.execute("UPDATE acc.projects SET status = 'closed' WHERE id = %s", [project])
     with pytest.raises(BusinessError, match="مش جاري"):
-        pv.save_draft(None, data(db, amount="100", project_id=project))
+        pv.save_draft(None, pdata(db, amount="100", project_id=project))
+    tb = TrialBalanceService(db).trial_balance(dt.date(2026, 1, 1), dt.date(2026, 12, 31))
+    assert tb["balanced"]
 
 
 def test_permissions(env):
@@ -263,24 +314,27 @@ def test_permissions(env):
                   {f"{perm}.view", f"{perm}.create", f"{perm}.edit", f"{perm}.save"})
     vid = rv.save_draft(None, data(db))
     for call in (lambda: rv.post(vid), lambda: rv.save_draft(vid, data(db), post=True), lambda: rv.unpost(vid),
-                 lambda: rv.delete_voucher(vid), lambda: pv.save_draft(None, data(db))):
+                 lambda: rv.delete_voucher(vid), lambda: pv.save_draft(None, pdata(db))):
         with pytest.raises(PermissionDenied):
             call()
     SESSION.start({"id": admin_id, "username": "clerk", "is_admin": False, "full_access": False},
                   {f"{perm}.view", f"{perm}.post", f"{perm}.unpost"})
     rv.post(vid)
     rv.unpost(vid)
-    for target in ("customer_receipts", "customer_payments"):
+    for target in ("customer_receipts", "supplier_payments"):
         codes = {r["permission_code"] for r in db.fetch_all(
-            "SELECT permission_code FROM sec.permissions WHERE permission_code LIKE %s", [f"cash.{target}.%"])}
+            "SELECT permission_code FROM sec.permissions WHERE permission_code LIKE %s AND is_active",
+            [f"cash.{target}.%"])}
         assert codes == {f"cash.{target}.{a}" for a in
                          ("view", "create", "edit", "save", "delete", "export", "post", "unpost")}
+    assert one(db, "SELECT count(*) FROM sec.permissions WHERE permission_code LIKE 'cash.customer_payments.%%' "
+                   "AND is_active") == 0
 
 
 def test_two_devices(env):
     """جهازين: تعديل نفس المسودة ← التاني بيترفض · ترحيل من جهازين ← مرة واحدة بس · ترحيلين في نفس اللحظة ← رقمين."""
     db = env["db"]
-    s1, s2 = CustomerVoucherService("receipt", db), CustomerVoucherService("receipt", Database(db.settings))
+    s1, s2 = VoucherService("receipt", db), VoucherService("receipt", Database(db.settings))
     try:
         vid = s1.save_draft(None, data(db))
         seen1, seen2 = s1.get_voucher(vid), s2.get_voucher(vid)
@@ -320,10 +374,10 @@ def test_two_devices(env):
 
 # ---- الشاشتين ----------------------------------------------------------------
 def make_screen(db, kind="receipt"):
-    from app.ui.screens.customer_vouchers_screen import CustomerPaymentsScreen, CustomerReceiptsScreen
+    from app.ui.screens.vouchers_screen import PaymentsScreen, ReceiptsScreen
 
-    cls = CustomerReceiptsScreen if kind == "receipt" else CustomerPaymentsScreen
-    screen = cls(CustomerVoucherService(kind, db))
+    cls = ReceiptsScreen if kind == "receipt" else PaymentsScreen
+    screen = cls(VoucherService(kind, db))
     screen.from_edit.setDate(screen.from_edit.date().addYears(-5))
     screen.to_edit.setDate(screen.to_edit.date().addYears(5))
     return screen
@@ -333,13 +387,13 @@ def test_screens(env):
     db, shown, asked = env["db"], env["shown"], env["asked"]
     screen = make_screen(db)
     try:
-        assert screen.windowTitle().endswith("سند قبض العملاء") and screen.save_button.text() == "حفظ مسودة"
+        assert screen.windowTitle().endswith("سند قبض") and screen.save_button.text() == "حفظ مسودة"
         screen.new_record()
         assert screen.mode == "new" and screen.source_edit.currentData() == treasury(db)
         screen.date_edit.setDate(screen.date_edit.date().fromString("2026-03-10", "yyyy-MM-dd"))
-        screen.customer_edit.setText("نقدي")
-        screen.customer_edit.editingFinished.emit()
-        assert screen.customer_edit.currentData() == customer(db)
+        screen.party_edit.setText("نقدي")
+        screen.party_edit.editingFinished.emit()
+        assert screen.party_edit.currentData() == customer(db)
         screen.amount_edit.setText("2,500")
         screen.description.setText("تحصيل نقدي")
         screen._refresh_side()
@@ -367,15 +421,23 @@ def test_screens(env):
 
     pay = make_screen(db, "payment")
     try:
-        assert pay.windowTitle().endswith("سند صرف العملاء")
+        assert pay.windowTitle().endswith("سند صرف") and pay.COLUMNS[2] == ("party_name", "المورد")
+        assert [r[0] for r in pay._party_rows()] == [supplier(db)]       # الموردين بس (مش العملاء)
+        assert "المورد" in pay.kpi_captions["party"].text()
         pay.new_record()
         pay.date_edit.setDate(pay.date_edit.date().fromString("2026-03-11", "yyyy-MM-dd"))
-        pay.customer_edit.set_value(customer(db))
+        pay.party_edit.setText("نقدي")
+        pay.party_edit.editingFinished.emit()
+        assert pay.party_edit.currentData() == supplier(db)
         pay.amount_edit.setText("700")
-        pay.description.setText("رد مبلغ")
+        pay.description.setText("سداد للمورد")
         pay._refresh_side()
         assert pay.funds_label.isVisible() or not pay.funds_label.isHidden()  # الخزنة فاضية
-        assert pay.entry_table.item(0, 0).text().startswith("1103")
+        payable = one(db, "SELECT a.code FROM party.supplier_groups g JOIN acc.accounts a "
+                          "ON a.id = g.control_account_id WHERE g.code = '1'")
+        assert pay.entry_table.item(0, 0).text().startswith(payable)
+        assert pay.kpi_values["party"].text().replace("\u2066", "").replace("\u2069", "").endswith(
+            "←  700.00 مدين")                                            # المورد رصيده الطبيعي دائن
         asked.clear()
         pay.post_voucher()
         assert any("مش مكفي" in a or "تكمّل الترحيل" in a for a in asked)   # تحذير بس — وبعدين اترحّل
@@ -388,7 +450,34 @@ def test_menu_and_registry():
     from app.services import permission_registry as reg
     from app.ui.screen_registry import SCREEN_FACTORIES
 
-    for target, title in (("customer_receipts", "سند قبض العملاء"), ("customer_payments", "سند صرف العملاء")):
+    with pytest.raises(KeyError):                                             # «سند صرف العملاء» اتشال
+        reg.find_target("cash", "customer_payments")
+    for target, title in (("customer_receipts", "سند قبض"), ("supplier_payments", "سند صرف")):
         t = reg.find_target("cash", target)
         assert t.name_ar == title and target in SCREEN_FACTORIES
         assert set(t.action_codes()) == {"view", "create", "edit", "save", "delete", "export", "post", "unpost"}
+
+
+def test_migration_keeps_used_customer_payments(temp_db, tmp_path):
+    """0036 على قاعدة فيها «سند صرف العملاء» متسجّل (حد جرّبه): الجدول بيفضل قديم بحمايته ونوعه بياخد CPV
+    عشان PV تبقى لسند الصرف (المورد) — من غير ما بيانات تضيع."""
+    import shutil
+
+    db = temp_db
+    for f in migrator.migrations_dir().glob("*.sql"):
+        if f.name < "0036":
+            shutil.copy(f, tmp_path / f.name)
+    migrator.migrate(db, tmp_path)
+    db.execute("INSERT INTO core.fiscal_years (year_code, start_date, end_date) VALUES ('2026', '2026-01-01', '2026-12-31')")
+    db.execute("INSERT INTO cash.customer_payments (voucher_date, customer_id, source_kind, treasury_id, amount, "
+               "description) VALUES (%s, %s, 'treasury', %s, 50, 'قديم')", [D, customer(db), treasury(db)])
+    migrator.migrate(db)
+    assert migrator.current_version(db) >= 36
+    assert db.fetch_all("SELECT code, prefix FROM core.document_types WHERE code IN "
+                        "('customer_payment', 'supplier_payment') ORDER BY code") == [
+        {"code": "customer_payment", "prefix": "CPV"}, {"code": "supplier_payment", "prefix": "PV"}]
+    assert one(db, "SELECT count(*) FROM cash.customer_payments") == 1
+    with pytest.raises(psycopg.errors.RaiseException, match="العميل مش موجود"):    # الحماية لسه شغالة
+        db.execute("UPDATE cash.customer_payments SET customer_id = -1")
+    with pytest.raises(psycopg.errors.RaiseException, match="سند مسودة"):
+        db.execute("UPDATE core.fiscal_years SET status = 'closed', closed_at = now()")

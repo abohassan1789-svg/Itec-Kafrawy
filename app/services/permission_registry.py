@@ -182,11 +182,12 @@ SECTIONS: tuple[Section, ...] = (
             Target("banks", "البنوك", "Banks", icon="🏦",
                    actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="💵"),
-        # سندات العملاء (2026-11-17 — النموذج 5): شاشتين منفصلين وجدولين منفصلين وصلاحية لكل واحدة.
-        Group("سندات العملاء", (
-            Target("customer_receipts", "سند قبض العملاء", "Customer Receipts", icon="📥",
+        # السندات (2026-11-17 — النموذج 5): شاشتين منفصلين وجدولين منفصلين وصلاحية لكل واحدة —
+        # «سند القبض للعميل وسند الصرف للمورد» (قرار المستخدم؛ «سند صرف العملاء» القديم اتشال).
+        Group("السندات", (
+            Target("customer_receipts", "سند قبض", "Receipt Voucher", icon="📥",
                    actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
-            Target("customer_payments", "سند صرف العملاء", "Customer Payments", icon="📤",
+            Target("supplier_payments", "سند صرف", "Payment Voucher", icon="📤",
                    actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
         ), icon="🧾"),
     )),

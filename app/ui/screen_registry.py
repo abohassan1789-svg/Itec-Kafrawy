@@ -74,15 +74,15 @@ def _banks() -> QWidget:
 
 
 def _customer_receipts() -> QWidget:
-    from app.ui.screens.customer_vouchers_screen import CustomerReceiptsScreen
+    from app.ui.screens.vouchers_screen import ReceiptsScreen
 
-    return CustomerReceiptsScreen()
+    return ReceiptsScreen()
 
 
-def _customer_payments() -> QWidget:
-    from app.ui.screens.customer_vouchers_screen import CustomerPaymentsScreen
+def _supplier_payments() -> QWidget:
+    from app.ui.screens.vouchers_screen import PaymentsScreen
 
-    return CustomerPaymentsScreen()
+    return PaymentsScreen()
 
 
 def _expense_types() -> QWidget:
@@ -218,7 +218,7 @@ SCREEN_FACTORIES: dict[str, ScreenFactory] = {
     "treasuries": _treasuries,
     "banks": _banks,
     "customer_receipts": _customer_receipts,
-    "customer_payments": _customer_payments,
+    "supplier_payments": _supplier_payments,
     "expense_types": _expense_types,
     "warehouses": _warehouses,
     "units_brands": _units_brands,

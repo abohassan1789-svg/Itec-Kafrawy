@@ -1,13 +1,13 @@
-"""شاشتي «سند قبض العملاء» و«سند صرف العملاء» — النموذج 5 «الفورم + كروت الأرقام + القيد» (اختيار المستخدم 2026-11-17)
-من غير خانات الخصومات (رد المستخدم: «شيلهم»).
+"""شاشتي «سند قبض» (للعميل) و«سند صرف» (للمورد) — النموذج 5 «الفورم + كروت الأرقام + القيد» (اختيار المستخدم 2026-11-17)
+من غير خانات الخصومات (رد المستخدم: «شيلهم») · «سند القبض للعميل وسند الصرف للمورد» (قرار المستخدم).
 
 ```
 ┌ [سند جديد][تعديل][حفظ مسودة][ترحيل ✔][إلغاء الترحيل][حذف][إلغاء][تحديث][تصدير إكسل][خروج]          (عرض) ┐
 ├──────────────────────────────────────────────┬──────────────────────────────────┤
-│ ┌ سند قبض العملاء ┐ الرقم · التاريخ · الحالة          │ ┌ السندات ┐ 🔍 رقم / عميل / بيان     │
-│   استلمنا من [العميل] · في [خزنة ▾][الخزنة]           │   من [..] إلى [..]                 │
+│ ┌ سند قبض ┐ الرقم · التاريخ · الحالة                 │ ┌ السندات ┐ 🔍 رقم / عميل / بيان     │
+│   استلمنا من [العميل] / صرفنا إلى [المورد]           │   من [..] إلى [..]                 │
 │   المبلغ · البيان · رقم الدفتر · أمر التوريد          │   [الكل][مسودة][مرحّل]              │
-│ [المبلغ] [رصيد العميل ← بعده] [رصيد الخزنة ← بعده]   │   الرقم│التاريخ│العميل│المبلغ│الحالة │
+│ [المبلغ] [رصيد العميل/المورد ← بعده] [رصيد الخزنة]   │   الرقم│التاريخ│الطرف│المبلغ│الحالة  │
 │ ⚠️ الخزنة مش مكفية (الصرف — تحذير بس)                │                                    │
 │ ┌ 📒 القيد اللي هيتعمل ┐ الحساب│مدين│دائن  ✔ متوازن   │   › السابق  صفحة 1 من 3  التالي ‹     │
 └──────────────────────────────────────────────┴──────────────────────────────────┘
@@ -43,7 +43,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from app.services.customer_voucher_service import KINDS, PAGE_SIZE, CustomerVoucherService, voucher_label
+from app.services.voucher_service import KINDS, PAGE_SIZE, VoucherService, voucher_label
 from app.services.errors import BusinessError, ConcurrentEditError
 from app.ui.common import messages
 from app.ui.common.base_screen import EDITING, BaseScreen
@@ -69,34 +69,37 @@ def _pydate(q: QDate) -> dt.date:
     return dt.date(q.year(), q.month(), q.day())
 
 
-def signed(value: Decimal | None) -> str:
-    """الرصيد بجنبه: «1,200.00 مدين» / «300.00 دائن» / «0.00»."""
+def signed(value: Decimal | None, natural: str = "مدين") -> str:
+    """الرصيد بجنبه: «1,200.00 مدين» / «300.00 دائن» / «0.00».
+
+    ``natural`` = الجنب الطبيعي للرصيد الموجب (المورد رصيده دائن: الموجب = ليه علينا)."""
     if value is None:
         return "—"
     if value == 0:
         return "0.00"
-    return f"{ltr(money(abs(value)))} {'مدين' if value > 0 else 'دائن'}"
+    other = "دائن" if natural == "مدين" else "مدين"
+    return f"{ltr(money(abs(value)))} {natural if value > 0 else other}"
 
 
-class CustomerVoucherScreen(BaseScreen):
+class VoucherScreen(BaseScreen):
     MODULE = "cash"
     KIND = "receipt"
     NEW_TEXT = "سند جديد"
     LIST_TITLE = "السندات"
     SEARCH_PLACEHOLDER = "🔍 رقم السند أو العميل أو البيان… (F1)"
-    COLUMNS = [("voucher_no", "رقم السند"), ("voucher_date", "التاريخ"), ("customer_name", "العميل"),
+    COLUMNS = [("voucher_no", "رقم السند"), ("voucher_date", "التاريخ"), ("party_name", "العميل"),
                ("amount", "المبلغ"), ("status", "الحالة")]
     FORM_STRETCH, LIST_STRETCH = 12, 10
     EXIT_LAST = True
 
-    def __init__(self, service: CustomerVoucherService | None = None, parent: QWidget | None = None) -> None:
+    def __init__(self, service: VoucherService | None = None, parent: QWidget | None = None) -> None:
         self.kind = KINDS[self.KIND]
-        self.service = service or CustomerVoucherService(self.KIND)
+        self.service = service or VoucherService(self.KIND)
         self.page = 1
         self.pages = 1
         self.status = "all"
         self._last_query: tuple | None = None
-        self._choices: dict[str, Any] = {"customers": [], "treasuries": [], "banks": [], "projects": []}
+        self._choices: dict[str, Any] = {"parties": [], "treasuries": [], "banks": [], "projects": []}
         self._filling = False
         today = dt.date.today()
         self._from = today.replace(day=1)
@@ -140,9 +143,9 @@ class CustomerVoucherScreen(BaseScreen):
         top.addWidget(self.status_label)
         form.addRow("رقم السند", top)
 
-        self.customer_edit = LookupEdit("اكتب كود العميل أو اسمه… *")
-        self.customer_edit.value_changed.connect(self._changed)
-        form.addRow(f"{self.kind.party_verb} *", self.customer_edit)
+        self.party_edit = LookupEdit(f"اكتب كود {self.kind.party_label} أو اسمه… *")
+        self.party_edit.value_changed.connect(self._changed)
+        form.addRow(f"{self.kind.party_verb} *", self.party_edit)
 
         self.source_kind = QComboBox()
         self.source_kind.addItem("💵 خزنة", "treasury")
@@ -163,7 +166,7 @@ class CustomerVoucherScreen(BaseScreen):
         self.description = QLineEdit()
         self.description.setMaxLength(500)
         self.description.setPlaceholderText("السند ده عن إيه (زي: تحصيل دفعة من الحساب)" if self.KIND == "receipt"
-                                            else "السند ده عن إيه (زي: رد مبلغ زيادة للعميل)")
+                                            else "السند ده عن إيه (زي: سداد دفعة من حساب المورد)")
         form.addRow("البيان *", self.description)
         self.paper_no = QLineEdit()
         self.paper_no.setMaxLength(30)
@@ -187,7 +190,7 @@ class CustomerVoucherScreen(BaseScreen):
         row.setSpacing(8)
         self.kpi_values: dict[str, QLabel] = {}
         self.kpi_captions: dict[str, QLabel] = {}
-        cards = (("amount", "مبلغ السند", BLUE), ("customer", "رصيد العميل ← بعد السند", "#7C3AED"),
+        cards = (("amount", "مبلغ السند", BLUE), ("party", f"رصيد {self.kind.party_label} ← بعد السند", "#7C3AED"),
                  ("source", "رصيد الخزنة ← بعد السند", OK_COLOR))
         for key, title, color in cards:
             card = QFrame()
@@ -310,10 +313,10 @@ class CustomerVoucherScreen(BaseScreen):
         try:
             self._choices = self.service.choices()
         except Exception:  # noqa: BLE001 - الرسالة بتطلع مع تحميل القائمة
-            self._choices = {"customers": [], "treasuries": [], "banks": [], "projects": []}
+            self._choices = {"parties": [], "treasuries": [], "banks": [], "projects": []}
 
-    def _customer_rows(self) -> list[tuple[int, str, str]]:
-        return [(c["id"], c["code"], f"{c['code']} — {c['name_ar']}") for c in self._choices["customers"]
+    def _party_rows(self) -> list[tuple[int, str, str]]:
+        return [(c["id"], c["code"], f"{c['code']} — {c['name_ar']}") for c in self._choices["parties"]
                 if c["is_active"]]
 
     def _source_rows(self, kind: str) -> list[tuple[int, str, str]]:
@@ -332,8 +335,8 @@ class CustomerVoucherScreen(BaseScreen):
         rec = record or {}
         self._filling = True
         try:
-            self.customer_edit.set_items(self._customer_rows(), rec.get("customer_id"),
-                                         f"{rec.get('customer_code', '')} — {rec.get('customer_name', '')}")
+            self.party_edit.set_items(self._party_rows(), rec.get("party_id"),
+                                      f"{rec.get('party_code', '')} — {rec.get('party_name', '')}")
             kind = rec.get("source_kind") or "treasury"
             self.source_kind.setCurrentIndex(0 if kind == "treasury" else 1)
             self._fill_source(kind, rec)
@@ -372,14 +375,14 @@ class CustomerVoucherScreen(BaseScreen):
     def _data(self) -> dict[str, Any]:
         kind = self.source_kind.currentData()
         source = self.source_edit.currentData()
-        return {"voucher_date": _pydate(self.date_edit.date()), "customer_id": self.customer_edit.currentData(),
+        return {"voucher_date": _pydate(self.date_edit.date()), "party_id": self.party_edit.currentData(),
                 "source_kind": kind, "treasury_id": source if kind == "treasury" else None,
                 "bank_account_id": source if kind == "bank" else None, "amount": self.amount_edit.text(),
                 "description": self.description.text() or self.kind.title, "paper_no": self.paper_no.text(),
                 "project_id": self.project_edit.currentData()}
 
     def _refresh_side(self) -> None:
-        """الكروت (المبلغ · رصيد العميل · رصيد الخزنة / البنك قبل وبعد) + تحذير الخزنة + القيد."""
+        """الكروت (المبلغ · رصيد العميل / المورد · رصيد الخزنة / البنك قبل وبعد) + تحذير الخزنة + القيد."""
         self._timer.stop()
         rec = self.current_record or {}
         editing = self.mode in EDITING
@@ -392,9 +395,9 @@ class CustomerVoucherScreen(BaseScreen):
         what = "الخزنة" if kind == "treasury" else "البنك"
         when = "دلوقتي (السند جوّاه)" if posted else "← بعد السند"
         self.kpi_captions["source"].setText(f"رصيد {what} {when}")
-        self.kpi_captions["customer"].setText(f"رصيد العميل {when}")
+        self.kpi_captions["party"].setText(f"رصيد {self.kind.party_label} {when}")
         try:
-            b = self.service.balances(data["customer_id"], kind, data["treasury_id"] or data["bank_account_id"],
+            b = self.service.balances(data["party_id"], kind, data["treasury_id"] or data["bank_account_id"],
                                       data["amount"], posted=posted)
         except Exception:  # noqa: BLE001 - الكروت للعرض بس
             b = None
@@ -402,12 +405,16 @@ class CustomerVoucherScreen(BaseScreen):
             self._clear_side(keep_entry=True)
         else:
             self.kpi_values["amount"].setText(ltr(money(b["amount"])) if b["amount"] else "—")
-            def pair(before: Decimal | None, after: Decimal | None) -> str:
+            def pair(before: Decimal | None, after: Decimal | None, natural: str = "مدين") -> str:
                 if before is None:
                     return "—"
-                return signed(before) if posted else f"{signed(before)}  ←  {signed(after)}"
+                if posted:
+                    return signed(before, natural)
+                return f"{signed(before, natural)}  ←  {signed(after, natural)}"
 
-            self.kpi_values["customer"].setText(pair(b["customer"], b["customer_after"]))
+            # العميل رصيده الطبيعي مدين (عليه لينا) · المورد دائن (ليه علينا).
+            natural = "مدين" if self.kind.party == "customer" else "دائن"
+            self.kpi_values["party"].setText(pair(b["party"], b["party_after"], natural))
             self.kpi_values["source"].setText(pair(b["source"], b["source_after"]))
             low = b["source_after"] is not None and b["source_after"] < 0
             self.kpi_values["source"].setStyleSheet(
@@ -422,7 +429,7 @@ class CustomerVoucherScreen(BaseScreen):
         self._refresh_entry(data, posted)
 
     def _clear_side(self, keep_entry: bool = False) -> None:
-        for key in ("amount", "customer", "source"):
+        for key in ("amount", "party", "source"):
             self.kpi_values[key].setText("—")
             self.kpi_values[key].setStyleSheet(VALUE_STYLE)
         self.funds_label.hide()
@@ -479,7 +486,7 @@ class CustomerVoucherScreen(BaseScreen):
 
     # ---- الأوضاع ----------------------------------------------------------
     def editable_widgets(self) -> list[QWidget]:
-        return [self.date_edit, self.customer_edit, self.source_kind, self.source_edit, self.amount_edit,
+        return [self.date_edit, self.party_edit, self.source_kind, self.source_edit, self.amount_edit,
                 self.description, self.paper_no, self.project_edit]
 
     def _is_editable_record(self) -> bool:
@@ -525,7 +532,7 @@ class CustomerVoucherScreen(BaseScreen):
         if rows:
             self.source_edit.set_value(rows[0][0])
         self.set_mode("new")
-        self.customer_edit.setFocus()
+        self.party_edit.setFocus()
 
     def edit_record(self) -> None:
         if self.current_id is None or not self.can("edit"):
@@ -734,7 +741,7 @@ class CustomerVoucherScreen(BaseScreen):
 
     @staticmethod
     def _record_data(rec: dict[str, Any]) -> dict[str, Any]:
-        return {k: rec.get(k) for k in ("voucher_date", "customer_id", "source_kind", "treasury_id",
+        return {k: rec.get(k) for k in ("voucher_date", "party_id", "source_kind", "treasury_id",
                                         "bank_account_id", "amount", "description", "paper_no", "project_id")}
 
     def collect(self) -> dict:
@@ -750,17 +757,23 @@ class CustomerVoucherScreen(BaseScreen):
         self.service.delete_voucher(int(record_id), expected_version=self.current_version)
 
 
-class CustomerReceiptsScreen(CustomerVoucherScreen):
+class ReceiptsScreen(VoucherScreen):
+    """سند قبض — من العميل."""
     TARGET = "customer_receipts"
     KIND = "receipt"
-    TITLE = "سند قبض العملاء"
+    TITLE = "سند قبض"
     ICON = "📥"
-    FORM_TITLE = "سند قبض العملاء"
+    FORM_TITLE = "سند قبض"
+    SEARCH_PLACEHOLDER = "🔍 رقم السند أو العميل أو البيان… (F1)"
 
 
-class CustomerPaymentsScreen(CustomerVoucherScreen):
-    TARGET = "customer_payments"
+class PaymentsScreen(VoucherScreen):
+    """سند صرف — للمورد."""
+    TARGET = "supplier_payments"
     KIND = "payment"
-    TITLE = "سند صرف العملاء"
+    TITLE = "سند صرف"
     ICON = "📤"
-    FORM_TITLE = "سند صرف العملاء"
+    FORM_TITLE = "سند صرف"
+    SEARCH_PLACEHOLDER = "🔍 رقم السند أو المورد أو البيان… (F1)"
+    COLUMNS = [("voucher_no", "رقم السند"), ("voucher_date", "التاريخ"), ("party_name", "المورد"),
+               ("amount", "المبلغ"), ("status", "الحالة")]
