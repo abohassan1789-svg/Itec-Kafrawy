@@ -109,6 +109,9 @@ SECTIONS: tuple[Section, ...] = (
         Group("القيود اليومية", (
             Target("journal_entries", "القيود اليومية", "Journal Entries", icon="📒",
                    actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
+            # الأرصدة الافتتاحية (2026-11-17 — النموذج 2): مستند واحد · حفظ مسودة · ترحيل · إلغاء ترحيل بالصلاحية.
+            Target("opening_balances", "الأرصدة الافتتاحية", "Opening Balances", icon="🏁",
+                   actions=("view", "edit", "save", "export", "post", "unpost")),
         ), icon="📒"),
         # الشركاء تحت «الحسابات» لأنها حقوق ملكية (31 رأس المال · 32 جاري الشركاء) — 2026-11-14.
         Group("حقوق الملكية", (

@@ -159,6 +159,8 @@ def test_category_accounts(env):
 def test_document_cost_center(env):
     """مركز تكلفة المستند بيتحط على سطور الإيرادات والمصروفات بس · أمر التوريد على كل السطور · من غير مركز ← خطأ."""
     db, engine = env["db"], env["engine"]
+    # 0033 (رد (ج)): المبيعات من غير «لازم مركز تكلفة» — بنرجّعها هنا عشان نختبر الرفض
+    db.execute("UPDATE acc.accounts SET requires_cost_center = true WHERE code = '4101'")
     with pytest.raises(BusinessError, match="«المبيعات»: الحساب «4101 .*» لازم يتكتب عليه مركز تكلفة"):
         engine.build("sales_invoice", invoice(db))
     project = one(db, "INSERT INTO acc.projects (code, name, cost_center_id, currency_code) "

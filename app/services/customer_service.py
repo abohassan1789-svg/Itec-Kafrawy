@@ -23,6 +23,7 @@ from app.repositories.customer_repository import STATUSES, CustomerRepository
 from app.services.audit_service import AuditService
 from app.services.concurrency import ConcurrencyGuard
 from app.services.errors import BusinessError
+from app.services.opening_balance_service import OpeningBalanceService
 from app.services.permission_service import PermissionService
 
 ENTITY, ENTITY_LABEL = "party.customers", "عميل"
@@ -46,6 +47,7 @@ class CustomerService:
         self.repository = repository or CustomerRepository(self.db)
         self.audit = audit or AuditService(self.db)
         self.guard = ConcurrencyGuard(self.db)
+        self.opening = OpeningBalanceService(self.db)
 
     # ---- قراية -------------------------------------------------------------
     def list_customers(self, keyword: str = "", status: str = "all", group_id: int | None = None,
@@ -64,7 +66,12 @@ class CustomerService:
         return self.repository.list_customers("", "all", None, LOOKUP_LIMIT, 0)
 
     def get_customer(self, customer_id: int) -> dict[str, Any] | None:
-        return self.repository.get_customer(int(customer_id))
+        row = self.repository.get_customer(int(customer_id))
+        if row is not None:                                # خانة «رصيد أول المدة» (مستند الأرصدة الافتتاحية)
+            opening = self.opening.party_balance("customer", int(customer_id))
+            row.update({"opening_debit": opening["debit"], "opening_credit": opening["credit"],
+                        "opening_status": opening["status"], "opening_date": opening["balance_date"]})
+        return row
 
     def group_choices(self) -> list[dict[str, Any]]:
         return self.repository.group_choices()
@@ -180,6 +187,11 @@ class CustomerService:
                 updated = self.repository.update_customer(int(customer_id), clean, ex=tx,
                                                           expected_version=expected_version)
                 self.guard.ensure(tx, updated, expected_version, entity=ENTITY, entity_id=customer_id)
+            opening = data.get("opening")
+            if opening is not None:                        # نفس سطر المستند (مايتكررش) — جوه نفس الـ transaction
+                self.opening.set_party_balance(
+                    tx, "customer", int(customer_id), opening.get("debit"), opening.get("credit"),
+                    opening.get("old_debit"), opening.get("old_credit"), label=clean["name_ar"])
             after = self.repository.get_customer(int(customer_id), ex=tx)
             self.audit.record(tx, action="create" if before is None else "update", entity=ENTITY,
                               entity_id=customer_id, entity_label=ENTITY_LABEL,

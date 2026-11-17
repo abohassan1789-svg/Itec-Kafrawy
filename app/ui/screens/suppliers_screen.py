@@ -48,13 +48,13 @@ from app.services.supplier_service import PAGE_SIZE, SupplierService
 from app.ui.common import messages
 from app.ui.common.base_screen import BaseScreen, align_form_right
 from app.ui.common.data_table import default_format
+from app.ui.common.opening_field import OpeningBalanceField
 from app.ui.common.theme import GREEN
 
 ACTIVE_COLOR, MUTED, WARN = "#087443", "#64748B", "#B45309"
 NO_TAX = "— من غير"
 ALL_GROUPS = "كل المجموعات"
 STATUS_CHIPS = (("all", "الكل"), ("active", "النشط"), ("inactive", "الموقوف"))
-OPENING_NOTE = "رصيد أول المدة بيتسجل في «مستند الأرصدة الافتتاحية» (مع القيود — المرحلة 4)."
 TAX_WARNING = "⚠ مورد عليه ض.ق.م ومن غير رقم تسجيل — اتأكد إنه بيطلّع فاتورة ضريبية قبل خصم ض.ق.م المدخلات."
 CHIP_STYLE = (
     "QPushButton { background:#FFFFFF; color:#334155; border:1px solid #CBD5E1; border-radius:11px; "
@@ -205,15 +205,13 @@ class SuppliersScreen(BaseScreen):
         self.bank_account = self._ltr(QLineEdit(), 60, "اختياري — EG00 0000 …")
         self.notes = QLineEdit()
         self.notes.setMaxLength(500)
-        hint = QLabel(OPENING_NOTE)
-        hint.setWordWrap(True)
-        hint.setStyleSheet(f"color:{MUTED}; font-weight:600;")
         form.addRow("مدة السداد", self.terms)
         form.addRow("العملة", self.currency)
         form.addRow("البنك", self.bank_name)
         form.addRow("رقم الحساب / IBAN", self.bank_account)
         form.addRow("ملاحظات", self.notes)
-        form.addRow("", hint)
+        self.opening_field = OpeningBalanceField("cr")
+        form.addRow("رصيد أول المدة", self.opening_field)
         return box
 
     def arrange_content(self, content: QHBoxLayout, form_box: QGroupBox, list_box: QGroupBox) -> None:
@@ -288,6 +286,7 @@ class SuppliersScreen(BaseScreen):
     def set_mode(self, mode: str) -> None:
         super().set_mode(mode)
         editing = mode in ("new", "edit")
+        self.opening_field.set_editing(editing)
         for chip in self.status_buttons.buttons():
             chip.setEnabled(not editing)
         self.group_filter.setEnabled(not editing)
@@ -471,6 +470,7 @@ class SuppliersScreen(BaseScreen):
             getattr(self, key).setText(record.get(key) or "")
         self.terms.setValue(int(record.get("payment_terms_days") or 0))
         self._set_combo(self.currency, record.get("currency_code"), record.get("currency_code") or "")
+        self.opening_field.load(record)
         self._update_tax_warning()
 
     def clear_form(self) -> None:
@@ -486,6 +486,7 @@ class SuppliersScreen(BaseScreen):
         self.wht_tax.setCurrentIndex(0)
         self.terms.setValue(30)
         self.currency.setCurrentIndex(0)
+        self.opening_field.clear()
 
     def collect(self) -> dict:
         return {"name_ar": self.name_ar.text(), "name_en": self.name_en.text(), "group_id": self.group.currentData(),
@@ -495,7 +496,7 @@ class SuppliersScreen(BaseScreen):
                 "currency_code": self.currency.currentData(), "vat_tax_code_id": self.vat_tax.currentData(),
                 "wht_tax_code_id": self.wht_tax.currentData(), "bank_name": self.bank_name.text(),
                 "bank_account": self.bank_account.text(), "notes": self.notes.text(),
-                "is_active": self.is_active.isChecked()}
+                "is_active": self.is_active.isChecked(), "opening": self.opening_field.payload()}
 
     def save_record(self, payload: dict, record_id: Any) -> Any:
         return self.suppliers.save_supplier(None if record_id is None else int(record_id), payload,

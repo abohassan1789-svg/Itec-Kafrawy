@@ -49,13 +49,13 @@ from app.services.customer_service import PAGE_SIZE, CustomerService
 from app.ui.common import messages
 from app.ui.common.base_screen import BaseScreen, align_form_right
 from app.ui.common.data_table import default_format
+from app.ui.common.opening_field import OpeningBalanceField
 from app.ui.common.theme import GREEN
 
 ACTIVE_COLOR, MUTED, WARN = "#087443", "#64748B", "#B45309"
 NO_TAX = "— من غير"
 ALL_GROUPS = "كل المجموعات"
 STATUS_CHIPS = (("all", "الكل"), ("active", "النشط"), ("inactive", "الموقوف"))
-OPENING_NOTE = "رصيد أول المدة بيتسجل في «مستند الأرصدة الافتتاحية» (مع القيود — المرحلة 4)."
 LIMIT_HINT = "حد الائتمان تنبيه بس: الفاتورة اللي تعدّيه بتطلّع تنبيه ومابتتمنعش · 0 = من غير حد."
 CHIP_STYLE = (
     "QPushButton { background:#FFFFFF; color:#334155; border:1px solid #CBD5E1; border-radius:11px; "
@@ -202,13 +202,15 @@ class CustomersScreen(BaseScreen):
             self.currency.addItem(f"{cur['code']} — {cur['name_ar']}", cur["code"])
         self.notes = QLineEdit()
         self.notes.setMaxLength(500)
-        hint = QLabel(f"{LIMIT_HINT}\n{OPENING_NOTE}")
+        hint = QLabel(LIMIT_HINT)
         hint.setWordWrap(True)
         hint.setStyleSheet(f"color:{MUTED}; font-weight:600;")
         form.addRow("مدة السداد", self.terms)
         form.addRow("حد الائتمان", self.credit_limit)
         form.addRow("العملة", self.currency)
         form.addRow("ملاحظات", self.notes)
+        self.opening_field = OpeningBalanceField("dr")
+        form.addRow("رصيد أول المدة", self.opening_field)
         form.addRow("", hint)
         return box
 
@@ -284,6 +286,7 @@ class CustomersScreen(BaseScreen):
     def set_mode(self, mode: str) -> None:
         super().set_mode(mode)
         editing = mode in ("new", "edit")
+        self.opening_field.set_editing(editing)
         for chip in self.status_buttons.buttons():
             chip.setEnabled(not editing)
         self.group_filter.setEnabled(not editing)
@@ -460,6 +463,7 @@ class CustomersScreen(BaseScreen):
         self.terms.setValue(int(record.get("payment_terms_days") or 0))
         self.credit_limit.setValue(float(record.get("credit_limit") or 0))
         self._set_combo(self.currency, record.get("currency_code"), record.get("currency_code") or "")
+        self.opening_field.load(record)
 
     def clear_form(self) -> None:
         for edit in (self.code_edit, self.name_ar, self.name_en, self.control_account, self.tax_reg_no,
@@ -474,6 +478,7 @@ class CustomersScreen(BaseScreen):
         self.terms.setValue(30)
         self.credit_limit.setValue(0)
         self.currency.setCurrentIndex(0)
+        self.opening_field.clear()
 
     def collect(self) -> dict:
         return {"name_ar": self.name_ar.text(), "name_en": self.name_en.text(), "group_id": self.group.currentData(),
@@ -483,7 +488,7 @@ class CustomersScreen(BaseScreen):
                 "credit_limit": Decimal(str(round(self.credit_limit.value(), 2))),
                 "currency_code": self.currency.currentData(), "vat_tax_code_id": self.vat_tax.currentData(),
                 "wht_tax_code_id": self.wht_tax.currentData(), "notes": self.notes.text(),
-                "is_active": self.is_active.isChecked()}
+                "is_active": self.is_active.isChecked(), "opening": self.opening_field.payload()}
 
     def save_record(self, payload: dict, record_id: Any) -> Any:
         return self.customers.save_customer(None if record_id is None else int(record_id), payload,

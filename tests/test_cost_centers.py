@@ -349,7 +349,7 @@ def test_screen_tabs_tree_and_form(env):
     assert screen.items[ids["21"]].isExpanded() and not screen.items[ids["2101"]].childCount()
     screen.load(ids["2201"])
     assert plain(screen.path_label.text()) == "2 الأنشطة الفنية ◂ 22 MCC — لوحات التحكم ◂ 2201 MCC — ورشة التصنيع"
-    assert "مفيش — مركز فرعي" in screen.kids_label.text() and "4101" in plain(screen.accounts_label.text())
+    assert "مفيش — مركز فرعي" in screen.kids_label.text() and "5201" in plain(screen.accounts_label.text())
     screen.collapse_all()
     assert not any(it.isExpanded() for it in screen.items.values())
     screen.expand_all()

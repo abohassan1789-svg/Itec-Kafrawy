@@ -93,7 +93,8 @@ def test_seeded_chart_shape(env):
     assert row(db, "1103")["is_system"] and row(db, "1")["is_system"] and not row(db, "110101")["is_system"]
     assert row(db, "1209")["nature"] == "cr" and row(db, "42")["nature"] == "dr"            # مجمع إهلاك / مردودات
     assert row(db, "51")["classification"] == "cogs" and row(db, "42")["classification"] == "returns"
-    assert row(db, "5302")["is_active"] is False and row(db, "4101")["requires_cost_center"]
+    assert row(db, "5302")["is_active"] is False and row(db, "5201")["requires_cost_center"]
+    assert not row(db, "4101")["requires_cost_center"]                     # 0033: رد (ج) — اتشالت
     assert db.fetch_value("SELECT count(*) FROM acc.accounts WHERE currency_code <> 'EGP'") == 0
     assert db.fetch_value("SELECT row_version FROM acc.accounts WHERE code = '1103'") == 1
 
@@ -440,7 +441,7 @@ def test_split_account_database(env):
     g = db.fetch_one("SELECT * FROM acc.accounts WHERE id = %s", [general])
     assert (g["code"], g["name_ar"], g["name_en"], g["role_code"], g["is_system"], g["is_leaf"], g["level"]) == (
         "410101", "مبيعات بضاعة — عام", "Goods Sales — General", "sales", True, True, 4)
-    assert g["requires_cost_center"] and g["classification"] == "operating_rev" and g["nature"] == "cr"
+    assert not g["requires_cost_center"] and g["classification"] == "operating_rev" and g["nature"] == "cr"
     sales = row(db, "4101")
     assert sales["is_leaf"] is False and sales["is_system"] and sales["role_code"] == "sales"
     # مستوى 2 (51 تكلفة المبيعات) ← 5101
@@ -506,7 +507,8 @@ def test_split_account_service(env):
                                "role_name": "تكلفة المبيعات", "is_system": True, "tax_links": [],
                                "default_keys": ["تكلفة المبيعات"]}
     assert plan["defaults"]["code"] == "5102" and plan["defaults"]["role_code"] == "cogs"
-    new_id = service.branch_account(ids["51"], {**plan["defaults"], "name_ar": "تكلفة مبيعات خدمات"}, 1)
+    new_id = service.branch_account(ids["51"], {**plan["defaults"], "name_ar": "تكلفة مبيعات خدمات"},
+                                    plan["expected_version"])
     assert service.get_account(new_id)["code"] == "5102" and not service.get_account(new_id)["is_system"]
     assert row(db, "5101")["is_system"] and row(db, "5101")["role_code"] == "cogs"
     # مربوط بضريبة (110602 خصم المنبع لينا ← WHT1/3/5): الربط بينزل للعام
