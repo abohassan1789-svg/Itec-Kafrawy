@@ -117,6 +117,8 @@ SECTIONS: tuple[Section, ...] = (
         Group("الكشوف", (
             Target("account_statement", "كشف الحساب ودفتر الأستاذ", "Account Statement & Ledger", icon="📑",
                    actions=("view",)),
+            # ميزان المراجعة (2026-11-17 — النموذج 4 «تبويب لكل نوع»): 8 أعمدة · المرحّل بس · صلاحية واحدة (عرض).
+            Target("trial_balance", "ميزان المراجعة", "Trial Balance", icon="⚖️", actions=("view",)),
         ), icon="📑"),
         # الشركاء تحت «الحسابات» لأنها حقوق ملكية (31 رأس المال · 32 جاري الشركاء) — 2026-11-14.
         Group("حقوق الملكية", (

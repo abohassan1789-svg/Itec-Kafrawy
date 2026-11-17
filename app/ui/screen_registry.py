@@ -121,6 +121,12 @@ def _account_statement() -> QWidget:
     return AccountStatementScreen()
 
 
+def _trial_balance() -> QWidget:
+    from app.ui.screens.trial_balance_screen import TrialBalanceScreen
+
+    return TrialBalanceScreen()
+
+
 def _customers() -> QWidget:
     from app.ui.screens.customers_screen import CustomersScreen
 
@@ -189,6 +195,7 @@ SCREEN_FACTORIES: dict[str, ScreenFactory] = {
     "journal_entries": _journal_entries,
     "opening_balances": _opening_balances,
     "account_statement": _account_statement,
+    "trial_balance": _trial_balance,
     "customer_groups": _customer_groups,
     "customers": _customers,
     "projects": _projects,

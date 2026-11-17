@@ -331,6 +331,21 @@ class AccountStatementScreen(BaseScreen):
                 "date_from": _pydate(self.from_edit.date()), "date_to": _pydate(self.to_edit.date()),
                 "grouping": self.grouping_combo.currentData() if self._grouping_on else "main"}
 
+    def show_account(self, account_id: int, date_from: dt.date, date_to: dt.date, grouping: str = "main") -> None:
+        """يفتح كشف حساب معيّن على فترة معيّنة (من «ميزان المراجعة» بالدبل كليك) — عرض واحد بس في الآخر."""
+        self._ready = False
+        try:
+            self.kind_combo.setCurrentIndex(self.kind_combo.findData("account"))
+            self.target_edit.set_value(account_id)
+            self.from_edit.setDate(_qdate(date_from))
+            self.to_edit.setDate(_qdate(date_to))
+            self._update_grouping()
+            if self._grouping_on:
+                self.grouping_combo.setCurrentIndex(max(0, self.grouping_combo.findData(grouping)))
+        finally:
+            self._ready = True
+        self.run()
+
     def run(self) -> None:
         """«عرض ▶» = الكشف من أول صفحة بالفلاتر الحالية."""
         self.page = 1
