@@ -157,6 +157,11 @@ SECTIONS: tuple[Section, ...] = (
             Target("employees", "الموظفين", "Employees", icon="🪪",
                    actions=("view", "create", "edit", "save", "delete", "export")),
         ), icon="🪪"),
+        # «العهد» (المرحلة 5 — رد المستخدم 2026-11-18: مكانها قسم «الموظفين»).
+        Group("العهد", (
+            Target("custody", "العهد", "Employee Custody", icon="💼",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
+        ), icon="💼"),
     )),
     # «الأصناف + المخازن» زي الأكسس (2026-11-15): المخازن أول زرار — وبعدها الوحدات والماركات والأصناف.
     Section("inv", "المخازن", "Inventory", "🏬", groups=(

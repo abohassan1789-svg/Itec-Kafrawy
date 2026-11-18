@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج العهد — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+/* ===== إضافات شاشة السندات ===== */
+.b-post{background:#137A38}.b-unpost{background:#B45309}.b-draft{background:#2563EB}
+.tg2{display:flex;border:1px solid var(--input);border-radius:6px;overflow:hidden;flex-shrink:0}
+.tg2 span{flex:1;text-align:center;padding:4px 8px;font-weight:900;font-size:9px;cursor:pointer;background:#fff;color:#475569}
+.tg2 span.rv.on{background:#137A38;color:#fff}.tg2 span.pv.on{background:#B91C1C;color:#fff}
+.amt{font-size:13px !important;font-weight:900;direction:ltr;text-align:left}
+.je{background:#fff;border:1px dashed #94A3B8;border-radius:6px;padding:4px 5px;flex-shrink:0}
+.je h6{margin:0 0 3px;font-size:8.5px;color:#334155;font-weight:900;display:flex;justify-content:space-between}
+.bal{display:flex;justify-content:space-between;gap:4px;font-size:8px;font-weight:800;background:#F8FAFC;border:1px solid var(--card-border);border-radius:5px;padding:3px 5px;margin-bottom:4px}
+.bal b{direction:ltr;unicode-bidi:isolate}
+.bl{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.bl small{font-size:7px;font-weight:900;margin-left:3px}
+.bl.bd small{color:#087443}.bl.bc small{color:#1D4ED8}
+.vc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px;font-size:8px;cursor:pointer;border-right:4px solid #137A38}
+.vc.pv{border-right-color:#B91C1C}.vc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.vc .r{display:flex;justify-content:space-between;gap:4px;align-items:center}
+.vc b.m{direction:ltr;font-size:10px}
+.vc.rv b.m{color:#087443}.vc.pv b.m{color:#B91C1C}
+.steps{display:flex;gap:3px;flex-shrink:0}
+.steps span{flex:1;text-align:center;font-size:8px;font-weight:900;padding:4px 2px;border-radius:5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.steps span.on{background:var(--green);color:#fff}.steps span.done{background:#DDF3E6;color:#087443}
+.paperv{background:#fff;width:96%;margin:4px auto;box-shadow:0 2px 8px rgba(15,23,42,.25);padding:8px 10px;font-size:8.5px;border-top:5px solid #137A38}
+.paperv.pv{border-top-color:#B91C1C}
+.paperv .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.paperv .lg{background:var(--green);color:#fff;font-weight:900;font-size:11px;border-radius:5px;padding:3px 7px}
+.paperv h4{margin:0;font-size:13px}
+.paperv .ln{display:flex;gap:5px;align-items:center;border-bottom:1px dotted #CBD5E1;padding:4px 0}
+.paperv .ln label{width:80px;font-weight:900;color:#334155;flex-shrink:0}
+.paperv .ln .v{flex:1}
+.paperv .box{border:2px solid #137A38;border-radius:6px;padding:3px 8px;font-weight:900;font-size:13px;direction:ltr}
+.paperv.pv .box{border-color:#B91C1C}
+.paperv .sig{display:flex;justify-content:space-between;margin-top:10px;color:var(--muted);font-weight:700}
+.paperv .sig span{border-top:1px solid #94A3B8;padding-top:2px;min-width:70px;text-align:center}
+.inl{width:100%;height:15px;border:1px solid #2563EB;border-radius:3px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 3px;direction:ltr;text-align:left}
+</style>
+<style>
+/* ===== إضافات شاشة حركات الخزائن والبنوك ===== */
+.flt{display:flex;gap:4px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.flt label{font-size:8.5px;font-weight:800;color:#334155}
+.ty{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;color:#fff;white-space:nowrap}
+.ft{display:flex;gap:6px;align-items:stretch;flex-shrink:0}
+.ft .bx{flex:1;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:6px;border-top:4px solid #B91C1C}
+.ft .bx.to{border-top-color:#137A38}
+.ft .bx h5{margin:0 0 4px;font-size:9.5px;font-weight:900}
+.ft .bx .bb{font-size:8.5px;font-weight:800;margin-top:4px;display:flex;justify-content:space-between}
+.ft .bx .bb b{direction:ltr;unicode-bidi:isolate}
+.arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:70px}
+.arrow .am{font-size:12px;font-weight:900;direction:ltr;color:#111827}
+.arrow .ar{font-size:22px;color:var(--green);line-height:1}
+.accs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;flex-shrink:0}
+.ac{background:#fff;border:1px solid var(--card-border);border-right:4px solid #0E7490;border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;position:relative}
+.ac.t{border-right-color:#137A38}
+.ac.f{outline:2px solid #B91C1C;background:#FEF2F2}.ac.d{outline:2px solid #137A38;background:#ECFDF3}
+.ac b{display:block;font-size:8.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac .v{direction:ltr;unicode-bidi:isolate;font-weight:900;font-size:10px}
+.ac .lb{position:absolute;left:4px;top:3px;font-size:7.5px;font-weight:900;border-radius:7px;padding:0 5px;color:#fff}
+.ac .lb.f{background:#B91C1C}.ac .lb.d{background:#137A38}
+.paperv.cm{border-top-color:#2563EB}.paperv.cm .box{border-color:#2563EB}
+.tstat{display:flex;gap:4px;flex-shrink:0}
+.tstat span{flex:1;text-align:center;padding:5px 3px;border-radius:6px;font-size:8.5px;font-weight:900;background:#E2E8F0;color:#475569;cursor:pointer}
+.tstat span.done{background:#DDF3E6;color:#087443}.tstat span.on{background:#FEF3C7;color:#92400E;outline:1px solid #FDE68A}
+</style>
+<style>
+/* ===== إضافات شاشة الشيكات ===== */
+.st{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;color:#fff;white-space:nowrap}
+.acts{display:flex;gap:3px;flex-wrap:wrap;align-items:center;flex-shrink:0}
+.acb{border-radius:5px;padding:3px 7px;font-size:8.5px;font-weight:900;cursor:pointer;border:1px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;white-space:nowrap}
+.acb.on{background:#2563EB;color:#fff;border-color:#2563EB}
+.acb.go{background:#137A38;color:#fff;border-color:#137A38}
+.acb.off{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0;cursor:default}
+.kb{display:grid;gap:4px;flex:1;min-height:0}
+.kc{background:#E2E8F0;border-radius:6px;padding:3px;display:flex;flex-direction:column;min-height:0;overflow:auto}
+.kc h6{margin:0 0 3px;font-size:8.5px;font-weight:900;color:#fff;border-radius:4px;padding:2px 4px;display:flex;justify-content:space-between}
+.kq{background:#fff;border:1px solid var(--card-border);border-radius:5px;padding:3px 4px;margin-bottom:3px;font-size:7.5px;cursor:pointer;line-height:1.45}
+.kq.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.kq b{display:block;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kq .v{direction:ltr;unicode-bidi:isolate;font-weight:900}
+.due{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;white-space:nowrap}
+.due.od{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.due.td{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.due.tm{background:#FFF7ED;color:#C2410C;border-color:#FED7AA}
+.due.wk{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.due.lt{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.kp.o{border-right:3px solid #F59E0B}.kp.o b{color:#B45309}
+.kp.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;flex-shrink:0}
+.cal .h{text-align:center;font-size:7.5px;font-weight:900;color:#fff;background:var(--green);border-radius:3px;padding:1px}
+.cal .d{background:#fff;border:1px solid var(--card-border);border-radius:4px;min-height:34px;padding:1px 2px;font-size:7px;cursor:pointer;line-height:1.35}
+.cal .d.x{background:transparent;border:none;cursor:default}
+.cal .d.t{outline:2px solid #F59E0B}
+.cal .d.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.cal .d b{font-size:8px}
+.cal .d .i{color:#087443;font-weight:900;direction:ltr;display:block}
+.cal .d .o{color:#B91C1C;font-weight:900;direction:ltr;display:block}
+.chq{background:linear-gradient(135deg,#F0FDF4,#ECFEFF);border:1px solid #94A3B8;border-radius:8px;width:97%;margin:4px auto;padding:7px 9px;font-size:8.5px;box-shadow:0 2px 8px rgba(15,23,42,.2);position:relative}
+.chq.out{background:linear-gradient(135deg,#FFF7ED,#FEF2F2)}
+.chq .r{display:flex;gap:6px;align-items:center;margin-bottom:5px}
+.chq .r label{font-weight:900;color:#334155;white-space:nowrap}
+.chq .ln2{border-bottom:1px dotted #64748B;flex:1;padding-bottom:1px}
+.chq .bx2{border:2px solid #137A38;border-radius:5px;padding:2px 6px;font-weight:900;font-size:12px;direction:ltr;background:#fff;min-width:110px;text-align:left}
+.chq.out .bx2{border-color:#B91C1C}
+.chq .mc{font-family:Consolas,monospace;letter-spacing:2px;color:#475569;font-size:9px;direction:ltr;text-align:center;margin-top:4px}
+.tl{position:relative;padding-right:14px}
+.tl:before{content:"";position:absolute;right:5px;top:4px;bottom:4px;width:2px;background:#CBD5E1}
+.tli{position:relative;margin-bottom:5px}
+.tli .dot{position:absolute;right:-13px;top:3px;width:10px;height:10px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #94A3B8}
+.tli .cd{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px}
+.tli.nx .cd{border-style:dashed;background:#F8FAFC}
+.msg{border-radius:5px;padding:3px 6px;font-size:8.5px;font-weight:800;flex-shrink:0}
+.msg.ok{background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}
+.msg.bad{background:#FEE2E2;color:#B91C1C;border:1px solid #FECACA}
+.msg.wr{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+.slip{background:#fff;border-top:5px solid #2563EB;box-shadow:0 2px 8px rgba(15,23,42,.25);padding:6px 8px;font-size:8px;width:96%;margin:4px auto}
+.slip h4{margin:0 0 3px;font-size:11px;color:#1D4ED8}
+</style>
+<style>
+/* ===== إضافات شاشة العهد ===== */
+.tg2 span.cd.on{background:#2563EB;color:#fff}.tg2 span.cs.on{background:#137A38;color:#fff}
+.ec{background:#fff;border:1px solid var(--card-border);border-right:4px solid #2563EB;border-radius:7px;padding:5px 6px;cursor:pointer;font-size:8px;display:flex;flex-direction:column;gap:3px}
+.ec.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.ec.zero{border-right-color:#94A3B8}
+.ec.old{border-right-color:#DC2626}
+.ec .tp{display:flex;gap:5px;align-items:center}
+.ec .tp b{font-size:9px;display:block}
+.ec .v{direction:ltr;unicode-bidi:isolate;font-weight:900;font-size:11px}
+.age{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;white-space:nowrap}
+.age.a1{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.age.a2{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.age.a3{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.age.a4{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.wz{display:flex;gap:3px;flex-shrink:0}
+.wz span{flex:1;text-align:center;font-size:8.5px;font-weight:900;padding:4px 2px;border-radius:5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.wz span.on{background:var(--green);color:#fff}.wz span.done{background:#DDF3E6;color:#087443}
+.paperv.cd{border-top-color:#2563EB}.paperv.cd .box{border-color:#2563EB}
+.tot2{display:flex;justify-content:space-between;gap:6px;font-size:8.5px;font-weight:900;background:#F8FAFC;border:1px solid var(--card-border);border-radius:5px;padding:3px 6px;flex-shrink:0}
+.tot2 b{direction:ltr;unicode-bidi:isolate}
+.al{display:inline-block;height:6px;border-radius:3px;vertical-align:middle;background:#137A38}
+.al.r{background:#CBD5E1}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة «العهد» (المرحلة 5 · صرف عهدة لموظف · تسويتها بالمصروفات ورد الباقي للخزنة · FIFO · كشف العهدة)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل شاشات السندات والشيكات اللي خلصت — الفرق في طريقة الإدخال والعرض. اختار رقم (أو قول خد كذا من نموذج وكذا من نموذج). <b>كل الموظفين والمبالغ هنا وهمية</b> (مش من الأكسس)، وأكواد الحسابات والخزائن وأنواع المصروفات من اللي في البرنامج. النهارده في النماذج = <b class="ltr">31/05/2026</b>. <b>الحاجات الزرقا شغالة وكلها مربوطة ببعض</b>: اختار موظف، بدّل «صرف عهدة / تسوية»، غيّر السطور والمرتجع و«ترحيل ✔» ← رصيد الموظف والعهد المفتوحة والقيد بيتغيّروا في كل النماذج.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== البيانات (وهمية)
+const TODAY="2026-05-31";
+// الموظفين اللي عليهم دور «عهدة»: [الكود، الاسم، الوظيفة]
+const EMP=[["EMP-003","أحمد سامي","مندوب مشتريات"],["EMP-005","محمود عادل","فني تركيبات"],["EMP-007","كريم فتحي","سواق"],["EMP-009","ياسر حسن","مشرف موقع"]];
+// الخزائن والحسابات البنكية: [الكود، الاسم، الحساب، الرصيد قبل الحركات دي]
+const TRS=[["TRS-001","الخزينة الرئيسية","110101",200000],["TRS-002","خزينة النثريات","110102",15000],["BNK-001-01","البنك الأهلي — جاري","110201",446850]];
+// أنواع المصروفات (الجاهزة من الأكسس): [الكود، الاسم، الحساب]
+const XT=[["EXT-001","كهرباء","5203"],["EXT-002","إيجارات","5202"],["EXT-003","مصاريف عامة","5204"],["EXT-004","مصاريف نقل بضاعة","5301"],["EXT-005","مصاريف تليفونات","5207"],["EXT-006","إكراميات","5209"],["EXT-007","مياه","5203"],["EXT-008","سولار","5304"],["EXT-009","صيانة سيارات","5305"],["EXT-010","مواصلات","5208"]];
+const ACC={"1107":"عهد الموظفين","5202":"الإيجار","5203":"كهرباء ومياه","5204":"مصروفات نثرية","5207":"تليفونات وإنترنت","5208":"انتقالات ومواصلات","5209":"إكراميات وضيافة","5301":"نقل ومشال","5304":"وقود وسولار","5305":"صيانة سيارات"};
+TRS.forEach(t=>ACC[t[2]]=t[1]);
+const ORD=["","Itec-014","Itec-017","Itec-021"];
+// أنواع المستندات: [الاسم، اللون، الأيقونة]
+const KT={disb:["صرف عهدة","#2563EB","💼"],sett:["تسوية عهدة","#137A38","🧾"],ret:["رد نقدية","#0E7490","↩"]};
+const V={kind:"disb",emp:"EMP-003",sel:"",tab:"all",step:1,alf:"all",cd:"",from:"2026-04-01",to:TODAY,msg:"",
+ f:{date:TODAY,amt:5000,src:"TRS-002",desc:"عهدة مصاريف موقع",ord:""},
+ s:{date:TODAY,desc:"تسوية مصاريف الأسبوع",ret:0,retTo:"TRS-001"},
+ lines:[{xt:"EXT-010",desc:"مواصلات للموقع",ord:"Itec-017",amt:450},{xt:"EXT-008",desc:"سولار العربية",ord:"",amt:1200}]};
+let JV=120,SEQ=0,DR=0;const CNT={disb:0,sett:0};
+const D=[];
+// ===== المنطق
+const emp=id=>EMP.find(e=>e[0]===id);
+const tr=id=>TRS.find(t=>t[0]===id)||TRS[0];
+const xt=id=>XT.find(x=>x[0]===id)||XT[0];
+const total=d=>d.kind==="disb"?d.amt:d.lines.reduce((s,l)=>s+(+l.amt||0),0)+(+d.ret||0);
+const posted=(f=()=>true)=>D.filter(d=>d.st==="posted"&&f(d));
+function remaining(c){return c.amt-posted(s=>s.kind==="sett").reduce((a,s)=>a+s.alloc.filter(x=>x[0]===c.id).reduce((b,x)=>b+x[1],0),0);}
+const byDate=(a,b)=>a.date<b.date?-1:a.date>b.date?1:a.seq-b.seq;
+function openOf(e){return posted(d=>d.kind==="disb"&&d.emp===e).sort(byDate).map(d=>({d,rem:remaining(d)})).filter(x=>x.rem>0.004);}
+function fifo(e,amt){let left=amt;const A=[];for(const o of openOf(e)){if(left<=0.004)break;const t=Math.min(o.rem,left);A.push([o.d.id,t]);left-=t;}return [A,Math.max(0,left)];}
+const bal=e=>posted(d=>d.emp===e).reduce((s,d)=>s+(d.kind==="disb"?d.amt:-total(d)),0);
+const trBal=id=>tr(id)[3]-posted(d=>d.kind==="disb"&&d.src===id).reduce((s,d)=>s+d.amt,0)+posted(d=>d.kind==="sett"&&d.retTo===id).reduce((s,d)=>s+(+d.ret||0),0);
+const dtype=d=>d.kind==="disb"?"disb":d.lines.length?"sett":"ret";
+function doPost(d){d.st="posted";d.no=(d.kind==="disb"?"CD":"CS")+"-2026-"+String(++CNT[d.kind]).padStart(5,"0");d.jv="JV-2026-"+String(++JV).padStart(5,"0");
+  if(d.kind==="sett"){d.alloc=[];const [A,ex]=fifo(d.emp,total(d));d.alloc=A;d.excess=ex;}}
+function mkD(e,date,amt,src,desc,ord,draft){const d={id:"d"+(++SEQ),seq:SEQ,kind:"disb",emp:e,date,amt,src,desc,ord,st:"draft",no:"مسودة "+(++DR),alloc:[],lines:[],ret:0,excess:0};D.push(d);if(!draft)doPost(d);return d;}
+function mkS(e,date,lines,ret,retTo,desc,draft){const d={id:"d"+(++SEQ),seq:SEQ,kind:"sett",emp:e,date,lines:lines.map(l=>({xt:l[0],desc:l[1],ord:l[2],amt:l[3]})),ret,retTo,desc,st:"draft",no:"مسودة "+(++DR),alloc:[],excess:0};D.push(d);if(!draft)doPost(d);return d;}
+// الحركات الوهمية بالترتيب
+mkD("EMP-007","2026-03-20",4000,"TRS-001","سولار وصيانة العربية","");
+mkS("EMP-007","2026-04-02",[["EXT-008","سولار مارس","",2800]],0,"TRS-001","تسوية سولار مارس");
+mkD("EMP-003","2026-04-05",10000,"TRS-001","عهدة مشتريات أبريل","");
+mkS("EMP-003","2026-04-20",[["EXT-004","نقل كابلات للموقع","Itec-014",3200],["EXT-010","مواصلات","",650],["EXT-006","إكراميات تحميل","",300]],0,"TRS-001","تسوية أول أبريل");
+mkD("EMP-005","2026-05-02",5000,"TRS-002","عهدة تركيبات","Itec-017");
+mkD("EMP-003","2026-05-10",8000,"TRS-001","عهدة موقع Itec-017","Itec-017");
+mkS("EMP-005","2026-05-15",[["EXT-010","مواصلات الفنيين","Itec-017",1200],["EXT-003","مستلزمات تركيب صغيرة","Itec-017",900]],2900,"TRS-002","تسوية تركيبات + رد الباقي");
+mkS("EMP-003","2026-05-25",[["EXT-008","سولار","",2400],["EXT-009","صيانة العربية","",1850]],1000,"TRS-001","تسوية مايو");
+mkD("EMP-005","2026-05-28",3000,"TRS-002","عهدة تركيبات تانية","");
+mkD("EMP-009","2026-05-30",15000,"BNK-001-01","عهدة موقع Itec-021","Itec-021");
+mkS("EMP-009","2026-05-31",[["EXT-010","مواصلات العمال","Itec-021",700]],0,"TRS-001","تسوية أولى",true);
+
+// ===== أدوات
+const N=c=>`<span class="ltr">${c}</span>`;
+const mf=n=>(+n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const m0=n=>(+n||0).toLocaleString("en-US");
+const dd=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
+const dm=d=>N(d.slice(8)+"/"+d.slice(5,7));
+const doc=id=>D.find(d=>d.id===id);
+const eName=id=>emp(id)[1];
+const blv=v=>`<span class="bl ${v>=0?'bd':'bc'}">${mf(Math.abs(v))}<small>${Math.abs(v)<.005?"":v>0?"عليه":"ليه عندنا"}</small></span>`;
+const kB=d=>{const k=dtype(d);return `<span class="st" style="background:${KT[k][1]}">${KT[k][2]} ${KT[k][0]}</span>`;};
+const sB=d=>d.st==="posted"?'<span class="bdg ok">مرحّل</span>':'<span class="bdg x">مسودة</span>';
+const ageCat=a=>a<=7?"a1":a<=30?"a2":a<=60?"a3":"a4";
+const ageB=d=>{const a=dd(d.date,TODAY);return `<span class="age ${ageCat(a)}">${a} يوم</span>`;};
+const oldest=e=>{const O=openOf(e);return O.length?O[0].d:null;};
+function cur(){let d=doc(V.sel);if(!d||d.emp!==V.emp){d=D.filter(x=>x.emp===V.emp).slice(-1)[0];V.sel=d?d.id:"";}return d;}
+// القيود
+function jeOf(d){const n=eName(d.emp);if(d.kind==="disb")return [["1107",n,d.amt,0],[tr(d.src)[2],"",0,d.amt]];
+  const L=d.lines.filter(l=>+l.amt>0).map(l=>[xt(l.xt)[2],[xt(l.xt)[1],l.ord].filter(Boolean).join(" · "),+l.amt,0]);if(+d.ret>0)L.push([tr(d.retTo)[2],"المرتجع",+d.ret,0]);L.push(["1107",n,0,total(d)]);return L;}
+const jeTable=(L,t,empty)=>{const a=L.reduce((s,l)=>s+l[2],0),b=L.reduce((s,l)=>s+l[3],0);
+  if(!L.length||!(a>0))return `<div class="je"><h6><span>📒 ${t}</span></h6><div class="hint">${empty||"اكتب المبلغ ← القيد بيظهر هنا"}</div></div>`;
+  return `<div class="je"><h6><span>📒 ${t}</span><span class="${Math.abs(a-b)<.005?'ok-line':'bad-line'}">${Math.abs(a-b)<.005?'✔ متوازن':'✖ مش متوازن'}</span></h6><table class="tbl"><tr><th>الحساب</th><th>البُعد / البيان</th><th>مدين</th><th>دائن</th></tr>${L.map(l=>`<tr><td>${N(l[0])} ${ACC[l[0]]}</td><td>${l[1]}</td><td class="n">${l[2]?mf(l[2]):""}</td><td class="n">${l[3]?mf(l[3]):""}</td></tr>`).join("")}</table></div>`;};
+// المستند الجديد من الفورم
+const newDoc=()=>V.kind==="disb"?{kind:"disb",emp:V.emp,amt:+V.f.amt||0,src:V.f.src,lines:[],ret:0}:{kind:"sett",emp:V.emp,lines:V.lines,ret:+V.s.ret||0,retTo:V.s.retTo};
+const newJe=()=>jeTable(jeOf(newDoc()),V.kind==="disb"?"القيد اللي هيتعمل مع ترحيل الصرف":"القيد اللي هيتعمل مع ترحيل التسوية");
+function vErr(){const E=[],W=[];
+  if(V.kind==="disb"){const a=+V.f.amt||0;if(!(a>0))E.push("المبلغ لازم أكبر من صفر");
+    const b=trBal(V.f.src);if(a>b)W.push(`رصيد ${tr(V.f.src)[1]} (${m0(b)}) مش مكفي للمبلغ ده — تحذير بس`);}
+  else{const L=V.lines;if(!L.length&&!(+V.s.ret>0))E.push("لازم سطر مصروف واحد على الأقل أو مبلغ مرتجع للخزنة");
+    L.forEach((l,i)=>{if(!(+l.amt>0))E.push(`السطر ${i+1}: المبلغ لازم أكبر من صفر`);});
+    const t=total(newDoc()),b=bal(V.emp);
+    if(t>0&&b<=0.004)W.push(`${eName(V.emp)} مالوش عهدة مفتوحة — التسوية كلها (${m0(t)}) هتبقى «ليه عندنا»`);
+    else if(t-b>0.004)W.push(`التسوية (${m0(t)}) أكبر من العهدة المفتوحة (${m0(b)}) بـ ${m0(t-b)} — الزيادة صرفها من جيبه وهتبقى «ليه عندنا»`);}
+  return [E,W];}
+const msgs=()=>{const [E,W]=vErr();return (V.msg?`<div class="msg ok">${V.msg}</div>`:"")+E.map(e=>`<div class="msg bad">✖ ${e}</div>`).join("")+W.map(w=>`<div class="msg wr">⚠️ ${w}</div>`).join("");};
+// عناصر الفورم
+const fld=(l,w)=>`<div class="f"><label>${l}</label>${w}</div>`;
+const lock=(l,v)=>`<div class="f"><label>${l}</label><i class="lock">${v}</i></div>`;
+const selEmp=w=>`<select class="lv" data-k="emp" ${w?`style="width:${w}px;flex:none"`:""}>${EMP.map(e=>`<option value="${e[0]}" ${V.emp===e[0]?"selected":""}>${e[0]} — ${e[1]}</option>`).join("")}</select>`;
+const selTr=(attr,val,w)=>`<select class="lv" ${attr} ${w?`style="width:${w}px;flex:none"`:""}>${TRS.map(t=>`<option value="${t[0]}" ${val===t[0]?"selected":""}>${t[1]} (${m0(trBal(t[0]))})</option>`).join("")}</select>`;
+const selOrd=(attr,val)=>`<select class="lv" ${attr}>${ORD.map(o=>`<option value="${o}" ${val===o?"selected":""}>${o||"— من غير —"}</option>`).join("")}</select>`;
+const inF=(g,k,t="text",x="")=>`<input class="lv" data-${g}="${k}" type="${t}" value="${V[g][k]}" ${x}>`;
+const nextNo=k=>N((k==="disb"?"CD":"CS")+"-2026-"+String(CNT[k]+1).padStart(5,"0"))+" (مع الترحيل)";
+function formDisb(t){const f=V.f;return `<div class="gb"><span class="t">${t||"💼 صرف عهدة جديدة"}</span>${lock("رقم المستند",nextNo("disb"))}${fld("الموظف",selEmp())}${fld("التاريخ",inF("f","date","date"))}${fld("من خزنة / بنك",selTr('data-f="src"',f.src))}${fld("المبلغ",inF("f","amt","number",'min="0" step="500" style="direction:ltr;text-align:left"'))}${fld("أمر التوريد",selOrd('data-f="ord"',f.ord))}${fld("البيان",inF("f","desc"))}</div>`;}
+function linesTbl(){const L=V.lines;return `<table class="tbl"><tr><th>م</th><th>نوع المصروف</th><th>البيان</th><th>أمر التوريد</th><th>المبلغ</th><th></th></tr>${L.map((l,i)=>`<tr><td>${i+1}</td><td><select class="lv" data-l="${i}:xt">${XT.map(x=>`<option value="${x[0]}" ${l.xt===x[0]?"selected":""}>${x[1]}</option>`).join("")}</select></td><td><input class="lv" data-l="${i}:desc" value="${l.desc}" style="width:100%"></td><td style="width:62px">${selOrd(`data-l="${i}:ord"`,l.ord)}</td><td style="width:62px"><input class="inl" type="number" min="0" data-l="${i}:amt" value="${l.amt}"></td><td><span class="mini" data-dell="${i}" title="شيل السطر">✕</span></td></tr>`).join("")}<tr class="tot"><td colspan="4"><span class="mini" data-addl="1">+ سطر</span> إجمالي المصروفات</td><td class="n">${mf(L.reduce((s,l)=>s+(+l.amt||0),0))}</td><td></td></tr></table>`;}
+function retBox(){const s=V.s;return `<div class="f"><label>رد للخزنة</label><input class="lv" data-s="ret" type="number" min="0" step="100" value="${s.ret}" style="direction:ltr;width:70px;flex:none"><label style="width:auto">في</label>${selTr('data-s="retTo"',s.retTo)}</div>`;}
+function totBar(){const t=total({kind:"sett",lines:V.lines,ret:+V.s.ret||0}),b=bal(V.emp),r=b-t;return `<div class="tot2"><span>العهدة المفتوحة <b>${m0(b)}</b></span><span>− التسوية <b>${m0(t)}</b></span><span>= الباقي عليه ${blv(r)}</span></div>`;}
+function formSett(t){return `<div class="gb"><span class="t">${t||"🧾 تسوية عهدة جديدة"}</span>${lock("رقم المستند",nextNo("sett"))}${fld("الموظف",selEmp())}${fld("التاريخ",inF("s","date","date"))}${fld("البيان",inF("s","desc"))}<div class="sec2">المصروفات اللي صرفها (كل سطر على حساب نوعه)</div>${linesTbl()}<div class="sec2">الفلوس اللي رجّعها</div>${retBox()}</div>${totBar()}`;}
+const formK=()=>V.kind==="disb"?formDisb():formSett();
+const tbF=(kk)=>`<div class="tb"><span class="bt b-new">جديد</span><span class="bt b-edit">تعديل</span><span class="bt b-draft" data-add="draft" ${kk?`data-kk="${kk}"`:""} style="cursor:pointer">حفظ مسودة</span><span class="bt b-post" data-add="post" ${kk?`data-kk="${kk}"`:""} style="cursor:pointer">ترحيل ✔</span><span class="bt b-unpost">إلغاء الترحيل</span><span class="bt b-del">حذف</span><span class="bt b-ref">تحديث</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span></div>`;
+const kindT=w=>`<div class="tg2" style="width:${w||180}px"><span class="cd ${V.kind==='disb'?'on':''}" data-kind="disb">💼 صرف عهدة</span><span class="cs ${V.kind==='sett'?'on':''}" data-kind="sett">🧾 تسوية</span></div>`;
+function win(inner,title){return `<div class="win"><div class="wt"><span>${title||"💼 العهد — A-H CODE"}</span><span>_ ▢ ✕</span></div><div class="body">${inner}</div></div>`;}
+const kp=(t,v,k="",x="")=>`<div class="kp ${k}" ${x}><small>${t}</small><b>${v}</b></div>`;
+function empCard(e){const o=oldest(e),O=openOf(e);return `<div class="hdr" style="border-right-color:${bal(e)>0?'#2563EB':'#94A3B8'}"><b>${eName(e)}</b> <span class="hint" style="display:inline">${e} · ${emp(e)[2]}</span><div class="p">رصيد العهدة: ${blv(bal(e))} · ${O.length} عهدة مفتوحة${o?` · أقدم واحدة ${N(o.no)} من ${ageB(o)}`:""}</div></div>`;}
+function openTbl(e,A){const O=openOf(e);if(!O.length)return `<div class="hint">مفيش عهد مفتوحة على ${eName(e)}.</div>`;
+  return `<table class="tbl"><tr><th>الصرف</th><th>التاريخ</th><th>المبلغ</th><th>اتسوّى</th><th>الباقي</th><th>العمر</th>${A?"<th>التسوية دي بتقفل</th>":""}</tr>${O.map(o=>{const x=A?A.find(a=>a[0]===o.d.id):null;return `<tr><td>${N(o.d.no)}</td><td>${dm(o.d.date)}</td><td class="n">${m0(o.d.amt)}</td><td class="n">${m0(o.d.amt-o.rem)}</td><td class="n"><b>${m0(o.rem)}</b></td><td>${ageB(o.d)}</td>${A?`<td class="n" style="color:#087443;font-weight:900">${x?m0(x[1])+(Math.abs(x[1]-o.rem)<.005?" ✔ تتقفل":""):"—"}</td>`:""}</tr>`;}).join("")}</table>`;}
+const fifoSett=()=>fifo(V.emp,total({kind:"sett",lines:V.lines,ret:+V.s.ret||0}));
+function docList(f=()=>true,o={}){const L=D.filter(d=>(o.all||d.emp===V.emp)&&f(d)).sort(byDate).reverse();
+  return `<table class="tbl"><tr><th>النوع</th><th>الرقم</th><th>التاريخ</th>${o.all?"<th>الموظف</th>":""}<th>المبلغ</th><th>البيان</th><th>الحالة</th></tr>${L.map(d=>`<tr class="${V.sel===d.id?'sel':''}" data-sel="${d.id}" style="cursor:pointer"><td>${kB(d)}</td><td><b class="ltr">${d.no}</b></td><td>${dm(d.date)}</td>${o.all?`<td>${eName(d.emp)}</td>`:""}<td class="n">${mf(total(d))}</td><td>${d.desc}</td><td>${sB(d)}${d.st==="draft"?` <span class="btn-s" data-post="${d.id}">ترحيل</span>`:""}</td></tr>`).join("")||`<tr><td colspan="7">مفيش مستندات</td></tr>`}</table>`;}
+function docHdr(d){if(!d)return "";const k=dtype(d);return `<div class="hdr" style="border-right-color:${KT[k][1]}"><b>${N(d.no)} · ${KT[k][0]} · ${mf(total(d))} ج.م</b> ${sB(d)}<div class="p">${eName(d.emp)} · ${dm(d.date)} · ${d.kind==="disb"?"من "+tr(d.src)[1]+(d.ord?" · أمر التوريد "+N(d.ord):""):`${d.lines.length} سطر مصروفات${+d.ret?" · رجّع "+m0(d.ret)+" لـ "+tr(d.retTo)[1]:""}`}${d.st==="posted"?" · القيد "+N(d.jv):""}${d.kind==="sett"&&d.alloc.length?" · قفلت: "+d.alloc.map(a=>N(doc(a[0]).no)+" ("+m0(a[1])+")").join(" + "):""}${d.excess>0.004?` · <b style="color:#1D4ED8">ليه عندنا ${m0(d.excess)}</b>`:""}</div></div>`;}
+const docJe=d=>d?jeTable(jeOf(d),d.st==="posted"?`قيد ${d.no} · ${d.jv}`:"القيد اللي هيتعمل مع الترحيل"):"";
+// تشغيل جزء بنوع «تسوية» مؤقتاً (للنماذج اللي هي تسوية بس)
+function asSett(fn){const k=V.kind;V.kind="sett";try{return fn();}finally{V.kind=k;}}
+
+// 1) الكلاسيك
+function m1(){return win(tbF()+`<div class="content"><div class="col" style="width:46%;gap:3px"><div class="flt">${kindT()}</div><div class="scroll">${formK()}</div>${msgs()}${newJe()}</div><div class="col" style="flex:1;gap:4px">${empCard(V.emp)}<div class="sec2">العهد المفتوحة (التسوية بتقفل الأقدم الأول)</div>${openTbl(V.emp,V.kind==="sett"?fifoSett()[0]:null)}<div class="sec2">مستندات ${eName(V.emp)}</div><div class="scroll">${docList()}</div></div></div>`);}
+
+// 2) زي الأكسس: الموظف ← جدولين (العهد · التسويات)
+function m2(){const e=V.emp;const ds=D.filter(d=>d.emp===e&&d.kind==="disb").sort(byDate),ss=D.filter(d=>d.emp===e&&d.kind==="sett").sort(byDate);
+  const P=posted(d=>d.emp===e);const sd=P.filter(d=>d.kind==="disb").reduce((s,d)=>s+d.amt,0),sx=P.filter(d=>d.kind==="sett").reduce((s,d)=>s+d.lines.reduce((a,l)=>a+(+l.amt||0),0),0),sr=P.filter(d=>d.kind==="sett").reduce((s,d)=>s+(+d.ret||0),0);
+  const c=cur();
+  return win(`<div class="tb"><span class="bt b-new">جديد</span><span class="bt b-save">حفظ</span><span class="bt b-del">حذف</span><span class="bt b-ref">تحديث</span><span class="bt b-exit">خروج</span></div><div class="content" style="flex-direction:column;gap:4px"><div class="flt"><label>الموظف</label>${selEmp(190)}<span class="hint" style="margin:0">زي <span class="ltr">F3hoda</span> + <span class="ltr">FTASADD</span> في شاشة واحدة</span></div><div class="kpis">${kp("اتصرف له",m0(sd),"b")}${kp("صرف مصاريف",m0(sx),"g")}${kp("رجّع للخزنة",m0(sr),"g")}${kp("الباقي عليه",m0(sd-sx-sr),bal(e)>0?"r":"")}</div><div style="display:flex;gap:6px;flex:1;min-height:0"><div class="col" style="flex:1"><div class="sec2">💼 العهد (زي Tb3hoda)</div><div class="scroll"><table class="tbl"><tr><th>التاريخ</th><th>الرقم</th><th>المبلغ</th><th>البيان</th><th>الباقي</th></tr>${ds.map(d=>`<tr data-sel="${d.id}" class="${V.sel===d.id?'sel':''}" style="cursor:pointer"><td>${dm(d.date)}</td><td>${N(d.no)}</td><td class="n">${m0(d.amt)}</td><td>${d.desc}</td><td class="n">${d.st==="posted"?m0(remaining(d)):"—"}</td></tr>`).join("")||'<tr><td colspan="5">مفيش</td></tr>'}</table></div></div><div class="col" style="flex:1.3"><div class="sec2">🧾 التسويات (زي TbTAswia) — المصروف + المرتجع</div><div class="scroll"><table class="tbl"><tr><th>التاريخ</th><th>الرقم</th><th>المصروف</th><th>المرتجع</th><th>البيان</th></tr>${ss.map(d=>`<tr data-sel="${d.id}" class="${V.sel===d.id?'sel':''}" style="cursor:pointer"><td>${dm(d.date)}</td><td>${N(d.no)}</td><td class="n">${m0(d.lines.reduce((a,l)=>a+(+l.amt||0),0))}</td><td class="n">${m0(d.ret)}</td><td>${d.desc}</td></tr>`).join("")||'<tr><td colspan="5">مفيش</td></tr>'}</table></div></div></div>${docHdr(c)}<div class="hint">الفرق عن الأكسس: التسوية مقسومة على <b>أنواع المصروفات</b> (كل نوع على حسابه)، وكل مستند بقيد، والرصيد من دفتر اليومية ببُعد الموظف.</div></div>`,"💼 عهد الموظفين — زي F3hoda — A-H CODE");}
+
+// 3) لوحة الموظفين (كروت)
+function m3(){const cards=EMP.map(e=>{const b=bal(e[0]),o=oldest(e[0]);const given=posted(d=>d.emp===e[0]&&d.kind==="disb").reduce((s,d)=>s+d.amt,0);const pct=given?Math.min(100,Math.round((given-Math.max(0,b))/given*100)):0;const age=o?dd(o.date,TODAY):0;
+  return `<div class="ec ${V.emp===e[0]?'sel':''} ${b<=0.004?'zero':age>30?'old':''}" data-emp="${e[0]}"><div class="tp"><span class="av ${b<=0.004?'off':''}">${e[1].split(" ").map(w=>w[0]).join("")}</span><span><b>${e[1]}</b><span class="hint" style="margin:0">${e[2]}</span></span></div><div style="display:flex;justify-content:space-between;align-items:center"><span class="v">${m0(Math.abs(b))}</span>${b<-.004?'<span class="bdg pj">ليه عندنا</span>':o?ageB(o):'<span class="bdg x">مفيش عهدة</span>'}</div><div class="hint" style="margin:0">اتسوّى ${pct}% <span class="pg"><span style="width:${pct}%"></span></span> · ${openOf(e[0]).length} مفتوحة</div></div>`;}).join("");
+  const tot=EMP.reduce((s,e)=>s+Math.max(0,bal(e[0])),0);
+  return win(`<div class="tb"><span class="bt b-new" data-kind="disb" style="cursor:pointer">💼 صرف عهدة للمحدد</span><span class="bt b-post" data-kind="sett" style="cursor:pointer">🧾 تسوية للمحدد</span><span class="bt b-ref">تحديث</span><span class="bt b-exit">خروج</span><span class="mode" style="margin-right:auto">إجمالي العهد المفتوحة ${N(m0(tot))}</span></div><div class="content" style="flex-direction:column;gap:4px"><div class="cards" style="grid-template-columns:repeat(4,1fr)">${cards}</div>${empCard(V.emp)}<div class="scroll">${openTbl(V.emp)}<div class="sec2">آخر الحركات</div>${docList()}</div><div class="hint">الكارت الأحمر = أقدم عهدة مفتوحة عدّى عليها أكتر من 30 يوم · الرمادي = مفيش عهدة. دوس كارت ← تفاصيله تحت، والزرارين فوق بيبدّلوا الصرف / التسوية للموظف ده (في النموذج 1).</div></div>`,"👥 لوحة العهد بالموظفين — A-H CODE");}
+
+// 4) مستند التسوية بالسطور + FIFO
+function m4(){return asSett(()=>{const [A,ex]=fifoSett();const [E,W]=vErr();
+  return win(tbF("sett")+`<div class="content"><div class="col" style="width:55%;gap:3px"><div class="scroll"><div class="gb"><span class="t">🧾 تسوية عهدة — ${nextNo("sett")}</span><div class="g2">${fld("الموظف",selEmp())}${fld("التاريخ",inF("s","date","date"))}</div>${fld("البيان",inF("s","desc"))}</div><div class="sec2">المصروفات</div>${linesTbl()}<div class="sec2">المرتجع</div>${retBox()}</div>${totBar()}${V.msg?`<div class="msg ok">${V.msg}</div>`:""}${E.map(e=>`<div class="msg bad">✖ ${e}</div>`).join("")}${W.map(w=>`<div class="msg wr">⚠️ ${w}</div>`).join("")}</div><div class="col" style="flex:1;gap:4px"><div class="sec2">FIFO — التسوية دي هتقفل إيه (الأقدم الأول)</div>${openTbl(V.emp,A)}${ex>0.004?`<div class="msg wr">⚠️ ${m0(ex)} زيادة مالهاش عهدة ← «ليه عندنا»</div>`:""}<div class="scroll">${newJe()}</div></div></div>`,"🧾 تسوية عهدة بالسطور — A-H CODE");});}
+
+// 5) تبويب لكل نوع
+function m5(){const T=[["all","الكل",()=>true,"var(--green)"],["disb","💼 صرف",d=>dtype(d)==="disb",KT.disb[1]],["sett","🧾 تسوية",d=>dtype(d)==="sett",KT.sett[1]],["ret","↩ رد نقدية",d=>dtype(d)==="ret",KT.ret[1]],["draft","مسودات",d=>d.st==="draft","#64748B"]];
+  const t=T.find(x=>x[0]===V.tab)||T[0];const L=D.filter(t[2]);let d=doc(V.sel);if(!d||!t[2](d))d=L.slice(-1)[0];
+  return win(tbF()+`<div class="content" style="flex-direction:column;gap:3px"><div class="tabs2">${T.map(x=>`<span class="${V.tab===x[0]?'on':''}" data-tab="${x[0]}" style="${V.tab===x[0]?'background:'+x[3]:''}">${x[1]}<em>${D.filter(x[2]).length}</em></span>`).join("")}</div><div style="display:flex;gap:6px;flex:1;min-height:0;border-top:3px solid ${t[3]};padding-top:4px"><div class="col" style="width:58%"><div class="flt"><span class="chipf on">مارس – مايو 2026</span><span class="chipf">كل الموظفين</span><span class="hint" style="margin:0">مجموع التبويب <b class="ltr">${m0(L.reduce((s,x)=>s+total(x),0))}</b></span></div><div class="scroll">${docList(t[2],{all:true})}</div></div><div class="col" style="flex:1;gap:4px">${docHdr(d)}<div class="scroll">${docJe(d)}</div></div></div></div>`,"💼 العهد — تبويب لكل نوع — A-H CODE");}
+
+// 6) كشف العهدة (mandob4)
+function m6(){const e=V.emp;const P=posted(d=>d.emp===e).sort(byDate);const op=P.filter(d=>d.date<V.from).reduce((s,d)=>s+(d.kind==="disb"?d.amt:-total(d)),0);const L=P.filter(d=>d.date>=V.from&&d.date<=V.to);
+  let r=op,dr=0,cr=0;const rows=L.map(d=>{const a=d.kind==="disb"?d.amt:0,c=d.kind==="sett"?total(d):0;r+=a-c;dr+=a;cr+=c;return `<tr data-sel="${d.id}" style="cursor:pointer" class="${V.sel===d.id?'sel':''}"><td>${dm(d.date)}</td><td>${N(d.no)}</td><td>${d.kind==="disb"?"صرف عهدة — "+d.desc:"تسوية — "+d.lines.map(l=>xt(l.xt)[1]).join(" + ")+(+d.ret?" + رد "+m0(d.ret):"")}</td><td class="n">${a?mf(a):""}</td><td class="n">${c?mf(c):""}</td><td class="n">${blv(r)}</td></tr>`;}).join("");
+  return win(`<div class="tb"><span class="bt b-ref">عرض ▶</span><span class="bt b-exp">تصدير إكسل</span><span class="bt b-exit">خروج</span></div><div class="content" style="flex-direction:column;gap:4px"><div class="flt"><label>الموظف</label>${selEmp(170)}<label>من</label><input type="date" class="lv" data-k="from" value="${V.from}" style="width:96px;flex:none"><label>إلى</label><input type="date" class="lv" data-k="to" value="${V.to}" style="width:96px;flex:none"></div><div class="scroll"><table class="tbl"><tr><th>التاريخ</th><th>المستند</th><th>البيان</th><th>مدين (اتصرف له)</th><th>دائن (سوّى / رجّع)</th><th>الرصيد</th></tr><tr class="sec"><td colspan="5">رصيد سابق (قبل ${dm(V.from)})</td><td class="n">${blv(op)}</td></tr>${rows||'<tr><td colspan="6">مفيش حركة في الفترة</td></tr>'}<tr class="tot"><td colspan="3">إجمالي حركة الفترة</td><td class="n">${mf(dr)}</td><td class="n">${mf(cr)}</td><td></td></tr><tr class="sec"><td colspan="5">الرصيد آخر المدة</td><td class="n">${blv(r)}</td></tr></table></div><div class="hint">ده نفس «كشف الحساب» بنوع «عهدة موظف» اللي اتعمل في المرحلة 4 (من دفتر اليومية — المرحّل بس) — هنا جوه شاشة العهد كتبويب، ودبل كليك يفتح المستند.</div></div>`,"📄 كشف عهدة موظف — زي mandob4 — A-H CODE");}
+
+// 7) العهدة الواحدة على خط زمني
+function m7(){const C=posted(d=>d.kind==="disb"&&d.emp===V.emp).sort(byDate);let c=doc(V.cd);if(!c||c.emp!==V.emp||c.kind!=="disb"||c.st!=="posted")c=C.find(x=>remaining(x)>0)||C[C.length-1];
+  if(!c)return win(`<div class="content"><div class="col" style="flex:1"><div class="flt"><label>الموظف</label>${selEmp(170)}</div><div class="hint">مفيش عهد مرحّلة على ${eName(V.emp)}.</div></div></div>`,"🧭 دورة العهدة — A-H CODE");
+  const S=posted(s=>s.kind==="sett"&&s.alloc.some(a=>a[0]===c.id)).sort(byDate);let left=c.amt;
+  const items=[`<div class="tli"><span class="dot" style="background:#2563EB"></span><div class="cd"><div style="display:flex;justify-content:space-between"><b>💼 صرف ${N(c.no)} من ${tr(c.src)[1]}</b><span>${dm(c.date)} · <b class="ltr" style="color:#2563EB">${c.jv}</b></span></div><div class="hint" style="margin:1px 0 0">مدين ${N("1107")} عهد الموظفين (${eName(c.emp)}) ${N(m0(c.amt))} · دائن ${N(tr(c.src)[2])} ${tr(c.src)[1]}</div></div></div>`].concat(S.map(s=>{const a=s.alloc.find(x=>x[0]===c.id)[1];left-=a;return `<div class="tli"><span class="dot" style="background:#137A38"></span><div class="cd"><div style="display:flex;justify-content:space-between"><b>🧾 ${N(s.no)} سوّى منها ${N(m0(a))}${s.alloc.length>1?` <span class="hint" style="display:inline">(تسوية ${m0(total(s))} اتوزعت على ${s.alloc.length} عهد)</span>`:""}</b><span>${dm(s.date)} · <b class="ltr" style="color:#2563EB">${s.jv}</b></span></div><div class="hint" style="margin:1px 0 0">${s.lines.map(l=>xt(l.xt)[1]+" "+m0(l.amt)).join(" · ")}${+s.ret?" · رجّع للخزنة "+m0(s.ret):""} — الباقي من العهدة: <b class="ltr">${m0(left)}</b></div></div></div>`;}));
+  const rem=remaining(c);items.push(`<div class="tli nx"><span class="dot" style="background:${rem>0?'#F59E0B':'#137A38'}"></span><div class="cd">${rem>0?`⏳ لسه <b class="ltr">${m0(rem)}</b> مفتوحة من ${ageB(c)} — <span class="acb" data-kind="sett">🧾 سوّي الباقي</span>`:`✔ العهدة دي اتقفلت خالص`}</div></div>`);
+  return win(`<div class="content" style="flex-direction:column;gap:4px"><div class="flt"><label>الموظف</label>${selEmp(150)}<label>العهدة</label><select class="lv" data-k="cd" style="width:210px;flex:none">${C.map(x=>`<option value="${x.id}" ${x.id===c.id?"selected":""}>${x.no} · ${m0(x.amt)} · ${remaining(x)>0?"باقي "+m0(remaining(x)):"اتقفلت"}</option>`).join("")}</select></div><div style="display:flex;gap:6px;align-items:center;flex-shrink:0"><span class="hint" style="margin:0">اتسوّى</span><span class="al" style="width:${Math.round((c.amt-rem)/c.amt*260)}px"></span><span class="al r" style="width:${Math.round(rem/c.amt*260)}px"></span><b class="ltr">${Math.round((c.amt-rem)/c.amt*100)}%</b></div><div class="scroll"><div class="tl">${items.join("")}</div></div><div class="hint">كل عهدة بتتقفل من التسويات بالترتيب (FIFO) — والتسوية الواحدة ممكن تقفل عهدتين.</div></div>`,`🧭 دورة العهدة ${c.no} — A-H CODE`);}
+
+// 8) معالج خطوة بخطوة للتسوية
+function m8(){return asSett(()=>{const st=V.step;const S=[[1,"1. الموظف"],[2,"2. المصروفات"],[3,"3. المرتجع"],[4,"4. المراجعة والترحيل"]];
+  const body=st===1?`<div class="g2">${fld("الموظف",selEmp())}${fld("التاريخ",inF("s","date","date"))}</div>${fld("البيان",inF("s","desc"))}${empCard(V.emp)}<div class="sec2">العهد المفتوحة</div>${openTbl(V.emp)}`
+   :st===2?`<div class="hint">اكتب كل مصروف في سطر واختار نوعه (من «أنواع المصروفات») — الحساب بيتجاب من النوع.</div>${linesTbl()}${totBar()}`
+   :st===3?`<div class="hint">لو فاضل معاه فلوس ورجّعها، اكتبها هنا واختار الخزنة اللي استلمتها.</div><div class="gb"><span class="t">↩ المرتجع</span>${retBox()}</div>${totBar()}`
+   :`${msgs()}<div class="sec2">هتقفل (FIFO)</div>${openTbl(V.emp,fifoSett()[0])}${newJe()}`;
+  return win(`<div class="content" style="flex-direction:column;gap:4px"><div class="wz">${S.map(s=>`<span class="${s[0]===st?'on':s[0]<st?'done':''}" data-step="${s[0]}">${s[1]}</span>`).join("")}</div><div class="scroll">${body}</div><div class="nav"><span class="mini" data-step="${Math.max(1,st-1)}">› السابق</span><span class="hint" style="margin:0 8px">خطوة ${st} من 4</span>${st<4?`<span class="mini" data-step="${st+1}">التالي ‹</span>`:`<span class="btn-s" data-add="post" data-kk="sett">ترحيل التسوية ✔</span>`}</div></div>`,"🧾 تسوية عهدة — خطوة بخطوة — A-H CODE");});}
+
+// 9) أعمار العهد والتنبيهات
+function m9(){const O=EMP.flatMap(e=>openOf(e[0]).map(o=>({e:e[0],d:o.d,rem:o.rem,age:dd(o.d.date,TODAY)})));const cats=[["a1","0 – 7 أيام","g"],["a2","8 – 30 يوم","b"],["a3","31 – 60 يوم","o"],["a4","أكتر من 60","r"]];
+  const L=O.filter(x=>V.alf==="all"||ageCat(x.age)===V.alf).sort((a,b)=>b.age-a.age);
+  return win(`<div class="content" style="flex-direction:column;gap:4px"><div class="kpis">${cats.map(c=>{const A=O.filter(x=>ageCat(x.age)===c[0]);return kp(`${c[1]} (${A.length})`,m0(A.reduce((s,x)=>s+x.rem,0)),c[2]+(V.alf===c[0]?" sel":""),`data-alf="${c[0]}" style="cursor:pointer"`);}).join("")}</div><div class="flt"><span class="chipf ${V.alf==='all'?'on':''}" data-alf="all">كل المفتوح (${O.length}) — ${N(m0(O.reduce((s,x)=>s+x.rem,0)))}</span><span class="hint" style="margin:0">العمر من تاريخ الصرف لحد النهارده · الأقدم فوق</span></div><div class="scroll"><table class="tbl"><tr><th>الموظف</th><th>العهدة</th><th>التاريخ</th><th>المبلغ</th><th>الباقي</th><th>العمر</th><th>المطلوب</th></tr>${L.map(x=>`<tr data-emp="${x.e}" style="cursor:pointer" class="${V.emp===x.e?'sel':''}"><td>${eName(x.e)}</td><td>${N(x.d.no)}</td><td>${dm(x.d.date)}</td><td class="n">${m0(x.d.amt)}</td><td class="n"><b>${m0(x.rem)}</b></td><td><span class="age ${ageCat(x.age)}">${x.age} يوم</span></td><td>${x.age>30?"⛔ اطلب التسوية":x.age>7?"فكّره يسوّي":"لسه جديدة"}</td></tr>`).join("")||'<tr><td colspan="7">مفيش عهد مفتوحة</td></tr>'}</table></div><div class="msg wr">🔔 أول ما البرنامج يتفتح: «فيه ${O.filter(x=>x.age>30).length} عهدة مفتوحة أكتر من 30 يوم» — ونفس الكروت في «شاشة المعلومات» بعدين. (مفيش حد أقصى للعهدة — ردك في شاشة الموظفين.)</div></div>`,"⏳ أعمار العهد المفتوحة — A-H CODE");}
+
+// 10) الورقة: إيصال استلام عهدة / إقرار تسوية
+const ONES=["","واحد","اتنين","تلاتة","أربعة","خمسة","ستة","سبعة","تمانية","تسعة","عشرة","حداشر","اتناشر","تلتاشر","أربعتاشر","خمستاشر","ستاشر","سبعتاشر","تمنتاشر","تسعتاشر"];
+const TENS=["","","عشرين","تلاتين","أربعين","خمسين","ستين","سبعين","تمانين","تسعين"];
+const HUN=["","مية","ميتين","تلتمية","ربعمية","خمسمية","ستمية","سبعمية","تمنمية","تسعمية"];
+function w999(n){const h=Math.floor(n/100),r=n%100;const p=[];if(h)p.push(HUN[h]);if(r<20){if(r)p.push(ONES[r]);}else{const o=r%10;p.push((o?ONES[o]+" و":"")+TENS[Math.floor(r/10)]);}return p.join(" و");}
+function words(n){n=Math.floor(n);if(!n)return "صفر";const m=Math.floor(n/1e6),t=Math.floor(n%1e6/1000),r=n%1000;const p=[];
+  if(m)p.push(m===1?"مليون":m===2?"مليونين":w999(m)+" مليون");if(t)p.push(t===1?"ألف":t===2?"ألفين":t<=10?w999(t)+" آلاف":w999(t)+" ألف");if(r)p.push(w999(r));return p.join(" و")+" جنيه مصري لا غير";}
+function m10(){const e=emp(V.emp),dsb=V.kind==="disb";const t=total(newDoc());
+  const paper=dsb?`<div class="paperv cd"><div class="ph"><span class="lg">ITEC</span><h4>إيصال استلام عهدة نقدية</h4><span class="hint" style="margin:0">${nextNo("disb")}<br>${dm(V.f.date)}</span></div><div class="ln"><label>استلمت أنا</label><span class="v"><b>${e[1]}</b> (${e[0]} · ${e[2]})</span></div><div class="ln"><label>مبلغ وقدره</label><span class="v"><span class="box" style="display:inline-block">${mf(t)}</span></span></div><div class="ln"><label>بالحروف</label><span class="v" style="font-weight:900">${words(t)}</span></div><div class="ln"><label>من</label><span class="v">${selTr('data-f="src"',V.f.src,170)}</span></div><div class="ln"><label>المبلغ</label><span class="v"><input class="lv" data-f="amt" type="number" min="0" step="500" value="${V.f.amt}" style="width:90px;direction:ltr"></span></div><div class="ln"><label>الغرض</label><span class="v">${inF("f","desc")}</span></div><div class="hint">وده على سبيل العهدة، وأتعهد بتسويتها بالمستندات أو ردّها للخزنة.</div><div class="sig"><span>توقيع المستلم</span><span>أمين الخزينة</span><span>المدير المالي</span></div></div>`
+  :`<div class="paperv"><div class="ph"><span class="lg">ITEC</span><h4>إقرار تسوية عهدة</h4><span class="hint" style="margin:0">${nextNo("sett")}<br>${dm(V.s.date)}</span></div><div class="ln"><label>الموظف</label><span class="v"><b>${e[1]}</b> — رصيد عهدته قبل التسوية ${N(m0(bal(V.emp)))}</span></div><table class="tbl" style="margin:4px 0"><tr><th>م</th><th>البيان</th><th>نوع المصروف</th><th>المبلغ</th></tr>${V.lines.map((l,i)=>`<tr><td>${i+1}</td><td>${l.desc}</td><td>${xt(l.xt)[1]}</td><td class="n">${mf(l.amt)}</td></tr>`).join("")}<tr><td colspan="3">مرتجع نقدي للخزنة</td><td class="n">${mf(V.s.ret)}</td></tr><tr class="tot"><td colspan="3">الإجمالي</td><td class="n">${mf(t)}</td></tr></table><div class="ln"><label>بالحروف</label><span class="v" style="font-weight:900">${words(t)}</span></div><div class="ln"><label>الباقي عليه</label><span class="v">${blv(bal(V.emp)-t)}</span></div><div class="sig"><span>توقيع الموظف</span><span>المراجع</span><span>المدير المالي</span></div></div>`;
+  return win(tbF()+`<div class="content" style="flex-direction:column;gap:3px"><div class="flt">${kindT()}<label>الموظف</label>${selEmp(170)}</div><div class="scroll" style="background:#94A3B8;border-radius:6px">${paper}</div>${msgs()}</div>`,`🧾 ${dsb?"إيصال استلام عهدة":"إقرار تسوية عهدة"} — A-H CODE`);}
+
+const M=[
+ ["الكلاسيك: الفورم + كارت الموظف وعهده المفتوحة","فوق زرار <b>صرف عهدة / تسوية</b>، شمال الفورم (والتسوية بسطور مصروفات + المرتجع) والقيد اللي هيتعمل، ويمين <b>كارت الموظف</b> برصيده و<b>العهد المفتوحة</b> وقصاد كل واحدة التسوية دي هتقفل منها كام (FIFO)، وتحت مستنداته. <b>بدّل لـ «تسوية» وغيّر المبالغ ← «ترحيل ✔».</b>",m1],
+ ["زي الأكسس: الموظف ← العهد والتسويات","زي <span class='ltr'>F3hoda</span> و<span class='ltr'>FTASADD</span> في شاشة واحدة: تختار الموظف ← فوق اتصرف له / صرف مصاريف / رجّع / الباقي، وتحت جدولين: <b>العهد</b> و<b>التسويات</b> (المصروف + المرتجع). <b>غيّر الموظف.</b>",m2],
+ ["لوحة الموظفين (كارت لكل موظف)","كل موظف عليه دور «عهدة» <b>كارت</b> برصيده ونسبة اللي اتسوّى وعمر أقدم عهدة (الأحمر = أكتر من 30 يوم)، تدوس كارت ← عهده المفتوحة وحركاته تحت، وزرارين «صرف / تسوية» للمحدد. <b>دوس على كارت «كريم فتحي».</b>",m3],
+ ["مستند التسوية بالسطور + FIFO","التسوية لوحدها بمساحة كبيرة: <b>سطور المصروفات</b> (النوع · البيان · أمر التوريد · المبلغ) + <b>المرتجع للخزنة</b> + «الباقي عليه»، وجنبها <b>العهد اللي هتتقفل</b> بالترتيب والقيد. <b>زوّد سطر أو كبّر مبلغ لحد ما يعدّي العهدة.</b>",m4],
+ ["تبويب لكل نوع","تبويبات: <b>الكل · صرف · تسوية · رد نقدية · مسودات</b> بعددها ولونها (كل الموظفين)، وجنبها المستند المحدد وقيده — والمسودة جنبها زرار «ترحيل». <b>دوس «مسودات» ← «ترحيل».</b>",m5],
+ ["كشف العهدة جوه الشاشة","زي <span class='ltr'>mandob4</span> «كشف حساب موظف»: الموظف + من / إلى ← رصيد سابق ← الحركات (مدين = اتصرف له · دائن = سوّى / رجّع) بالرصيد الجاري ← الرصيد آخر المدة. <b>غيّر «من» لـ 01/05.</b>",m6],
+ ["العهدة الواحدة على خط زمني","تختار عهدة ← <b>الصرف</b> ← كل <b>تسوية قفلت منها</b> كام بقيدها ← الباقي، وشريط «اتسوّى %». يوضّح إزاي التسوية الواحدة ممكن تقفل عهدتين. <b>اختار أحمد سامي ← العهدة الأولى.</b>",m7],
+ ["التسوية خطوة بخطوة","معالج: <b>1. الموظف ← 2. المصروفات ← 3. المرتجع ← 4. المراجعة والترحيل</b> (FIFO + القيد). أسهل لحد مش محاسب. <b>دوس «التالي» لحد الآخر ← «ترحيل التسوية ✔».</b>",m8],
+ ["أعمار العهد والتنبيهات","كروت: <b>0–7 · 8–30 · 31–60 · أكتر من 60 يوم</b> بعددها ومبالغها، وتحت كل العهد المفتوحة (الأقدم فوق) و«المطلوب» قصاد كل واحدة، وتنبيه أول ما البرنامج يتفتح. <b>دوس كارت «أكتر من 60».</b>",m9],
+ ["الورقة: إيصال استلام عهدة / إقرار تسوية","الإدخال على شكل الورقة اللي الموظف بيمضي عليها: <b>إيصال استلام عهدة</b> (المبلغ بالحروف والغرض والتوقيعات) أو <b>إقرار تسوية</b> بسطوره والمرتجع والباقي. <b>بدّل «صرف / تسوية» وغيّر المبلغ.</b>",m10],
+];
+
+const NOTE=`<b>الشاشة دي بتعمل إيه:</b> بتصرف <b>عهدة نقدية لموظف</b> (من خزنة أو بنك) وبعدين <b>بتسوّيها</b> بالمصاريف اللي صرفها (كل مصروف على <b>نوعه</b> من «أنواع المصروفات» ← حسابه) + <b>الفلوس اللي رجّعها للخزنة</b> — و<b>كل مستند بقيد أوتوماتيك</b> بمحرك الترحيل، والرصيد على <span class="ltr">1107</span> «عهد الموظفين» <b>ببُعد الموظف</b> (من دفتر اليومية مش من المستندات):
+<table class="tbl" style="font-size:12px;margin:6px 0;max-width:980px"><tr><th>المستند</th><th>القيد</th></tr>
+<tr><td>💼 صرف عهدة</td><td>مدين <span class="ltr">1107</span> عهد الموظفين (ببُعد الموظف) / دائن الخزنة أو البنك</td></tr>
+<tr><td>🧾 تسوية عهدة</td><td>مدين حساب كل نوع مصروف بمبلغه (وأمر التوريد على السطر) + مدين الخزنة بالمرتجع / دائن <span class="ltr">1107</span> (الموظف) بالإجمالي</td></tr>
+<tr><td>↩ رد نقدية بس</td><td>نفس التسوية من غير سطور: مدين الخزنة / دائن <span class="ltr">1107</span></td></tr></table>
+و<b>FIFO</b>: التسوية بتقفل <b>أقدم عهدة مفتوحة الأول</b> لوحدها (بقفل صفوف العهد جوه نفس الـ transaction)، فتعرف كل عهدة اتسوّى منها كام وفاضل كام وعمرها. التسوية <b>أكبر من المفتوح</b> ← تحذير (الزيادة = صرفها من جيبه ← «ليه عندنا»). الحسابات كلها موجودة في الدليل (<span class="ltr">1107</span> بدور «عهد» ومفتاح «عهد الموظفين» في الحسابات الافتراضية) — <b>مفيش حساب جديد</b>. الرقم أوتوماتيك: <span class="ltr">CD-2026-00001</span> للصرف و<span class="ltr">CS-2026-00001</span> للتسوية (اقتراح). الموظف = اللي عليه دور «عهدة» في شاشة الموظفين بس.
+<br><b>كانت إيه في الأكسس (من الدراسة — قراية بس):</b> قسم «العهد» في Main: <span class="ltr">F3hoda</span> «عهد الموظفين» (جدول <span class="ltr">Tb3hoda</span>: التاريخ · الموظف · المبلغ · البيان) و<span class="ltr">FTASADD</span> «تسويات العهد» (جدول <span class="ltr">TbTAswia</span>: نفس الأعمدة + <span class="ltr">AmountADD</span> = المرتجع للخزنة) و<span class="ltr">mandob4</span> «كشف حساب موظف» (<span class="ltr">ACc3hoda</span> / <span class="ltr">HissapEMP</span>). والمرتجع كان بيدخل رصيد الخزنة في استعلام الخزنة.
+<ul>
+<li><b>شكل البيانات:</b> <b>سطر عهدة واحد</b> و<b>3 تسويات</b> بس — كلهم لنفس الموظف، والتسويات مجموعها = العهدة بالظبط (يعني الرصيد صفر) والمرتجع في التلاتة صفر. يعني الشاشة كانت شبه مش مستخدمة.</li>
+<li><b>العيوب:</b> التسوية <b>مبلغ واحد من غير نوع مصروف</b> (فالمصروف مابيظهرش في المصروفات ولا الأرباح) · مفيش ربط بين التسوية والعهدة اللي بتسوّيها · مفيش قيد · مفيش أمر توريد · مفيش تنبيه للعهد القديمة · ⚠️ جدول اسمه <span class="ltr">3hoda</span> (180 ألف سطر) <b>مالوش علاقة بالعهد</b> — ده جدول الجرد.</li>
+<li><b>من E3marEG (فكرة بس):</b> حساب رقابة «عهد موظفين» + تسوية FIFO بقفل صفوف ومنع التسوية الأكبر من المفتوح + حساب وسيط «عهدة قيد التسوية» للمشتريات اللي فاتورتها ماجتش. <b>ومش هناخد عيوبه:</b> الحساب هناك <b>مالوش بُعد موظف</b> (الرصيد من المستندات بس) والحسابات بيدوّر عليها بالاسم.</li>
+<li><b>الشبكة:</b> الترحيل بيقفل صفوف عهد الموظف (<span class="ltr">FOR UPDATE</span>) ويحسب FIFO جوه نفس الـ transaction — فلو جهازين رحّلوا تسويتين لنفس الموظف في نفس اللحظة، التانية بتستنى الأولى وتقفل اللي فاضل صح · الحفظ بـ <span class="ltr">row_version</span> · الرقم بقفل صف · index على الموظف والتاريخ والخزنة وأمر التوريد · القائمة بفترة وصفحات.</li>
+<li><b>مكان الشاشة:</b> قسم «الموظفين» ← «العهد» (اقتراح — جنب شاشة الموظفين) + صلاحيات: عرض · جديد · تعديل · حذف المسودة · ترحيل · إلغاء الترحيل · تصدير.</li>
+</ul>`;
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>شكل الشاشة:</b> الكلاسيك بكارت الموظف وعهده المفتوحة (النموذج 1 — اقتراحي)؟ ولا لوحة الموظفين (3)؟ ولا تبويب لكل نوع (5)؟ ولا زي الأكسس (2)؟ — وتقدر تقول «1 + كروت الأعمار من 9».</li>
+<li><b>شاشة ولا اتنين:</b> شاشة واحدة «العهد» بزرار <b>صرف / تسوية</b> (اقتراحي — عشان التسوية محتاجة تشوف العهد المفتوحة)؟ ولا في القايمة «صرف عهدة» و«تسوية عهدة» لوحدهم زي الأكسس؟</li>
+<li><b>التسوية بسطور مصروفات</b> كل سطر: نوع المصروف (من «أنواع المصروفات») · البيان · أمر التوريد · المبلغ (اقتراحي)؟ — في الأكسس كانت مبلغ واحد وبيان من غير نوع.</li>
+<li><b>المرتجع للخزنة</b> جوه نفس مستند التسوية (زي <span class="ltr">AmountADD</span> — اقتراحي)؟ ولا مستند «رد عهدة» لوحده؟</li>
+<li><b>FIFO:</b> التسوية بتقفل أقدم عهدة الأول لوحدها (اقتراحي)؟ ولا المستخدم يختار العهدة اللي بيسوّيها بإيده؟</li>
+<li><b>التسوية أكبر من العهدة المفتوحة</b> (الموظف صرف من جيبه): (أ) <b>تتسجل بتحذير والزيادة تبقى «ليه عندنا»</b> (رصيده دائن) وتتظبط مع أول عهدة جاية (اقتراحي) · (ب) تتمنع خالص؟</li>
+<li><b>الصرف من خزنة أو حساب بنكي</b> (اقتراحي) ولا خزنة بس؟ والرصيد مش مكفي ← <b>تحذير بس</b> زي السندات (اقتراحي)؟</li>
+<li><b>الحفظ:</b> مسودة + ترحيل + إلغاء الترحيل بالصلاحية زي السندات، والرقم الرسمي مع أول ترحيل (اقتراحي)؟ و<b>إلغاء ترحيل صرف عهدة اتسوّى منها</b> ← ممنوع لحد ما التسويات اللي عليها تتلغي الأول (اقتراحي)؟</li>
+<li><b>الترقيم:</b> <span class="ltr">CD-2026-00001</span> للصرف و<span class="ltr">CS-2026-00001</span> للتسوية ويبدأ من 1 كل سنة (اقتراحي)؟ + رقم الإيصال الورقي اختياري زي السندات؟</li>
+<li><b>أمر التوريد:</b> اختياري على الصرف (للمعلومة) وعلى <b>كل سطر في التسوية</b> (ده اللي بيتحمّل على المشروع — اقتراحي)؟</li>
+<li><b>«عهدة قيد التسوية»</b> (بضاعة الموظف اشتراها وفاتورتها لسه عند المورد): <b>نأجّلها لمرحلة المشتريات</b> (اقتراحي)؟ ولا مش بيحصل عندكم والموظف بيشتري مصاريف بس؟</li>
+<li><b>التنبيهات والأعمار</b> (النموذج 9): تنبيه للعهدة المفتوحة <b>أكتر من 30 يوم</b> في الشاشة وأول ما البرنامج يتفتح (اقتراحي)؟ ولا مش محتاجها؟</li>
+<li><b>كشف العهدة:</b> «كشف الحساب» بنوع «عهدة موظف» (موجود من المرحلة 4) يكفي (اقتراحي)؟ ولا تبويب كشف جوه الشاشة كمان (النموذج 6)؟</li>
+<li><b>نقل الأكسس:</b> العهدة الواحدة والتسويات التلاتة رصيدهم صفر ← <b>مابتتنقلش</b> (اقتراحي)، ولو فيه عهدة مفتوحة فعلاً على حد النهارده تتكتب في «الأرصدة الافتتاحية» قسم «عهدة»؟</li>
+<li><b>مكان الشاشة:</b> قسم «الموظفين» ← «العهد» (اقتراحي) ولا قسم «الخزينة»؟ وصلاحية لكل زرار زي باقي الشاشات؟</li>
+<li><b>الطباعة</b> (إيصال استلام العهدة وإقرار التسوية — النموذج 10) مع مرحلة الطباعة (اقتراحي)؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+function addDoc(mode,kk){const k0=V.kind;if(kk)V.kind=kk;const [E]=vErr();if(E.length){V.msg="";V.kind=k0;render();return;}
+  let d;if(V.kind==="disb"){const f=V.f;d=mkD(V.emp,f.date,+f.amt,f.src,f.desc,f.ord,true);}
+  else{d=mkS(V.emp,V.s.date,V.lines.map(l=>[l.xt,l.desc,l.ord,+l.amt]),+V.s.ret||0,V.s.retTo,V.s.desc,true);}
+  if(mode==="post")doPost(d);
+  V.sel=d.id;V.cd=d.kind==="disb"?d.id:"";
+  V.msg=mode==="post"?`✔ ${d.no} اترحّل بقيد ${d.jv}${d.kind==="sett"&&d.alloc.length?" وقفل من "+d.alloc.map(a=>doc(a[0]).no).join(" + "):""} — ظهر في كل النماذج`:`✔ اتحفظ «${d.no}» — لسه مالوش قيد`;
+  if(d.kind==="sett"){V.lines=[{xt:"EXT-010",desc:"",ord:"",amt:0}];V.s.ret=0;V.step=1;}
+  V.kind=k0;render();}
+document.addEventListener("change",e=>{const t=e.target;
+  if(t.dataset.f){const k=t.dataset.f;V.f[k]=k==="amt"?Math.max(0,+t.value||0):t.value;V.msg="";render();return;}
+  if(t.dataset.s){const k=t.dataset.s;V.s[k]=k==="ret"?Math.max(0,+t.value||0):t.value;V.msg="";render();return;}
+  if(t.dataset.l){const [i,k]=t.dataset.l.split(":");V.lines[+i][k]=k==="amt"?Math.max(0,+t.value||0):t.value;V.msg="";render();return;}
+  const k=t.dataset.k;if(!k)return;V[k]=t.value;if(k==="emp"){V.sel="";V.cd="";}V.msg="";render();});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option"))return;
+  const ad=e.target.closest("[data-add]");if(ad){addDoc(ad.dataset.add,ad.dataset.kk);return;}
+  const kd=e.target.closest("[data-kind]");if(kd){V.kind=kd.dataset.kind;V.msg="";render();return;}
+  const pt=e.target.closest("[data-post]");if(pt){const d=doc(pt.dataset.post);doPost(d);V.sel=d.id;V.emp=d.emp;V.msg=`✔ ${d.no} اترحّل بقيد ${d.jv}`;render();return;}
+  const al=e.target.closest("[data-addl]");if(al){V.lines.push({xt:"EXT-003",desc:"",ord:"",amt:0});render();return;}
+  const dl=e.target.closest("[data-dell]");if(dl){V.lines.splice(+dl.dataset.dell,1);render();return;}
+  const sp=e.target.closest("[data-step]");if(sp){V.step=+sp.dataset.step;render();return;}
+  const tb=e.target.closest("[data-tab]");if(tb){V.tab=tb.dataset.tab;render();return;}
+  const af=e.target.closest("[data-alf]");if(af){V.alf=V.alf===af.dataset.alf?"all":af.dataset.alf;render();return;}
+  const s=e.target.closest("[data-sel]");if(s){V.sel=s.dataset.sel;const d=doc(V.sel);if(d){V.emp=d.emp;if(d.kind==="disb")V.cd=d.id;}render();return;}
+  const em=e.target.closest("[data-emp]");if(em){V.emp=em.dataset.emp;V.sel="";V.cd="";render();return;}
+});
+render();
+</script>
+</body>
+</html>

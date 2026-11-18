@@ -71,7 +71,7 @@ def test_menu_tree_admin_sees_everything():
     purch = tree[2]
     assert not purch["coming_soon"] and purch["count"] == 2             # «المشتريات» ← مجموعات الموردين + الموردين
     hr = tree[3]
-    assert not hr["coming_soon"] and hr["count"] == 1                   # «الموظفين» ← قسم لوحده
+    assert not hr["coming_soon"] and hr["count"] == 2                   # «الموظفين» ← الموظفين + العهد
     cash = tree[5]
     assert not cash["coming_soon"] and cash["count"] == 7               # «الخزينة» ← الخزائن + البنوك + حركات الخزائن والبنوك + سند قبض + سند صرف + شيكات العملاء + شيكات الموردين
     inv = tree[4]

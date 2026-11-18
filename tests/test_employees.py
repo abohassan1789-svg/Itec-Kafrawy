@@ -349,6 +349,7 @@ def test_menu_and_registry():
 
     group = reg.section("hr").groups[0]
     assert group.title == "الموظفين" and [t.code for t in group.targets] == ["employees"]
+    assert [g.title for g in reg.section("hr").groups] == ["الموظفين", "العهد"]                  # العهد (0040)
     target = reg.find_target("hr", "employees")
     assert target.name_ar == "الموظفين"
     assert "employees" in SCREEN_FACTORIES
