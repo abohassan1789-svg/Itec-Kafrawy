@@ -22,6 +22,8 @@ from app.services.brand_service import clean_name
 from app.services.concurrency import ConcurrencyGuard
 from app.services.errors import BusinessError
 from app.services.permission_service import PermissionService
+from app.services.stock_ledger_service import KINDS as STOCK_KINDS
+from app.services.stock_ledger_service import StockLedgerService, fmt_qty
 
 ENTITY, ENTITY_LABEL = "inv.items", "صنف"
 PERM = "inv.items"
@@ -30,7 +32,8 @@ LOOKUP_LIMIT = 10000
 MAX_UNITS = 10
 DEFAULT_TAX = "VAT14"
 NOT_FOUND = "الصنف ده مش موجود (ممكن يكون اتمسح)."
-BALANCE_NOTE = "الرصيد ومتوسط التكلفة وتحت حد الطلب بيظهروا مع «دفتر المخزون» (المرحلة 6)."
+BALANCE_NOTE = ("الرصيد ومتوسط التكلفة من «دفتر المخزون» (بيتحرّك من الفواتير والتحويلات والجرد) — الصنف اللي عليه "
+                "حركة مايتمسحش ووحدته الأساسية و«خدمي» مايتغيّروش.")
 ACCOUNT_LABELS = {"inventory": "المخزون", "sales": "المبيعات", "cogs": "تكلفة المبيعات", "sales_ret": "المردودات"}
 # (المفتاح، الاسم، أقصى طول) للخانات النصية الاختيارية
 _TEXTS = (("alt_name", "الاسم التاني", 200), ("description", "الوصف", 500), ("notes", "الملاحظات", 500))
@@ -76,6 +79,7 @@ class ItemService:
         self.repository = repository or ItemRepository(self.db)
         self.audit = audit or AuditService(self.db)
         self.guard = ConcurrencyGuard(self.db)
+        self.stock = StockLedgerService(self.db)
 
     # ---- قراية -------------------------------------------------------------
     @staticmethod
@@ -95,7 +99,23 @@ class ItemService:
 
     def stats(self) -> dict[str, int]:
         row = self.repository.stats()
-        return {k: int(row[k]) for k in ("active", "service", "no_category", "with_reorder")}
+        out = {k: int(row[k]) for k in ("active", "service", "no_category", "with_reorder")}
+        out["below_reorder"] = self.stock.below_reorder_count()
+        return out
+
+    def stock_text(self, item_id: int | None) -> tuple[str, str]:
+        """(الرصيد، متوسط التكلفة) للفورم — من دفتر المخزون."""
+        if item_id is None:
+            return "", ""
+        data = self.stock.item_summary(int(item_id))
+        if not data["has_movements"]:
+            return "0 — مفيش حركة لسه", "—"
+        parts = [f"{fmt_qty(data['qty'])} (القيمة {data['value']:,.2f})"]
+        virtual = sum((r["qty"] for r in data["warehouses"] if r["is_virtual"]), Decimal("0"))
+        if virtual:
+            parts.append(f"+ {fmt_qty(virtual)} في الوهمي")
+        avg = " · ".join(f"{STOCK_KINDS[r['stock_kind']]}: {r['avg_cost']:,.2f}" for r in data["kinds"] if r["qty"] > 0)
+        return " ".join(parts), avg or "—"
 
     def lookup_items(self) -> list[dict[str, Any]]:
         """نافذة البحث F1 + «تصدير إكسل»."""
@@ -302,7 +322,7 @@ class ItemService:
             if before is None:
                 raise BusinessError(NOT_FOUND)
             before["units"] = self.repository.item_units(int(item_id), ex=tx)
-            # TODO (دفتر المخزون — المرحلة 6): الصنف اللي عليه حركة مايتمسحش — FK RESTRICT + «وقّفه بدل ما تمسحه».
+            # الصنف اللي عليه حركة مخزون: القاعدة بترفض برسالة «وقّفه بدل ما تمسحه» (0043).
             deleted = self.repository.delete_item(int(item_id), ex=tx, expected_version=expected_version)
             self.guard.ensure(tx, deleted, expected_version, entity=ENTITY, entity_id=item_id)
             self.audit.record(tx, action="delete", entity=ENTITY, entity_id=item_id, entity_label=ENTITY_LABEL,

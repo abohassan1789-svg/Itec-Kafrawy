@@ -202,7 +202,8 @@ def test_service(env):
     for key in ("itm-0003", "3", "labor", "كونتاكتور"):
         assert codes(service.list_items(key))[:1] in (["ITM-0003"], ["ITM-0001"]), key
     assert codes(service.list_items(page=2, page_size=2)) == ["ITM-0003"]
-    assert service.stats() == {"active": 3, "service": 1, "no_category": 0, "with_reorder": 2}
+    assert service.stats() == {"active": 3, "service": 1, "no_category": 0, "with_reorder": 2,
+                               "below_reorder": 2}
     # الإيقاف · النوع الموقوف · المسح
     s = service.get_item(svc)
     service.set_active(svc, False, s["row_version"])

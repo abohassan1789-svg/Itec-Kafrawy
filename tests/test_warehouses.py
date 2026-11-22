@@ -127,7 +127,7 @@ def test_service_default_virtual_keeper_and_rules(env):
     assert (d["code"], d["is_virtual"], d["is_default"]) == ("WH-003", False, False)
     assert service.inventory_account() == {"code": "1105", "name_ar": "المخزون"}
     assert service.stats() == {"active": 2, "virtual": 1, "no_keeper": 1, "default_code": "WH-001",
-                               "default_name": "المخزن الرئيسي"}
+                               "default_name": "المخزن الرئيسي", "value": 0}
     keeper = emp(db, "أ/ هاني سعد")
     wid = service.save_warehouse(None, payload(name_en="Workshop", keeper_id=keeper, address="العبور",
                                                phone="0100", is_default=True))

@@ -7,7 +7,7 @@
   جوه قفل (جهازين في نفس اللحظة ← واحد يستنى التاني). الافتراضي مايتوقفش ومايتمسحش، والوهمي مايبقاش افتراضي.
 * **وهمي** (تشيك بوكس زي الأكسس): حركته كميات بس من غير قيد ولا تكلفة (المرحلة 8).
 * **مفيش مركز تكلفة** على المخزن (رد المستخدم).
-* الأرصدة والقيمة من دفتر المخزون (المرحلة 6) — الشاشة بتعرض «—».
+* الأرصدة والقيمة من «دفتر المخزون» (0043) — المخزن اللي عليه حركة مايتمسحش و«وهمي» مايتغيّرش.
 * كل حفظ / إيقاف / مسح في ``sec.audit_log`` في نفس الـ transaction (والمخزن اللي اتشال منه «الافتراضي») +
   ``row_version``.
 """
@@ -22,6 +22,7 @@ from app.services.audit_service import AuditService
 from app.services.concurrency import ConcurrencyGuard
 from app.services.errors import BusinessError
 from app.services.permission_service import PermissionService
+from app.services.stock_ledger_service import StockLedgerService
 
 ENTITY, ENTITY_LABEL = "inv.warehouses", "مخزن"
 PERM = "inv.warehouses"
@@ -31,7 +32,7 @@ NOT_FOUND = "المخزن ده مش موجود (ممكن يكون اتمسح)."
 DEFAULT_LOCKED = ("المخزن «{name}» هو المخزن الافتراضي (بيتملى لوحده في الفواتير) — {what} "
                   "(علّم مخزن تاني «افتراضي» الأول).")
 VIRTUAL_NOTE = "👻 مخزن وهمي — حركته كميات بس من غير قيد ولا تكلفة (الصرف الوهمي — المرحلة 8)."
-BALANCE_NOTE = "الأرصدة والقيمة من دفتر المخزون (المرحلة 6)."
+BALANCE_NOTE = "الأرصدة والقيمة من «دفتر المخزون» (القيمة = الكمية × متوسط تكلفة الشركة)."
 # (المفتاح، الاسم، أقصى طول) للخانات النصية الاختيارية
 _TEXTS = (("name_en", "الاسم EN", 120), ("address", "العنوان", 200), ("phone", "التليفون", 30),
           ("notes", "الملاحظات", 500))
@@ -44,6 +45,7 @@ class WarehouseService:
         self.repository = repository or WarehouseRepository(self.db)
         self.audit = audit or AuditService(self.db)
         self.guard = ConcurrencyGuard(self.db)
+        self.stock = StockLedgerService(self.db)
 
     # ---- قراية -------------------------------------------------------------
     def list_warehouses(self, keyword: str = "", status: str = "all", page: int = 1,
@@ -61,7 +63,14 @@ class WarehouseService:
         """كروت الأرقام: المخازن النشطة · منها وهمي · العادية من غير أمين · الافتراضي."""
         row = self.repository.stats()
         return {"active": int(row["active"]), "virtual": int(row["virtual"]), "no_keeper": int(row["no_keeper"]),
-                "default_code": row["default_code"], "default_name": row["default_name"]}
+                "default_code": row["default_code"], "default_name": row["default_name"],
+                "value": self.stock.total_value()}
+
+    def stock_of(self, warehouse_id: int | None) -> dict[str, Any] | None:
+        """عدد الأصناف اللي عليها رصيد في المخزن + قيمتها (``None`` لو مفيش)."""
+        if warehouse_id is None:
+            return None
+        return self.stock.warehouse_summary().get(int(warehouse_id))
 
     def lookup_warehouses(self) -> list[dict[str, Any]]:
         """نافذة البحث F1: كل المخازن (لحد ``LOOKUP_LIMIT``)."""
@@ -199,8 +208,7 @@ class WarehouseService:
                 raise BusinessError(NOT_FOUND)
             if before["is_default"]:
                 raise BusinessError(DEFAULT_LOCKED.format(name=before["name_ar"], what="مايتمسحش"))
-            # TODO (دفتر المخزون — المرحلة 6): المخزن اللي عليه حركة مايتمسحش — FK RESTRICT
-            # + رسالة عربي «عليه حركة — وقّفه بدل ما تمسحه».
+            # المخزن اللي عليه حركة مخزون: القاعدة بترفض برسالة «وقّفه بدل ما تمسحه» (0043).
             deleted = self.repository.delete_warehouse(int(warehouse_id), ex=tx, expected_version=expected_version)
             self.guard.ensure(tx, deleted, expected_version, entity=ENTITY, entity_id=warehouse_id)
             self.audit.record(tx, action="delete", entity=ENTITY, entity_id=warehouse_id, entity_label=ENTITY_LABEL,

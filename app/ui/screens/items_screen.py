@@ -234,7 +234,11 @@ class ItemsScreen(BaseScreen):
         form.addRow("المخزن الافتراضي", self.warehouse)
         form.addRow("كود الضريبة *", self.tax)
         form.addRow("سعر البيع", self.sale_price)
+        self.balance_view = self._readonly("")
+        self.avg_view = self._readonly("")
         form.addRow("حد الطلب", self.reorder_level)
+        form.addRow("الرصيد", self.balance_view)
+        form.addRow("متوسط التكلفة", self.avg_view)
         form.addRow("ملاحظات", self.notes)
         form.addRow(self._hint(BALANCE_NOTE))
         return box
@@ -585,9 +589,9 @@ class ItemsScreen(BaseScreen):
         self.kpi_values["no_category"].setStyleSheet(
             f"font-size:15px; font-weight:900; border:none; color:{BAD if warn else ACTIVE_COLOR};")
         self.kpi_frames["no_category"].setStyleSheet(KPI_STYLE.format(color="#DC2626" if warn else GREEN))
-        self.kpi_values["reorder"].setText("— (المرحلة 6)")
-        self.kpi_frames["reorder"].setToolTip(f"{stats['with_reorder']:,} صنف عليه حد طلب — المقارنة بالرصيد مع "
-                                              "«دفتر المخزون»")
+        self.kpi_values["reorder"].setText(f"{stats['below_reorder']:,}")
+        self.kpi_frames["reorder"].setToolTip(f"{stats['with_reorder']:,} صنف عليه حد طلب — منهم "
+                                              f"{stats['below_reorder']:,} رصيده وصل لحد الطلب أو أقل")
 
     def refresh_list(self) -> None:
         super().refresh_list()
@@ -657,10 +661,13 @@ class ItemsScreen(BaseScreen):
             self._add_unit_row(u["unit_id"], u["factor"], u.get("unit_name"))
         self._sync_unit_labels()
         self._show_accounts()
+        balance, avg = self.service.stock_text(record.get("id"))
+        self.balance_view.setText(balance)
+        self.avg_view.setText(avg)
 
     def clear_form(self) -> None:
         for edit in (self.code_edit, self.name, self.alt_name, self.description, self.notes, self.sale_price,
-                     self.reorder_level):
+                     self.reorder_level, self.balance_view, self.avg_view):
             edit.clear()
         for combo in (self.category, self.brand, self.warehouse):
             combo.blockSignals(True)

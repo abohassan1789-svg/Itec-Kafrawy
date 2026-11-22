@@ -188,8 +188,8 @@ class WarehousesScreen(BaseScreen):
         box = QGroupBox("المحاسبة والأرصدة")
         form = self._form(box)
         self.account_view = self._readonly("")
-        self.items_view = self._readonly("— (دفتر المخزون — المرحلة 6)")
-        self.value_view = self._readonly("— (دفتر المخزون — المرحلة 6)")
+        self.items_view = self._readonly("")
+        self.value_view = self._readonly("")
         self.accounting_hint = self._hint("")
         form.addRow("حساب المخزون", self.account_view)
         form.addRow("أصناف عليها رصيد", self.items_view)
@@ -407,7 +407,7 @@ class WarehousesScreen(BaseScreen):
         self.kpi_values["no_keeper"].setStyleSheet(
             f"font-size:15px; font-weight:900; border:none; color:{'#B91C1C' if warn else ACTIVE_COLOR};")
         self.kpi_frames["no_keeper"].setStyleSheet(KPI_STYLE.format(color="#DC2626" if warn else GREEN))
-        self.kpi_values["value"].setText("— (المرحلة 6)")
+        self.kpi_values["value"].setText(f"{stats['value']:,.2f}")
 
     def refresh_list(self) -> None:
         super().refresh_list()
@@ -464,6 +464,10 @@ class WarehousesScreen(BaseScreen):
         self.is_active.setChecked(bool(record.get("is_active", True)))
         self._set_keeper(record)
         self._show_accounting()
+        stock = self.warehouses.stock_of(record.get("id"))
+        self.items_view.setText(f"{stock['items']:,}" if stock else "0")
+        self.value_view.setText("— (وهمي: كميات بس)" if record.get("is_virtual")
+                                else f"{(stock or {}).get('value') or 0:,.2f}")
 
     def clear_form(self) -> None:
         for edit in (self.code_edit, self.name_ar, self.name_en, self.address, self.phone, self.notes):
@@ -473,6 +477,8 @@ class WarehousesScreen(BaseScreen):
         self.is_default.setChecked(False)
         self.is_active.setChecked(True)
         self._show_accounting()
+        self.items_view.clear()
+        self.value_view.clear()
 
     def collect(self) -> dict:
         return {"name_ar": self.name_ar.text(), "name_en": self.name_en.text(), "address": self.address.text(),
