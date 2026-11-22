@@ -444,7 +444,11 @@ class OpeningBalancesScreen(BaseScreen):
         account = self._accounts.get(self.other_table.cellWidget(r, O_ACC).currentData())
         party = self.other_table.cellWidget(r, O_PARTY)
         kind = (account or {}).get("party_kind")
-        if kind:
+        owner = (account or {}).get("owner_partner_id")
+        if kind and owner:                                   # حساب شريك (0042) ← الشريك صاحبه بس ومتملّي لوحده
+            party.set_items([(p["id"], p["code"], f"{p['code']} — {p['name_ar']}")
+                             for p in self._choices["parties"].get(kind, []) if p["id"] == owner], owner)
+        elif kind:
             party.set_items(self._party_rows(kind), value, text,
                             placeholder=f"اكتب كود أو اسم {PARTY_LABELS[kind]} *")
         else:

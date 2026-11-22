@@ -238,3 +238,33 @@ def test_screen_shows_account(env):
         assert screen.account_edit.text().replace("⁦", "").replace("⁩", "") == "3201 م/ حسام عبد الله"
     finally:
         screen.close()
+
+
+def test_journal_fills_partner_from_account(env):
+    """شاشة القيود: اختيار حساب شريك (3201) ← الشريك بيتملى لوحده · والـ Service بتملاه لو مبعوتش."""
+    from app.services.journal_service import JournalService
+    from app.ui.screens.journal_entries_screen import C_PARTY, JournalEntriesScreen
+    from tests.test_journal_entries import set_line
+
+    db, shown, svc = env["db"], env["shown"], env["service"]
+    a = svc.save_partner(None, payload(name_ar="مصطفى"))
+    svc.save_partner(None, payload(name_ar="طارق"))
+    acc_id = lambda code: one(db, "SELECT id FROM acc.accounts WHERE code = %s", code)   # noqa: E731
+    js = JournalService(db)
+    x = js.save_draft(None, {"entry_date": D1, "description": "إيداع", "lines": [
+        {"account_id": acc_id("110101"), "debit": "100"}, {"account_id": acc_id("3201"), "credit": "100"}]})
+    assert one(db, "SELECT partner_id FROM acc.journal_lines WHERE entry_id = %s AND line_no = 2", x) == a
+    screen = JournalEntriesScreen(JournalService(db))
+    try:
+        screen.new_record()
+        screen.description.setText("إيداع شريك")
+        screen.date_edit.setDate(screen.date_edit.date().fromString("2026-03-01", "yyyy-MM-dd"))
+        set_line(screen, 0, acc_id("3201"), credit="100")
+        set_line(screen, 1, acc_id("110101"), debit="100")
+        party = screen.lines_table.cellWidget(0, C_PARTY)
+        assert party.currentData() == a and len(party._rows) == 1
+        screen.save()
+        assert shown[-1] == "saved"
+        assert one(db, "SELECT count(*) FROM acc.journal_lines WHERE partner_id = %s", a) == 2
+    finally:
+        screen.close()

@@ -523,8 +523,6 @@ def test_0039_fixes_old_lines(temp_db, tmp_path):
     """القاعدة اللي اتنفذ عليها 0038 بقيود على أوراق القبض بالعميل ← 0039 بيشيل الطرف والقيد يفضل مرحّل."""
     import shutil
 
-    from app.services.journal_service import JournalService
-
     folder = tmp_path / "m"
     folder.mkdir()
     for f in sorted(migrator.migrations_dir().glob("*.sql")):
@@ -540,11 +538,13 @@ def test_0039_fixes_old_lines(temp_db, tmp_path):
     try:
         acc = {r["code"]: r["id"] for r in temp_db.fetch_all("SELECT id, code FROM acc.accounts")}
         cust = customer(temp_db)
-        js = JournalService(temp_db)
-        eid = js.save_draft(None, {"entry_date": D, "description": "شيك قديم", "lines": [
-            {"account_id": acc["1104"], "debit": "500", "party_id": cust},
-            {"account_id": acc["1103"], "credit": "500", "party_id": cust}]})
-        js.post(eid)
+        # قيد بالـ SQL (كود البرنامج الحالي بيفترض القاعدة متحدّثة لآخر سكريبت — زي ما البرنامج بيعمل وهو بيفتح)
+        eid = one(temp_db, "INSERT INTO acc.journal_entries (entry_date, fiscal_year_id, description) VALUES "
+                           "(%s, (SELECT id FROM core.fiscal_years LIMIT 1), 'شيك قديم') RETURNING id", D)
+        for n, (code, dr, cr) in enumerate((("1104", 500, 0), ("1103", 0, 500)), start=1):
+            temp_db.execute("INSERT INTO acc.journal_lines (entry_id, line_no, account_id, debit, credit, customer_id) "
+                            "VALUES (%s, %s, %s, %s, %s, %s)", [eid, n, acc[code], dr, cr, cust])
+        temp_db.execute("UPDATE acc.journal_entries SET status = 'posted' WHERE id = %s", [eid])
         assert one(temp_db, "SELECT count(*) FROM acc.journal_lines WHERE customer_id = %s", cust) == 2
         migrator.migrate(temp_db)                                         # 0039
         assert one(temp_db, "SELECT count(*) FROM acc.journal_lines WHERE customer_id = %s", cust) == 1

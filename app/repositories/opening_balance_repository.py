@@ -225,10 +225,11 @@ class OpeningBalanceRepository:
             f"coalesce(sum(x.credit), 0) AS credit FROM ({_LINES}) x GROUP BY x.section")
 
     def account_choices(self, ex: Executor | None = None) -> list[dict]:
-        """الحسابات الفرعية (والموقوفة عشان السطر القديم يتعرض) بنوعها — الشاشة بتفلتر الميزانية / الكل."""
+        """الحسابات الفرعية (والموقوفة عشان السطر القديم يتعرض) بنوعها — الشاشة بتفلتر الميزانية / الكل.
+        ``owner_partner_id`` = حساب شريك تحت 32 (0042) ← الشريك بيتملى لوحده."""
         return self._x(ex).fetch_all(
-            "SELECT id, code, name_ar, account_type, party_kind, requires_cost_center, is_active FROM acc.accounts "
-            "WHERE is_leaf ORDER BY code")
+            "SELECT a.id, a.code, a.name_ar, a.account_type, a.party_kind, a.requires_cost_center, a.is_active, "
+            "(SELECT pr.id FROM party.partners pr WHERE pr.account_id = a.id) AS owner_partner_id FROM acc.accounts a WHERE a.is_leaf ORDER BY a.code")
 
     def opening_account(self, ex: Executor | None = None) -> dict | None:
         return self._x(ex).fetch_one(

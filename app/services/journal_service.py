@@ -165,6 +165,8 @@ class JournalService:
                     **{col: None for col in PARTY_COLUMNS.values()}}
             party_id = self._id(raw.get("party_id"))
             kind = account.get("party_kind")
+            if kind and party_id is None and account.get("owner_partner_id"):
+                party_id = int(account["owner_partner_id"])          # حساب شريك ← الشريك هو صاحبه (0042)
             if kind:
                 if party_id is None:
                     raise BusinessError(f"السطر {n}: الحساب «{account['code']} {account['name_ar']}» حساب رقابة — "

@@ -168,10 +168,10 @@ class JournalRepository:
 
     # ---- الاختيارات -------------------------------------------------------------
     def account_choices(self, ex: Executor | None = None) -> list[dict]:
-        """الحسابات الفرعية (النشطة وكمان الموقوفة عشان القيد القديم يتعرض)."""
+        """الحسابات الفرعية (النشطة وكمان الموقوفة عشان القيد القديم يتعرض) · ``owner_partner_id`` = حساب شريك (0042)."""
         return self._x(ex).fetch_all(
-            "SELECT id, code, name_ar, party_kind, requires_cost_center, is_active FROM acc.accounts "
-            "WHERE is_leaf ORDER BY code")
+            "SELECT a.id, a.code, a.name_ar, a.party_kind, a.requires_cost_center, a.is_active, "
+            "(SELECT pr.id FROM party.partners pr WHERE pr.account_id = a.id) AS owner_partner_id FROM acc.accounts a WHERE a.is_leaf ORDER BY a.code")
 
     def cost_center_choices(self, ex: Executor | None = None) -> list[dict]:
         return self._x(ex).fetch_all(
