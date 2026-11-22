@@ -72,14 +72,14 @@ def plain(text: str) -> str:
 def test_seed_keys_and_new_accounts(env):
     db = env["db"]
     m = mapping(db)
-    assert len(m) == 30 and all(m.values())                                  # كله متحدد من أول يوم
+    assert len(m) == 31 and all(m.values())                                  # كله متحدد من أول يوم
     assert m == {
         "sales": "4101", "services": "4102", "sales_ret": "42", "disc_allowed": "5303", "customers": "1103",
         "cust_adv": "2105", "suppliers": "2101", "disc_received": "4302", "inventory": "1105", "cogs": "51",
         "inv_adj": "5205", "cost_var": "5206", "cash_box": "110101", "bank": "110201", "notes_rec": "1104",
         "cheques_coll": "1108", "notes_pay": "2102", "bank_charges": "5402", "custody": "1107", "vat_out": "2103", "vat_in": "110601",
         "wht_rec": "110602", "wht_pay": "2104", "fx_gain": "4301", "fx_loss": "5401", "rounding": "5403",
-        "opening": "34", "retained": "33", "capital": "31", "depr": "1209"}
+        "opening": "34", "retained": "33", "capital": "31", "partner_cur": "3299", "depr": "1209"}
     assert db.fetch_value("SELECT count(DISTINCT row_version) FROM acc.default_accounts") == 1    # كله 1
     groups = [r["group_code"] for r in db.fetch_all(
         "SELECT DISTINCT ON (group_code) group_code, sort_order FROM acc.default_accounts ORDER BY group_code, sort_order")]
@@ -152,7 +152,7 @@ def test_service_read_save_and_account_for(env):
     assert {r["key"] for r in found} == {"disc_allowed", "disc_received", "wht_rec", "wht_pay"}
     assert {r["key"] for r in service.list_keys(None, "4301")} == {"fx_gain"}
     summary = service.group_summary()
-    assert summary["sales"] == {"total": 6, "missing": 0} and sum(s["total"] for s in summary.values()) == 30
+    assert summary["sales"] == {"total": 6, "missing": 0} and sum(s["total"] for s in summary.values()) == 31
     assert [a["code"] for a in service.account_choices("asset")][:3] == ["110101", "110102", "110201"]
     assert service.suggested_account("bank")["code"] == "110201"
     assert service.suggested_account("services") is None                     # مالوش دور
@@ -280,7 +280,7 @@ def test_screen_groups_list_and_form(env):
     assert screen.type_name.text().startswith("الإيرادات") and "متحدد" in screen.status_label.text()
     assert not screen.account_combo.isEnabled() and not screen.suggest_button.isEnabled()
     assert plain(screen.count_label.text()) == "«المبيعات»: 6 مفتاح · 6 متحدد · 0 ناقص"
-    assert plain(screen.total_label.text()).startswith("30 مفتاح · 30 متحدد")
+    assert plain(screen.total_label.text()).startswith("31 مفتاح · 31 متحدد")
     assert screen.format_cell("account", None, screen.table.rows[0]) == "⁦4101⁩ مبيعات بضاعة"
     # قسم تاني
     screen.groups_list.setCurrentRow(5)                                   # العملات

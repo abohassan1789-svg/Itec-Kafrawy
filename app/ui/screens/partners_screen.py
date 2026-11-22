@@ -138,6 +138,11 @@ class PartnersScreen(BaseScreen):
         self.code_edit.setLayoutDirection(Qt.LeftToRight)
         self.code_edit.setPlaceholderText("بيتولّد لوحده")
         self.code_edit.setToolTip("كود الشريك بيتولّد لوحده وقت الحفظ (PRT-001، PRT-002…) وثابت بعد كده")
+        self.account_edit = QLineEdit()
+        self.account_edit.setReadOnly(True)
+        self.account_edit.setPlaceholderText("بيتعمل لوحده تحت جاري الشركاء")
+        self.account_edit.setToolTip("كل شريك ليه حساب فرعي لوحده تحت «32 جاري الشركاء» بيتعمل لوحده مع الحفظ "
+                                     "(3201، 3202…) واسمه بيتغيّر مع اسم الشريك — ورأس المال على «31» ببُعد الشريك")
         self.name_ar = QLineEdit()
         self.name_ar.setMaxLength(200)
         self.name_ar.setPlaceholderText("اسم الشريك")
@@ -160,6 +165,7 @@ class PartnersScreen(BaseScreen):
         self.is_active = QCheckBox("نشط")
         self.is_active.toggled.connect(self._update_share_hint)
         form.addRow("الكود", self.code_edit)
+        form.addRow("الحساب", self.account_edit)
         form.addRow("الاسم *", self.name_ar)
         form.addRow("الاسم EN", self.name_en)
         form.addRow("نوع الشريك", self.partner_type)
@@ -297,6 +303,7 @@ class PartnersScreen(BaseScreen):
         except Exception:  # noqa: BLE001
             return
         self.code_edit.setText(f"{defaults['code']} (مقترح)")
+        self.account_edit.setText(self.partners.account_hint())
         self.is_active.setChecked(True)
         self.partner_type.setCurrentIndex(max(0, self.partner_type.findData(defaults["partner_type"])))
         self._update_share_hint()
@@ -450,6 +457,8 @@ class PartnersScreen(BaseScreen):
     def fill_form(self, record: dict) -> None:
         self._load_others(record.get("id"))
         self.code_edit.setText(record.get("code") or "")
+        self.account_edit.setText(f"⁦{record['account_code']}⁩ {record['account_name']}"
+                                  if record.get("account_code") else "")
         for key in ("name_ar", "name_en", "mobile", "phone", "email", "address", "national_id", "notes"):
             getattr(self, key).setText(record.get(key) or "")
         self.partner_type.setCurrentIndex(max(0, self.partner_type.findData(record.get("partner_type"))))
@@ -465,8 +474,8 @@ class PartnersScreen(BaseScreen):
         self._update_share_hint()
 
     def clear_form(self) -> None:
-        for edit in (self.code_edit, self.name_ar, self.name_en, self.mobile, self.phone, self.email, self.address,
-                     self.national_id, self.notes):
+        for edit in (self.code_edit, self.account_edit, self.name_ar, self.name_en, self.mobile, self.phone,
+                     self.email, self.address, self.national_id, self.notes):
             edit.clear()
         self.partner_type.setCurrentIndex(0)
         self.is_active.setChecked(True)

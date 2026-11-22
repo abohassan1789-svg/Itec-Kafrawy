@@ -43,6 +43,7 @@ CENT = Decimal("0.01")
 HALF_CENT = Decimal("0.005")
 MAX_AMOUNT = Decimal("9999999999999999.99")
 DEFAULTS_SCREEN = "الحسابات الافتراضية"
+PARTNER_CURRENT_KEY = "partner_cur"   # جاري الشريك ← حسابه لوحده تحت 32 (0042)
 PARTY_LABELS = {"customer": "العميل", "supplier": "المورد", "employee": "الموظف", "partner": "الشريك"}
 SIDE_LABELS = {"dr": "مدين", "cr": "دائن"}
 _MASTER_FIELDS = {"treasury": ("treasury_id", "الخزنة"), "bank": ("bank_account_id", "الحساب البنكي"),
@@ -143,13 +144,16 @@ class PostingService:
             if line.party is None:
                 raise BusinessError(f"«{name}»: لازم يتحدد {PARTY_LABELS[rule['party_kind']]}.")
             kind, party_id = line.party
-            key = ("party", kind, int(party_id))
+            # المفتاح الافتراضي جوه الكاش: نفس الشريك ممكن يبقى على 32 (جاري) و31 (رأس المال) في نفس القيد.
+            key = ("party", kind, int(party_id), rule["default_key"])
             if key not in cache:
                 party = self.repository.party(kind, int(party_id), ex=ex)
                 if party is None:
                     raise BusinessError(f"«{name}»: {PARTY_LABELS[kind]} مش موجود (ممكن يكون اتمسح).")
                 if party["account_id"]:
                     cache[key] = int(party["account_id"])
+                elif party.get("own_account_id") and rule["default_key"] == PARTNER_CURRENT_KEY:
+                    cache[key] = int(party["own_account_id"])         # حساب الشريك نفسه تحت 32 (0042)
                 elif rule["default_key"]:
                     cache[key] = self._default(ex, rule["default_key"], name)
                 else:

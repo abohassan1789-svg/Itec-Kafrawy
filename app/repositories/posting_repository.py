@@ -49,14 +49,18 @@ class PostingRepository:
         return self._x(ex).fetch_value("SELECT name FROM inv.item_categories WHERE id = %s", [category_id])
 
     def party(self, kind: str, party_id: int, ex: Executor | None = None) -> dict | None:
-        """الطرف + حساب الرقابة بتاع مجموعته (العملاء / الموردين بس — الموظف والشريك من المفتاح الافتراضي)."""
+        """الطرف + حساب الرقابة بتاع مجموعته (العملاء / الموردين بس — الموظف والشريك من المفتاح الافتراضي).
+
+        ``own_account_id`` = حساب الطرف لوحده (الشريك بس — حسابه تحت 32، سكريبت 0042)."""
         table, groups = _PARTY_TABLES[kind]
         if groups:
             return self._x(ex).fetch_one(
-                f"SELECT p.id, p.code, p.name_ar, g.control_account_id AS account_id FROM {table} p "
-                f"JOIN {groups} g ON g.id = p.group_id WHERE p.id = %s", [party_id])
+                f"SELECT p.id, p.code, p.name_ar, g.control_account_id AS account_id, NULL::integer AS own_account_id "
+                f"FROM {table} p JOIN {groups} g ON g.id = p.group_id WHERE p.id = %s", [party_id])
+        own = "p.account_id" if kind == "partner" else "NULL::integer"
         return self._x(ex).fetch_one(
-            f"SELECT p.id, p.code, p.name_ar, NULL::integer AS account_id FROM {table} p WHERE p.id = %s", [party_id])
+            f"SELECT p.id, p.code, p.name_ar, NULL::integer AS account_id, {own} AS own_account_id "
+            f"FROM {table} p WHERE p.id = %s", [party_id])
 
     def tax_account(self, tax_code_id: int, direction: str, ex: Executor | None = None) -> dict | None:
         column = "sales_account_id" if direction == "sales" else "purchase_account_id"

@@ -1,7 +1,8 @@
 """SQL الشركاء (``party.partners`` — سكريبت 0022) — المرحلة 3ب.
 
 نفس فكرة ``EmployeeRepository``: الكود ``PRT-001`` محسوب في القاعدة من المسلسل ``seq`` (البرنامج بيكتب المسلسل بس).
-``share_totals`` = مجموع نسب الشركاء النشطين (للتنبيه لو مش 100%). كل دالة بتاخد ``ex`` اختياري (``Tx`` من
+``share_totals`` = مجموع نسب الشركاء النشطين (للتنبيه لو مش 100%). حساب الشريك تحت 32 (``account_id``)
+بيتعمل لوحده في القاعدة مع الإضافة ويتمسح معاه (سكريبت 0042). كل دالة بتاخد ``ex`` اختياري (``Tx`` من
 ``db.atomic()``) عشان التعديل وسجله يبقوا في transaction واحدة.
 """
 
@@ -22,8 +23,10 @@ PARTNER_TYPES = ("general", "limited")
 _SELECT = """
     SELECT p.id, p.seq, p.code, p.name_ar, p.name_en, p.partner_type, p.mobile, p.phone, p.email, p.address,
            p.national_id, p.join_date, p.profit_percent, p.loss_percent, p.subscribed_capital, p.notes,
-           p.is_active, p.created_at, p.updated_at, p.row_version
+           p.is_active, p.created_at, p.updated_at, p.row_version,
+           p.account_id, a.code AS account_code, a.name_ar AS account_name
     FROM party.partners p
+    JOIN acc.accounts a ON a.id = p.account_id
 """
 
 # قفل ترقيم الكود (جهازين بيضيفوا شريك في نفس اللحظة مياخدوش نفس الرقم).
@@ -108,6 +111,12 @@ class PartnerRepository:
     def suggested_code(self, ex: Executor | None = None) -> str:
         """للعرض بس في وضع «جديد» (الرقم الفعلي بيتحسب وقت الحفظ جوه القفل)."""
         return format_code(int(self._x(ex).fetch_value(_NEXT_SEQ)))
+
+    def account_parent(self, ex: Executor | None = None) -> dict | None:
+        """الحساب الرئيسي اللي حسابات الشركاء بتتعمل تحته (32 جاري الشركاء — سكريبت 0042) — للعرض بس."""
+        return self._x(ex).fetch_one(
+            "SELECT id, code, name_ar FROM acc.accounts WHERE role_code = 'partner' AND NOT is_leaf AND is_active "
+            "ORDER BY level, code LIMIT 1")
 
     def insert_partner(self, data: dict[str, Any], ex: Executor | None = None) -> int:
         cols = ", ".join(PARTNER_FIELDS)

@@ -38,7 +38,8 @@ def issue(env, doc_type, d):
 
 def test_types_seeded(env):
     types = {t["code"]: t for t in env["service"].list_types()}
-    assert len(types) == 17                                           # + سند قبض (0035) / سند صرف للمورد (0036) / حركة خزائن وبنوك (0037) / شيك وارد وصادر (0038) / صرف وتسوية عهدة (0040)
+    assert len(types) == 21                                           # + سند قبض (0035) / سند صرف للمورد (0036) / حركة خزائن وبنوك (0037) / شيك وارد وصادر (0038) / صرف وتسوية عهدة (0040) / حركات الشركاء والتوزيع (0041)
+    assert [types[k]["prefix"] for k in ("partner_dep", "partner_wd", "partner_cap", "profit_dist")] == ["PD", "PW", "PC", "PF"]
     assert types["custody_disb"]["prefix"] == "CD" and types["custody_settle"]["prefix"] == "CS"
     assert (types["sales_invoice"]["prefix"], types["sales_invoice"]["digits"]) == ("INV", 5)
     assert types["receipt"]["prefix"] == "RCV" and types["journal"]["prefix"] == "JV"

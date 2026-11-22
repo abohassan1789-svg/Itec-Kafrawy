@@ -124,6 +124,10 @@ SECTIONS: tuple[Section, ...] = (
         Group("حقوق الملكية", (
             Target("partners", "الشركاء", "Partners", icon="🤝",
                    actions=("view", "create", "edit", "save", "delete", "export")),
+            # «حركات الشركاء» (المرحلة 5 — النموذج 1 اختيار المستخدم 2026-11-22): إيداع · سحب · زيادة رأس المال ·
+            # توزيع أرباح / خسارة — شاشة واحدة · مسودة + ترحيل + إلغاء ترحيل بالصلاحية.
+            Target("partner_transactions", "حركات الشركاء", "Partner Transactions", icon="💰",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
         ), icon="🤝"),
         # أنواع المصروفات تحت «الحسابات» (رد المستخدم 2026-11-15: مش قسم جديد) — كل نوع مربوط بحساب مصروف.
         Group("المصروفات", (

@@ -67,7 +67,7 @@ def row(db, code):
 # ---- الدليل الجاهز ----------------------------------------------------------
 def test_seeded_chart_shape(env):
     db, ids = env["db"], env["ids"]
-    assert len(ids) == 62                       # 51 من 0009 + 5 من 0012 (الحسابات الافتراضية) + 5 من 0025 (المصروفات) + 1108 (0038)
+    assert len(ids) == 63                       # 51 من 0009 + 5 من 0012 (الحسابات الافتراضية) + 5 من 0025 (المصروفات) + 1108 (0038) + 3299 (0042)
     roots = db.fetch_all("SELECT code, account_type, statement FROM acc.accounts WHERE parent_id IS NULL ORDER BY code")
     assert [(r["code"], r["account_type"], r["statement"]) for r in roots] == [
         ("1", "asset", "bs"), ("2", "liability", "bs"), ("3", "equity", "bs"),
@@ -291,7 +291,7 @@ def tab_counts(screen) -> list[str]:
 
 def test_screen_tabs_tree_and_expand_collapse(env):
     screen = make_screen(env["db"])
-    assert tab_counts(screen) == ["1 الأصول (20)", "2 الخصوم (7)", "3 حقوق الملكية (5)",
+    assert tab_counts(screen) == ["1 الأصول (20)", "2 الخصوم (7)", "3 حقوق الملكية (6)",
                                   "4 الإيرادات (8)", "5 المصروفات (22)"]
     assert screen.current_type == "asset" and screen.type_tabs["asset"].isChecked()
     assert screen.code_edit.text() == "1" and screen.type_edit.text().startswith("أصول")
@@ -386,7 +386,7 @@ def test_screen_f1_and_search(env, monkeypatch):
 
     class FakeLookup:
         def __init__(self, _title, _columns, rows, _fmt, _parent):
-            assert len(rows) == 62                               # الدليل كله
+            assert len(rows) == 63                               # الدليل كله
             self.selected_id = ids["2103"]
 
         def exec(self):

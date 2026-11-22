@@ -8,6 +8,8 @@
 * **رأس المال المكتتب** رقم مرجعي — المدفوع الفعلي من القيود على 31 رأس المال ببُعد الشريك (المرحلة 5).
 * نوع الشريك: متضامن / موصي · الرقم القومي وتاريخ الدخول اختياريين.
 * كل حفظ / إيقاف / مسح في ``sec.audit_log`` في نفس الـ transaction (بالنسب القديمة والجديدة) + ``row_version``.
+* **حساب لكل شريك تحت 32 جاري الشركاء** (طلب المستخدم 2026-11-22 — سكريبت 0042): بيتعمل لوحده في القاعدة مع
+  الإضافة (3201، 3202 …) باسم الشريك، واسمه بيتغيّر معاه، وبيتمسح معاه — والسجل بيتكتب هنا للحساب كمان.
 """
 
 from __future__ import annotations
@@ -18,6 +20,7 @@ from decimal import Decimal, InvalidOperation
 from typing import Any
 
 from app.database.db import Database, get_db
+from app.repositories.account_repository import AccountRepository
 from app.repositories.partner_repository import PARTNER_TYPES, STATUSES, PartnerRepository, format_code
 from app.services.audit_service import AuditService
 from app.services.concurrency import ConcurrencyGuard
@@ -25,6 +28,7 @@ from app.services.errors import BusinessError
 from app.services.permission_service import PermissionService
 
 ENTITY, ENTITY_LABEL = "party.partners", "شريك"
+ACCOUNT_ENTITY, ACCOUNT_LABEL = "acc.accounts", "حساب"
 PERM = "acc.partners"
 PAGE_SIZE = 100
 LOOKUP_LIMIT = 5000
@@ -63,6 +67,7 @@ class PartnerService:
         self.repository = repository or PartnerRepository(self.db)
         self.audit = audit or AuditService(self.db)
         self.guard = ConcurrencyGuard(self.db)
+        self.accounts = AccountRepository(self.db)
 
     # ---- قراية -------------------------------------------------------------
     def list_partners(self, keyword: str = "", status: str = "all", page: int = 1,
@@ -88,6 +93,13 @@ class PartnerService:
 
     def get_partner(self, partner_id: int) -> dict[str, Any] | None:
         return self.repository.get_partner(int(partner_id))
+
+    def account_hint(self) -> str:
+        """للشاشة في وضع «جديد»: الحساب هيتعمل فين."""
+        parent = self.repository.account_parent()
+        if parent is None:
+            return "مفيش حساب رئيسي «جاري الشركاء» في الدليل"
+        return f"هيتعمل لوحده تحت «{parent['code']} {parent['name_ar']}»"
 
     def new_defaults(self) -> dict[str, Any]:
         return {"code": self.repository.suggested_code(), "is_active": True, "partner_type": "general",
@@ -186,9 +198,11 @@ class PartnerService:
                 if taken:
                     raise BusinessError(f"الرقم القومي ده متسجل قبل كده للشريك «{taken['name_ar']}» "
                                         f"({taken['code']}).")
+            account_before = None
             if partner_id is None:
-                partner_id = self.repository.insert_partner(clean, ex=tx)
+                partner_id = self.repository.insert_partner(clean, ex=tx)   # حسابه تحت 32 بيتعمل في القاعدة
             else:
+                account_before = self.accounts.get_account(int(before["account_id"]), ex=tx, for_update=True)
                 updated = self.repository.update_partner(int(partner_id), clean, ex=tx,
                                                          expected_version=expected_version)
                 self.guard.ensure(tx, updated, expected_version, entity=ENTITY, entity_id=partner_id)
@@ -196,6 +210,12 @@ class PartnerService:
             self.audit.record(tx, action="create" if before is None else "update", entity=ENTITY,
                               entity_id=partner_id, entity_label=ENTITY_LABEL,
                               record_label=f"{code} {clean['name_ar']}", before=before, after=after)
+            account_after = self.accounts.get_account(int(after["account_id"]), ex=tx)
+            if account_before is None or account_after["row_version"] != account_before["row_version"]:
+                self.audit.record(tx, action="create" if account_before is None else "update",
+                                  entity=ACCOUNT_ENTITY, entity_id=account_after["id"], entity_label=ACCOUNT_LABEL,
+                                  record_label=f"{account_after['code']} {account_after['name_ar']}",
+                                  before=account_before, after=account_after)
         return int(partner_id)
 
     def set_active(self, partner_id: int, active: bool, expected_version: int | None = None) -> None:
@@ -227,7 +247,12 @@ class PartnerService:
                 raise BusinessError(NOT_FOUND)
             # TODO (القيود — المرحلة 4): الشريك اللي عليه قيد مايتمسحش — FK RESTRICT من سطور القيود
             # + رسالة عربي «عليه حركة — وقّفه بدل ما تمسحه».
+            account = self.accounts.get_account(int(before["account_id"]), ex=tx, for_update=True)
             deleted = self.repository.delete_partner(int(partner_id), ex=tx, expected_version=expected_version)
             self.guard.ensure(tx, deleted, expected_version, entity=ENTITY, entity_id=partner_id)
             self.audit.record(tx, action="delete", entity=ENTITY, entity_id=partner_id, entity_label=ENTITY_LABEL,
                               record_label=f"{before['code']} {before['name_ar']}", before=before)
+            if account is not None:                                      # اتمسح معاه في القاعدة
+                self.audit.record(tx, action="delete", entity=ACCOUNT_ENTITY, entity_id=account["id"],
+                                  entity_label=ACCOUNT_LABEL, record_label=f"{account['code']} {account['name_ar']}",
+                                  before=account)
