@@ -1,4 +1,4 @@
-"""SQL «دفتر المخزون» (``inv.stock_movements`` + ``inv.stock_balances`` + ``inv.item_costs`` — سكريبت 0043).
+"""SQL «دفتر المخزون» (``inv.stock_movements`` + ``inv.stock_balances`` + ``inv.item_costs`` — سكريبت 0043 + 0044).
 
 * قفل صفوف الأصناف (``FOR NO KEY UPDATE`` بالترتيب — مفيش deadlock) قبل أي كتابة.
 * إضافة / مسح حركات مستند · قراية الحالة قبل يوم معيّن · حركات الصنف من يوم معيّن · حفظ اللي اتحسب.
@@ -85,6 +85,16 @@ class StockLedgerRepository:
             "FROM inv.stock_movements WHERE item_id = %s AND movement_date >= %s ORDER BY movement_date, id",
             [item_id, day])
 
+    def previous_day(self, item_id: int, day: date, ex: Executor) -> date | None:
+        return ex.fetch_value("SELECT max(movement_date) FROM inv.stock_movements "
+                              "WHERE item_id = %s AND movement_date < %s AND NOT is_virtual", [item_id, day])
+
+    def daily_qty(self, item_id: int, ex: Executor) -> list[dict]:
+        """صافي كل (مخزن + نوع) في كل يوم — مترتب بالتاريخ (للمقارنة بالرصيد قبل التعديل)."""
+        return ex.fetch_all(
+            "SELECT warehouse_id, stock_kind, movement_date, sum(qty) AS qty FROM inv.stock_movements "
+            "WHERE item_id = %s GROUP BY warehouse_id, stock_kind, movement_date ORDER BY movement_date", [item_id])
+
     def save_computed(self, movement_id: int, values: dict[str, Any], ex: Executor) -> None:
         sets = ", ".join(f"{c} = %s" for c in _COMPUTED)
         ex.execute(f"UPDATE inv.stock_movements SET {sets} WHERE id = %s",
@@ -161,11 +171,11 @@ class StockLedgerRepository:
     def warehouse_summary(self, ex: Executor | None = None) -> dict[int, dict]:
         """لكل مخزن: عدد الأصناف اللي ليها رصيد + القيمة (الكمية × متوسط الشركة)."""
         rows = self._x(ex).fetch_all(
-            "SELECT b.warehouse_id, count(DISTINCT b.item_id) AS items, "
+            "SELECT b.warehouse_id, count(DISTINCT b.item_id) FILTER (WHERE b.qty > 0) AS items, "
             "round(sum(CASE WHEN w.is_virtual THEN 0 ELSE b.qty * coalesce(c.avg_cost, 0) END), 2) AS value "
             "FROM inv.stock_balances b JOIN inv.warehouses w ON w.id = b.warehouse_id "
             "LEFT JOIN inv.item_costs c ON c.item_id = b.item_id AND c.stock_kind = b.stock_kind "
-            "WHERE b.qty > 0 GROUP BY b.warehouse_id")
+            "GROUP BY b.warehouse_id")
         return {int(r["warehouse_id"]): {"items": int(r["items"]), "value": r["value"]} for r in rows}
 
     def cost_differences(self, ex: Executor | None = None) -> list[dict]:

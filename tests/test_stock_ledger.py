@@ -17,7 +17,7 @@ from app.security.session import SESSION
 from app.services.auth_service import DEFAULT_ADMIN_PASSWORD, DEFAULT_ADMIN_USERNAME, AuthService
 from app.services.errors import BusinessError
 from app.services.permissions_sync_service import PermissionsSyncService
-from app.services.stock_ledger_service import StockLedgerService
+from app.services.stock_ledger_service import NegativeStockError, StockLedgerService
 from app.services.stock_ledger_service import StockLine as S
 
 D1, D2, D3, D4, D5 = (dt.date(2026, 3, d) for d in (1, 2, 3, 4, 5))
@@ -51,26 +51,26 @@ def item(db, name, service=False):
         "RETURNING id", [name, service])
 
 
-def post(env, doc_id, lines, d=D1, doc="purchase_invoice", no=None, db=None):
+def post(env, doc_id, lines, d=D1, doc="purchase_invoice", no=None, db=None, allow=False):
     db = db or env["db"]
     ledger = StockLedgerService(db) if db is not env["db"] else env["ledger"]
     with db.atomic() as tx:
         return ledger.post(tx, doc_type=doc, source_id=doc_id, source_no=no or f"{doc}-{doc_id}",
-                           movement_date=d, lines=lines)
+                           movement_date=d, lines=lines, allow_negative=allow)
 
 
-def remove(env, doc_id, doc="purchase_invoice"):
+def remove(env, doc_id, doc="purchase_invoice", allow=False):
     with env["db"].atomic() as tx:
-        return env["ledger"].remove(tx, doc_type=doc, source_id=doc_id)
+        return env["ledger"].remove(tx, doc_type=doc, source_id=doc_id, allow_negative=allow)
 
 
 def buy(env, doc_id, qty, cost, d=D1, wh=None, kind="invoice", it=None):
     return post(env, doc_id, [S(it or env["item"], wh or env["main"], qty, kind, unit_cost=cost)], d)
 
 
-def sell(env, doc_id, qty, d=D1, wh=None, kind="invoice", it=None):
+def sell(env, doc_id, qty, d=D1, wh=None, kind="invoice", it=None, allow=False):
     return post(env, doc_id, [S(it or env["item"], wh or env["main"], -Decimal(str(qty)), kind)], d,
-                doc="sales_invoice")
+                doc="sales_invoice", allow=allow)
 
 
 def cost_row(env, kind="invoice", it=None):
@@ -241,7 +241,6 @@ def test_transfer_validation(env):
         [S(env["item"], env["main"], -4), S(env["item"], env["main"], 4, transfer_of=0)],          # نفس المخزن والنوع
         [S(env["item"], env["main"], -4), S(env["item"], env["branch"], 3, transfer_of=0)],        # كمية مختلفة
         [S(env["item"], env["main"], -4), S(env["item2"], env["branch"], 4, transfer_of=0)],       # صنف مختلف
-        [S(env["item"], env["main"], -4), S(env["item"], env["virtual"], 4, transfer_of=0)],       # وهمي ↔ حقيقي
         [S(env["item"], env["main"], -4), S(env["item"], env["branch"], 4, transfer_of=0, unit_cost=5)],
         [S(env["item"], env["branch"], 4, transfer_of=1), S(env["item"], env["main"], -4)],        # الداخل قبل الخارج
     ]
@@ -291,7 +290,7 @@ def test_database_guards(env):
     with pytest.raises(psycopg.errors.RaiseException, match="مابتتعدّلش"):
         db.execute("UPDATE inv.stock_movements SET qty = 5 WHERE id = %s", [mid])
     with pytest.raises(psycopg.errors.CheckViolation):
-        db.execute("UPDATE inv.stock_balances SET qty = -1")
+        db.execute("UPDATE inv.item_costs SET avg_cost = -1")
     with pytest.raises(psycopg.errors.RaiseException, match="مايتمسحش"):
         db.execute("DELETE FROM inv.items WHERE id = %s", [env["item"]])
     with pytest.raises(psycopg.errors.RaiseException, match="الوحدة الأساسية"):
@@ -388,3 +387,87 @@ def test_item_and_warehouse_screens_data(env):
     version = env["db"].fetch_value("SELECT row_version FROM inv.items WHERE id = %s", [env["item"]])
     with pytest.raises(psycopg.errors.RaiseException, match="وقّفه بدل ما تمسحه"):
         items.delete_item(env["item"], expected_version=version)
+
+
+# ---- البيع من غير رصيد بالصلاحية (رد المستخدم 2026-11-23) -----------------------------------------
+def sale_row(env, doc_id):
+    return env["db"].fetch_one("SELECT unit_cost, value, booked_value FROM inv.stock_movements "
+                               "WHERE source_type = 'sales_invoice' AND source_id = %s", [doc_id])
+
+
+def test_negative_needs_permission_and_cost_is_corrected(env):
+    buy(env, 1, 10, "100", D1)
+    sell(env, 10, 10, D2)                                    # الرصيد 0 والمتوسط 100
+    with pytest.raises(NegativeStockError) as err:
+        sell(env, 11, 5, D3)
+    assert err.value.shortages[0]["short"] == 5 and "صلاحية" in str(err.value)
+    out = sell(env, 11, 5, D3, allow=True)[0]                # بآخر متوسط مؤقتاً
+    assert (out["unit_cost"], out["value"]) == (Decimal("100"), Decimal("-500.00"))
+    assert wh_qty(env, env["main"]) == -5 and cost_row(env)["qty"] == -5
+    buy(env, 2, 10, "120", D4)                               # الشراء غطّى الناقص ← التكلفة اتصلّحت بـ 120
+    s = sale_row(env, 11)
+    assert (s["unit_cost"], s["value"], s["booked_value"]) == (Decimal("120"), Decimal("-600.00"), Decimal("-500.00"))
+    c = cost_row(env)
+    assert (c["qty"], c["value"], c["avg_cost"]) == (5, Decimal("600.00"), Decimal("120"))
+    assert [(r["source_id"], r["difference"]) for r in env["ledger"].cost_differences()] == [(11, Decimal("-100.00"))]
+    check_books(env)
+
+
+def test_negative_partial_cover_and_item_without_cost(env):
+    sell(env, 10, 5, D1, allow=True)                         # صنف عمره مااتشترى ← تكلفة صفر مؤقتاً
+    assert sale_row(env, 10)["value"] == 0
+    buy(env, 1, 3, "120", D2)                                # غطّى 3 بس
+    assert sale_row(env, 10)["value"] == Decimal("-360.00")
+    c = cost_row(env)
+    assert (c["qty"], c["value"], c["avg_cost"]) == (-2, Decimal("0.00"), Decimal("120"))
+    buy(env, 2, 4, "130", D3)                                # غطّى الـ 2 الباقيين بـ 130
+    s = sale_row(env, 10)
+    assert s["value"] == Decimal("-620.00") and s["unit_cost"] == Decimal("124")
+    c = cost_row(env)
+    assert (c["qty"], c["value"], c["avg_cost"]) == (2, Decimal("260.00"), Decimal("130"))
+    check_books(env)
+
+
+def test_existing_negative_does_not_block_others(env):
+    buy(env, 1, 10, "100", D1)
+    sell(env, 10, 15, D3, allow=True)                        # يوم 3 = −5 بصلاحية
+    buy(env, 2, 2, "100", D2)                                # من غير صلاحية: يوم 3 بقى −3 (أحسن) ← عادي
+    with pytest.raises(NegativeStockError):
+        sell(env, 11, 1, D2)                                 # يوم 3 هيبقى −4 (أوحش) ← محتاج صلاحية
+    buy(env, 3, 3, "100", D5)                                # الرصيد رجع صفر
+    with pytest.raises(NegativeStockError):
+        remove(env, 3)                                       # مسح الشراء يرجّعه سالب ← محتاج صلاحية
+    assert remove(env, 3, allow=True)
+    assert wh_qty(env, env["main"]) == -3
+    check_books(env)
+
+
+def test_backdated_purchase_before_negative_sale(env):
+    sell(env, 10, 4, D3, allow=True)
+    buy(env, 1, 10, "50", D2)                                # قبل البيع ← البيع مابقاش ناقص
+    s = sale_row(env, 10)
+    assert (s["unit_cost"], s["value"]) == (Decimal("50"), Decimal("-200.00"))
+    assert cost_row(env)["qty"] == 6
+    check_books(env)
+
+
+def test_transfer_between_virtual_and_real(env):
+    buy(env, 1, 10, "100")
+    out = post(env, 50, [S(env["item"], env["main"], -4), S(env["item"], env["virtual"], 4, transfer_of=0)], D2,
+               doc="transfer")
+    assert [(r["unit_cost"], r["value"]) for r in out] == [(Decimal("100"), Decimal("-400.00")), (None, 0)]
+    assert cost_row(env)["value"] == Decimal("600.00") and wh_qty(env, env["virtual"]) == 4
+    back = post(env, 51, [S(env["item"], env["virtual"], -2), S(env["item"], env["main"], 2, transfer_of=0)], D3,
+                doc="transfer")
+    assert [(r["unit_cost"], r["value"]) for r in back] == [(None, 0), (Decimal("100"), Decimal("200.00"))]
+    c = cost_row(env)
+    assert (c["qty"], c["value"]) == (8, Decimal("800.00"))
+    assert (wh_qty(env, env["main"]), wh_qty(env, env["virtual"])) == (8, 2)
+    check_books(env)
+
+
+def test_cross_kind_transfer_never_goes_negative(env):
+    buy(env, 1, 3, "100", kind="invoice")
+    with pytest.raises(BusinessError, match="حتى بصلاحية"):
+        post(env, 50, [S(env["item"], env["main"], -5, "invoice"),
+                       S(env["item"], env["main"], 5, "statement", transfer_of=0)], D2, doc="transfer", allow=True)

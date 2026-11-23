@@ -1,21 +1,25 @@
-"""«دفتر المخزون» — محرك حركة المخزون (المرحلة 6 · من غير شاشة · سكريبت 0043).
+"""«دفتر المخزون» — محرك حركة المخزون (المرحلة 6 · من غير شاشة · سكريبت 0043 + 0044).
 
 كل مستند بيحرّك مخزون (بضاعة أول المدة · فاتورة / مردود شراء · إذن صرف / مردود بيع · تحويل · تسوية جرد)
 **مابيحسبش تكلفة بنفسه**: بيبعت سطور ``StockLine`` (الصنف · المخزن · فاتورة/بيان · الكمية بالوحدة الأساسية
 + داخل / − خارج · وتكلفة الوحدة للداخل)، والمحرك جوه transaction المستند:
 
 1. بيقفل صفوف الأصناف (``FOR NO KEY UPDATE`` بالترتيب) — جهازين بيبيعوا نفس الصنف بيتصفّوا ورا بعض.
-2. بيمسح حركات المستند القديمة (لو بيتعدّل) ويسجّل الجديدة.
-3. **بيعيد حساب** الصنف من أقدم يوم اتأثر لحد آخر حركة (حركة بتاريخ قديم بتغيّر متوسط اللي بعدها):
+2. بيمسح حركات المستند القديمة (لو بيتعدّل) ويسجّل الجديدة — **التاريخ القديم مسموح** (رد المستخدم).
+3. **بيعيد حساب** الصنف من أقدم يوم اتأثر لحد آخر حركة:
    * **متوسط مرجّح مستمر على مستوى الشركة لكل (صنف + فاتورة/بيان)** — الداخل بتكلفته بيغيّر المتوسط، والخارج
-     بيطلع بالمتوسط ومابيغيّروش · التحويل: الخارج بالمتوسط والداخل **بنفس القيمة** (لو من نوع لنوع بيدخل في
-     متوسط النوع التاني).
+     بيطلع بالمتوسط ومابيغيّروش · التحويل بين مخزنين حقيقيين: الخارج بالمتوسط والداخل **بنفس القيمة**.
    * ترتيب نفس اليوم: **الوارد بتكلفة ← التحويلات ← الصادر** (وجوه كل مجموعة بالترتيب اللي اتسجلت بيه).
    * آخر خروج بيصفّر الكمية بياخد **كل القيمة الباقية** (مفيش قروش معلّقة في المخزون).
-   * **الرصيد السالب ممنوع** في أي مخزن، آخر أي يوم (مش النهارده بس) ← ``BusinessError`` بالعربي والمستند كله بيرجع.
-   * **المخزن الوهمي** كميات بس: من غير تكلفة ولا قيمة ولا متوسط.
+   * **الرصيد السالب بالصلاحية بس** (رد المستخدم — صلاحية «من غير رصيد» في كل شاشة لوحدها، والمستند بيبعت
+     ``allow_negative``): من غيرها أي يوم في أي مخزن يبقى آخره بالسالب **أكتر من الأول** ← ``NegativeStockError``.
+     اللي اتصرف من غير رصيد بيطلع **بآخر متوسط مؤقتاً**، ولما شراء ييجي يغطّيه **تكلفته بتتصلّح بسعر الشراء ده**
+     (الأقدم الأول) — والفرق بيبان في ``cost_differences``.
+   * **المخزن الوهمي** كميات بس (من غير تكلفة ولا قيمة) · التحويل بينه وبين الحقيقي مسموح في الاتجاهين
+     (رد المستخدم): حقيقي ← وهمي = خروج بالمتوسط (بيطلع من قيمة المخزون) · وهمي ← حقيقي = دخول **بآخر متوسط**.
+   * التحويل **من فاتورة لبيان (أو العكس)** مايعدّيش رصيد النوع في الشركة حتى بالصلاحية (التكلفة بتتنقل لمتوسط تاني).
 4. بيرجّع لكل سطر **تكلفته وقيمته** (المستند بيعمل بيهم سطور «المخزون» و«تكلفة المبيعات» في محرك الترحيل).
-   القيمة اللي اتقيّدت بتتحفظ (``booked_value``)، ولو إعادة الحساب غيّرت قيمة حركة قديمة، الفرق بيبان في
+   القيمة اللي اتقيّدت بتتحفظ (``booked_value``)، ولو إعادة الحساب غيّرت قيمة حركة، الفرق بيبان في
    ``cost_differences`` (بند «فروق التكلفة» هيقيّده).
 
 الصلاحيات بتاعة المستند نفسه (المحرك بيتنادى من Service المستند بعد ما يتأكد منها) · سجل التعديلات بتاع المستند.
@@ -23,6 +27,7 @@
 
 from __future__ import annotations
 
+import bisect
 import datetime as dt
 from dataclasses import dataclass
 from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
@@ -43,6 +48,7 @@ MAX_QTY = Decimal("999999999999")
 MAX_COST = Decimal("999999999999")
 MAX_LINES = 30000
 ZERO = Decimal("0")
+_SAVED = ("unit_cost", "value", "kind_qty_after", "kind_value_after", "avg_cost_after", "wh_qty_after", "day_seq")
 
 
 @dataclass(frozen=True)
@@ -55,6 +61,20 @@ class StockLine:
     stock_kind: str = "invoice"
     unit_cost: Any = None            # الداخل بس (شراء · أول المدة · مردود بيع بتكلفته الأصلية · زيادة جرد)
     transfer_of: int | None = None   # الداخل في التحويل ← رقم سطر الخارج (من 0) في نفس المستند
+
+
+class NegativeStockError(BusinessError):
+    """الرصيد هيبقى بالسالب والمستخدم مالوش صلاحية «من غير رصيد» — ``shortages`` فيها كل صنف ومخزن ويوم."""
+
+    def __init__(self, shortages: list[dict[str, Any]]) -> None:
+        self.shortages = shortages
+        first = shortages[0]
+        text = (f"الصنف {first['item_code']} «{first['item_name']}»: رصيد «{KINDS[first['stock_kind']]}» في المخزن "
+                f"«{first['warehouse_name']}» هيبقى بالسالب آخر يوم {first['date']:%d/%m/%Y} "
+                f"(ناقص {fmt_qty(first['short'])} {first['unit_name']})")
+        if len(shortages) > 1:
+            text += f" — و{len(shortages) - 1} تاني"
+        super().__init__(text + " — الصرف من غير رصيد محتاج صلاحية.")
 
 
 def item_code(seq: int) -> str:
@@ -79,9 +99,33 @@ def _decimal(value: Any, label: str) -> Decimal:
     return number
 
 
+def _money(value: Decimal) -> Decimal:
+    return value.quantize(CENT, rounding=ROUND_HALF_UP)
+
+
 def _db_message(exc: psycopg.Error) -> BusinessError:
     diag = getattr(exc, "diag", None)
     return BusinessError((diag.message_primary if diag else None) or str(exc))
+
+
+class _History:
+    """رصيد كل (مخزن + نوع) آخر أي يوم **قبل التعديل** — عشان السالب اللي كان موجود (بصلاحية) مايترفضش تاني."""
+
+    def __init__(self, rows: list[dict]) -> None:
+        self.days: dict[tuple[int, str], list[dt.date]] = {}
+        self.totals: dict[tuple[int, str], list[Decimal]] = {}
+        for r in rows:                                       # مترتبين بالتاريخ
+            key = (int(r["warehouse_id"]), r["stock_kind"])
+            total = (self.totals.get(key) or [ZERO])[-1] + r["qty"]
+            self.days.setdefault(key, []).append(r["movement_date"])
+            self.totals.setdefault(key, []).append(total)
+
+    def balance(self, key: tuple[int, str], day: dt.date) -> Decimal:
+        days = self.days.get(key)
+        if not days:
+            return ZERO
+        n = bisect.bisect_right(days, day)
+        return self.totals[key][n - 1] if n else ZERO
 
 
 class StockLedgerService:
@@ -114,9 +158,9 @@ class StockLedgerService:
                 raise BusinessError(f"{label}: الكمية صفر.")
             if abs(qty) > MAX_QTY:
                 raise BusinessError(f"{label}: الكمية أكبر من المسموح.")
-            row = {"line": n, "label": label, "item": item, "warehouse": wh, "item_id": int(line.item_id),
-                   "warehouse_id": int(line.warehouse_id), "stock_kind": kind, "qty": qty, "pair": None,
-                   "is_virtual": bool(wh["is_virtual"]), "given_cost": None}
+            row = {"line": n, "label": label, "item_id": int(line.item_id), "warehouse_id": int(line.warehouse_id),
+                   "stock_kind": kind, "qty": qty, "pair": None, "pair_of": None,
+                   "is_virtual": bool(wh["is_virtual"]), "given_cost": None, "mode": None}
             if line.transfer_of is not None:
                 src = int(line.transfer_of)
                 if not 0 <= src < len(lines) or src == n - 1:
@@ -124,17 +168,18 @@ class StockLedgerService:
                 if src >= n - 1:
                     raise BusinessError(f"{label}: سطر الخارج بتاع التحويل لازم ييجي قبل الداخل.")
                 out = clean[src]
-                if qty <= 0 or out["qty"] != -qty or out["item_id"] != row["item_id"] or out["pair_of"]:
+                if qty <= 0 or out["qty"] != -qty or out["item_id"] != row["item_id"] or out["pair_of"] is not None:
                     raise BusinessError(f"{label}: الداخل في التحويل لازم نفس الصنف والكمية بتاعة سطر الخارج.")
-                if out["is_virtual"] != row["is_virtual"]:
-                    raise BusinessError(f"{label}: مينفعش تحويل بين مخزن وهمي ومخزن حقيقي.")
                 if (out["warehouse_id"], out["stock_kind"]) == (row["warehouse_id"], kind):
                     raise BusinessError(f"{label}: التحويل لنفس المخزن ونفس النوع مالوش معنى.")
                 if line.unit_cost not in (None, ""):
-                    raise BusinessError(f"{label}: الداخل في التحويل بياخد تكلفة الخارج — ماتكتبلوش تكلفة.")
+                    raise BusinessError(f"{label}: الداخل في التحويل بياخد تكلفته لوحده — ماتكتبلوش تكلفة.")
                 row["pair"] = src
                 out["pair_of"] = n - 1
-            elif qty > 0 and not row["is_virtual"]:
+                row["mode"] = "none" if row["is_virtual"] else ("current" if out["is_virtual"] else "transfer")
+            elif row["is_virtual"]:
+                row["mode"] = "none"
+            elif qty > 0:
                 if line.unit_cost in (None, ""):
                     raise BusinessError(f"{label}: تكلفة الوحدة مطلوبة للداخل.")
                 cost = _decimal(line.unit_cost, "تكلفة الوحدة")
@@ -143,31 +188,26 @@ class StockLedgerService:
                 if cost > MAX_COST:
                     raise BusinessError(f"{label}: تكلفة الوحدة أكبر من المسموح.")
                 row["given_cost"] = cost.quantize(COST_STEP, rounding=ROUND_HALF_UP)
-            elif qty < 0 and line.unit_cost not in (None, ""):
-                raise BusinessError(f"{label}: الخارج بيطلع بمتوسط التكلفة — ماتكتبلوش تكلفة.")
-            row["pair_of"] = None
+                row["mode"] = "given"
+            else:
+                if line.unit_cost not in (None, ""):
+                    raise BusinessError(f"{label}: الخارج بيطلع بمتوسط التكلفة — ماتكتبلوش تكلفة.")
+                row["mode"] = "average"
+            if row["is_virtual"] and line.unit_cost not in (None, "") and line.transfer_of is None:
+                raise BusinessError(f"{label}: المخزن الوهمي كميات بس — ماتكتبلوش تكلفة.")
             clean.append(row)
         return clean
 
-    @staticmethod
-    def _mode(row: dict[str, Any]) -> str:
-        if row["is_virtual"]:
-            return "none"
-        if row["pair"] is not None:
-            return "transfer"
-        return "given" if row["qty"] > 0 else "average"
-
     # ---- الكتابة (جوه transaction المستند) -------------------------------------------
     def post(self, tx: Executor, *, doc_type: str, source_id: int, source_no: str, movement_date: dt.date,
-             lines: list[StockLine]) -> list[dict[str, Any]]:
+             lines: list[StockLine], allow_negative: bool = False) -> list[dict[str, Any]]:
         """يسجّل حركات المستند (أو يبدّل حركاته القديمة) ← لكل سطر: التكلفة والقيمة بعد إعادة الحساب.
 
-        لازم يتنادى جوه ``db.atomic()`` بتاع المستند. أي غلط (رصيد سالب · سنة مقفولة · بيانات ناقصة) ←
-        ``BusinessError`` بالعربي والمستند كله بيرجع.
+        لازم يتنادى جوه ``db.atomic()`` بتاع المستند. ``allow_negative`` = المستخدم عنده صلاحية «من غير رصيد»
+        في شاشة المستند. أي غلط ← ``BusinessError`` (والسالب من غير صلاحية ← ``NegativeStockError``) والمستند
+        كله بيرجع.
         """
-        doc = self.repository.doc_type(str(doc_type), ex=tx)
-        if doc is None:
-            raise BusinessError(f"نوع المستند «{doc_type}» مالوش حركة مخزون.")
+        doc = self._doc(tx, doc_type)
         if isinstance(movement_date, dt.datetime):
             movement_date = movement_date.date()
         if not isinstance(movement_date, dt.date):
@@ -184,9 +224,10 @@ class StockLedgerService:
             old = self.repository.source_movements(doc["code"], int(source_id), ex=tx)
             items = self.repository.lock_items([int(l.item_id) for l in lines] + [int(m["item_id"]) for m in old], tx)
             clean = self._clean(tx, lines, items)
-            start: dict[int, dt.date] = {}
-            for m in old:
-                start[int(m["item_id"])] = min(start.get(int(m["item_id"]), m["movement_date"]), m["movement_date"])
+            start = self._starts(old)
+            for row in clean:
+                start[row["item_id"]] = min(start.get(row["item_id"], movement_date), movement_date)
+            history = {i: _History(self.repository.daily_qty(i, ex=tx)) for i in start}
             if old:
                 self.repository.delete_source(doc["code"], int(source_id), ex=tx)
             ids: list[int] = []
@@ -196,57 +237,80 @@ class StockLedgerService:
                     "source_type": doc["code"], "source_id": int(source_id), "source_no": source_no,
                     "line_no": row["line"], "movement_date": movement_date, "item_id": row["item_id"],
                     "warehouse_id": row["warehouse_id"], "stock_kind": row["stock_kind"], "qty": row["qty"],
-                    "cost_mode": self._mode(row), "given_cost": row["given_cost"], "pair_id": pair_id,
+                    "cost_mode": row["mode"], "given_cost": row["given_cost"], "pair_id": pair_id,
                     "is_virtual": row["is_virtual"], "created_by": SESSION.user_id}, ex=tx))
-                start[row["item_id"]] = min(start.get(row["item_id"], movement_date), movement_date)
-            for item_id in sorted(start):
-                self._replay(tx, items[item_id], start[item_id])
+            self._replay_all(tx, items, start, history, allow_negative)
             self.repository.book(ids, ex=tx)
-            out = self.repository.source_lines(doc["code"], int(source_id), ex=tx)
+            return self.repository.source_lines(doc["code"], int(source_id), ex=tx)
         except psycopg.errors.RaiseException as exc:
             raise _db_message(exc) from exc
-        except psycopg.errors.CheckViolation as exc:
-            raise BusinessError("الرصيد هيبقى بالسالب — مينفعش (اعمل «تحديث» وجرّب تاني).") from exc
-        return out
 
-    def remove(self, tx: Executor, *, doc_type: str, source_id: int) -> bool:
+    def remove(self, tx: Executor, *, doc_type: str, source_id: int, allow_negative: bool = False) -> bool:
         """يمسح حركات المستند (إلغاء الترحيل / المسح) ويعيد الحساب ← ``False`` لو مالوش حركات.
 
-        لو اللي اتصرف بعده هيخلّي الرصيد بالسالب ← ``BusinessError`` ومابيتمسحش.
+        لو اللي اتصرف بعده هيخلّي الرصيد بالسالب ومفيش صلاحية «من غير رصيد» ← ``NegativeStockError`` ومابيتمسحش.
         """
-        doc = self.repository.doc_type(str(doc_type), ex=tx)
-        if doc is None:
-            raise BusinessError(f"نوع المستند «{doc_type}» مالوش حركة مخزون.")
+        doc = self._doc(tx, doc_type)
         try:
             old = self.repository.source_movements(doc["code"], int(source_id), ex=tx)
             if not old:
                 return False
             items = self.repository.lock_items([int(m["item_id"]) for m in old], tx)
-            start: dict[int, dt.date] = {}
-            for m in old:
-                start[int(m["item_id"])] = min(start.get(int(m["item_id"]), m["movement_date"]), m["movement_date"])
+            start = self._starts(old)
+            history = {i: _History(self.repository.daily_qty(i, ex=tx)) for i in start}
             self.repository.delete_source(doc["code"], int(source_id), ex=tx)
-            for item_id in sorted(start):
-                self._replay(tx, items[item_id], start[item_id])
+            self._replay_all(tx, items, start, history, allow_negative)
         except psycopg.errors.RaiseException as exc:
             raise _db_message(exc) from exc
-        except psycopg.errors.CheckViolation as exc:
-            raise BusinessError("الرصيد هيبقى بالسالب — مينفعش (اعمل «تحديث» وجرّب تاني).") from exc
         return True
 
+    def _doc(self, tx: Executor, doc_type: str) -> dict:
+        doc = self.repository.doc_type(str(doc_type), ex=tx)
+        if doc is None:
+            raise BusinessError(f"نوع المستند «{doc_type}» مالوش حركة مخزون.")
+        return doc
+
+    @staticmethod
+    def _starts(movements: list[dict]) -> dict[int, dt.date]:
+        start: dict[int, dt.date] = {}
+        for m in movements:
+            item_id = int(m["item_id"])
+            start[item_id] = min(start.get(item_id, m["movement_date"]), m["movement_date"])
+        return start
+
+    def _replay_all(self, tx: Executor, items: dict[int, dict], start: dict[int, dt.date],
+                    history: dict[int, _History], allow_negative: bool) -> None:
+        shortages: list[dict[str, Any]] = []
+        for item_id in sorted(start):
+            shortages += self._replay(tx, items[item_id], start[item_id], history[item_id])
+        if shortages and not allow_negative:
+            raise NegativeStockError(shortages)
+
     # ---- إعادة الحساب -----------------------------------------------------------------
-    def _replay(self, tx: Executor, item: dict[str, Any], day: dt.date) -> None:
+    def _safe_start(self, tx: Executor, item_id: int, day: dt.date) -> dt.date:
+        """يرجع لأول يوم الرصيد قبله مش بالسالب — عشان اللي اتصرف من غير رصيد يتصلّح بالشراء اللي غطّاه."""
+        while True:
+            states = self.repository.chain_state_before(item_id, day, ex=tx)
+            if all((s["qty"] or ZERO) >= 0 for s in states.values()):
+                return day
+            previous = self.repository.previous_day(item_id, day, ex=tx)
+            if previous is None:
+                return day
+            day = previous
+
+    def _replay(self, tx: Executor, item: dict[str, Any], day: dt.date, history: _History) -> list[dict[str, Any]]:
         item_id = int(item["id"])
-        chains: dict[str, dict[str, Decimal]] = {}
+        day = self._safe_start(tx, item_id, day)
+        chains: dict[str, dict[str, Any]] = {}
         for kind, row in self.repository.chain_state_before(item_id, day, ex=tx).items():
-            chains[kind] = {"qty": row["qty"] or ZERO, "value": row["value"] or ZERO, "avg": row["avg"] or ZERO}
+            chains[kind] = {"qty": row["qty"] or ZERO, "value": row["value"] or ZERO, "avg": row["avg"] or ZERO,
+                            "short": []}
         wh_qty = dict(self.repository.warehouse_qty_before(item_id, day, ex=tx))
         movements = self.repository.movements_from(item_id, day, ex=tx)
-        if movements:
-            names = self.repository.warehouses([int(m["warehouse_id"]) for m in movements], ex=tx)
         by_day: dict[dt.date, list[dict]] = {}
         for m in movements:
             by_day.setdefault(m["movement_date"], []).append(m)
+        results: dict[int, dict[str, Any]] = {}
         for current, rows in by_day.items():
             ins = {int(m["pair_id"]): m for m in rows if m["pair_id"] is not None}
             ordered = [m for m in rows if m["qty"] > 0 and m["pair_id"] is None]
@@ -254,58 +318,135 @@ class StockLedgerService:
                 if m["qty"] < 0 and int(m["id"]) in ins:
                     ordered += [m, ins[int(m["id"])]]
             ordered += [m for m in rows if m["qty"] < 0 and int(m["id"]) not in ins]
-            done: dict[int, dict] = {}
-            touched: set[tuple[int, str]] = set()
             for seq, m in enumerate(ordered, start=1):
-                computed = self._apply(m, chains, done)
+                pair = ins.get(int(m["id"])) if m["qty"] < 0 else None
+                if int(m["id"]) not in results:
+                    self._apply(item, m, pair, chains, results)
                 key = (int(m["warehouse_id"]), m["stock_kind"])
                 wh_qty[key] = wh_qty.get(key, ZERO) + m["qty"]
-                touched.add(key)
-                computed["wh_qty_after"] = wh_qty[key]
-                computed["day_seq"] = seq
-                done[int(m["id"])] = computed
-                if any(computed[c] != m[c] for c in computed):
-                    self.repository.save_computed(int(m["id"]), computed, ex=tx)
-            for key in sorted(touched):
-                if wh_qty[key] < 0:
-                    self._negative(item, names[key[0]], key[1], current, wh_qty[key])
+                results[int(m["id"])]["wh_qty_after"] = wh_qty[key]
+                results[int(m["id"])]["day_seq"] = seq
+        for m in movements:
+            computed = results[int(m["id"])]
+            if any(computed[c] != m[c] for c in _SAVED):
+                self.repository.save_computed(int(m["id"]), computed, ex=tx)
         self.repository.refresh_balances(item_id, ex=tx)
+        return self._shortages(tx, item, day, history)
+
+    def _shortages(self, tx: Executor, item: dict[str, Any], day: dt.date, before: _History) -> list[dict[str, Any]]:
+        """كل (مخزن + نوع) آخره بالسالب **أكتر من قبل التعديل** في أي يوم من ``day`` (أيام الحركات القديمة والجديدة)."""
+        after = _History(self.repository.daily_qty(int(item["id"]), ex=tx))
+        found: list[dict[str, Any]] = []
+        for key in sorted(set(before.days) | set(after.days)):
+            days = sorted({d for d in before.days.get(key, []) + after.days.get(key, []) if d >= day})
+            for current in days:
+                balance = after.balance(key, current)
+                if balance < 0 and balance < before.balance(key, current):
+                    found.append({"item_id": int(item["id"]), "item_code": item_code(item["seq"]),
+                                  "item_name": item["name"], "unit_name": item["unit_name"], "warehouse_id": key[0],
+                                  "stock_kind": key[1], "date": current, "short": -balance})
+                    break
+        if found:
+            names = self.repository.warehouses([f["warehouse_id"] for f in found], ex=tx)
+            for f in found:
+                f["warehouse_name"] = names[f["warehouse_id"]]["name_ar"]
+        return found
 
     @staticmethod
-    def _apply(m: dict[str, Any], chains: dict[str, dict[str, Decimal]], done: dict[int, dict]) -> dict[str, Any]:
+    def _snapshot(chain: dict[str, Any] | None) -> dict[str, Any]:
+        if chain is None:
+            return {"kind_qty_after": None, "kind_value_after": None, "avg_cost_after": None}
+        return {"kind_qty_after": chain["qty"], "kind_value_after": chain["value"], "avg_cost_after": chain["avg"]}
+
+    def _apply(self, item: dict, m: dict[str, Any], pair: dict[str, Any] | None,
+               chains: dict[str, dict[str, Any]], results: dict[int, dict]) -> None:
+        """يحسب الحركة (ولو خارج تحويل، الداخل اللي قصاده معاه)."""
+        mid = int(m["id"])
         if m["is_virtual"]:
-            return {"unit_cost": None, "value": ZERO, "kind_qty_after": None, "kind_value_after": None,
-                    "avg_cost_after": None}
-        chain = chains.setdefault(m["stock_kind"], {"qty": ZERO, "value": ZERO, "avg": ZERO})
-        qty = m["qty"]
-        if m["cost_mode"] == "given":
-            unit_cost = m["given_cost"]
-            value = (qty * unit_cost).quantize(CENT, rounding=ROUND_HALF_UP)
-        elif m["cost_mode"] == "transfer":
-            source = done[int(m["pair_id"])]
-            unit_cost = source["unit_cost"]
-            value = -source["value"]
-        else:                                                    # خارج بالمتوسط
-            unit_cost = chain["avg"]
-            if chain["qty"] + qty == 0:
-                value = -chain["value"]                          # آخر خروج بياخد الباقي كله
-            else:
-                value = (qty * unit_cost).quantize(CENT, rounding=ROUND_HALF_UP)
+            results[mid] = {"unit_cost": None, "value": ZERO, **self._snapshot(None)}
+            if pair is not None and not pair["is_virtual"]:          # وهمي ← حقيقي: الداخل بآخر متوسط
+                chain = self._chain(chains, pair["stock_kind"])
+                self._receive(pair, chain, chain["avg"], None, results)
+            elif pair is not None:
+                results[int(pair["id"])] = {"unit_cost": None, "value": ZERO, **self._snapshot(None)}
+            return
+        chain = self._chain(chains, m["stock_kind"])
+        if m["qty"] > 0:                                              # داخل بتكلفة من المستند
+            self._receive(m, chain, m["given_cost"], None, results)
+            return
+        if pair is not None and not pair["is_virtual"] and pair["stock_kind"] == m["stock_kind"]:
+            # تحويل بين مخزنين حقيقيين بنفس النوع: الشركة مااتغيّرش — الخارج بالمتوسط والداخل بنفس القيمة.
+            value = _money(m["qty"] * chain["avg"])
+            results[mid] = {"unit_cost": chain["avg"], "value": value, **self._snapshot(chain)}
+            results[int(pair["id"])] = {"unit_cost": chain["avg"], "value": -value, **self._snapshot(chain)}
+            return
+        if pair is not None and not pair["is_virtual"] and chain["qty"] + m["qty"] < 0:
+            raise BusinessError(
+                f"الصنف {item_code(item['seq'])} «{item['name']}»: التحويل من «{KINDS[m['stock_kind']]}» لـ "
+                f"«{KINDS[pair['stock_kind']]}» أكبر من رصيد «{KINDS[m['stock_kind']]}» في الشركة يوم "
+                f"{m['movement_date']:%d/%m/%Y} — مينفعش حتى بصلاحية «من غير رصيد».")
+        self._issue(m, chain, results)
+        if pair is None:
+            return
+        if pair["is_virtual"]:                                        # حقيقي ← وهمي: الداخل كمية بس
+            results[int(pair["id"])] = {"unit_cost": None, "value": ZERO, **self._snapshot(None)}
+            return
+        out = results[mid]                                            # فاتورة ↔ بيان: بنفس القيمة في النوع التاني
+        self._receive(pair, self._chain(chains, pair["stock_kind"]), out["unit_cost"], -out["value"], results)
+
+    @staticmethod
+    def _chain(chains: dict[str, dict[str, Any]], kind: str) -> dict[str, Any]:
+        return chains.setdefault(kind, {"qty": ZERO, "value": ZERO, "avg": ZERO, "short": []})
+
+    def _issue(self, m: dict[str, Any], chain: dict[str, Any], results: dict[int, dict]) -> None:
+        """خارج بالمتوسط — اللي مش موجود بيطلع بآخر متوسط مؤقتاً ويتسجل «ناقص» يتصلّح بالشراء الجاي."""
+        qty, have, avg = m["qty"], chain["qty"], chain["avg"]
+        if have + qty >= 0:
+            value = -chain["value"] if have + qty == 0 else _money(qty * avg)
+            unit_cost = avg
+        else:
+            missing = -(have + qty) if have > 0 else -qty
+            value = (-chain["value"] if have > 0 else ZERO) - _money(missing * avg)
+            unit_cost = (value / qty).quantize(COST_STEP, rounding=ROUND_HALF_UP)
+            chain["short"].append([int(m["id"]), missing, avg, qty])   # [الحركة، الناقص، بكام طلع، كميتها]
         chain["qty"] += qty
         chain["value"] += value
-        if qty > 0 and chain["qty"] > 0:
-            chain["avg"] = (chain["value"] / chain["qty"]).quantize(COST_STEP, rounding=ROUND_HALF_UP)
-            if chain["avg"] < 0:
-                chain["avg"] = ZERO
-        return {"unit_cost": unit_cost, "value": value, "kind_qty_after": chain["qty"],
-                "kind_value_after": chain["value"], "avg_cost_after": chain["avg"]}
+        results[int(m["id"])] = {"unit_cost": unit_cost, "value": value, **self._snapshot(chain)}
 
     @staticmethod
-    def _negative(item: dict, warehouse: dict, kind: str, day: dt.date, qty: Decimal) -> None:
-        raise BusinessError(
-            f"الصنف {item_code(item['seq'])} «{item['name']}»: رصيد «{KINDS[kind]}» في المخزن «{warehouse['name_ar']}» "
-            f"هيبقى بالسالب آخر يوم {day:%d/%m/%Y} (ناقص {fmt_qty(-qty)} {item['unit_name']}) — "
-            "الرصيد السالب ممنوع.")
+    def _receive(m: dict[str, Any], chain: dict[str, Any], unit_cost: Decimal, value: Decimal | None,
+                 results: dict[int, dict]) -> None:
+        """داخل بتكلفة — لو فيه «ناقص» (اتصرف من غير رصيد) بيغطّيه الأول وتكلفته بتتصلّح بالتكلفة دي."""
+        qty = m["qty"]
+        value = _money(qty * unit_cost) if value is None else value
+        cover, adjusted, last = qty, ZERO, None
+        while cover > 0 and chain["short"]:
+            entry = chain["short"][0]
+            part = min(cover, entry[1])
+            adj = _money(part * (unit_cost - entry[2]))
+            if adj:
+                out = results[entry[0]]
+                out["value"] -= adj
+                out["unit_cost"] = (out["value"] / entry[3]).quantize(COST_STEP, rounding=ROUND_HALF_UP)
+                adjusted += adj
+                last = (out, entry[3])
+            entry[1] -= part
+            cover -= part
+            if entry[1] == 0:
+                chain["short"].pop(0)
+        chain["qty"] += qty
+        chain["value"] += value - adjusted
+        if chain["qty"] == 0 and chain["value"] != 0 and last is not None:
+            out, out_qty = last                              # قروش التقريب على آخر خارج اتصلّح
+            out["value"] -= chain["value"]
+            out["unit_cost"] = (out["value"] / out_qty).quantize(COST_STEP, rounding=ROUND_HALF_UP)
+            chain["value"] = ZERO
+        if chain["qty"] > 0:
+            chain["avg"] = max(ZERO, (chain["value"] / chain["qty"]).quantize(COST_STEP, rounding=ROUND_HALF_UP))
+        else:
+            chain["avg"] = unit_cost
+        results[int(m["id"])] = {"unit_cost": unit_cost, "value": value, "kind_qty_after": chain["qty"],
+                                 "kind_value_after": chain["value"], "avg_cost_after": chain["avg"]}
 
     # ---- قراية --------------------------------------------------------------------
     def available(self, item_id: int, warehouse_id: int | None = None, stock_kind: str | None = None, *,
