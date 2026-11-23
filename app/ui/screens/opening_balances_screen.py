@@ -108,7 +108,7 @@ class OpeningBalancesScreen(BaseScreen):
         self.section = "trs"
         self.section_rows: list[dict] = []
         self._edits: dict[tuple[str, int], dict] = {}      # (القسم، الطرف/الخزنة) ← التغيير
-        self._lines: dict[int, tuple[Decimal, Decimal]] = {}  # كل سطور المستند (للإجماليات)
+        self._lines: dict[Any, tuple[Decimal, Decimal]] = {}  # كل سطور المستند + المخزون (للإجماليات)
         self._other_meta: list[dict] = []                  # بيانات كل سطر في «حسابات تانية» (الأصلي)
         self._other_removed: list[dict] = []
         self._choices: dict[str, Any] = {"accounts": [], "cost_centers": [], "parties": {}}
@@ -294,8 +294,10 @@ class OpeningBalancesScreen(BaseScreen):
                  "cus": "كل العملاء على حساب رقابة مجموعتهم · مدين = عليه · دائن = ليه (دفع زيادة).",
                  "sup": "كل الموردين على حساب رقابة مجموعتهم · دائن = ليه · مدين = دفعنا له زيادة.",
                  "emp": "عهدة كل موظف على «عهد الموظفين» · مدين = العهدة اللي معاه.",
-                 "prt": "رأس مال كل شريك على «رأس المال» · دائن عادة (جاري الشركاء من «حسابات تانية»)."}
-        self.section_hint.setText(hints.get(section, "") + " الفاضي = مالوش رصيد.")
+                 "prt": "رأس مال كل شريك على «رأس المال» · دائن عادة (جاري الشركاء من «حسابات تانية»).",
+                 "inv": "قراية بس — بيتكتب من شاشة «بضاعة أول المدة» (أو رصيد أول المدة في شاشة الأصناف): "
+                        "القيمة على حساب المخزون والفرق على «34» مع الترحيل، والكميات بتدخل دفتر المخزون."}
+        self.section_hint.setText(hints.get(section, "") + ("" if section == "inv" else " الفاضي = مالوش رصيد."))
 
     def _fill_master(self) -> None:
         self._filling = True
@@ -599,6 +601,8 @@ class OpeningBalancesScreen(BaseScreen):
         except Exception:  # noqa: BLE001
             lines = []
         self._lines = {int(l["id"]): (Decimal(l["debit"]), Decimal(l["credit"])) for l in lines}
+        stock = ((record.get("sections") or {}).get("inv") or {}).get("debit") or ZERO
+        self._lines[("inv",)] = (Decimal(stock), ZERO)            # بضاعة أول المدة (قراية بس)
         if not self._choices["accounts"]:
             self._load_choices()
         other = [l for l in lines if l["section"] == "oth"]

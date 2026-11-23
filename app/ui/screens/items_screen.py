@@ -14,6 +14,8 @@
 ```
 * الاسم مايتكررش في نفس النوع — في نوع تاني **تحذير بس** (تحت الاسم وقت الكتابة + سؤال قبل الحفظ).
 * الحسابات من النوع (مفيش حساب على الصنف) · الخدمي مالوش مخزن ولا حد طلب · الرصيد مع دفتر المخزون.
+* **رصيد أول المدة** (2026-11-23): المخزن (الافتراضي = مخزن الصنف ← العام) · فاتورة/بيان · الرصيد · السعر — بيعدّلوا
+  نفس السطر في «بضاعة أول المدة» مع حفظ الصنف، ومقفولين بعد ترحيل الأرصدة الافتتاحية.
 """
 
 from __future__ import annotations
@@ -43,6 +45,8 @@ from PySide6.QtWidgets import (
 )
 
 from app.services.item_service import BALANCE_NOTE, PAGE_SIZE, ItemService, category_path
+from app.services.opening_stock_service import KINDS as STOCK_KINDS
+from app.services.opening_stock_service import line_value, parse_cost, parse_qty
 from app.ui.common import messages
 from app.ui.common.base_screen import EDITING, BaseScreen, align_form_right
 from app.ui.common.data_table import default_format
@@ -95,6 +99,8 @@ class ItemsScreen(BaseScreen):
         self.kind = "all"
         self._last_query: tuple | None = None
         self._choices: dict[str, list[dict]] = {}
+        self._opening: dict[str, Any] = {}                          # سطر «بضاعة أول المدة» اللي الشاشة شافته
+        self._opening_filling = False
         super().__init__(parent)
         self.layout().insertWidget(1, self.kpi_bar)                # تحت شريط الأدوات
         list_layout = self.count_label.parentWidget().layout()
@@ -243,6 +249,37 @@ class ItemsScreen(BaseScreen):
         form.addRow(self._hint(BALANCE_NOTE))
         return box
 
+    def _build_opening(self) -> QGroupBox:
+        box = QGroupBox("رصيد أول المدة")
+        form = self._form(box)
+        self.opening_wh = QComboBox()
+        self.opening_wh.setToolTip("المخزن اللي فيه الرصيد — الافتراضي مخزن الصنف (أو المخزن الافتراضي العام)")
+        self.opening_kind = QComboBox()
+        for code, name in STOCK_KINDS.items():
+            self.opening_kind.addItem(name, code)
+        self.opening_wh.currentIndexChanged.connect(self._opening_target_changed)
+        self.warehouse.currentIndexChanged.connect(self._follow_default_warehouse)
+        self.opening_kind.currentIndexChanged.connect(self._opening_target_changed)
+        self.opening_qty = QLineEdit()
+        self.opening_qty.setLayoutDirection(Qt.LeftToRight)
+        self.opening_qty.setPlaceholderText("الفاضي = مالوش رصيد (بالوحدة الأساسية)")
+        self.opening_cost = QLineEdit()
+        self.opening_cost.setLayoutDirection(Qt.LeftToRight)
+        self.opening_cost.setPlaceholderText("سعر الوحدة الأساسية")
+        self.opening_qty.textChanged.connect(self._opening_value)
+        self.opening_cost.textChanged.connect(self._opening_value)
+        self.opening_value = QLabel("")
+        self.opening_note = self._hint("")
+        row = QHBoxLayout()
+        row.addWidget(self.opening_wh, 2)
+        row.addWidget(self.opening_kind, 1)
+        form.addRow("المخزن", row)
+        form.addRow("الرصيد", self.opening_qty)
+        form.addRow("السعر", self.opening_cost)
+        form.addRow("القيمة", self.opening_value)
+        form.addRow(self.opening_note)
+        return box
+
     def _build_accounts(self) -> QGroupBox:
         box = QGroupBox("الحسابات (من نوع الصنف)")
         form = self._form(box)
@@ -262,7 +299,7 @@ class ItemsScreen(BaseScreen):
         right.setContentsMargins(0, 0, 4, 0)
         right.setSpacing(8)
         right.addWidget(form_box)
-        for box in (self._build_units(), self._build_sales(), self._build_accounts()):
+        for box in (self._build_units(), self._build_sales(), self._build_opening(), self._build_accounts()):
             align_form_right(box)
             right.addWidget(box)
         right.addStretch(1)
@@ -343,6 +380,15 @@ class ItemsScreen(BaseScreen):
             for value, text in rows:
                 combo.addItem(text, value)
             combo.blockSignals(False)
+        try:
+            warehouses = self.service.opening.warehouses(active_only=True)
+        except Exception:  # noqa: BLE001
+            warehouses = []
+        self.opening_wh.blockSignals(True)
+        self.opening_wh.clear()
+        for w in warehouses:
+            self.opening_wh.addItem(f"{w['name_ar']} ({w['code']})" + (" — وهمي" if w["is_virtual"] else ""), w["id"])
+        self.opening_wh.blockSignals(False)
 
     @staticmethod
     def _select(combo: QComboBox, value: Any, text: str | None = None) -> None:
@@ -427,6 +473,110 @@ class ItemsScreen(BaseScreen):
         if checked and editing:
             self.warehouse.setCurrentIndex(0)
             self.reorder_level.clear()
+        self._opening_enable()
+
+    # ---- رصيد أول المدة ------------------------------------------------------------
+    def _opening_locked(self) -> bool:
+        return bool(self._opening.get("locked"))
+
+    def _opening_virtual(self) -> bool:
+        text = self.opening_wh.currentText()
+        return text.endswith("— وهمي")
+
+    def _opening_enable(self) -> None:
+        if not hasattr(self, "opening_wh"):
+            return
+        on = self.mode in EDITING and not self.is_service.isChecked() and not self._opening_locked()
+        for w in (self.opening_wh, self.opening_kind, self.opening_qty):
+            w.setEnabled(on)
+        self.opening_cost.setEnabled(on and not self._opening_virtual())
+
+    def _show_opening(self, info: dict[str, Any]) -> None:
+        """يعرض سطر (الصنف + المخزن + النوع) اللي رجع من «بضاعة أول المدة»."""
+        self._opening = info
+        self._opening_filling = True
+        for combo, value in ((self.opening_wh, info.get("warehouse_id")), (self.opening_kind, info.get("stock_kind"))):
+            index = combo.findData(value)
+            if index >= 0:
+                combo.setCurrentIndex(index)
+        line = info.get("line")
+        self.opening_qty.setText(fmt_amount(line["qty"]) if line else "")
+        self.opening_cost.setText(fmt_amount(line["unit_cost"]) if line and not line["is_virtual"] else "")
+        self._opening_filling = False
+        notes = []
+        if info.get("locked"):
+            notes.append("✔ الأرصدة الافتتاحية مترحّلة — رصيد أول المدة مقفول (الغي ترحيلها الأول).")
+        else:
+            notes.append("بيتسجل في «بضاعة أول المدة» (نفس السطر لو اتعدّل من هناك) ويترحّل مع الأرصدة الافتتاحية.")
+        if info.get("others"):
+            notes.append(f"⚠ للصنف {info['others']} سطر تاني (مخزن / نوع تاني) — شوفهم في شاشة «بضاعة أول المدة».")
+        self.opening_note.setText(" ".join(notes))
+        self._opening_value()
+        self._opening_enable()
+
+    def _load_opening(self, item_id: Any, warehouse_id: Any = None, kind: str | None = None) -> None:
+        if warehouse_id is None and item_id is None:
+            warehouse_id = self.warehouse.currentData() or self.service.opening.default_warehouse_id()
+        try:
+            info = self.service.opening.item_line(item_id, warehouse_id, kind or "invoice")
+        except Exception:  # noqa: BLE001
+            info = {"line": None, "others": 0, "warehouse_id": warehouse_id, "stock_kind": kind or "invoice"}
+        self._show_opening(info)
+
+    def _opening_target_changed(self, *_args: Any) -> None:
+        """تغيير المخزن / النوع ← يجيب سطرهم (الرصيد والسعر اللي هناك)."""
+        if self._opening_filling:
+            return
+        self._load_opening(self.current_id if self.mode != "new" else None,
+                           self.opening_wh.currentData(), self.opening_kind.currentData())
+
+    def _follow_default_warehouse(self, *_args: Any) -> None:
+        """الصنف الجديد: مخزن رصيد أول المدة بيمشي ورا «المخزن الافتراضي» لحد ما يتكتب رصيد."""
+        if self.mode != "new" or self.opening_qty.text().strip():
+            return
+        target = self.warehouse.currentData() or self.service.opening.default_warehouse_id()
+        index = self.opening_wh.findData(target)
+        if index >= 0 and index != self.opening_wh.currentIndex():
+            self.opening_wh.setCurrentIndex(index)
+
+    def _opening_value(self, *_args: Any) -> None:
+        try:
+            qty = parse_qty(self.opening_qty.text())
+            cost = parse_cost(self.opening_cost.text())
+        except Exception:  # noqa: BLE001
+            self.opening_value.setText("✖ رقم غلط")
+            self.opening_value.setStyleSheet(f"color:{BAD}; font-weight:800;")
+            return
+        if qty is None:
+            text, color = "", MUTED
+        elif self._opening_virtual():
+            text, color = "كمية بس (مخزن وهمي)", MUTED
+        elif not cost:
+            text, color = "0.00 ⚠ سعر صفر", WARN
+        else:
+            text, color = f"{line_value(qty, cost):,.2f}", ACTIVE_COLOR
+        self.opening_value.setText(ltr(text) if text and text[0].isdigit() else text)
+        self.opening_value.setStyleSheet(f"color:{color}; font-weight:800;")
+
+    def set_opening(self, qty: str, cost: str = "", warehouse_id: Any = None, kind: str | None = None) -> None:
+        """كتابة رصيد أول المدة (زي ما المستخدم بيكتب)."""
+        if warehouse_id is not None:
+            self.opening_wh.setCurrentIndex(self.opening_wh.findData(warehouse_id))
+        if kind is not None:
+            self.opening_kind.setCurrentIndex(self.opening_kind.findData(kind))
+        self.opening_qty.setText(qty)
+        self.opening_cost.setText(cost)
+
+    def _opening_payload(self) -> dict[str, Any] | None:
+        if self._opening_locked():
+            return None
+        line = self._opening.get("line")
+        target = (self.opening_wh.currentData(), self.opening_kind.currentData())
+        if line is not None and (line["warehouse_id"], line["stock_kind"]) != target:
+            line = None
+        return {"warehouse_id": target[0], "stock_kind": target[1], "qty": self.opening_qty.text(),
+                "unit_cost": "" if self._opening_virtual() else self.opening_cost.text(),
+                "line_id": line["id"] if line else None, "row_version": line["row_version"] if line else 0}
 
     def _check_name(self, *_args: Any) -> None:
         """تحت الاسم: نفس الاسم في نفس النوع ← مش هيتحفظ · في نوع تاني ← تحذير بس."""
@@ -496,6 +646,7 @@ class ItemsScreen(BaseScreen):
         self._select(self.unit, defaults["unit_id"])
         self._select(self.tax, defaults["tax_code_id"])
         self.is_service.setChecked(bool(defaults["is_service"]))
+        self._load_opening(None)
         self.set_mode("new")
         self._sync_unit_labels()
         self._show_accounts()
@@ -664,6 +815,7 @@ class ItemsScreen(BaseScreen):
         balance, avg = self.service.stock_text(record.get("id"))
         self.balance_view.setText(balance)
         self.avg_view.setText(avg)
+        self._load_opening(record.get("id"))
 
     def clear_form(self) -> None:
         for edit in (self.code_edit, self.name, self.alt_name, self.description, self.notes, self.sale_price,
@@ -679,6 +831,10 @@ class ItemsScreen(BaseScreen):
         self._hint_name("")
         for view in self.account_views.values():
             view.clear()
+        self._opening = {}
+        self.opening_qty.clear()
+        self.opening_cost.clear()
+        self.opening_note.setText("")
 
     def collect(self) -> dict:
         return {"name": self.name.text(), "alt_name": self.alt_name.text(), "description": self.description.text(),
@@ -686,7 +842,8 @@ class ItemsScreen(BaseScreen):
                 "unit_id": self.unit.currentData(), "is_service": self.is_service.isChecked(),
                 "default_warehouse_id": self.warehouse.currentData(), "tax_code_id": self.tax.currentData(),
                 "sale_price": self.sale_price.text(), "reorder_level": self.reorder_level.text(),
-                "notes": self.notes.text(), "is_active": self.is_active.isChecked(), "units": self._unit_rows()}
+                "notes": self.notes.text(), "is_active": self.is_active.isChecked(), "units": self._unit_rows(),
+                "opening": self._opening_payload()}
 
     def save_record(self, payload: dict, record_id: Any) -> Any:
         return self.service.save_item(None if record_id is None else int(record_id), payload,

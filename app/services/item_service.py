@@ -8,6 +8,9 @@
 * **خدمي** مالوش مخزن افتراضي ولا حد طلب · **المخزن الافتراضي** اختياري (الفاضي = الافتراضي العام) ومش وهمي.
 * **كود الضريبة** الافتراضي ض.ق.م 14% ويتغيّر (إضافة بس) · **سعر البيع** و**حد الطلب** اختياريين ≥ 0.
 * كل حفظ / إيقاف / مسح في ``sec.audit_log`` في نفس الـ transaction (ومعاه الوحدات التانية) + ``row_version``.
+* **رصيد أول المدة** (المرحلة 6 — رد المستخدم 2026-11-23): الرصيد + السعر + المخزن + فاتورة/بيان بيعدّلوا **نفس سطر**
+  (الصنف + المخزن + النوع) في «بضاعة أول المدة» جوه transaction حفظ الصنف (``data["opening"]``) — مقفول بعد ترحيل
+  الأرصدة الافتتاحية.
 """
 
 from __future__ import annotations
@@ -21,6 +24,7 @@ from app.services.audit_service import AuditService
 from app.services.brand_service import clean_name
 from app.services.concurrency import ConcurrencyGuard
 from app.services.errors import BusinessError
+from app.services.opening_stock_service import OpeningStockService, parse_qty
 from app.services.permission_service import PermissionService
 from app.services.stock_ledger_service import KINDS as STOCK_KINDS
 from app.services.stock_ledger_service import StockLedgerService, fmt_qty
@@ -80,6 +84,7 @@ class ItemService:
         self.audit = audit or AuditService(self.db)
         self.guard = ConcurrencyGuard(self.db)
         self.stock = StockLedgerService(self.db)
+        self.opening = OpeningStockService(self.db)
 
     # ---- قراية -------------------------------------------------------------
     @staticmethod
@@ -258,6 +263,9 @@ class ItemService:
         PermissionService.require(f"{PERM}.create" if item_id is None else f"{PERM}.edit")
         PermissionService.require(f"{PERM}.save")
         clean = self._clean(data)
+        opening = data.get("opening")
+        if opening and clean["is_service"] and parse_qty(opening.get("qty"), "رصيد أول المدة") is not None:
+            raise BusinessError("الصنف الخدمي مالوش رصيد أول المدة — امسح الرصيد أو شيل «خدمي».")
         with self.db.atomic() as tx:
             before = None
             if item_id is not None:
@@ -282,7 +290,10 @@ class ItemService:
             code = format_code(clean["seq"])
             if before is None:
                 item_id = self.repository.insert_item(clean, ex=tx)
+                self._set_opening(tx, int(item_id), opening, f"{code} «{clean['name']}»")
             else:
+                # قبل التعديل: لو الصنف بقى خدمي ورصيده اتمسح، السطر يتشال الأول (القاعدة بترفض خدمي عليه رصيد).
+                self._set_opening(tx, int(item_id), opening, f"{code} «{clean['name']}»")
                 updated = self.repository.update_item(int(item_id), clean, ex=tx, expected_version=expected_version)
                 self.guard.ensure(tx, updated, expected_version, entity=ENTITY, entity_id=item_id)
             self.repository.replace_units(int(item_id), clean["units"], ex=tx)
@@ -292,6 +303,13 @@ class ItemService:
                               entity_id=item_id, entity_label=ENTITY_LABEL,
                               record_label=f"{code} {clean['name']}", before=before, after=after)
         return int(item_id)
+
+    def _set_opening(self, tx, item_id: int, opening: dict[str, Any] | None, label: str) -> None:
+        if not opening:
+            return
+        self.opening.set_item_line(tx, item_id, opening.get("warehouse_id"), opening.get("stock_kind") or "invoice",
+                                   opening.get("qty"), opening.get("unit_cost"), line_id=opening.get("line_id"),
+                                   row_version=opening.get("row_version"), label=label)
 
     def set_active(self, item_id: int, active: bool, expected_version: int | None = None) -> None:
         PermissionService.require(f"{PERM}.edit")

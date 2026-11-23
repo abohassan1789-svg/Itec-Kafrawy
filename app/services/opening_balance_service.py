@@ -14,6 +14,11 @@
 
 الترحيل = **محرك الترحيل** (``PostingService.post_document``): سطر «line» لكل رصيد + «opening» بالمجموع ← قيد
 أوتوماتيك واحد ``OB`` بيظهر في «القيود اليومية» قراية بس · إلغاء الترحيل بيمسح القيد.
+
+**بضاعة أول المدة (المرحلة 6 — 0045، رد المستخدم 2026-11-23):** بتترحّل **مع** المستند ده: كل سطر مش وهمي قيمته
+على حساب المخزون (من نوع الصنف ← الافتراضي 1105) في نفس القيد، والسطور كلها بتدخل «دفتر المخزون» (``opening_stock``)
+بتاريخ الأرصدة · إلغاء الترحيل بيطلّعها (ولو اللي اتصرف بعدها هيخلّي الرصيد بالسالب ← محتاج صلاحية «من غير رصيد»).
+قسم «📦 المخزون» قراية بس هنا (بيتكتب من شاشة «بضاعة أول المدة» أو شاشة الأصناف).
 """
 
 from __future__ import annotations
@@ -26,6 +31,7 @@ import psycopg
 
 from app.database.db import Database, Executor, get_db
 from app.repositories.opening_balance_repository import PARTY_COLUMNS, OpeningBalanceRepository
+from app.repositories.opening_stock_repository import OpeningStockRepository
 from app.security.session import SESSION
 from app.services.audit_service import AuditService
 from app.services.concurrency import ConcurrencyGuard
@@ -33,6 +39,7 @@ from app.services.errors import BusinessError, ConcurrentEditError
 from app.services.journal_service import parse_money
 from app.services.permission_service import PermissionService
 from app.services.posting_service import PostingLine, PostingService
+from app.services.stock_ledger_service import StockLedgerService, StockLine
 
 ENTITY, ENTITY_LABEL = "acc.opening_balances", "الأرصدة الافتتاحية"
 PERM = "acc.opening_balances"
@@ -41,8 +48,11 @@ DESCRIPTION = "الأرصدة الافتتاحية"
 # (المفتاح، الاسم، الأيقونة) — نفس ترتيب شريط الأقسام في النموذج 2
 SECTIONS: dict[str, tuple[str, str]] = {
     "trs": ("الخزائن", "💵"), "bnk": ("البنوك", "🏦"), "cus": ("العملاء", "👥"), "sup": ("الموردين", "🚚"),
-    "emp": ("عهد الموظفين", "🧑‍🔧"), "prt": ("الشركاء", "🤝"), "oth": ("حسابات تانية", "📒"),
+    "emp": ("عهد الموظفين", "🧑‍🔧"), "prt": ("الشركاء", "🤝"), "inv": ("المخزون", "📦"),
+    "oth": ("حسابات تانية", "📒"),
 }
+STOCK_DOC = "opening_stock"
+KIND_NAMES = {"invoice": "فاتورة", "statement": "بيان"}
 PARTY_LABELS = {"customer": "العميل", "supplier": "المورد", "employee": "الموظف", "partner": "الشريك"}
 BALANCE_SHEET = ("asset", "liability", "equity")
 POSTED = "مستند الأرصدة الافتتاحية مرحّل — الغي ترحيله الأول عشان تعدّل الأرصدة."
@@ -68,6 +78,8 @@ class OpeningBalanceService:
         self.repository = repository or OpeningBalanceRepository(self.db)
         self.audit = audit or AuditService(self.db)
         self.posting = posting or PostingService(self.db)
+        self.stock = OpeningStockRepository(self.db)
+        self.ledger = StockLedgerService(self.db)
         self.guard = ConcurrencyGuard(self.db)
 
     # ---- قراية -------------------------------------------------------------
@@ -80,10 +92,13 @@ class OpeningBalanceService:
         for row in self.repository.summary():
             summary[row["section"]] = {"lines": int(row["lines"]), "debit": Decimal(row["debit"]),
                                        "credit": Decimal(row["credit"])}
+        stock = self.stock.summary()
+        summary["inv"] = {"lines": int(stock["lines"]), "debit": Decimal(stock["value"]), "credit": ZERO}
         debit = sum((s["debit"] for s in summary.values()), ZERO)
         credit = sum((s["credit"] for s in summary.values()), ZERO)
         header.update({"sections": summary, "total_debit": debit, "total_credit": credit,
-                       "opening_account": self.repository.opening_account(), "entry_id": None})
+                       "opening_account": self.repository.opening_account(), "entry_id": None,
+                       "inventory_value": Decimal(stock["value"]), "inventory_account": self.stock.inventory_account()})
         if header["status"] == "posted":
             entry = self.posting.entry_for(DOC_TYPE, SOURCE_ID)
             header["entry_id"] = entry["id"] if entry else None
@@ -95,7 +110,23 @@ class OpeningBalanceService:
             raise BusinessError("القسم ده مش معروف.")
         if section == "oth":
             return self.repository.lines(section="oth")
+        if section == "inv":
+            return self.stock_rows()
         return self.repository.section_rows(section)
+
+    def stock_rows(self) -> list[dict[str, Any]]:
+        """قسم «📦 المخزون» قراية بس: سطر لكل (صنف + مخزن + نوع) بقيمته (``account_id`` فاضي ← مايتعدّلش هنا)."""
+        account = self.stock.inventory_account() or {}
+        rows = []
+        for l in self.stock.lines():
+            rows.append({"ref_id": int(l["id"]), "code": l["item_code"],
+                         "name": f"{l['item_name']} — {l['warehouse_name']} ({KIND_NAMES[l['stock_kind']]})",
+                         "is_active": bool(l["item_active"]), "account_id": None,
+                         "account_code": account.get("code"), "account_name": account.get("name_ar") or "المخزون",
+                         "party_kind": None, "party_id": None, "line_id": None,
+                         "debit": Decimal(l["value"]), "credit": ZERO, "qty": l["qty"], "unit_cost": l["unit_cost"],
+                         "is_virtual": bool(l["is_virtual"])})
+        return rows
 
     def lines(self) -> list[dict[str, Any]]:
         return self.repository.lines()
@@ -291,11 +322,17 @@ class OpeningBalanceService:
     # ---- الترحيل / إلغاء الترحيل -------------------------------------------------
     def _post(self, tx: Executor, head: dict[str, Any]) -> None:
         lines = self.repository.lines(ex=tx)
-        if not lines:
+        stock = self.stock.lines(ex=tx)
+        if not lines and not stock:
             raise BusinessError("مفيش ولا رصيد في المستند — اكتب الأرصدة الأول.")
         self._check_year(tx, head["balance_date"])
         posting: list[PostingLine] = []
         total = ZERO
+        for s in stock:                                          # بضاعة أول المدة ← حساب المخزون من نوع الصنف
+            value = Decimal(s["value"])
+            if not s["is_virtual"] and value > 0:
+                total += value
+                posting.append(PostingLine("inventory", value, category_id=s["category_id"]))
         for line in lines:
             amount = Decimal(line["debit"]) - Decimal(line["credit"])
             total += amount
@@ -303,8 +340,15 @@ class OpeningBalanceService:
             posting.append(PostingLine("line", amount, account_id=line["account_id"], party=party,
                                        cost_center_id=line["cost_center_id"], description=line["description"]))
         posting.append(PostingLine("opening", total))
-        self.posting.post_document(tx, doc_type=DOC_TYPE, source_id=SOURCE_ID, source_no=SOURCE_NO,
-                                   entry_date=head["balance_date"], description=DESCRIPTION, lines=posting)
+        if any(Decimal(p.amount) for p in posting):              # كله صفر (بضاعة وهمي / بسعر صفر بس) ← مفيش قيد
+            self.posting.post_document(tx, doc_type=DOC_TYPE, source_id=SOURCE_ID, source_no=SOURCE_NO,
+                                       entry_date=head["balance_date"], description=DESCRIPTION, lines=posting)
+        if stock:
+            self.ledger.post(tx, doc_type=STOCK_DOC, source_id=SOURCE_ID, source_no=SOURCE_NO,
+                             movement_date=head["balance_date"],
+                             lines=[StockLine(int(s["item_id"]), int(s["warehouse_id"]), Decimal(s["qty"]),
+                                              s["stock_kind"], unit_cost=None if s["is_virtual"] else s["unit_cost"])
+                                    for s in stock])
         self.repository.set_status("posted", SESSION.user_id, ex=tx)
         after = self.repository.header(ex=tx)
         self._record(tx, "post", head, after, [], [])
@@ -330,6 +374,8 @@ class OpeningBalanceService:
                 if head["status"] != "posted":
                     raise BusinessError("مستند الأرصدة الافتتاحية مش مرحّل.")
                 self.posting.unpost_document(tx, doc_type=DOC_TYPE, source_id=SOURCE_ID)
+                self.ledger.remove(tx, doc_type=STOCK_DOC, source_id=SOURCE_ID,
+                                   allow_negative=SESSION.can(f"{PERM}.negative"))
                 self.repository.set_status("draft", SESSION.user_id, ex=tx)
                 self._record(tx, "unpost", head, self.repository.header(ex=tx), [], [])
         except psycopg.errors.RaiseException as exc:
@@ -341,6 +387,7 @@ class OpeningBalanceService:
 
         journal = JournalRepository(self.db)
         opening = self.repository.opening_account() or {}
-        accounts = [a for a in self.repository.account_choices() if a["id"] != opening.get("id")]
+        accounts = [a for a in self.repository.account_choices()
+                    if a["id"] != opening.get("id") and a.get("role_code") != "inventory"]
         return {"accounts": accounts, "cost_centers": journal.cost_center_choices(),
                 "parties": {k: journal.party_choices(k) for k in PARTY_COLUMNS}}

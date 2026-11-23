@@ -294,7 +294,8 @@ def test_permissions(env):
             call()
     codes = {r["permission_code"] for r in db.fetch_all(
         "SELECT permission_code FROM sec.permissions WHERE permission_code LIKE 'acc.opening_balances.%%'")}
-    assert codes == {f"{perm}.{a}" for a in ("view", "edit", "save", "export", "post", "unpost")}
+    assert codes == {f"{perm}.{a}" for a in ("view", "edit", "save", "export", "post", "unpost",
+                                                         "negative")}
 
 
 def test_two_devices(env):

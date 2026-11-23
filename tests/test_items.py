@@ -370,6 +370,7 @@ def test_menu_and_registry():
     from app.ui.screen_registry import SCREEN_FACTORIES
 
     group = reg.section("inv").groups[0]
-    assert [t.code for t in group.targets] == ["warehouses", "units_brands", "item_categories", "items"]
+    assert [t.code for t in group.targets] == ["warehouses", "units_brands", "item_categories", "items",
+                                                       "opening_stock"]
     assert reg.find_target("inv", "items").name_ar == "الأصناف"
     assert "items" in SCREEN_FACTORIES

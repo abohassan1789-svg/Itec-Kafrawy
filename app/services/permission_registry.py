@@ -30,6 +30,8 @@ SCREEN_ACTIONS: tuple[tuple[str, str, str], ...] = (
     ("show_totals", "إظهار الإجماليات", "Show Totals"),
     ("post", "ترحيل", "Post"),
     ("unpost", "إلغاء الترحيل", "Unpost"),
+    # «من غير رصيد» (2026-11-23): المستند يقدر يخلّي رصيد المخزون بالسالب (رد المستخدم — صلاحية لكل شاشة لوحدها).
+    ("negative", "من غير رصيد", "Without Stock"),
     ("lock", "قفل / فتح", "Lock / Unlock"),
 )
 
@@ -111,7 +113,7 @@ SECTIONS: tuple[Section, ...] = (
                    actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost")),
             # الأرصدة الافتتاحية (2026-11-17 — النموذج 2): مستند واحد · حفظ مسودة · ترحيل · إلغاء ترحيل بالصلاحية.
             Target("opening_balances", "الأرصدة الافتتاحية", "Opening Balances", icon="🏁",
-                   actions=("view", "edit", "save", "export", "post", "unpost")),
+                   actions=("view", "edit", "save", "export", "post", "unpost", "negative")),
         ), icon="📒"),
         # كشف الحساب ودفتر الأستاذ (2026-11-17 — النموذج 1): شاشة واحدة لكل الكشوف · المرحّل بس · صلاحية واحدة (عرض).
         Group("الكشوف", (
@@ -181,6 +183,9 @@ SECTIONS: tuple[Section, ...] = (
             # الأصناف (2026-11-16 — النموذج 3 «كروت أرقام فوق + قائمة وفورم»).
             Target("items", "الأصناف", "Items", icon="📦",
                    actions=("view", "create", "edit", "save", "delete", "export")),
+            # بضاعة أول المدة (2026-11-23 — النموذج 4 «زي الإكسل»): بتترحّل مع الأرصدة الافتتاحية.
+            Target("opening_stock", "بضاعة أول المدة", "Opening Stock", icon="📥",
+                   actions=("view", "edit", "save", "import", "export")),
         ), icon="📦"),
     )),
     # «الخزائن والبنوك» (2026-11-15): الخزائن ← البنوك (البنوك وحساباتها — النموذج 7).
