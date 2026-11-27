@@ -348,7 +348,9 @@ class BaseScreen(QWidget):
         self.current_id = None
         self.current_record = None
         self.current_version = None
+        self.table.blockSignals(True)          # من غير إشارة: مسح التحديد كان بيحمّل الصف الحالي تاني (current_id قديم)
         self.table.clearSelection()
+        self.table.blockSignals(False)
         self.clear_form()
         self.set_mode("new")
 

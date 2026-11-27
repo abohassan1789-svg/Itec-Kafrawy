@@ -22,6 +22,7 @@ from typing import Any
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
+    QAbstractItemDelegate,
     QAbstractItemView,
     QButtonGroup,
     QCheckBox,
@@ -112,11 +113,11 @@ class _GridTable(QTableWidget):
         super().keyPressEvent(event)
 
     def closeEditor(self, editor, hint) -> None:  # noqa: ANN001 - Qt
-        super().closeEditor(editor, QAbstractItemView.NoHint
-                            if hint in (QAbstractItemView.EditNextItem, QAbstractItemView.EditPreviousItem) else hint)
-        if hint == QAbstractItemView.EditNextItem:
+        super().closeEditor(editor, QAbstractItemDelegate.NoHint
+                            if hint in (QAbstractItemDelegate.EditNextItem, QAbstractItemDelegate.EditPreviousItem) else hint)
+        if hint == QAbstractItemDelegate.EditNextItem:
             self.step(True)
-        elif hint == QAbstractItemView.EditPreviousItem:
+        elif hint == QAbstractItemDelegate.EditPreviousItem:
             self.step(False)
 
 
