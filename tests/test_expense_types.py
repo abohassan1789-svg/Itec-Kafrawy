@@ -152,22 +152,22 @@ def test_service_auto_pick_tree_and_delete(env):
     d = service.new_defaults()
     p52 = acc(db, "52")["id"]
     assert (d["code"], d["account_mode"], d["account_parent_id"]) == ("EXT-011", "auto", p52)
-    assert service.suggested_account(p52)["code"] == "5210"
+    assert service.suggested_account(p52)["code"] == "5211"          # 5210 «بضاعة المخزن الوهمي» (0046)
     assert [p["code"] for p in service.account_parents()] == ["52", "53", "54"]
     usable = [a["code"] for a in service.usable_accounts()]
     assert "5203" in usable and "5401" not in usable and "51" not in usable and "5303" not in usable
     # يتعمل حساب جديد تحت 52
     tid = service.save_type(None, payload(account_mode="auto", account_parent_id=p52))
     t = service.get_type(tid)
-    assert (t["code"], t["account_code"], t["account_name"], t["owns_account"]) == ("EXT-011", "5210", "أدوات مكتبية",
+    assert (t["code"], t["account_code"], t["account_name"], t["owns_account"]) == ("EXT-011", "5211", "أدوات مكتبية",
                                                                                     True)
-    assert acc(db, "5210")["account_type"] == "expense" and acc(db, "5210")["role_code"] is None
+    assert acc(db, "5211")["account_type"] == "expense" and acc(db, "5211")["role_code"] is None
     # حساب موجود + نوع فرعي (الافتراضي = حساب الأب)
     sd = service.new_defaults(tid)
     assert (sd["parent_id"], sd["account_mode"], sd["account_id"]) == (tid, "pick", t["account_id"])
     kid = service.save_type(None, payload(name_ar="أحبار طابعات", parent_id=tid, account_id=t["account_id"]))
     k = service.get_type(kid)
-    assert (k["parent_code"], k["account_code"], k["owns_account"]) == ("EXT-011", "5210", False)
+    assert (k["parent_code"], k["account_code"], k["owns_account"]) == ("EXT-011", "5211", False)
     assert service.get_type(tid)["children_count"] == 1
     assert set(service.subtree_ids(tid)) == {tid, kid}
     assert kid not in [r["id"] for r in service.parent_choices(tid)] and tid not in [
@@ -182,7 +182,7 @@ def test_service_auto_pick_tree_and_delete(env):
     # تغيير اسم النوع ← اسم حسابه اللي اتعمل معاه بيتغيّر (ومايتغيّرش لو عليه نوع تاني)
     t = service.get_type(tid)
     service.save_type(tid, {**t, "name_ar": "أدوات مكتبية وطباعة"}, t["row_version"])
-    assert acc(db, "5210")["name_ar"] == "أدوات مكتبية"                 # عليه «أحبار طابعات» كمان
+    assert acc(db, "5211")["name_ar"] == "أدوات مكتبية"                 # عليه «أحبار طابعات» كمان
     # الأب مايتوقفش وتحته نشط · الفرعي مايتفعّلش والأب موقوف · مايتمسحش وتحته أنواع
     t = service.get_type(tid)
     with pytest.raises(BusinessError, match="تحته أنواع نشطة"):
@@ -204,7 +204,7 @@ def test_service_auto_pick_tree_and_delete(env):
     service.delete_type(kid, k["row_version"])
     t = service.get_type(tid)
     service.delete_type(tid, t["row_version"])
-    assert et(db, "EXT-011") is None and acc(db, "5210") is None
+    assert et(db, "EXT-011") is None and acc(db, "5211") is None
     audits = [r["entity"] for r in db.fetch_all("SELECT entity FROM sec.audit_log WHERE entity IN "
                                                 "('exp.expense_types', 'acc.accounts') ORDER BY id")]
     assert audits[0] == "acc.accounts" and audits[-1] == "acc.accounts" and "exp.expense_types" in audits
@@ -273,7 +273,7 @@ def test_two_devices(env):
         got = {r["code"]: (r["name_ar"], r["acc"]) for r in db.fetch_all(
             "SELECT t.code, t.name_ar, a.code AS acc FROM exp.expense_types t JOIN acc.accounts a "
             "ON a.id = t.account_id WHERE t.seq > 10")}
-        assert got == {"EXT-011": ("نوع أ", "5210"), "EXT-012": ("نوع ب", "5211")}
+        assert got == {"EXT-011": ("نوع أ", "5211"), "EXT-012": ("نوع ب", "5212")}
         # جهاز بيوقف «كهرباء» (لسه ماحفظش) والتاني بيضيف تحته نوع نشط ← بيستنى وبعدين يترفض
         results.clear()
 

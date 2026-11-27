@@ -75,7 +75,7 @@ def test_menu_tree_admin_sees_everything():
     cash = tree[5]
     assert not cash["coming_soon"] and cash["count"] == 7               # «الخزينة» ← الخزائن + البنوك + حركات الخزائن والبنوك + سند قبض + سند صرف + شيكات العملاء + شيكات الموردين
     inv = tree[4]
-    assert not inv["coming_soon"] and inv["count"] == 5                 # «المخازن» ← المخازن + الوحدات والماركات + أنواع الأصناف + الأصناف + بضاعة أول المدة
+    assert not inv["coming_soon"] and inv["count"] == 6                 # «المخازن» ← المخازن + الوحدات والماركات + أنواع الأصناف + الأصناف + بضاعة أول المدة + التحويل بين المخازن
     assert tree[6]["coming_soon"]                                       # التقارير لسه
 
 

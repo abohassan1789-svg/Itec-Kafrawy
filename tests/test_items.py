@@ -371,6 +371,6 @@ def test_menu_and_registry():
 
     group = reg.section("inv").groups[0]
     assert [t.code for t in group.targets] == ["warehouses", "units_brands", "item_categories", "items",
-                                                       "opening_stock"]
+                                                       "opening_stock", "stock_transfers"]
     assert reg.find_target("inv", "items").name_ar == "الأصناف"
     assert "items" in SCREEN_FACTORIES

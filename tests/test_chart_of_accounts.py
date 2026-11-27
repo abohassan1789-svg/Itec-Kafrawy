@@ -67,7 +67,7 @@ def row(db, code):
 # ---- الدليل الجاهز ----------------------------------------------------------
 def test_seeded_chart_shape(env):
     db, ids = env["db"], env["ids"]
-    assert len(ids) == 63                       # 51 من 0009 + 5 من 0012 (الحسابات الافتراضية) + 5 من 0025 (المصروفات) + 1108 (0038) + 3299 (0042)
+    assert len(ids) == 64                       # 51 من 0009 + 5 من 0012 (الحسابات الافتراضية) + 5 من 0025 (المصروفات) + 1108 (0038) + 3299 (0042) + 5210 (0046)
     roots = db.fetch_all("SELECT code, account_type, statement FROM acc.accounts WHERE parent_id IS NULL ORDER BY code")
     assert [(r["code"], r["account_type"], r["statement"]) for r in roots] == [
         ("1", "asset", "bs"), ("2", "liability", "bs"), ("3", "equity", "bs"),
@@ -88,7 +88,7 @@ def test_seeded_chart_shape(env):
         "ORDER BY role_code, length(code)")}
     assert roles["customers"] == "1103" and roles["suppliers"] == "2101" and roles["vat_in"] == "110601"
     assert roles["vat_out"] == "2103" and roles["partner"] == "32" and roles["cash"] == "1101"
-    assert db.fetch_value("SELECT count(*) FROM acc.account_roles") == 29           # 23 + 5 من 0012 + شيكات تحت التحصيل (0038)
+    assert db.fetch_value("SELECT count(*) FROM acc.account_roles") == 30           # 23 + 5 من 0012 + شيكات تحت التحصيل (0038) + بضاعة المخزن الوهمي (0046)
     assert row(db, "1103")["party_kind"] == "customer" and row(db, "2101")["party_kind"] == "supplier"
     assert row(db, "1103")["is_system"] and row(db, "1")["is_system"] and not row(db, "110101")["is_system"]
     assert row(db, "1209")["nature"] == "cr" and row(db, "42")["nature"] == "dr"            # مجمع إهلاك / مردودات
@@ -142,13 +142,13 @@ def test_database_rules(env):
     with pytest.raises(raise_, match="موقوف"):
         db.execute("UPDATE acc.accounts SET is_active = true WHERE id = %s", [l5])
     # النوع والقائمة بيتورثوا (حتى لو اتكتب غلط)، والتصنيف لازم يناسب النوع
-    child = ins(db, "5210", ids["52"], account_type="asset", classification="operating_exp")
+    child = ins(db, "5211", ids["52"], account_type="asset", classification="operating_exp")
     assert db.fetch_one("SELECT account_type, statement, level FROM acc.accounts WHERE id = %s", [child]) == {
         "account_type": "expense", "statement": "is", "level": 3}
     with pytest.raises(psycopg.errors.CheckViolation):
         ins(db, "5211", ids["52"], classification="current")
     with pytest.raises(psycopg.errors.UniqueViolation):
-        ins(db, "5210", ids["52"], classification="operating_exp")
+        ins(db, "5211", ids["52"], classification="operating_exp")
     with pytest.raises(psycopg.errors.ForeignKeyViolation):
         ins(db, "5212", ids["52"], classification="operating_exp", currency_code="XXX")
     # row_version: تعديل = +1 · من غير تغيير = زي ما هو
@@ -276,7 +276,7 @@ def test_two_devices(env):
             dev1.save_account(ids["5203"], {**fresh, "name_ar": "مياه"}, fresh["row_version"])
         # اتنين بيضيفوا تحت نفس الأب بنفس الكود المقترح: واحد بس يتسجل
         d1, d2 = dev1.new_defaults(ids["52"]), dev2.new_defaults(ids["52"])
-        assert d1["code"] == d2["code"] == "5210"                  # 5205 / 5206 من 0012 · 5207–5209 من 0025
+        assert d1["code"] == d2["code"] == "5211"                  # 5205 / 5206 من 0012 · 5207–5209 من 0025 · 5210 من 0046
         dev1.save_account(None, {**d1, "name_ar": "تليفونات"})
         with pytest.raises(BusinessError, match="متسجل قبل كده"):
             dev2.save_account(None, {**d2, "name_ar": "إنترنت"})
@@ -292,7 +292,7 @@ def tab_counts(screen) -> list[str]:
 def test_screen_tabs_tree_and_expand_collapse(env):
     screen = make_screen(env["db"])
     assert tab_counts(screen) == ["1 الأصول (20)", "2 الخصوم (7)", "3 حقوق الملكية (6)",
-                                  "4 الإيرادات (8)", "5 المصروفات (22)"]
+                                  "4 الإيرادات (8)", "5 المصروفات (23)"]
     assert screen.current_type == "asset" and screen.type_tabs["asset"].isChecked()
     assert screen.code_edit.text() == "1" and screen.type_edit.text().startswith("أصول")
     assert screen.statement_edit.text().startswith("الميزانية") and screen.system_label.isVisibleTo(screen)
@@ -311,10 +311,10 @@ def test_screen_tabs_tree_and_expand_collapse(env):
     assert not screen.delete_button.isEnabled()                                     # الجذر نظامي
     # تبويب تاني ← شجرته بس، وبيفتح الجذر بتاعه
     screen.type_tabs["expense"].click()
-    assert screen.current_type == "expense" and len(screen.items) == 22 and screen.code_edit.text() == "5"
+    assert screen.current_type == "expense" and len(screen.items) == 23 and screen.code_edit.text() == "5"
     assert screen.class_combo.currentData() == "operating_exp"
     assert "موقوف" in screen.items[ids["5302"]].text(2)
-    assert screen.count_label.text().replace("⁦", "").replace("⁩", "") == "22 حساب · 18 فرعي (بيقبل قيود) · 4 رئيسي · موقوف 1"
+    assert screen.count_label.text().replace("⁦", "").replace("⁩", "") == "23 حساب · 19 فرعي (بيقبل قيود) · 4 رئيسي · موقوف 1"
     # الرجوع للأصول بيفتح آخر حساب كان مفتوح فيها + الطي بيفضل
     screen.type_tabs["asset"].click()
     assert screen.code_edit.text() == "1" and not screen.items[ids["11"]].isExpanded()
@@ -386,7 +386,7 @@ def test_screen_f1_and_search(env, monkeypatch):
 
     class FakeLookup:
         def __init__(self, _title, _columns, rows, _fmt, _parent):
-            assert len(rows) == 63                               # الدليل كله
+            assert len(rows) == 64                               # الدليل كله
             self.selected_id = ids["2103"]
 
         def exec(self):
