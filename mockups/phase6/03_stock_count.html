@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج الجرد والتسويات — A-H CODE</title>
+<style>
+:root{
+  --green:#137A38; --green-dark:#0F6B30; --text:#111827; --muted:#64748B;
+  --border:#D9E2EC; --card-border:#E2E8F0; --input:#CBD5E1; --content:#F1F5F9;
+  --card:#FFFFFF; --alt:#F8FAFC; --sel:#DDF3E6; --first:#ECFDF3; --red:#DC2626;
+  --badge-bg:#ECFDF3; --badge-tx:#087443; --badge-bd:#B7E4C7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#E9EEF3;color:var(--text);font-size:14px}
+.top{background:var(--green-dark);color:#fff;padding:14px 20px;position:sticky;top:0;z-index:10}
+.top h1{margin:0 0 4px;font-size:20px;font-weight:900}
+.top p{margin:0;font-size:13px;opacity:.9}
+.wrap{padding:18px;max-width:1500px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:18px}
+.opt{background:#fff;border:1px solid var(--card-border);border-radius:10px;padding:12px;overflow:hidden}
+.opt h3{margin:0 0 2px;color:var(--green);font-size:16px;font-weight:900}
+.opt h3 span{display:inline-block;background:var(--green);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-left:6px;font-size:13px}
+.opt .d{color:var(--muted);font-size:12.5px;margin:0 0 10px;min-height:34px}
+.stage{background:#CBD5E1;border-radius:8px;padding:10px;display:flex;justify-content:center;align-items:center;min-height:430px;overflow:hidden}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.note ul{margin:4px 0 0;padding-right:18px}
+@media (max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:16px}}
+
+/* ===== مكونات Hr GAD ===== */
+.win{background:var(--content);border:1px solid #94A3B8;border-radius:6px;overflow:hidden;width:100%;height:410px;display:flex;flex-direction:column;font-size:10px;position:relative}
+.wt{height:20px;background:#fff;border-bottom:1px solid var(--card-border);font-size:9px;font-weight:800;display:flex;align-items:center;padding:0 8px;gap:6px;flex-shrink:0}
+.wt span:last-child{margin-right:auto;color:var(--muted)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+.tb{background:#fff;border-bottom:1px solid var(--card-border);padding:5px;display:flex;gap:3px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.bt{color:#fff;border-radius:4px;padding:3px 6px;font-weight:800;font-size:8.5px;white-space:nowrap}
+.b-new{background:#1A7A3C}.b-edit{background:#64748B}.b-save{background:#2563EB}.b-del{background:#DC2626}
+.b-can{background:#6B7280}.b-ref{background:#fff;color:#111827;border:1px solid #CBD5E1}.b-exit{background:#374151}
+.b-tog{background:#B45309}.b-exp{background:#0E7490}.b-dis{background:#CBD5E1}
+.mode{background:var(--badge-bg);color:var(--badge-tx);border:1px solid var(--badge-bd);border-radius:10px;padding:2px 8px;font-weight:900;font-size:8.5px}
+.mode.ed{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.content{flex:1;min-height:0;padding:7px;display:flex;gap:7px;overflow:hidden}
+.col{display:flex;flex-direction:column;min-width:0;min-height:0}
+.scroll{overflow:auto;min-height:0;flex:1}
+.gb{background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:14px 7px 7px;position:relative;margin-top:6px}
+.gb>.t{position:absolute;top:-1px;right:8px;color:var(--green);font-weight:900;font-size:9.5px;background:#fff;padding:0 4px;transform:translateY(-50%)}
+.f{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.f label{width:70px;font-size:8.5px;font-weight:700;color:#334155;flex-shrink:0}
+.f i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#F8FAFC;font-style:normal;font-size:8px;padding:1px 4px;color:#475569;overflow:hidden;white-space:nowrap}
+.f i.lock{background:#F1F5F9;color:#64748B}
+.tbl{width:100%;border-collapse:collapse;font-size:8.5px;background:#fff}
+.tbl th{background:var(--green);color:#fff;font-weight:900;padding:3px;text-align:right;position:sticky;top:0;z-index:1}
+.tbl td{padding:3px;border-bottom:1px solid #EEF2F6;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:var(--alt)}
+.tbl tr.sel td{background:var(--sel)}
+.tbl td:first-child{background:var(--first)}
+.tbl tr.sec td{background:#E8F5EC;color:var(--green);font-weight:900}
+.tbl tr.off td{color:#94A3B8}
+.tbl tr.tot td{background:#F1F5F9;font-weight:900}
+.tbl tr.err td{background:#FEE2E2;color:#B91C1C;font-weight:800;white-space:normal}
+.tbl .n{text-align:left;direction:ltr}
+.srch{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.srch i{flex:1;height:16px;border:1px solid var(--input);border-radius:4px;background:#fff;font-style:normal;font-size:8px;padding:1px 4px;color:var(--muted)}
+.cnt{color:var(--muted);font-size:8px;margin-top:3px;font-weight:700}
+.ltr{direction:ltr;unicode-bidi:isolate}
+.bdg{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;border:1px solid;white-space:nowrap}
+.bdg.ok{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.bdg.no{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.x{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.bdg.pj{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.ty{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.bdg.cc{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.tabs2{display:flex;gap:2px;flex-wrap:wrap;flex-shrink:0}
+.tabs2 span{padding:4px 8px;border-radius:5px 5px 0 0;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.tabs2 span.on{background:var(--green);color:#fff}
+.tabs2 span em{font-style:normal;background:#fff;color:var(--green);border-radius:7px;padding:0 4px;margin-right:3px;font-size:7.5px}
+.tabs2 span:not(.on) em{background:#CBD5E1;color:#334155}
+select.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 2px;color:#111827;outline:none;max-width:100%}
+.tbl select.lv{width:100%;height:15px}
+select.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+input.cb{accent-color:#2563EB;margin:0;width:11px;height:11px;cursor:pointer}
+.hint{color:var(--muted);font-size:8px;font-weight:700;margin-top:3px}
+.ok-line{color:#087443;font-size:8.5px;font-weight:800}
+.bad-line{color:#B91C1C;font-size:8.5px;font-weight:800}
+.side{width:122px;flex-shrink:0;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px;display:flex;flex-direction:column;gap:2px}
+.side .it{padding:4px 5px;border-radius:5px;font-weight:800;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.side .it.on{background:var(--first);color:var(--green);box-shadow:inset -3px 0 0 var(--green)}
+.side .it small{margin-right:auto;font-size:7.5px;color:var(--muted)}
+.tree{font-size:8.5px;background:#fff;border:1px solid var(--card-border);border-radius:5px}
+.tree div{padding:2px 3px;border-bottom:1px solid #F1F5F9;white-space:nowrap;display:flex;gap:3px;align-items:center;cursor:pointer}
+.tree div.sel{background:var(--sel);font-weight:800}
+.tree div.off{color:#94A3B8}
+.tree div.hl{background:#FEF9C3}
+.tree div.sel.hl{background:var(--sel)}
+.tg{display:inline-block;width:9px;text-align:center;color:var(--green);font-weight:900;cursor:pointer;flex-shrink:0}
+.mini{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;cursor:pointer;border:1px solid var(--input);background:#fff;color:#334155}
+.chipf{display:inline-block;border-radius:10px;padding:2px 8px;font-size:8px;font-weight:800;border:1px solid var(--input);background:#fff;color:#475569;cursor:pointer}
+.chipf.on{background:var(--green);color:#fff;border-color:var(--green)}
+.itabs{display:flex;gap:2px;border-bottom:2px solid var(--green);margin-top:4px;flex-shrink:0}
+.itabs span{padding:3px 7px;font-weight:800;font-size:8.5px;background:#E2E8F0;color:#475569;border-radius:4px 4px 0 0;cursor:pointer}
+.itabs span.on{background:var(--green);color:#fff}
+.hdr{background:#fff;border:1px solid var(--card-border);border-right:4px solid var(--green);border-radius:6px;padding:5px 7px;flex-shrink:0}
+.hdr b{font-size:10.5px}
+.hdr .p{color:var(--muted);font-size:8px;font-weight:700;margin-top:2px}
+.org{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;align-items:start}
+.oc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px;cursor:pointer;margin-bottom:3px}
+.oc.r{background:var(--green);color:#fff;font-weight:900;font-size:9px;text-align:center;border-color:var(--green)}
+.oc.c{border-right:3px solid var(--green);font-weight:800}
+.oc.g{margin-right:9px;border-right:3px solid #93C5FD;color:#334155}
+.oc.sel{outline:2px solid #2563EB;background:#EFF6FF;color:#111827}
+.oc.off{color:#94A3B8;border-style:dashed}
+.oc small{display:block;color:var(--muted);font-weight:700;font-size:7px}
+.oc.r small{color:#D1FAE5}
+.lane{border-left:1px dashed #CBD5E1;padding-left:4px}
+.lane:last-child{border-left:none}
+.btn-s{display:inline-block;border-radius:4px;padding:1px 5px;font-size:7.5px;font-weight:900;color:#fff;background:#1A7A3C;cursor:pointer;white-space:nowrap}
+.btn-s.g{background:#64748B}.btn-s.d{background:#CBD5E1;cursor:default}
+.bar{display:inline-block;height:6px;background:var(--green);border-radius:3px;vertical-align:middle}
+.bar.e{background:#F59E0B}
+/* ===== إضافات (كروت، مؤشرات، خانات كتابة) ===== */
+.pg{display:inline-block;width:42px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.pg span{display:block;height:100%;background:var(--green)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.pc{background:#fff;border:1px solid var(--card-border);border-right:3px solid var(--green);border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;line-height:1.5}
+.pc.done{border-right-color:#94A3B8;background:#F8FAFC}
+.pc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.pc b{font-size:8.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .m{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc .r{display:flex;justify-content:space-between;align-items:center;gap:3px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;flex-shrink:0}
+.kp{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px}
+.kp small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.kp b{font-size:10.5px;direction:ltr;unicode-bidi:isolate}
+.kp.g{border-right:3px solid var(--green)}.kp.g b{color:#087443}
+.kp.r{border-right:3px solid #DC2626}.kp.r b{color:#B91C1C}
+.kp.b{border-right:3px solid #2563EB}
+input.lv{flex:1;min-width:0;height:16px;border:1px solid #2563EB;border-radius:4px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 4px;color:#111827;outline:none}
+input.lv.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.nav{display:flex;gap:3px;align-items:center;justify-content:center;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px;flex-shrink:0}
+.nav .mini{font-size:9px;padding:1px 7px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;line-height:1.8}
+.qs ol{margin:4px 0 0;padding-right:20px}
+.bdg.wr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.cbar{display:inline-block;width:46px;height:5px;background:#E2E8F0;border-radius:3px;vertical-align:middle;overflow:hidden}
+.cbar span{display:block;height:100%;background:var(--green)}
+.cbar.over span{background:#DC2626}
+.sec2{color:var(--green);font-weight:900;font-size:8.5px;margin:4px 0 2px;border-bottom:1px dashed #CBD5E1}
+.bdg.sy{background:#EEF2FF;color:#3730A3;border-color:#C7D2FE}
+.av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:9px;flex-shrink:0}
+.av.off{background:#94A3B8}
+.rl{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;margin-left:2px;white-space:nowrap}
+.rl.s{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.rl.t{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.rl.w{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.rl.c{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+</style>
+<style>
+/* ===== إضافات شاشة السندات ===== */
+.b-post{background:#137A38}.b-unpost{background:#B45309}.b-draft{background:#2563EB}
+.tg2{display:flex;border:1px solid var(--input);border-radius:6px;overflow:hidden;flex-shrink:0}
+.tg2 span{flex:1;text-align:center;padding:4px 8px;font-weight:900;font-size:9px;cursor:pointer;background:#fff;color:#475569}
+.tg2 span.rv.on{background:#137A38;color:#fff}.tg2 span.pv.on{background:#B91C1C;color:#fff}
+.amt{font-size:13px !important;font-weight:900;direction:ltr;text-align:left}
+.je{background:#fff;border:1px dashed #94A3B8;border-radius:6px;padding:4px 5px;flex-shrink:0}
+.je h6{margin:0 0 3px;font-size:8.5px;color:#334155;font-weight:900;display:flex;justify-content:space-between}
+.bal{display:flex;justify-content:space-between;gap:4px;font-size:8px;font-weight:800;background:#F8FAFC;border:1px solid var(--card-border);border-radius:5px;padding:3px 5px;margin-bottom:4px}
+.bal b{direction:ltr;unicode-bidi:isolate}
+.bl{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.bl small{font-size:7px;font-weight:900;margin-left:3px}
+.bl.bd small{color:#087443}.bl.bc small{color:#1D4ED8}
+.vc{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:4px 6px;font-size:8px;cursor:pointer;border-right:4px solid #137A38}
+.vc.pv{border-right-color:#B91C1C}.vc.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.vc .r{display:flex;justify-content:space-between;gap:4px;align-items:center}
+.vc b.m{direction:ltr;font-size:10px}
+.vc.rv b.m{color:#087443}.vc.pv b.m{color:#B91C1C}
+.steps{display:flex;gap:3px;flex-shrink:0}
+.steps span{flex:1;text-align:center;font-size:8px;font-weight:900;padding:4px 2px;border-radius:5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.steps span.on{background:var(--green);color:#fff}.steps span.done{background:#DDF3E6;color:#087443}
+.paperv{background:#fff;width:96%;margin:4px auto;box-shadow:0 2px 8px rgba(15,23,42,.25);padding:8px 10px;font-size:8.5px;border-top:5px solid #137A38}
+.paperv.pv{border-top-color:#B91C1C}
+.paperv .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.paperv .lg{background:var(--green);color:#fff;font-weight:900;font-size:11px;border-radius:5px;padding:3px 7px}
+.paperv h4{margin:0;font-size:13px}
+.paperv .ln{display:flex;gap:5px;align-items:center;border-bottom:1px dotted #CBD5E1;padding:4px 0}
+.paperv .ln label{width:80px;font-weight:900;color:#334155;flex-shrink:0}
+.paperv .ln .v{flex:1}
+.paperv .box{border:2px solid #137A38;border-radius:6px;padding:3px 8px;font-weight:900;font-size:13px;direction:ltr}
+.paperv.pv .box{border-color:#B91C1C}
+.paperv .sig{display:flex;justify-content:space-between;margin-top:10px;color:var(--muted);font-weight:700}
+.paperv .sig span{border-top:1px solid #94A3B8;padding-top:2px;min-width:70px;text-align:center}
+.inl{width:100%;height:15px;border:1px solid #2563EB;border-radius:3px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:800;padding:0 3px;direction:ltr;text-align:left}
+</style>
+<style>
+/* ===== إضافات شاشة حركات الخزائن والبنوك ===== */
+.flt{display:flex;gap:4px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.flt label{font-size:8.5px;font-weight:800;color:#334155}
+.ty{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;color:#fff;white-space:nowrap}
+.ft{display:flex;gap:6px;align-items:stretch;flex-shrink:0}
+.ft .bx{flex:1;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:6px;border-top:4px solid #B91C1C}
+.ft .bx.to{border-top-color:#137A38}
+.ft .bx h5{margin:0 0 4px;font-size:9.5px;font-weight:900}
+.ft .bx .bb{font-size:8.5px;font-weight:800;margin-top:4px;display:flex;justify-content:space-between}
+.ft .bx .bb b{direction:ltr;unicode-bidi:isolate}
+.arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:70px}
+.arrow .am{font-size:12px;font-weight:900;direction:ltr;color:#111827}
+.arrow .ar{font-size:22px;color:var(--green);line-height:1}
+.accs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;flex-shrink:0}
+.ac{background:#fff;border:1px solid var(--card-border);border-right:4px solid #0E7490;border-radius:6px;padding:4px 6px;cursor:pointer;font-size:8px;position:relative}
+.ac.t{border-right-color:#137A38}
+.ac.f{outline:2px solid #B91C1C;background:#FEF2F2}.ac.d{outline:2px solid #137A38;background:#ECFDF3}
+.ac b{display:block;font-size:8.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac .v{direction:ltr;unicode-bidi:isolate;font-weight:900;font-size:10px}
+.ac .lb{position:absolute;left:4px;top:3px;font-size:7.5px;font-weight:900;border-radius:7px;padding:0 5px;color:#fff}
+.ac .lb.f{background:#B91C1C}.ac .lb.d{background:#137A38}
+.paperv.cm{border-top-color:#2563EB}.paperv.cm .box{border-color:#2563EB}
+.tstat{display:flex;gap:4px;flex-shrink:0}
+.tstat span{flex:1;text-align:center;padding:5px 3px;border-radius:6px;font-size:8.5px;font-weight:900;background:#E2E8F0;color:#475569;cursor:pointer}
+.tstat span.done{background:#DDF3E6;color:#087443}.tstat span.on{background:#FEF3C7;color:#92400E;outline:1px solid #FDE68A}
+</style>
+<style>
+/* ===== إضافات شاشة الشيكات ===== */
+.st{display:inline-block;border-radius:9px;padding:1px 6px;font-size:8px;font-weight:900;color:#fff;white-space:nowrap}
+.acts{display:flex;gap:3px;flex-wrap:wrap;align-items:center;flex-shrink:0}
+.acb{border-radius:5px;padding:3px 7px;font-size:8.5px;font-weight:900;cursor:pointer;border:1px solid #BFDBFE;background:#EFF6FF;color:#1D4ED8;white-space:nowrap}
+.acb.on{background:#2563EB;color:#fff;border-color:#2563EB}
+.acb.go{background:#137A38;color:#fff;border-color:#137A38}
+.acb.off{background:#F1F5F9;color:#94A3B8;border-color:#E2E8F0;cursor:default}
+.kb{display:grid;gap:4px;flex:1;min-height:0}
+.kc{background:#E2E8F0;border-radius:6px;padding:3px;display:flex;flex-direction:column;min-height:0;overflow:auto}
+.kc h6{margin:0 0 3px;font-size:8.5px;font-weight:900;color:#fff;border-radius:4px;padding:2px 4px;display:flex;justify-content:space-between}
+.kq{background:#fff;border:1px solid var(--card-border);border-radius:5px;padding:3px 4px;margin-bottom:3px;font-size:7.5px;cursor:pointer;line-height:1.45}
+.kq.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.kq b{display:block;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kq .v{direction:ltr;unicode-bidi:isolate;font-weight:900}
+.due{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;white-space:nowrap}
+.due.od{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.due.td{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.due.tm{background:#FFF7ED;color:#C2410C;border-color:#FED7AA}
+.due.wk{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.due.lt{background:#F1F5F9;color:#64748B;border-color:#E2E8F0}
+.kp.o{border-right:3px solid #F59E0B}.kp.o b{color:#B45309}
+.kp.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;flex-shrink:0}
+.cal .h{text-align:center;font-size:7.5px;font-weight:900;color:#fff;background:var(--green);border-radius:3px;padding:1px}
+.cal .d{background:#fff;border:1px solid var(--card-border);border-radius:4px;min-height:34px;padding:1px 2px;font-size:7px;cursor:pointer;line-height:1.35}
+.cal .d.x{background:transparent;border:none;cursor:default}
+.cal .d.t{outline:2px solid #F59E0B}
+.cal .d.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.cal .d b{font-size:8px}
+.cal .d .i{color:#087443;font-weight:900;direction:ltr;display:block}
+.cal .d .o{color:#B91C1C;font-weight:900;direction:ltr;display:block}
+.chq{background:linear-gradient(135deg,#F0FDF4,#ECFEFF);border:1px solid #94A3B8;border-radius:8px;width:97%;margin:4px auto;padding:7px 9px;font-size:8.5px;box-shadow:0 2px 8px rgba(15,23,42,.2);position:relative}
+.chq.out{background:linear-gradient(135deg,#FFF7ED,#FEF2F2)}
+.chq .r{display:flex;gap:6px;align-items:center;margin-bottom:5px}
+.chq .r label{font-weight:900;color:#334155;white-space:nowrap}
+.chq .ln2{border-bottom:1px dotted #64748B;flex:1;padding-bottom:1px}
+.chq .bx2{border:2px solid #137A38;border-radius:5px;padding:2px 6px;font-weight:900;font-size:12px;direction:ltr;background:#fff;min-width:110px;text-align:left}
+.chq.out .bx2{border-color:#B91C1C}
+.chq .mc{font-family:Consolas,monospace;letter-spacing:2px;color:#475569;font-size:9px;direction:ltr;text-align:center;margin-top:4px}
+.tl{position:relative;padding-right:14px}
+.tl:before{content:"";position:absolute;right:5px;top:4px;bottom:4px;width:2px;background:#CBD5E1}
+.tli{position:relative;margin-bottom:5px}
+.tli .dot{position:absolute;right:-13px;top:3px;width:10px;height:10px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #94A3B8}
+.tli .cd{background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;font-size:8px}
+.tli.nx .cd{border-style:dashed;background:#F8FAFC}
+.msg{border-radius:5px;padding:3px 6px;font-size:8.5px;font-weight:800;flex-shrink:0}
+.msg.ok{background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}
+.msg.bad{background:#FEE2E2;color:#B91C1C;border:1px solid #FECACA}
+.msg.wr{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
+.slip{background:#fff;border-top:5px solid #2563EB;box-shadow:0 2px 8px rgba(15,23,42,.25);padding:6px 8px;font-size:8px;width:96%;margin:4px auto}
+.slip h4{margin:0 0 3px;font-size:11px;color:#1D4ED8}
+</style>
+<style>
+/* ===== إضافات شاشة العهد ===== */
+.tg2 span.cd.on{background:#2563EB;color:#fff}.tg2 span.cs.on{background:#137A38;color:#fff}
+.ec{background:#fff;border:1px solid var(--card-border);border-right:4px solid #2563EB;border-radius:7px;padding:5px 6px;cursor:pointer;font-size:8px;display:flex;flex-direction:column;gap:3px}
+.ec.sel{outline:2px solid #2563EB;background:#EFF6FF}
+.ec.zero{border-right-color:#94A3B8}
+.ec.old{border-right-color:#DC2626}
+.ec .tp{display:flex;gap:5px;align-items:center}
+.ec .tp b{font-size:9px;display:block}
+.ec .v{direction:ltr;unicode-bidi:isolate;font-weight:900;font-size:11px}
+.age{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;white-space:nowrap}
+.age.a1{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.age.a2{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.age.a3{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.age.a4{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.wz{display:flex;gap:3px;flex-shrink:0}
+.wz span{flex:1;text-align:center;font-size:8.5px;font-weight:900;padding:4px 2px;border-radius:5px;background:#E2E8F0;color:#475569;cursor:pointer}
+.wz span.on{background:var(--green);color:#fff}.wz span.done{background:#DDF3E6;color:#087443}
+.paperv.cd{border-top-color:#2563EB}.paperv.cd .box{border-color:#2563EB}
+.tot2{display:flex;justify-content:space-between;gap:6px;font-size:8.5px;font-weight:900;background:#F8FAFC;border:1px solid var(--card-border);border-radius:5px;padding:3px 6px;flex-shrink:0}
+.tot2 b{direction:ltr;unicode-bidi:isolate}
+.al{display:inline-block;height:6px;border-radius:3px;vertical-align:middle;background:#137A38}
+.al.r{background:#CBD5E1}
+</style>
+<style>
+/* ===== إضافات شاشة الشركاء ورأس المال ===== */
+.kg{display:flex;border:1px solid var(--input);border-radius:6px;overflow:hidden;flex-shrink:0}
+.kg span{flex:1;text-align:center;padding:4px 6px;font-weight:900;font-size:8.5px;cursor:pointer;background:#fff;color:#475569;white-space:nowrap;border-left:1px solid #E2E8F0}
+.kg span:last-child{border-left:none}
+.kg span.on{color:#fff}
+.pcard{background:#fff;border:1px solid var(--card-border);border-right:4px solid #7C3AED;border-radius:7px;padding:5px 7px;flex-shrink:0;font-size:8.5px}
+.pcard .tp{display:flex;gap:6px;align-items:center}
+.pcard .tp b{font-size:10.5px}
+.pcard .rw{display:flex;justify-content:space-between;gap:6px;align-items:center;margin-top:4px;font-weight:800}
+.pcard .rw b{direction:ltr;unicode-bidi:isolate}
+.cbar2{display:inline-block;width:110px;height:7px;background:#E2E8F0;border-radius:4px;vertical-align:middle;overflow:hidden}
+.cbar2 span{display:block;height:100%;background:#2563EB}
+.pt{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;white-space:nowrap}
+.pt.g{background:#F5F3FF;color:#6D28D9;border-color:#DDD6FE}
+.pt.l{background:#FFF7ED;color:#C2410C;border-color:#FED7AA}
+.av.pv{background:#7C3AED}
+.inp{width:44px;height:15px;border:1px solid #2563EB;border-radius:3px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:900;padding:0 3px;direction:ltr;text-align:left}
+.eq td.h{background:#F8FAFC;font-weight:900;color:#334155}
+.paperv.dp{border-top-color:#137A38}.paperv.wd{border-top-color:#B91C1C}.paperv.wd .box{border-color:#B91C1C}
+.paperv.cp{border-top-color:#2563EB}.paperv.cp .box{border-color:#2563EB}
+</style>
+
+<style>
+.inq{width:46px;height:15px;border:1px solid #2563EB;border-radius:3px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:900;padding:0 3px;direction:ltr;text-align:left}
+.inq.w{width:58px}
+.inq.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.kd{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;white-space:nowrap}
+.kd.i{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.kd.s{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.vw{background:#F5F3FF;color:#6D28D9;border:1px solid #DDD6FE;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900}
+.mx td.c{text-align:center}
+.mx td.z{color:#CBD5E1;text-align:center}
+.file{border:2px dashed #94A3B8;border-radius:8px;background:#fff;text-align:center;padding:16px 8px;color:#475569;font-weight:800;font-size:9px}
+.file b{display:block;font-size:11px;color:var(--green);margin-bottom:3px}
+.xl{font-family:Consolas,monospace;font-size:8px;background:#F8FAFC}
+.xl th{background:#217346 !important}
+.big{font-size:22px;font-weight:900;color:var(--green);direction:ltr;text-align:center;margin:8px 0}
+.qbox{display:flex;gap:4px;align-items:center;background:#fff;border:2px solid #2563EB;border-radius:7px;padding:5px;flex-shrink:0}
+.qbox b{font-size:9px;color:#1D4ED8;white-space:nowrap}
+.lock{background:#F1F5F9;border:1px solid #CBD5E1;border-radius:6px;padding:4px 6px;font-size:8px;font-weight:800;color:#475569}
+</style>
+<style>
+/* ===== إضافات شاشة التحويل ===== */
+.inq{width:46px;height:15px;border:1px solid #2563EB;border-radius:3px;background:#F5F9FF;font:inherit;font-size:8.5px;font-weight:900;padding:0 3px;direction:ltr;text-align:left}
+.inq.bad{border-color:#DC2626;background:#FEF2F2;color:#B91C1C}
+.inq:disabled,select.lv:disabled,input.lv:disabled{background:#F1F5F9;border-color:#CBD5E1;color:#64748B}
+.kd{display:inline-block;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;border:1px solid;white-space:nowrap}
+.kd.i{background:#ECFDF3;color:#087443;border-color:#B7E4C7}
+.kd.s{background:#FEF3C7;color:#92400E;border-color:#FDE68A}
+.vw{background:#F5F3FF;color:#6D28D9;border:1px solid #DDD6FE;border-radius:8px;padding:0 5px;font-size:7.5px;font-weight:900;white-space:nowrap}
+.route{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--card-border);border-radius:7px;padding:5px 7px;flex-shrink:0;font-weight:900;font-size:9px}
+.route .w{flex:1;border:1px solid var(--card-border);border-radius:6px;padding:3px 5px;background:#F8FAFC}
+.route .w small{display:block;color:var(--muted);font-size:7.5px;font-weight:800}
+.route .ar{font-size:16px;color:var(--green)}
+.swap{cursor:pointer;border:1px solid var(--input);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;background:#fff;font-size:10px;flex-shrink:0}
+.e{color:#B91C1C;font-size:7.5px;font-weight:800;white-space:normal;display:block}
+.w8{color:#92400E;font-size:7.5px;font-weight:800;white-space:normal;display:block}
+.up{color:#087443;font-weight:900}.dn{color:#B91C1C;font-weight:900}
+.msgb{border-radius:6px;padding:3px 6px;font-size:8px;font-weight:800;flex-shrink:0}
+.msgb.ok{background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}
+.msgb.no{background:#FEE2E2;color:#B91C1C;border:1px solid #FECACA}
+.msgb.inf{background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE}
+.ck{display:flex;gap:4px;align-items:flex-start;font-size:8.5px;font-weight:800;padding:3px 4px;border-bottom:1px dashed #E2E8F0}
+.ck b{width:13px;flex-shrink:0;text-align:center}
+.ck.ok b{color:#087443}.ck.no b{color:#B91C1C}.ck.wr b{color:#B45309}.ck.in b{color:#2563EB}
+.negt{display:inline-flex;align-items:center;gap:3px;border:1px dashed #B45309;color:#92400E;border-radius:10px;padding:1px 6px;font-size:7.5px;font-weight:900;cursor:pointer;background:#FFFBEB}
+.negt.on{background:#B45309;color:#fff;border-style:solid}
+.mx td.c{text-align:center;cursor:default}
+.mx th.pick{cursor:pointer}
+.mx th.f{background:#B91C1C !important}.mx th.t{background:#1D4ED8 !important}
+.mx td.z{color:#CBD5E1;text-align:center}
+.dlg{position:absolute;inset:34px 40px auto 40px;background:#fff;border:1px solid #94A3B8;border-radius:8px;box-shadow:0 10px 30px rgba(15,23,42,.35);z-index:5}
+.dlg .dh{background:var(--green);color:#fff;font-weight:900;font-size:9.5px;padding:5px 8px;border-radius:8px 8px 0 0;display:flex;justify-content:space-between}
+.dim{position:absolute;inset:20px 0 0 0;background:rgba(15,23,42,.25);z-index:4}
+.acc{background:#ECE9D8;font-family:Tahoma,Arial,sans-serif}
+.acc .af{display:flex;gap:4px;align-items:center;margin-bottom:3px;font-size:8.5px}
+.acc .af label{width:64px;font-weight:700}
+.acc .af i{flex:1;background:#fff;border:1px solid #7F9DB9;height:15px;font-style:normal;padding:1px 3px;font-size:8px;overflow:hidden;white-space:nowrap}
+.acc table{width:100%;border-collapse:collapse;font-size:8px;background:#fff}
+.acc th{background:#D4D0C8;border:1px solid #808080;padding:2px;font-weight:700}
+.acc td{border:1px solid #C0C0C0;padding:2px}
+.chg{font-size:8px;line-height:1.55;background:#fff;border:1px solid var(--card-border);border-radius:6px;padding:5px 7px}
+.chg b{color:var(--green)}
+.qbox input{flex:1;min-width:0;height:18px;border:1px solid #2563EB;border-radius:4px;font:inherit;font-size:9px;font-weight:900;padding:0 4px;direction:ltr;text-align:left}
+.last td{background:#FEF9C3 !important}
+</style>
+<style>
+/* ===== إضافات شاشة الجرد ===== */
+.tbl td .inq{width:50px}
+.dfz{color:#087443;font-weight:900}
+.un{color:#94A3B8;font-weight:800;font-size:7.5px}
+.oth{display:inline-flex;align-items:center;gap:3px;border:1px dashed #2563EB;color:#1D4ED8;border-radius:10px;padding:1px 6px;font-size:7.5px;font-weight:900;cursor:pointer;background:#EFF6FF}
+.wzb{display:flex;gap:4px;justify-content:space-between;flex-shrink:0}
+.wzb span{cursor:pointer}
+.tbl.sl td:first-child{white-space:normal}
+.rvp{background:#fff;border:1px solid var(--card-border);border-radius:6px}
+.zr,.f label.zr{display:flex;gap:4px;align-items:center;font-size:8.5px;font-weight:800;color:#334155;width:auto;flex:1;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج شاشة «الجرد والتسويات» (المرحلة 6 · جرد لكل مخزن · العجز والزيادة على «5205 تسوية جرد المخزون»)</h1>
+  <p>10 نماذج بنفس ألوان وخطوط Hr GAD ونفس شكل الشاشات اللي خلصت — الفرق في طريقة العدّ والعرض. اختار رقم (أو قول «خد كذا من نموذج كذا») ورد على الأسئلة تحت. كل البيانات هنا وهمية، وكل النماذج شغالة على نفس الجرد: اكتب «الفعلي» أو اعمل «ترحيل» في أي نموذج وهتلاقيه اتغيّر في الباقي.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+// ===== البيانات (وهمية)
+// الأصناف: [الكود، الاسم، الوحدة الأساسية، نوع الصنف «القسم»]
+const IT=[["ITM-0001","كابل نحاس 2×1.5 مم","متر","MCC"],["ITM-0002","مفتاح إضاءة مفرد","عدد","Lighting"],
+ ["ITM-0003","بريزة أرضي","عدد","Lighting"],["ITM-0004","لمبة LED 12 وات","عدد","Lighting"],["ITM-0005","ماسورة PVC 3/4","متر","MCC"],
+ ["ITM-0006","كشاف طوارئ","عدد","Fire Alarm"],["ITM-0007","لوحة توزيع 12 خط","عدد","MCC"],["ITM-0008","جهاز إنذار حريق","عدد","Fire Alarm"],
+ ["ITM-0009","حساس حرارة","عدد","BMS"],["ITM-0010","كنترولر DDC","عدد","BMS"]];
+const CATS=["BMS","MCC","Lighting","Fire Alarm"];
+// المخازن: [الكود، الاسم، وهمي]
+const WH=[["WH-001","المخزن الرئيسي",0],["WH-002","مخزن الفرع",0],["WH-003","المخزن الوهمي",1]];
+const KN={invoice:["فاتورة","i"],statement:["بيان","s"]};
+const TY={periodic:"دوري",annual:"سنوي",partial:"جزئي",direct:"تسوية مباشرة"};
+const WHY=["تالف","كسر","عينات","فرق عد","منتهي الصلاحية"];
+// الأرصدة الدفترية الحالية: الصنف|المخزن|النوع ← الكمية بالوحدة الأساسية
+const BAL={"ITM-0001|WH-001|invoice":1000,"ITM-0001|WH-002|invoice":500,"ITM-0001|WH-001|statement":150,
+ "ITM-0002|WH-001|invoice":360,"ITM-0002|WH-003|invoice":40,"ITM-0003|WH-001|invoice":200,"ITM-0003|WH-002|invoice":50,
+ "ITM-0004|WH-001|invoice":96,"ITM-0004|WH-002|invoice":600,"ITM-0004|WH-002|statement":120,"ITM-0005|WH-001|invoice":900,
+ "ITM-0006|WH-001|invoice":35,"ITM-0007|WH-001|invoice":8,"ITM-0008|WH-001|invoice":5,"ITM-0008|WH-002|statement":12,"ITM-0010|WH-001|invoice":6};
+// متوسط التكلفة على مستوى الشركة لكل (صنف + نوع) — «حساس حرارة» مالوش متوسط (عمره مااتشترى)
+const AVG={"ITM-0001|invoice":18.5,"ITM-0001|statement":16,"ITM-0002|invoice":22,"ITM-0003|invoice":35,"ITM-0004|invoice":45,
+ "ITM-0004|statement":40,"ITM-0005|invoice":12.75,"ITM-0006|invoice":310,"ITM-0007|invoice":1850,"ITM-0008|invoice":2400,"ITM-0008|statement":2350,"ITM-0010|invoice":5200};
+// الجرود: السطور {"الصنف|النوع": {cnt الفعلي · seen الدفتري وقت العدّ · cost تكلفة الزيادة لو مفيش متوسط · book الدفتري وقت الترحيل}}
+const C=[
+ {no:"SC-00001",date:"2026-10-31",wh:"WH-001",type:"periodic",note:"جرد آخر أكتوبر",st:"posted",zero:0,lines:{"ITM-0002|invoice":{book:362,cnt:360,cost:22},"ITM-0005|invoice":{book:895,cnt:900,cost:12.75},"ITM-0007|invoice":{book:8,cnt:8,cost:1850}}},
+ {no:"SC-00002",date:"2026-11-15",wh:"WH-002",type:"partial",note:"جرد اللمبات بس",st:"posted",zero:0,lines:{"ITM-0004|invoice":{book:603,cnt:600,cost:45}}},
+ {no:"",date:"2026-11-27",wh:"WH-001",type:"periodic",note:"جرد آخر نوفمبر",st:"draft",zero:0,lines:{"ITM-0001|invoice":{cnt:1000,seen:1000},"ITM-0001|statement":{cnt:148,seen:150},"ITM-0002|invoice":{cnt:360,seen:360},"ITM-0004|invoice":{cnt:100,seen:96},"ITM-0006|invoice":{cnt:33,seen:35},"ITM-0009|invoice":{cnt:3,seen:0}}}];
+let SEQ=2;
+const V={d:2,msg:"",mt:"ok",neg:0,flt:"all",step:1,wz:2,cat:"MCC",qc:"",qq:"",qk:"invoice",last:"",dlg:1,ai:"ITM-0008",ak:"statement",aq:"",
+ p:{item:"ITM-0003",wh:"WH-001",kind:"invoice",dir:-1,qty:4,why:"تالف",cost:""}};
+
+// ===== المنطق
+const it=c=>IT.find(i=>i[0]===c);const wh=c=>WH.find(w=>w[0]===c);const virt=c=>!!wh(c)[2];
+const N=c=>`<span class="ltr">${c}</span>`;
+const mf=n=>(+n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const m0=n=>(+n||0).toLocaleString("en-US",{maximumFractionDigits:3});
+const kB=k=>`<span class="kd ${KN[k][1]}">${KN[k][0]}</span>`;
+const vB=w=>virt(w)?' <span class="vw">👻 وهمي</span>':"";
+const bal=(i,w,k)=>BAL[`${i}|${w}|${k}`]||0;
+const avg=(i,k)=>AVG[`${i}|${k}`]||0;
+const sp=k=>k.split("|");
+const D=()=>C[V.d];
+const ed=()=>D().st==="draft";
+// سطور الجرد: المسودة = كل (صنف + نوع) ليه رصيد دفتري في المخزن + اللي اتعدّ · المرحّل = اللي اتسجّل
+const keysOf=d=>{const s=new Set(Object.keys(d.lines));if(d.st==="draft")Object.keys(BAL).forEach(k=>{const [i,w,kd]=sp(k);if(w===d.wh&&BAL[k])s.add(i+"|"+kd);});return [...s].sort();};
+const bk=(d,k)=>d.st==="posted"?d.lines[k].book:bal(sp(k)[0],d.wh,sp(k)[1]);
+const raw=(d,k)=>{const l=d.lines[k];return l&&l.cnt!==undefined&&l.cnt!==null&&l.cnt!==""?+l.cnt:null;};
+const ct=(d,k)=>{const r=raw(d,k);return r!==null?r:(d.zero&&d.st==="draft"?0:null);};
+const df=(d,k)=>{const c=ct(d,k);return c===null?null:Math.round((c-bk(d,k))*1000)/1000;};
+const cs=(d,k)=>{const l=d.lines[k]||{};if(d.st==="posted")return +l.cost||0;return avg(sp(k)[0],sp(k)[1])||+l.cost||0;};
+const vl=(d,k)=>virt(d.wh)?0:Math.round((df(d,k)||0)*cs(d,k)*100)/100;
+function tot(d){const ks=keysOf(d);const t={all:ks.length,n:0,unraw:0,sh:0,su:0,shn:0,sun:0,ok:0};
+  ks.forEach(k=>{if(raw(d,k)===null)t.unraw++;const x=df(d,k);if(x===null)return;t.n++;if(x<0){t.shn++;t.sh+=-vl(d,k);}else if(x>0){t.sun++;t.su+=vl(d,k);}else t.ok++;});
+  t.sh=Math.round(t.sh*100)/100;t.su=Math.round(t.su*100)/100;t.net=Math.round((t.su-t.sh)*100)/100;return t;}
+// أخطاء السطر (للمسودة بس): no = ممنوع · wr = تنبيه
+function lerr(d,k){
+  if(d.st!=="draft")return null;const c=ct(d,k);if(c===null)return null;
+  if(c<0)return ["no","الفعلي مايبقاش بالسالب"];
+  const x=df(d,k),b=bk(d,k),l=d.lines[k];
+  if(x>0&&!virt(d.wh)&&!cs(d,k))return ["no","زيادة لصنف مالوش متوسط تكلفة — اكتب تكلفة الوحدة"];
+  if(l&&l.seen!==undefined&&l.seen!==b&&raw(d,k)!==null)return ["wr",`الدفتري اتغيّر بعد ما عدّيت (كان ${m0(l.seen)} بقى ${m0(b)}) — راجع العدّ`];
+  if(x&&b>0&&raw(d,k)!==null&&Math.abs(x)/b>0.2)return ["wr","فرق أكبر من 20% من الرصيد — راجع العدّ"];
+  return null;}
+function checks(d){const t=tot(d),ks=keysOf(d),r=[];
+  if(!t.n)r.push(["no","مفيش ولا صنف اتعدّ"]);else r.push(["ok",`اتعدّ ${t.all-t.unraw} من ${t.all} سطر (صنف + نوع) في «${wh(d.wh)[1]}»`]);
+  ks.forEach(k=>{const e=lerr(d,k);if(e)r.push([e[0],`${sp(k)[0]} (${KN[sp(k)[1]][0]}): ${e[1]}`]);});
+  if(t.unraw&&d.st==="draft")r.push(d.zero?["wr",`${t.unraw} سطر مااتعدّش هيتحسبوا صفر (عجز بكل رصيدهم) — «اللي مااتعدّش = صفر» متعلّم`]:["in",`${t.unraw} سطر مااتعدّش — هيفضلوا برصيدهم زي ما هم`]);
+  if(t.ok)r.push(["ok",`${t.ok} سطر مطابق — من غير حركة`]);
+  if(t.shn)r.push(["in",`عجز: ${t.shn} سطر بقيمة ${mf(t.sh)} (بالمتوسط)`]);
+  if(t.sun)r.push(["in",`زيادة: ${t.sun} سطر بقيمة ${mf(t.su)}`]);
+  r.push(virt(d.wh)?["in","المخزن الوهمي: كميات بس من غير قيد"]:(t.sh||t.su)?["in",`القيد على «5205 تسوية جرد المخزون» — الصافي ${mf(t.net)}`]:["in","مفيش فروق ← مفيش قيد ولا حركة مخزون"]);
+  r.push(["ok","السنة المالية 2026 مفتوحة والتاريخ جوّاها"]);
+  return r;}
+function je(d){if(virt(d.wh))return null;const t=tot(d),r=[];
+  if(t.su)r.push(["1105 المخزون",t.su,0],["5205 تسوية جرد المخزون — زيادة",0,t.su]);
+  if(t.sh)r.push(["5205 تسوية جرد المخزون — عجز",t.sh,0],["1105 المخزون",0,t.sh]);
+  return r.length?r:null;}
+const jeBox=d=>{const j=je(d);return `<div class="je"><h6><span>📒 القيد بتاع الجرد ده</span>${j?'<span class="ok-line">✔ متوازن</span>':''}</h6>${j?`<table class="tbl"><tr><th>الحساب</th><th>مدين</th><th>دائن</th></tr>${j.map(r=>`<tr><td>${r[0]}</td><td class="n">${r[1]?mf(r[1]):''}</td><td class="n">${r[2]?mf(r[2]):''}</td></tr>`).join("")}</table>`:`<div class="hint">${virt(d.wh)?'المخزن الوهمي: الكميات بتتصلّح بس — من غير قيد (زي قرارك)':'مفيش فروق لسه — مفيش قيد'}</div>`}</div>`;};
+const stB=d=>d.st==="posted"?'<span class="bdg ok">مرحّل</span>':'<span class="bdg x">مسودة</span>';
+const negT=()=>`<span class="negt ${V.neg?'on':''}" data-neg="1" title="جرّب: المستخدم عنده الصلاحية ولا لأ">🔑 من غير رصيد: ${V.neg?'عنده':'مالوش'}</span>`;
+const bar=t=>{const d=D();return `<div class="tb"><span class="bt b-new" data-new="1">+ جرد جديد</span>${d.st==="draft"?'<span class="bt b-save">💾 حفظ</span><span class="bt b-post" data-post="1">✔ ترحيل</span><span class="bt b-del" data-del="1">🗑 مسح</span>':'<span class="bt b-unpost" data-unpost="1">↩ إلغاء الترحيل</span>'}<span class="bt b-exp">⬇ إكسل</span><span class="bt b-exit">✕ خروج</span><span class="mode">${t||"جرد "+TY[d.type]}</span> ${stB(d)} ${negT()} <span class="oth" data-other="1" title="جرّب: جهاز تاني صرف من المخزن وانت بتعدّ">🔁 حركة من جهاز تاني</span></div>`;};
+const win=(t,body,title)=>`<div class="win"><div class="wt"><span>${title||"🧮 الجرد والتسويات"}</span><span>A-H CODE</span></div><div class="body">${bar(t)}${body}</div></div>`;
+const msg=()=>V.msg?`<div class="msgb ${V.mt}">${V.msg}</div>`:"";
+const whSel=(v,dis,attr)=>`<select class="lv" ${attr||'data-h="wh"'} ${dis?'disabled':''}>${WH.map(w=>`<option value="${w[0]}" ${v===w[0]?'selected':''}>${w[1]}${w[2]?' 👻':''}</option>`).join("")}</select>`;
+const kSel=(attr,v,dis)=>`<select class="lv" ${attr} ${dis?'disabled':''}><option value="invoice" ${v==='invoice'?'selected':''}>فاتورة</option><option value="statement" ${v==='statement'?'selected':''}>بيان</option></select>`;
+const tySel=(v,dis)=>v==="direct"?'<i class="lock">تسوية مباشرة</i>':`<select class="lv" data-h="type" ${dis?'disabled':''}>${["periodic","annual","partial"].map(t=>`<option value="${t}" ${v===t?'selected':''}>${TY[t]}</option>`).join("")}</select>`;
+const docSel=()=>`<select class="lv" data-docsel="1" style="max-width:150px">${C.map((d,i)=>`<option value="${i}" ${V.d===i?'selected':''}>${d.no||'مسودة'} · ${d.date.slice(5)} · ${wh(d.wh)[1].replace("المخزن ","")}</option>`).join("")}</select>`;
+const zeroCb=()=>{const d=D();return `<label class="zr"><input type="checkbox" class="cb" data-zero="1" ${d.zero?'checked':''} ${ed()?'':'disabled'}> اللي مااتعدّش = صفر (جرد شامل)</label>`;};
+const hdrForm=()=>{const d=D(),x=!ed();return `<div class="gb"><span class="t">بيانات الجرد</span><div class="g2">
+ <div class="f"><label>الرقم</label><i class="lock">${d.no?N(d.no):'بيتولّد مع الترحيل'}</i></div>
+ <div class="f"><label>تاريخ الجرد *</label><input class="lv" data-h="date" value="${d.date}" ${x?'disabled':''}></div>
+ <div class="f"><label>المخزن *</label>${whSel(d.wh,x)}</div>
+ <div class="f"><label>نوع الجرد</label>${tySel(d.type,x)}</div>
+ </div><div class="f"><label>ملاحظات</label><input class="lv" data-h="note" value="${d.note}" ${x?'disabled':''}></div><div class="f" style="margin-bottom:0">${zeroCb()}</div></div>`;};
+const cIn=(d,k,e)=>{const r=raw(d,k);return `<input class="inq ${e&&e[0]==='no'?'bad':''}" data-c="${k}" value="${r===null?'':r}" placeholder="${d.zero&&ed()?'0':'—'}" ${ed()?'':'disabled'}>`;};
+const dfB=x=>x===null?'<span class="un">مااتعدّش</span>':x===0?'<span class="dfz">✔ مطابق</span>':x<0?`<span class="dn">▼ ${m0(x)}</span>`:`<span class="up">▲ +${m0(x)}</span>`;
+const sg=v=>v<0?`<span class="dn">${mf(v)}</span>`:v>0?`<span class="up">+${mf(v)}</span>`:'';
+const costCell=(d,k)=>{const x=df(d,k);if(virt(d.wh))return '—';if(ed()&&x>0&&!avg(sp(k)[0],sp(k)[1]))return `<input class="inq ${cs(d,k)?'':'bad'}" data-cost="${k}" value="${(d.lines[k]||{}).cost||''}" placeholder="التكلفة">`;return cs(d,k)?mf(cs(d,k)):'—';};
+const eLine=e=>e?`<span class="${e[0]==='no'?'e':'w8'}">${e[0]==='no'?'✖':'⚠'} ${e[1]}</span>`:'';
+// جدول العدّ — blind من غير الدفتري · slim من غير التكلفة والقيمة · flt / cat / only للفلترة
+function cntTbl(o={}){const d=D();let ks=keysOf(d);
+  if(o.cat)ks=ks.filter(k=>it(sp(k)[0])[3]===o.cat);
+  if(o.flt==="diff")ks=ks.filter(k=>df(d,k));
+  if(o.flt==="un")ks=ks.filter(k=>raw(d,k)===null);
+  if(o.only)ks=ks.filter(o.only);
+  const full=!o.blind&&!o.slim;const cols=o.blind?4:o.slim?5:7;const t=tot(d);
+  return `<table class="tbl ${o.slim?'sl':''}"><tr><th>الصنف</th><th>النوع</th>${o.blind?'<th>الوحدة</th>':'<th>الدفتري</th>'}<th>الفعلي</th>${o.blind?'':'<th>الفرق</th>'}${full?'<th>التكلفة</th><th>قيمة الفرق</th>':''}</tr>
+  ${ks.map(k=>{const [i,kd]=sp(k);const e=o.blind?null:lerr(d,k);const x=df(d,k);return `<tr class="${V.last===k?'last':''}"><td>${N(i)} ${it(i)[1]}${eLine(e)}</td><td>${kB(kd)}</td>
+   ${o.blind?`<td>${it(i)[2]}</td>`:`<td class="n">${m0(bk(d,k))}</td>`}<td>${cIn(d,k,e)}</td>${o.blind?'':`<td class="n">${dfB(x)}</td>`}
+   ${full?`<td class="n">${costCell(d,k)}</td><td class="n">${x?sg(vl(d,k)):''}</td>`:''}</tr>`;}).join("")||`<tr><td colspan="${cols}" class="un">مفيش سطور هنا</td></tr>`}
+  ${full?`<tr class="tot"><td colspan="4">الإجمالي — عجز ${t.shn} · زيادة ${t.sun} · مطابق ${t.ok} · مااتعدّش ${t.unraw}</td><td></td><td></td><td class="n">${sg(t.net)||mf(0)}</td></tr>`:''}</table>`;}
+const fl=()=>{const t=tot(D());return `<div class="srch" style="gap:3px">${[["all",`الكل ${t.all}`],["diff",`فيها فرق ${t.shn+t.sun}`],["un",`مااتعدّتش ${t.unraw}`]].map(f=>`<span class="chipf ${V.flt===f[0]?'on':''}" data-flt="${f[0]}">${f[1]}</span>`).join("")}${ed()?'<span class="btn-s g" data-fill="1" style="margin-right:auto" title="كل اللي مااتعدّش ياخد رصيده الدفتري">✔ الباقي مطابق</span>':''}</div>`;};
+const addRow=()=>ed()?`<div class="srch" style="margin-top:4px"><select class="lv" data-v="ai">${IT.map(i=>`<option value="${i[0]}" ${V.ai===i[0]?'selected':''}>${i[0]} ${i[1]}</option>`).join("")}</select>${kSel('data-v="ak" style="max-width:56px"',V.ak)}<input class="lv" data-v="aq" value="${V.aq}" placeholder="الفعلي" style="max-width:50px"><span class="btn-s" data-add="1">+ صنف مش في الدفتر</span></div>`:'<div class="lock" style="margin-top:4px">🔒 مرحّل — التعديل بـ «إلغاء الترحيل»</div>';
+const kpis=()=>{const t=tot(D());return `<div class="kpis"><div class="kp b"><small>اتعدّ</small><b>${t.all-t.unraw} / ${t.all}</b></div><div class="kp r"><small>عجز (${t.shn} سطر)</small><b>${mf(t.sh?-t.sh:0)}</b></div>
+ <div class="kp g"><small>زيادة (${t.sun} سطر)</small><b>${mf(t.su)}</b></div><div class="kp ${t.net<0?'r':'g'}"><small>الصافي على 5205</small><b>${mf(t.net)}</b></div></div>`;};
+const listTbl=slim=>`<table class="tbl"><tr><th>الرقم</th><th>التاريخ</th>${slim?'':'<th>المخزن</th>'}<th>النوع</th><th>الصافي</th>${slim?'':'<th>الحالة</th>'}</tr>${C.map((d,i)=>`<tr class="${V.d===i?'sel':''}" data-doc="${i}" style="cursor:pointer"><td>${d.no?N(d.no):'مسودة'}</td><td>${N(d.date.slice(5))}</td>${slim?'':`<td>${wh(d.wh)[1].replace("المخزن ","")}</td>`}<td>${TY[d.type]}</td><td class="n">${sg(tot(d).net)||'0.00'}</td>${slim?'':`<td>${stB(d)}</td>`}</tr>`).join("")}</table>`;
+const ckList=d=>`<div class="rvp">${checks(d).map(c=>`<div class="ck ${c[0]}"><b>${{ok:"✔",no:"✖",wr:"⚠",in:"ℹ"}[c[0]]}</b><span>${c[1]}</span></div>`).join("")}</div>`;
+const beforeAfter=d=>{const ks=keysOf(d).filter(k=>df(d,k));return `<table class="tbl"><tr><th>الصنف</th><th>قبل</th><th>بعد</th><th>الفرق</th></tr>${ks.map(k=>`<tr><td>${N(sp(k)[0])} ${kB(sp(k)[1])}</td><td class="n">${m0(bk(d,k))}</td><td class="n"><b>${m0(ct(d,k))}</b></td><td class="n">${dfB(df(d,k))}</td></tr>`).join("")||'<tr><td colspan="4" class="un">مفيش فروق</td></tr>'}</table>`;};
+
+// ===== النماذج
+const M=[
+["الكلاسيك: الرأس + السطور + قائمة الجرود","زي «حركات الخزائن والبنوك»: يمين الرأس (الرقم · التاريخ · المخزن · نوع الجرد) وتحته كل أصناف المخزن بالدفتري والفعلي والفرق وقيمته، وشمال قائمة الجرود. الغلط بيبان تحت الصنف.",()=>win("",`<div class="content">
+ <div class="col" style="flex:1"><div class="scroll">${hdrForm()}${msg()}<div class="gb"><span class="t">الأصناف — الدفتري والفعلي</span>${fl()}${cntTbl({flt:V.flt})}${addRow()}</div>${jeBox(D())}</div></div>
+ <div class="col" style="width:196px"><div class="srch"><i>🔍 بحث برقم أو مخزن…</i></div><div class="scroll">${listTbl()}</div><div class="cnt">${C.length} جرد · السنة 2026</div></div></div>`)],
+
+["زي الإكسل: كل أصناف المخزن بخانة «الفعلي»","زي «بضاعة أول المدة» اللي اخترتها: جدول واحد كبير لكل أصناف المخزن، تكتب الفعلي وتنزل بـ Enter، وفوق 4 كروت (اتعدّ · عجز · زيادة · الصافي) وفلتر «فيها فرق / مااتعدّتش».",()=>{const d=D();return win("",`<div class="content" style="flex-direction:column">
+ <div class="flt"><label>الجرد</label>${docSel()}<label>المخزن</label><span style="width:110px;display:flex">${whSel(d.wh,!ed())}</span><label>النوع</label><span style="width:70px;display:flex">${tySel(d.type,!ed())}</span>${zeroCb()}</div>
+ ${kpis()}${msg()}${fl()}<div class="scroll">${cntTbl({flt:V.flt})}</div>
+ <div class="hint">Tab / Enter للخانة اللي بعدها · الفاضي = مااتعدّش · كل سطر بيتحفظ بإصداره ← 2–3 أجهزة يعدّوا نفس المخزن مع بعض من غير ما حد يمسح شغل التاني</div></div>`);}],
+
+["جرد أعمى: العدّ الأول ← بعدين المطابقة","خطوتين: ① أمين المخزن بيعدّ من غير ما يشوف الرصيد الدفتري (ورقة عد / إكسل) · ② «المطابقة» بتظهر الفروق بس للمراجعة قبل الترحيل. بيمنع إن العدّ يتظبّط على الدفتر.",()=>{const d=D(),t=tot(d);return win("جرد أعمى",`<div class="content" style="flex-direction:column">
+ <div class="tg2"><span class="rv ${V.step===1?'on':''}" data-step="1">① العدّ (من غير الدفتري)</span><span class="rv ${V.step===2?'on':''}" data-step="2">② المطابقة والفروق</span></div>${msg()}
+ ${V.step===1?`<div class="srch"><span class="btn-s g">🖨 ورقة العدّ</span><span class="btn-s g">⬇ نموذج إكسل للعدّ</span><span class="btn-s g">⬆ استيراد الفعلي من إكسل</span><span class="hint" style="margin-right:auto">${wh(d.wh)[1]} · اتعدّ ${t.all-t.unraw} من ${t.all}</span></div><div class="scroll">${cntTbl({blind:1})}</div>`
+ :`${kpis()}<div class="scroll">${cntTbl({flt:"diff"})}</div><div class="hint">بيظهر اللي فيه فرق بس — مطابق ${t.ok} · مااتعدّش ${t.unraw}. امسح «الفعلي» لو عايزه يتعدّ تاني.</div>`}</div>`);}],
+
+["خطوة بخطوة (معالج)","4 خطوات فوق: ① فتح الجرد (المخزن والتاريخ والنوع) · ② العدّ · ③ مراجعة الفروق · ④ القيد والترحيل. مناسب للجرد السنوي اللي بياخد أيام — كل خطوة شاشة لوحدها.",()=>{const d=D(),s=V.wz;const nm=["فتح الجرد","العدّ","الفروق","الترحيل"];return win("",`<div class="content" style="flex-direction:column">
+ <div class="wz">${nm.map((n,i)=>`<span class="${s===i+1?'on':s>i+1?'done':''}" data-wz="${i+1}">${"①②③④"[i]} ${n}</span>`).join("")}</div>${msg()}
+ <div class="scroll">${s===1?hdrForm()+'<div class="hint">الرصيد الدفتري بيتحسب من دفتر المخزون بتاريخ الجرد — مش لقطة بتتنسخ زي الأكسس</div>':s===2?fl()+cntTbl({flt:V.flt,slim:1}):s===3?kpis()+cntTbl({flt:"diff"}):ckList(d)+jeBox(d)}</div>
+ <div class="wzb"><span class="btn-s g" data-wz="${Math.max(1,s-1)}">→ السابق</span>${s<4?`<span class="btn-s" data-wz="${s+1}">التالي ←</span>`:ed()?'<span class="btn-s" data-post="1">✔ ترحيل الجرد</span>':'<span class="btn-s d">مرحّل</span>'}</div></div>`);}],
+
+["العدّ السريع بالكود (Enter)","خانة واحدة فوق: الكود (أو الباركود) + الكمية ← Enter، وكل مرة بتزوّد على المعدود (تعدّ رف رف). يمين اللي اتعدّ وشمال اللي لسه — مناسب للعدّ واقف في المخزن بلابتوب.",()=>{const d=D();const un=keysOf(d).filter(k=>raw(d,k)===null);return win("عدّ سريع",`<div class="content" style="flex-direction:column">
+ <div class="qbox"><b>الكود</b><input data-v="qc" value="${V.qc}" placeholder="ITM-0003" ${ed()?'':'disabled'}><b>النوع</b><span style="width:60px;display:flex">${kSel('data-v="qk"',V.qk,!ed())}</span><b>الكمية</b><input data-v="qq" value="${V.qq}" placeholder="1" style="max-width:54px" ${ed()?'':'disabled'}><span class="btn-s" data-quick="1">↵ عدّ</span></div>${msg()}
+ <div style="display:flex;gap:6px;flex:1;min-height:0"><div class="col" style="flex:1.7"><div class="sec2">اللي اتعدّ (${keysOf(d).length-un.length}) — كل Enter بيزوّد على المعدود</div><div class="scroll">${cntTbl({only:k=>raw(d,k)!==null,slim:1})}</div></div>
+ <div class="col" style="flex:1"><div class="sec2">لسه مااتعدّش (${un.length})</div><div class="scroll"><table class="tbl"><tr><th>الصنف</th><th>الدفتري</th></tr>${un.map(k=>`<tr data-qpick="${k}" style="cursor:pointer"><td>${N(sp(k)[0])} ${it(sp(k)[0])[1]} ${kB(sp(k)[1])}</td><td class="n">${m0(bk(d,k))}</td></tr>`).join("")||'<tr><td colspan="2" class="dfz">✔ كله اتعدّ</td></tr>'}</table></div><div class="hint">اضغط على صنف ← الكود ينزل في الخانة</div></div></div></div>`);}],
+
+["العجز يمين والزيادة شمال","بعد العدّ: لوحة حمرا للعجز ولوحة خضرا للزيادة، وفي النص الصافي — بتشوف القيد قبل ما ترحّل، وتقدر تصلّح الفعلي من اللوحة نفسها.",()=>{const d=D(),t=tot(d),ks=keysOf(d);const li=f=>ks.filter(k=>f(df(d,k))).map(k=>{const [i,kd]=sp(k);const e=lerr(d,k);const need=ed()&&df(d,k)>0&&!avg(i,kd)&&!virt(d.wh);return `<tr><td>${N(i)} ${it(i)[1]} ${kB(kd)}${eLine(e)}</td><td class="n">${m0(bk(d,k))}</td><td>${cIn(d,k,e)}</td><td class="n">${dfB(df(d,k))}</td><td class="n">${need?costCell(d,k):sg(vl(d,k))}</td></tr>`;}).join("")||'<tr><td colspan="5" class="un">مفيش</td></tr>';
+ const hd='<tr><th>الصنف</th><th>الدفتري</th><th>الفعلي</th><th>الفرق</th><th>القيمة</th></tr>';return win("",`<div class="content" style="flex-direction:column">${msg()}
+ <div class="ft" style="flex:1;min-height:0"><div class="bx" style="overflow:auto"><h5 style="color:#B91C1C">▼ العجز — ${t.shn} سطر</h5><table class="tbl">${hd}${li(x=>x<0)}</table><div class="bb"><span>قيمة العجز</span><b class="dn">${mf(t.sh)}</b></div></div>
+ <div class="arrow" style="min-width:64px"><span class="hint">الصافي</span><span class="am">${mf(t.net)}</span><span class="bdg ${t.net<0?'no':'ok'}">${t.net<0?'عجز':t.net>0?'زيادة':'متعادل'}</span><span class="hint" style="text-align:center">مطابق ${t.ok}<br>مااتعدّش ${t.unraw}</span></div>
+ <div class="bx to" style="overflow:auto"><h5 style="color:#087443">▲ الزيادة — ${t.sun} سطر</h5><table class="tbl">${hd}${li(x=>x>0)}</table><div class="bb"><span>قيمة الزيادة</span><b class="up">${mf(t.su)}</b></div></div></div>${jeBox(d)}</div>`);}],
+
+["تبويب لكل قسم (نوع الصنف)","الجرد قسم قسم زي الأكسس (TypeShop): تبويب لكل نوع صنف (BMS · MCC · …) وعليه «اتعدّ كام من كام» — كل واحد يمسك قسم، وتعرف فاضل إيه بنظرة.",()=>{const d=D(),ks=keysOf(d);const st=c=>{const a=ks.filter(k=>it(sp(k)[0])[3]===c);return [a.filter(k=>raw(d,k)!==null).length,a.length];};return win("",`<div class="content" style="flex-direction:column">
+ <div class="flt"><label>الجرد</label>${docSel()}<span class="hint">${wh(d.wh)[1]}${vB(d.wh)} · ${d.date}</span><span style="margin-right:auto">${zeroCb()}</span></div>
+ <div class="tabs2">${CATS.map(c=>{const s=st(c);return `<span class="${V.cat===c?'on':''}" data-cat="${c}">${c}<em>${s[0]}/${s[1]}</em></span>`;}).join("")}</div>${msg()}
+ <div class="scroll">${cntTbl({cat:V.cat})}</div>${kpis()}</div>`);}],
+
+["لوحة المراجعة قبل الترحيل (زي التحويل)","نفس شكل «التحويل بين المخازن» اللي اخترته: يمين الرأس والعدّ، وفي النص لوحة بتتحسب وانت بتكتب (✔ ✖ ⚠ ℹ + قبل / بعد + القيد)، وشمال قائمة الجرود. «ترحيل» بيوقف لو فيها ✖.",()=>{const d=D();return win("",`<div class="content">
+ <div class="col" style="flex:1.55"><div class="scroll">${hdrForm()}<div class="gb"><span class="t">الأصناف</span>${fl()}${cntTbl({flt:V.flt,slim:1})}</div></div></div>
+ <div class="col" style="flex:1"><div class="sec2">🔎 لوحة المراجعة قبل الترحيل</div>${msg()}<div class="scroll">${ckList(d)}<div class="sec2">قبل / بعد</div>${beforeAfter(d)}${jeBox(d)}</div></div>
+ <div class="col" style="width:118px"><div class="scroll">${listTbl(1)}</div><div class="cnt">${C.length} جرد</div></div></div>`);}],
+
+["تسوية مباشرة من غير جرد (نافذة)","لصنف واحد اتكسر أو تلف أو طلع عينة: زرار «± تسوية مباشرة» بيفتح نافذة (عجز / زيادة · الكمية · السبب) وبيترحّل في لحظتها — بدل ما تعمل جرد كامل. زي جدول GARD في الأكسس.",()=>{const p=V.p;const b=bal(p.item,p.wh,p.kind);const q=+p.qty||0;const a=avg(p.item,p.kind)||+p.cost||0;const after=Math.round((b+p.dir*q)*1000)/1000;const v=virt(p.wh)?0:Math.round(q*a*100)/100;
+ const bad=!(q>0)?"الكمية لازم أكبر من صفر":(after<0&&!V.neg)?`الرصيد هيبقى ${m0(after)} — محتاج صلاحية «من غير رصيد»`:(p.dir>0&&!a&&!virt(p.wh))?"زيادة لصنف مالوش متوسط — اكتب تكلفة الوحدة":"";
+ const jt=virt(p.wh)?"المخزن الوهمي: كميات بس من غير قيد":p.dir<0?`القيد: مدين 5205 تسوية جرد المخزون / دائن 1105 المخزون — ${mf(v)}`:`القيد: مدين 1105 المخزون / دائن 5205 تسوية جرد المخزون — ${mf(v)}`;
+ return `<div class="win"><div class="wt"><span>📦 الأصناف</span><span>A-H CODE</span></div><div class="body"><div class="tb"><span class="bt b-new">+ جديد</span><span class="bt b-edit">✎ تعديل</span><span class="bt b-tog" data-dlg="1" style="cursor:pointer">± تسوية مباشرة</span><span class="bt b-exit">✕ خروج</span><span class="mode">عرض</span> ${negT()}</div>
+ <div class="content" style="flex-direction:column">${V.dlg?'':msg()}<div class="scroll"><table class="tbl"><tr><th>الكود</th><th>الصنف</th><th>القسم</th><th>رصيد الرئيسي (فاتورة)</th><th>المتوسط</th></tr>${IT.map(i=>`<tr class="${p.item===i[0]?'sel':''}" data-pit="${i[0]}" style="cursor:pointer"><td>${N(i[0])}</td><td>${i[1]}</td><td>${i[3]}</td><td class="n">${m0(bal(i[0],"WH-001","invoice"))}</td><td class="n">${avg(i[0],"invoice")?mf(avg(i[0],"invoice")):'—'}</td></tr>`).join("")}</table></div>
+ <div class="hint">اختار صنف واضغط «± تسوية مباشرة» — التسوية بتتسجّل مستند «تسوية مباشرة» في قائمة الجرود (بتبان في باقي النماذج)</div></div></div>
+ ${V.dlg?`<div class="dim"></div><div class="dlg"><div class="dh"><span>± تسوية مباشرة — ${p.item} ${it(p.item)[1]}</span><span data-dlg="0" style="cursor:pointer">✕</span></div><div style="padding:7px">
+ <div class="tg2" style="margin-bottom:5px"><span class="pv ${p.dir<0?'on':''}" data-pdir="-1">▼ عجز / تالف (خروج)</span><span class="rv ${p.dir>0?'on':''}" data-pdir="1">▲ زيادة (دخول)</span></div>
+ <div class="g2"><div class="f"><label>المخزن *</label>${whSel(p.wh,0,'data-p="wh"')}</div><div class="f"><label>النوع</label>${kSel('data-p="kind"',p.kind)}</div>
+ <div class="f"><label>الكمية *</label><input class="lv" data-p="qty" value="${p.qty}"></div><div class="f"><label>السبب *</label><select class="lv" data-p="why">${WHY.map(w=>`<option ${p.why===w?'selected':''}>${w}</option>`).join("")}</select></div>
+ <div class="f"><label>الرصيد الحالي</label><i class="lock">${m0(b)} ${it(p.item)[2]}</i></div><div class="f"><label>بعد التسوية</label><i class="lock" style="${after<0?'color:#B91C1C;font-weight:900':''}">${m0(after)} ${it(p.item)[2]}</i></div>
+ <div class="f"><label>تكلفة الوحدة</label>${p.dir>0&&!avg(p.item,p.kind)&&!virt(p.wh)?`<input class="lv ${a?'':'bad'}" data-p="cost" value="${p.cost}" placeholder="مفيش متوسط — اكتبها">`:`<i class="lock">${virt(p.wh)?'—':mf(a)+' (المتوسط)'}</i>`}</div><div class="f"><label>القيمة</label><i class="lock">${virt(p.wh)?'—':mf(v)}</i></div></div>
+ ${V.msg&&V.mt==="no"?`<div class="msgb no">${V.msg}</div>`:bad?`<div class="msgb no">✖ ${bad}</div>`:`<div class="msgb ok">✔ ${jt}</div>`}
+ <div style="display:flex;gap:4px;justify-content:flex-end;margin-top:6px"><span class="bt b-post" data-pgo="1" style="cursor:pointer">✔ ترحيل التسوية</span><span class="bt b-can" data-dlg="0" style="cursor:pointer">إلغاء</span></div></div></div>`:''}</div>`;}],
+
+["زي الأكسس F3hoda1 + اللي اتغيّر","يمين شكل شاشة الجرد القديمة (كل الأصناف بتتضاف مع كل تاريخ جرد، وخانة count1 للعدّ) وشمال اللي اتغيّر عندنا — للمقارنة بس.",()=>{const d=D(),ks=keysOf(d);return `<div class="win acc"><div class="wt" style="background:#0A246A;color:#fff"><span>F3hoda1 — الجرد</span><span style="color:#fff">Microsoft Access</span></div><div style="display:flex;flex:1;min-height:0">
+ <div style="flex:1.25;padding:6px;display:flex;flex-direction:column;min-width:0"><div class="af"><label>date123</label><i>${d.date}</i></div><div class="af"><label>month / year</label><i>${+d.date.slice(5,7)} / ${d.date.slice(0,4)}</i></div>
+ <div style="font-size:8px;font-weight:700;margin:3px 0">QBHDOR — جدول 3hoda (صف لكل صنف مع كل تاريخ)</div><div style="overflow:auto;flex:1"><table><tr><th>partNumber</th><th>ItemN</th><th>count1</th><th>Balance</th><th>TypeInv</th><th>priceCost</th><th>TypeShop</th></tr>${ks.map(k=>{const [i,kd]=sp(k);const r=raw(d,k);return `<tr><td>${+i.slice(4)}</td><td>${it(i)[1]}</td><td>${r===null?'':r}</td><td>0</td><td>${kd==="statement"?"بيان":""}</td><td>${avg(i,kd)||0}</td><td>${CATS.indexOf(it(i)[3])+1}</td></tr>`;}).join("")}<tr><td>*</td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table></div>
+ <div style="margin-top:4px;display:flex;gap:4px"><span style="border:1px outset #fff;background:#D4D0C8;padding:2px 8px;font-size:8px">إضافة كل الأصناف</span><span style="border:1px outset #fff;background:#D4D0C8;padding:2px 8px;font-size:8px">طباعة PrintHD</span></div></div>
+ <div style="flex:1;padding:6px;overflow:auto"><div class="chg"><b>اللي اتغيّر عندنا:</b><br>• الجرد <b>مستند برقم</b> (<span class="ltr">SC-00001</span>) ومخزن ونوع — مش صف لكل صنف مع كل تاريخ (الأكسس: <b>180,737 صف</b> لـ 62 تاريخ، منهم 340 بس فيهم عدّ).<br>• <b>الدفتري بيتحسب لوحده</b> من دفتر المخزون بتاريخ الجرد — مش خانة Balance.<br>• الفرق بيعمل <b>حركة مخزون + قيد</b> عجز / زيادة على 5205 بالمتوسط — الأكسس مكانش بيعمل قيد.<br>• <b>فاتورة / بيان</b> لكل سطر (TypeInv كان فاضي في أغلب الصفوف).<br>• <b>«تسوية مباشرة»</b> بسبب، بدل جدولين GARD (998) و Gard2 (787) اللي كانوا بيتستوردوا من إكسل.<br>• القسم (TypeShop) بقى <b>نوع الصنف</b> وتقدر تجرد قسم قسم.<br>• مسودة ← <b>ترحيل</b> ← إلغاء ترحيل بصلاحية.<br>• جهازين يعدّوا نفس المخزن مع بعض محميين (إصدار لكل سطر + قفل الأصناف وقت الترحيل).</div></div></div></div>`;}],
+];
+
+const NOTE=`<b>📌 الشاشة دي بتعمل إيه؟</b> بتقارن <b>الرصيد الدفتري</b> (اللي في البرنامج) <b>بالفعلي</b> (اللي اتعدّ في المخزن) لكل صنف، والفرق بيتصلّح بحركة مخزون وقيد: <b>العجز</b> خروج بالمتوسط (مدين 5205 تسوية جرد المخزون / دائن 1105 المخزون) و<b>الزيادة</b> دخول (العكس) — والمطابق مالوش حركة.
+<ul>
+<li><b>كانت إيه في الأكسس:</b> <span class="ltr">F3hoda1</span> «الجرد» (ظاهرة في قسم «الأصناف + المخازن» في قايمة Main) على جدول <span class="ltr">3hoda</span>: كل تاريخ جرد بيتضاف فيه <b>صف لكل الأصناف</b> (حوالي 3,100) — <b>180,737 صف لـ 62 تاريخ</b>، واللي فيهم عدّ فعلي (<span class="ltr">count1</span>) <b>340 صف بس</b>. والتسويات كانت جدولين بيتستوردوا من إكسل: <span class="ltr">GARD</span> (998 سطر: الصنف ± كمية) و<span class="ltr">Gard2</span> (787: + فاتورة / بيان + التكلفة). ومفيش قيد محاسبي (النموذج 10).</li>
+<li><b>المحرك جاهز</b> (دفتر المخزون + محرك الترحيل): نوع المستند «تسوية جرد» وقاعدة القيد على «5205 تسوية جرد المخزون» موجودين من قبل كده · العجز بيطلع <b>بالمتوسط المرجّح</b> · الزيادة بتدخل بالمتوسط، ولو الصنف <b>مالوش متوسط</b> (عمره مااتشترى) لازم تكتب تكلفته · <b>المخزن الوهمي كميات بس</b> من غير قيد.</li>
+<li><b>الشبكة:</b> كل سطر عدّ بيتحفظ بإصداره (2–3 أجهزة يعدّوا نفس المخزن) · لو جهاز تاني صرف من الصنف بعد ما عدّيته ← السطر بيتعلّم ⚠ «الدفتري اتغيّر» (جرّب الزرار الأزرق 🔁) · الترحيل بيقفل صفوف الأصناف وبيحسب الفرق على الرصيد الدفتري لحظتها.</li>
+<li>جرّب: «ترحيل» في المسودة (هيترفض: «حساس حرارة» زيادة من غير تكلفة — اكتب تكلفته في أي نموذج) · «✔ الباقي مطابق» · علّم «اللي مااتعدّش = صفر» وشوف العجز · بعد الترحيل اضغط 🔁 وبعدين «إلغاء الترحيل» (هيترفض إلا بصلاحية 🔑 «من غير رصيد») · «± تسوية مباشرة» في النموذج 9.</li>
+</ul>`;
+const QS=`<b>❓ محتاج قرارك في دول (مع رقم النموذج):</b>
+<ol>
+<li><b>شكل الشاشة:</b> لوحة المراجعة زي «التحويل» (8 — اقتراحي عشان الشاشتين يبقوا شبه بعض)؟ ولا زي الإكسل (2)؟ ولا الكلاسيك (1)؟ ولا تبويب لكل قسم (7)؟ — وتقدر تقول «8 + الكروت من 2 + العدّ السريع من 5».</li>
+<li><b>الجرد الأعمى</b> (3): العدّ من غير ما الرصيد الدفتري يبان — نعمله اختيار في الشاشة (اقتراحي: زرار «إخفاء الدفتري» بصلاحية) ولا مش محتاجه؟</li>
+<li><b>اللي مااتعدّش:</b> يفضل برصيده زي ما هو (اقتراحي) + تشيك بوكس «اللي مااتعدّش = صفر» للجرد الشامل بتأكيد؟ ولا دايماً صفر؟</li>
+<li><b>فاتورة / بيان:</b> الصنف اللي ليه رصيد في النوعين بيظهر بسطرين وكل واحد بيتعدّ لوحده (اقتراحي) ولا الجرد لنوع واحد يتحدد في الرأس؟</li>
+<li><b>المخزن:</b> كل جرد لمخزن واحد (اقتراحي) — والمخزن الوهمي يتجرد كميات بس من غير قيد؟</li>
+<li><b>الرصيد الدفتري:</b> بيتحسب بتاريخ الجرد وقت الترحيل، ولو اتغيّر بعد ما عدّيت بيطلع تنبيه ⚠ بس (اقتراحي) — ولا نقفل الحركة على المخزن طول ما الجرد مفتوح؟</li>
+<li><b>تكلفة الزيادة:</b> بالمتوسط لوحدها، ولو الصنف مالوش متوسط تتكتب بالإيد (اقتراحي)؟ والعجز بالمتوسط دايماً؟</li>
+<li><b>الحساب:</b> العجز والزيادة الاتنين على «5205 تسوية جرد المخزون» (اقتراحي — زي الحسابات الافتراضية) ولا حساب للعجز وحساب إيراد للزيادة؟</li>
+<li><b>التسوية المباشرة</b> (9 — تالف / كسر / عينات من غير جرد): نعملها في نفس الشاشة كنوع «تسوية مباشرة» بسبب (اقتراحي) ولا شاشة لوحدها ولا مش دلوقتي؟ · والأسباب: تالف · كسر · عينات · فرق عد · منتهي — تزوّد حاجة؟</li>
+<li><b>أنواع الجرد:</b> دوري · سنوي · جزئي — تصنيف للتقارير بس (اقتراحي)؟</li>
+<li><b>الوحدة:</b> العدّ بالوحدة الأساسية بس (اقتراحي — أبسط وأقل غلط) ولا تختار وحدة (لفة / كرتونة) زي التحويل؟</li>
+<li><b>مسودة + ترحيل</b> والرقم <span class="ltr">SC-00001</span> من أول ترحيل ويبدأ من 1 كل سنة · «إلغاء الترحيل» بصلاحية، ولو هيخلّي رصيد بالسالب محتاج «من غير رصيد» (اقتراحي — زي التحويل)؟</li>
+<li><b>إكسل:</b> «نموذج للعدّ» يتصدّر و«الفعلي» يتستورد منه دلوقتي (اقتراحي — زي بضاعة أول المدة) · والطباعة (ورقة العدّ ومحضر الجرد زي PrintHD) مع مرحلة الطباعة؟</li>
+<li><b>نقل الأكسس:</b> الـ 180 ألف صف بتوع <span class="ltr">3hoda</span> وتسويات <span class="ltr">GARD / Gard2</span> <b>مش هيتنقلوا</b> — أثرهم داخل في «بضاعة أول المدة» (اقتراحي)؟</li>
+<li><b>المكان والصلاحيات:</b> «المخازن» ← «الأصناف + المخازن» بعد «التحويل بين المخازن» · عرض · جديد · تعديل · مسح · ترحيل · إلغاء ترحيل · تصدير · استيراد · <b>من غير رصيد</b> (اقتراحي)؟</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;
+  document.getElementById("qs").innerHTML=QS;
+  document.getElementById("grid").innerHTML=M.map((m,i)=>`<div class="opt"><h3><span>${i+1}</span>${m[0]}</h3><p class="d">${m[1]}</p><div class="stage">${m[2]()}</div></div>`).join("");
+}
+function say(t,mt="ok"){V.msg=t;V.mt=mt;}
+function setCnt(d,k,v){const l=d.lines[k]||(d.lines[k]={});l.cnt=v;l.seen=bk(d,k);}
+function post(d){const b=checks(d).filter(c=>c[0]==="no");if(b.length){say("✖ مارحّلش: "+b[0][1]+(b.length>1?` (و${b.length-1} تاني)`:""),"no");return false;}
+  const t=tot(d),nl={};keysOf(d).forEach(k=>{const c=ct(d,k);if(c===null)return;const [i,kd]=sp(k);nl[k]={book:bk(d,k),cnt:c,cost:cs(d,k)};BAL[`${i}|${d.wh}|${kd}`]=c;});
+  d.lines=nl;if(!d.no){SEQ++;d.no="SC-"+String(SEQ).padStart(5,"0");}d.st="posted";
+  say(`✔ اترحّل ${d.no}: ${virt(d.wh)?`عجز ${t.shn} سطر · زيادة ${t.sun} سطر`:`عجز ${mf(t.sh)} · زيادة ${mf(t.su)}`}${virt(d.wh)?' (وهمي — من غير قيد)':(t.sh||t.su)?' والقيد اتعمل':' (مطابق — من غير قيد)'} — الأرصدة اتغيّرت في كل النماذج`);return true;}
+function unpost(d){const ks=Object.keys(d.lines);const bad=ks.find(k=>{const [i,kd]=sp(k);const l=d.lines[k];return bal(i,d.wh,kd)-(l.cnt-l.book)<0;});
+  if(bad&&!V.neg){say(`✖ إلغاء الترحيل هيخلّي ${sp(bad)[0]} في «${wh(d.wh)[1]}» بالسالب (الزيادة اتصرفت بعد الجرد) — محتاج صلاحية «من غير رصيد»`,"no");return;}
+  ks.forEach(k=>{const [i,kd]=sp(k);const l=d.lines[k];const key=`${i}|${d.wh}|${kd}`;BAL[key]=Math.round(((BAL[key]||0)-(l.cnt-l.book))*1000)/1000;d.lines[k]={cnt:l.cnt,seen:BAL[key],cost:avg(i,kd)?undefined:l.cost};});
+  d.st="draft";say(`↩ اتلغى ترحيل ${d.no} — رجع مسودة والرقم ثابت والأرصدة رجعت`,"inf");}
+function other(){const d=D();const k9="ITM-0009|WH-001|invoice",k6="ITM-0006|WH-001|invoice";
+  if(d.st==="posted"&&(BAL[k9]||0)>=2){BAL[k9]-=2;say("🔁 جهاز تاني صرف 2 «حساس حرارة» من المخزن الرئيسي (من الزيادة اللي الجرد دخّلها) — جرّب «إلغاء الترحيل» دلوقتي","inf");return;}
+  if((BAL[k6]||0)>=5){BAL[k6]-=5;say("🔁 جهاز تاني صرف 5 «كشاف طوارئ» من المخزن الرئيسي — الدفتري اتغيّر، والسطر اللي اتعدّ قبل كده اتعلّم ⚠","inf");return;}
+  say("مفيش رصيد كفاية للتجربة","no");}
+function newDoc(){C.push({no:"",date:"2026-11-27",wh:"WH-001",type:"periodic",note:"",st:"draft",zero:0,lines:{}});V.d=C.length-1;V.flt="all";say("+ جرد جديد (مسودة) — اكتب الفعلي قصاد كل صنف","inf");}
+document.addEventListener("change",e=>{const t=e.target,d=D();
+  if(t.dataset.docsel){V.d=+t.value;V.msg="";render();return;}
+  if(t.dataset.zero){d.zero=t.checked?1:0;V.msg="";render();return;}
+  if(t.dataset.h){const k=t.dataset.h;if(k==="wh"&&d.wh!==t.value){d.wh=t.value;d.lines={};say("المخزن اتغيّر — العدّ القديم اتمسح","inf");}else{d[k]=t.value;V.msg="";}render();return;}
+  if(t.dataset.c){const k=t.dataset.c,v=t.value.trim();if(v===""){if(d.lines[k]){delete d.lines[k].cnt;if(!d.lines[k].cost)delete d.lines[k];}}else setCnt(d,k,+v||0);V.msg="";V.last="";render();return;}
+  if(t.dataset.cost){const k=t.dataset.cost;(d.lines[k]||(d.lines[k]={})).cost=Math.max(0,+t.value||0);V.msg="";render();return;}
+  if(t.dataset.p){const k=t.dataset.p;V.p[k]=k==="qty"?Math.max(0,+t.value||0):t.value;V.msg="";render();return;}
+  if(t.dataset.v){V[t.dataset.v]=t.dataset.v==="qc"?t.value.trim().toUpperCase():t.value;render();return;}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.dataset&&["qc","qq"].includes(e.target.dataset.v)){e.target.dispatchEvent(new Event("change",{bubbles:true}));document.querySelector("[data-quick]").click();}});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option"))return;
+  const g=s=>e.target.closest(s);const d=D();let x;
+  if(g("[data-neg]")){V.neg=V.neg?0:1;V.msg="";render();return;}
+  if(g("[data-other]")){other();render();return;}
+  if(x=g("[data-doc]")){V.d=+x.dataset.doc;V.msg="";render();return;}
+  if(g("[data-new]")){newDoc();render();return;}
+  if(g("[data-post]")){post(d);render();return;}
+  if(g("[data-unpost]")){unpost(d);render();return;}
+  if(g("[data-del]")){if(C.length>1){C.splice(V.d,1);V.d=C.length-1;say("🗑 المسودة اتمسحت","inf");}render();return;}
+  if(x=g("[data-flt]")){V.flt=x.dataset.flt;render();return;}
+  if(g("[data-fill]")){let n=0;keysOf(d).forEach(k=>{if(raw(d,k)===null){setCnt(d,k,bk(d,k));n++;}});say(`✔ ${n} سطر اتسجّلوا «مطابق» (الفعلي = الدفتري)`);render();return;}
+  if(g("[data-add]")){if(V.aq===""){say("✖ اكتب الفعلي","no");render();return;}const k=V.ai+"|"+V.ak;setCnt(d,k,Math.max(0,+V.aq||0));V.last=k;V.aq="";say(`✔ ${V.ai} (${KN[V.ak][0]}) اتضاف للجرد`);render();return;}
+  if(x=g("[data-step]")){V.step=+x.dataset.step;V.msg="";render();return;}
+  if(x=g("[data-wz]")){V.wz=+x.dataset.wz;V.msg="";render();return;}
+  if(x=g("[data-cat]")){V.cat=x.dataset.cat;render();return;}
+  if(x=g("[data-qpick]")){V.qc=sp(x.dataset.qpick)[0];V.qk=sp(x.dataset.qpick)[1];render();return;}
+  if(g("[data-quick]")){if(!ed()){render();return;}const i=it(V.qc);if(!i){say(`✖ الكود «${V.qc||'—'}» مش موجود`,"no");render();return;}const q=+V.qq||1,k=V.qc+"|"+V.qk;setCnt(d,k,(raw(d,k)||0)+q);say(`✔ ${V.qc} ${i[1]}: +${m0(q)} ← المعدود ${m0(raw(d,k))} ${i[2]}`);V.last=k;V.qc="";V.qq="";render();return;}
+  if(x=g("[data-pit]")){V.p.item=x.dataset.pit;V.p.cost="";V.msg="";render();return;}
+  if(x=g("[data-dlg]")){V.dlg=+x.dataset.dlg;V.msg="";render();return;}
+  if(x=g("[data-pdir]")){V.p.dir=+x.dataset.pdir;V.msg="";render();return;}
+  if(g("[data-pgo]")){const p=V.p,b=bal(p.item,p.wh,p.kind),q=+p.qty||0,a=avg(p.item,p.kind)||+p.cost||0,after=Math.round((b+p.dir*q)*1000)/1000;
+    if(!(q>0)){say("✖ الكمية لازم أكبر من صفر","no");render();return;}
+    if(after<0&&!V.neg){say(`✖ الرصيد هيبقى ${m0(after)} — محتاج صلاحية «من غير رصيد»`,"no");render();return;}
+    if(p.dir>0&&!a&&!virt(p.wh)){say("✖ زيادة لصنف مالوش متوسط — اكتب تكلفة الوحدة","no");render();return;}
+    SEQ++;const no="SC-"+String(SEQ).padStart(5,"0");C.push({no,date:"2026-11-27",wh:p.wh,type:"direct",note:`${p.why} — من شاشة الصنف`,st:"posted",zero:0,lines:{[p.item+"|"+p.kind]:{book:b,cnt:after,cost:a}}});
+    BAL[`${p.item}|${p.wh}|${p.kind}`]=after;V.dlg=0;say(`✔ اترحّلت التسوية ${no}: ${p.item} ${p.dir<0?'عجز':'زيادة'} ${m0(q)} (${p.why}) — الرصيد بقى ${m0(after)}`);render();return;}
+});
+render();
+</script>
+</body>
+</html>
