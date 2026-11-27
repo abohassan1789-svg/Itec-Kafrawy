@@ -22,7 +22,7 @@ SOURCES = ("all", "manual", "auto")
 PARTY_COLUMNS = {"customer": "customer_id", "supplier": "supplier_id", "employee": "employee_id",
                  "partner": "partner_id"}
 LINE_FIELDS = ("line_no", "account_id", "description", "debit", "credit", "cost_center_id", "project_id",
-               "customer_id", "supplier_id", "employee_id", "partner_id")
+               "customer_id", "supplier_id", "employee_id", "partner_id", "currency_code", "fx_rate", "amount_fc")
 
 _SELECT = """
     SELECT e.id, e.entry_no, e.draft_no, e.entry_date, e.fiscal_year_id, e.description, e.reference, e.status,
@@ -45,6 +45,7 @@ _LIST = """
 _LINES = """
     SELECT l.id, l.entry_id, l.line_no, l.account_id, l.description, l.debit, l.credit, l.cost_center_id,
            l.project_id, l.customer_id, l.supplier_id, l.employee_id, l.partner_id,
+           l.currency_code, l.fx_rate, l.amount_fc,
            a.code AS account_code, a.name_ar AS account_name, a.party_kind, a.requires_cost_center,
            a.is_active AS account_active, a.is_leaf AS account_leaf,
            cc.code AS cost_center_code, cc.name_ar AS cost_center_name,

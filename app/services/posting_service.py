@@ -66,6 +66,11 @@ class PostingLine:
     cost_center_id: int | None = None
     project_id: int | None = None
     description: str | None = None
+    # المستند بعملة غير الأساسية (0048 — «تعدد العملات الكامل»): العملة والسعر والمبلغ بالعملة على سطر القيد.
+    # ``amount`` نفسه دايماً بالجنيه · السطور بنفس الحساب والعملة والسعر بتتجمّع (والمبلغ بالعملة بيتجمّع معاها).
+    currency_code: str | None = None
+    fx_rate: Any = None
+    amount_fc: Any = None
 
 
 def money(value: Any) -> Decimal:
@@ -224,22 +229,42 @@ class PostingService:
             center = line.cost_center_id or (
                 cost_center_id if account.get("account_type") in ("revenue", "expense") else None) or None
             project = line.project_id or project_id or None
-            key = (account_id, side, center, project, party, text)
+            currency, rate, fc = self._fc(line, rule["name_ar"])
+            key = (account_id, side, center, project, party, text, currency, rate)
             group = groups.get(key)
             if group is None:
                 groups[key] = {"role": rule["role"], "role_name": rule["name_ar"], "order": rule["sort_order"],
                                "seen": len(groups), "account_id": account_id, "side": side, "raw": abs(amount),
-                               "cost_center_id": center, "project_id": project, "party": party, "description": text}
+                               "cost_center_id": center, "project_id": project, "party": party, "description": text,
+                               "currency_code": currency, "fx_rate": rate, "fc": fc}
                 self._check_account(groups[key], accounts.get(account_id))
             else:
                 group["raw"] += abs(amount)
+                if fc is not None:
+                    group["fc"] += fc
 
         out = sorted(groups.values(), key=lambda g: (g["order"], g["seen"]))
         for g in out:
             g["amount"] = g.pop("raw").quantize(CENT, rounding=ROUND_HALF_UP)
+            fc = g.pop("fc")
+            g["amount_fc"] = fc.quantize(CENT, rounding=ROUND_HALF_UP) if fc is not None else None
+            if g["currency_code"] and not g["amount_fc"]:          # مبلغ بالعملة صفر ← السطر من غير عملة
+                g["currency_code"] = g["fx_rate"] = g["amount_fc"] = None
         out = [g for g in out if g["amount"] > 0]
         self._balance(out, len(lines))
         return [self._line(n, g) for n, g in enumerate(out, start=1)]
+
+    @staticmethod
+    def _fc(line: PostingLine, name: str) -> tuple[str | None, Decimal | None, Decimal | None]:
+        """العملة والسعر والمبلغ بالعملة (موجب) — أو ``(None, None, None)`` لو السطر بالعملة الأساسية."""
+        code = str(line.currency_code or "").strip().upper() or None
+        if code is None:
+            return None, None, None
+        rate = money(line.fx_rate) if line.fx_rate not in (None, "") else Decimal("0")
+        if rate <= 0:
+            raise BusinessError(f"«{name}»: سعر صرف {code} لازم أكبر من صفر.")
+        fc = abs(money(line.amount_fc)) if line.amount_fc not in (None, "") else Decimal("0")
+        return code, rate.quantize(Decimal("0.000001"), rounding=ROUND_HALF_UP), fc
 
     @staticmethod
     def _check_account(g: dict[str, Any], account: dict[str, Any] | None) -> None:
@@ -288,6 +313,7 @@ class PostingService:
                 "credit": g["amount"] if g["side"] == "cr" else Decimal("0"),
                 "cost_center_id": g["cost_center_id"], "project_id": g["project_id"],
                 "rounding": g.get("rounded", Decimal("0")),
+                "currency_code": g.get("currency_code"), "fx_rate": g.get("fx_rate"), "amount_fc": g.get("amount_fc"),
                 **{col: None for col in PARTY_COLUMNS.values()}}
         if g["party"]:
             line[PARTY_COLUMNS[g["party"][0]]] = g["party"][1]

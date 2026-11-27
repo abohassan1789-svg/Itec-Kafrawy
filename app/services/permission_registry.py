@@ -157,6 +157,10 @@ SECTIONS: tuple[Section, ...] = (
                    actions=("view", "create", "edit", "save", "delete", "export")),
             Target("suppliers", "الموردين", "Suppliers", icon="🚚",
                    actions=("view", "create", "edit", "save", "delete", "export")),
+            # فاتورة الشراء (2026-11-27 — النموذج 9 «بيانات الفاتورة بتبويبات» بشكل الفاتورة السعودية): مسودة +
+            # ترحيل · «من غير رصيد» = إلغاء ترحيل فاتورة بضاعتها اتصرفت (الرصيد هيبقى بالسالب) · الطباعة مع مرحلتها.
+            Target("purchase_invoices", "فاتورة الشراء", "Purchase Invoice", icon="🧾",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost", "negative")),
         ), icon="🚚"),
     )),
     # قسم لوحده (قرار المستخدم 2026-11-11) عشان يتضاف فيه حاجات تانية بعدين.

@@ -350,5 +350,6 @@ def test_menu_and_registry():
     target = reg.find_target("purch", "supplier_groups")
     assert target.name_ar == "مجموعات الموردين"
     group = reg.section("purch").groups[0]
-    assert group.title == "الموردين" and [t.code for t in group.targets] == ["supplier_groups", "suppliers"]
+    assert group.title == "الموردين" and [t.code for t in group.targets] == ["supplier_groups", "suppliers",
+                                                                   "purchase_invoices"]
     assert "supplier_groups" in SCREEN_FACTORIES
