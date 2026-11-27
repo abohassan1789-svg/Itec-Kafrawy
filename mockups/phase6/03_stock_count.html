@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>نماذج الجرد والتسويات</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@500;600;700&display=swap">
+<style>
+/* التخطيط: شريط نماذج فوق + مسرح واحد كبير بالحجم الحقيقي (نموذج واحد في المرة) + الشرح والأسئلة تحت */
+:root{
+  --bg:#F2F4F8; --stage:#E6EAF2; --surface:#FFFFFF; --surface-2:#F6F8FB; --line:#E1E6EF;
+  --ink:#0F172A; --ink-2:#48556B; --ink-3:#8791A5;
+  --accent:#2747D8; --accent-soft:#E6EBFF; --on-accent:#FFFFFF;
+  --short:#CE3B2D; --short-soft:#FCEAE8; --surp:#0B8259; --surp-soft:#E1F5EC; --pend:#A66A12; --pend-soft:#FFF2D6;
+  --night:#0E1424; --night-2:#18203A; --night-line:#2A3558; --night-ink:#E8ECF8; --night-ink-2:#9BA8C7; --night-accent:#8FA2FF;
+  --device:#0B1020; --device-screen:#FFFFFF;
+  --shadow:0 1px 2px rgba(15,23,42,.05),0 10px 30px rgba(15,23,42,.07);
+  --r:16px; --r-s:10px;
+  --font:"IBM Plex Sans Arabic","Segoe UI",Tahoma,Arial,sans-serif;
+  --display:"Readex Pro","IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0A0F1D; --stage:#060A14; --surface:#131A2C; --surface-2:#19223A; --line:#27314C;
+  --ink:#E9EDF7; --ink-2:#AAB5CE; --ink-3:#73819F;
+  --accent:#8195FF; --accent-soft:#1D2852; --on-accent:#0A0F1D;
+  --short:#FF8576; --short-soft:#3B1C1D; --surp:#45D6A2; --surp-soft:#11352B; --pend:#F1BE5E; --pend-soft:#3A2D10;
+  --night:#0A0F1D; --night-2:#141C33; --night-line:#28335A; --night-ink:#E8ECF8; --night-ink-2:#9BA8C7; --night-accent:#8FA2FF;
+  --device:#000000; --device-screen:#131A2C;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35); color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0A0F1D; --stage:#060A14; --surface:#131A2C; --surface-2:#19223A; --line:#27314C;
+  --ink:#E9EDF7; --ink-2:#AAB5CE; --ink-3:#73819F;
+  --accent:#8195FF; --accent-soft:#1D2852; --on-accent:#0A0F1D;
+  --short:#FF8576; --short-soft:#3B1C1D; --surp:#45D6A2; --surp-soft:#11352B; --pend:#F1BE5E; --pend-soft:#3A2D10;
+  --night:#0A0F1D; --night-2:#141C33; --night-line:#28335A; --night-ink:#E8ECF8; --night-ink-2:#9BA8C7; --night-accent:#8FA2FF;
+  --device:#000000; --device-screen:#131A2C;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35); color-scheme:dark }
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.6}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.n{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums}
+.page{max-width:1320px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+.intro h1{font-family:var(--display);font-size:clamp(22px,3vw,30px);font-weight:700;margin:0 0 6px;text-wrap:balance;line-height:1.3}
+.intro p{margin:0;color:var(--ink-2);max-width:78ch}
+.rail{display:flex;flex-wrap:wrap;gap:8px;padding:4px 2px 8px}
+.tab{flex:0 0 auto;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px 7px 8px;font-weight:600;color:var(--ink-2);white-space:nowrap}
+.tab b{font-family:var(--display);display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--surface-2);color:var(--ink-2);font-size:12px}
+.tab.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tab.on b{background:var(--accent);color:var(--on-accent)}
+.stagewrap{background:var(--stage);border-radius:22px;padding:14px;overflow-x:auto}
+.about{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.about div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px}
+.about small{display:block;color:var(--ink-3);font-weight:700;letter-spacing:.02em;margin-bottom:2px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px}
+.box h2{font-family:var(--display);font-size:17px;margin:0 0 8px}
+.box ul,.box ol{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:6px}
+.box li{max-width:95ch}
+.box code{font-family:Consolas,monospace;direction:ltr;unicode-bidi:isolate;background:var(--surface-2);border-radius:5px;padding:0 5px;font-size:.92em}
+
+/* ===== الشاشة جوه المسرح ===== */
+.app{min-width:1040px;background:var(--surface-2);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);position:relative}
+.abar{display:flex;align-items:center;gap:12px;padding:12px 18px;background:var(--surface);border-bottom:1px solid var(--line)}
+.abar .ttl{display:flex;align-items:center;gap:10px;min-width:0}
+.abar .ic{width:36px;height:36px;border-radius:11px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700}
+.abar b{font-family:var(--display);font-size:16px;display:block;line-height:1.3}
+.abar small{color:var(--ink-3);font-weight:500}
+.abar .acts{margin-inline-start:auto;display:flex;align-items:center;gap:8px}
+.saved{color:var(--surp);font-size:12.5px;font-weight:600}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:7px 14px;font-weight:600;white-space:nowrap}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.warn{background:var(--pend-soft);border-color:var(--pend);color:var(--pend)}
+.btn.sm{padding:4px 10px;font-size:12.5px;border-radius:8px}
+.btn.ok{background:var(--surp-soft);border-color:transparent;color:var(--surp)}
+.btn:disabled{opacity:.45;cursor:default}
+select.sel{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 8px;font-weight:600;max-width:230px}
+.toast{margin:10px 18px 0;border-radius:10px;padding:8px 14px;font-weight:600;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.toast.ok{background:var(--surp-soft);color:var(--surp)}.toast.no{background:var(--short-soft);color:var(--short)}.toast.inf{background:var(--accent-soft);color:var(--accent)}
+.main{padding:16px 18px 18px;display:grid;gap:14px;min-height:540px;align-content:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;min-width:0}
+.card h4{margin:0 0 8px;font-size:12.5px;color:var(--ink-3);font-weight:700;letter-spacing:.02em}
+.big{font-family:var(--display);font-weight:700;font-size:26px;line-height:1.2}
+.muted{color:var(--ink-3)}.sub{color:var(--ink-2);font-size:12.5px}
+.pl{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+.pl.pend{background:var(--pend-soft);color:var(--pend)}.pl.ok{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.pl.short{background:var(--short-soft);color:var(--short)}.pl.surp{background:var(--surp-soft);color:var(--surp)}
+.pl.acc{background:var(--accent-soft);color:var(--accent)}
+.c-short{color:var(--short)}.c-surp{color:var(--surp)}.c-pend{color:var(--pend)}.c-acc{color:var(--accent)}
+.code{font-family:Consolas,monospace;direction:ltr;unicode-bidi:isolate;color:var(--ink-3);font-size:12px}
+.stp{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.stp button{border:0;background:var(--surface-2);width:28px;height:30px;font-weight:700;font-size:15px}
+.inc{width:74px;height:30px;border:0;background:transparent;text-align:center;font-weight:700;direction:ltr;font-variant-numeric:tabular-nums}
+.inc.solo{border:1px solid var(--line);border-radius:9px;background:var(--surface)}
+.inc:disabled{color:var(--ink-3)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 12px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.rows{display:flex;flex-direction:column}
+.row{display:grid;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row.sel{background:var(--accent-soft);border-radius:10px;border-bottom-color:transparent}
+.row .nm{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.scroll{overflow:auto;min-height:0}
+.je{width:100%;border-collapse:collapse;font-size:13px}
+.je td{padding:5px 4px;border-bottom:1px dashed var(--line)}
+.je tr:last-child td{border-bottom:0}
+.je td.n{text-align:left;font-weight:700}
+.bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.av{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-family:var(--display);flex-shrink:0}
+.last{animation:flash 1.2s ease-out}
+@keyframes flash{from{background:var(--pend-soft)}to{background:transparent}}
+@media (prefers-reduced-motion:reduce){.last{animation:none}}
+
+/* 1 بنتو */
+.bento{grid-template-columns:repeat(12,1fr)}
+.ringt{grid-column:span 3;grid-row:span 2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center}
+.ringt svg{width:150px;height:150px}
+.k3{grid-column:span 3}.k5{grid-column:span 5}.k4{grid-column:span 4}.k8{grid-column:span 8}
+.top4{display:flex;flex-direction:column;gap:7px}
+.top4 div{display:grid;grid-template-columns:1fr 90px 84px;gap:8px;align-items:center;font-size:13px}
+.top4 .b{height:8px;border-radius:4px}
+/* 2 التركيز */
+.focus{grid-template-columns:250px 1fr 250px}
+.q{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer}
+.q.on{background:var(--accent-soft);color:var(--accent)}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:var(--line)}
+.dot.ok{background:var(--ink-3)}.dot.short{background:var(--short)}.dot.surp{background:var(--surp)}.dot.pend{background:var(--pend)}
+.seg{display:flex;gap:4px}.seg i{flex:1;height:6px;border-radius:3px;background:var(--line)}
+.seg i.ok{background:var(--ink-3)}.seg i.short{background:var(--short)}.seg i.surp{background:var(--surp)}.seg i.cur{outline:2px solid var(--accent);outline-offset:1px}
+.fc{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:22px}
+.fc .disp{font-family:var(--display);font-size:64px;font-weight:700;line-height:1;min-height:64px}
+.pad{display:grid;grid-template-columns:repeat(3,76px);gap:8px;direction:ltr}
+.pad button{height:52px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);font-family:var(--display);font-size:20px;font-weight:600}
+.pad button.go{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-size:15px}
+/* 3 بالاستثناء */
+.xgrid{grid-template-columns:repeat(auto-fill,minmax(228px,1fr))}
+.xc{display:flex;flex-direction:column;gap:8px;border-width:1.5px}
+.xc.ok{background:var(--surface-2)}.xc.short{border-color:var(--short)}.xc.surp{border-color:var(--surp)}
+.xc .bk{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.1}
+.xc .two{display:flex;gap:6px}.xc .two .btn{flex:1}
+/* 4 الخريطة */
+.map{grid-template-columns:1fr 300px}
+.aisles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.aisle{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px;display:flex;flex-direction:column;gap:8px}
+.aisle h5{margin:0;font-size:13px;display:flex;justify-content:space-between;gap:6px}
+.shelf{border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;cursor:pointer;background:var(--surface-2);display:flex;flex-direction:column;gap:2px;text-align:start}
+.shelf b{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shelf.pend{border-style:dashed}.shelf.ok{background:var(--surface)}
+.shelf.short{background:var(--short-soft);border-color:var(--short)}.shelf.surp{background:var(--surp-soft);border-color:var(--surp)}
+.shelf.sel{outline:3px solid var(--accent);outline-offset:1px}
+.door{grid-column:1/-1;text-align:center;color:var(--ink-3);font-size:12px;border-top:2px dashed var(--line);padding-top:6px}
+.kv{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed var(--line)}
+/* 5 شريط الأوامر */
+.night{background:var(--night);color:var(--night-ink);border-color:var(--night-line)}
+.night .abar{background:var(--night);border-color:var(--night-line)}
+.night .abar small{color:var(--night-ink-2)}
+.night .abar .ic{background:var(--night-2);color:var(--night-accent)}
+.night .btn,.night select.sel{background:var(--night-2);border-color:var(--night-line);color:var(--night-ink)}
+.night .btn.pri{background:var(--night-accent);border-color:var(--night-accent);color:var(--night)}
+.night .saved{color:#45D6A2}
+.spot{justify-items:center;padding-top:34px}
+.cmd{width:min(680px,100%);background:var(--night-2);border:1px solid var(--night-line);border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.cmd .in{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--night-line)}
+.cmd input{flex:1;min-width:0;background:transparent;border:0;outline:0;font-size:19px;font-weight:600;color:var(--night-ink)}
+.cmd input::placeholder{color:var(--night-ink-2)}
+.kbd{border:1px solid var(--night-line);border-radius:6px;padding:0 7px;font-family:Consolas,monospace;font-size:12px;color:var(--night-ink-2);direction:ltr;unicode-bidi:isolate}
+.sug div{display:grid;grid-template-columns:96px 1fr auto;gap:10px;padding:9px 18px;align-items:center;color:var(--night-ink)}
+.sug div:first-child{background:rgba(143,162,255,.14)}
+.sug .code{color:var(--night-ink-2)}
+.hints{display:flex;gap:14px;flex-wrap:wrap;padding:10px 18px;border-top:1px solid var(--night-line);color:var(--night-ink-2);font-size:12.5px}
+.logl{width:min(680px,100%);display:flex;flex-direction:column;gap:6px}
+.logl div{display:flex;gap:10px;align-items:center;color:var(--night-ink-2);font-size:13px}
+.logl b{color:var(--night-ink)}
+.nstat{width:min(680px,100%);display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.nstat div{background:var(--night-2);border:1px solid var(--night-line);border-radius:14px;padding:10px 14px}
+.nstat small{display:block;color:var(--night-ink-2)}
+.nstat b{font-family:var(--display);font-size:20px}
+/* 6 السجل الحي */
+.live{grid-template-columns:270px 1fr 300px}
+.who{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.who:last-of-type{border-bottom:0}
+.who .g{flex:1;min-width:0}
+.fd{display:grid;grid-template-columns:44px 34px 1fr auto;gap:10px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--line)}
+.fd .av{width:28px;height:28px;font-size:12px}
+.cf{border:1.5px solid var(--pend);background:var(--pend-soft);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+/* 7 مستكشف الفروق */
+.vx{grid-template-columns:1fr 310px}
+.vrow{display:grid;grid-template-columns:190px 1fr 96px;gap:10px;align-items:center;padding:5px 6px;border-radius:10px;cursor:pointer}
+.vrow.sel{background:var(--accent-soft)}
+.vtrack{position:relative;height:22px;direction:ltr}
+.vtrack:before{content:"";position:absolute;left:50%;top:-5px;bottom:-5px;width:1px;background:var(--ink-3)}
+.vbar{position:absolute;top:3px;height:16px;border-radius:5px}
+.vbar.m{background:var(--short);right:50%}.vbar.p{background:var(--surp);left:50%}
+.vbar.u{border:1.5px dashed var(--ink-3);left:calc(50% - 16px);width:32px}
+.vaxis{display:grid;grid-template-columns:190px 1fr 96px;gap:10px;color:var(--ink-3);font-size:11.5px}
+.vaxis div{display:flex;justify-content:space-between;direction:ltr}
+/* 8 الموبايل */
+.mob{grid-template-columns:330px 1fr}
+.phone{width:300px;background:var(--device);border-radius:38px;padding:10px;justify-self:center;box-shadow:var(--shadow);border:1px solid var(--line)}
+.scr{background:var(--device-screen);border-radius:30px;overflow:hidden;display:flex;flex-direction:column;height:560px}
+.scr .ph{padding:12px 16px 8px;display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.vf{margin:0 14px;height:130px;border-radius:16px;background:var(--night);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.bc{width:150px;height:60px;background:repeating-linear-gradient(90deg,#E8ECF8 0 3px,transparent 3px 5px,#E8ECF8 5px 6px,transparent 6px 10px,#E8ECF8 10px 14px,transparent 14px 16px)}
+.vf i{position:absolute;left:18px;right:18px;height:2px;background:#FF5A4A;top:50%;box-shadow:0 0 12px #FF5A4A}
+.scr .bd{padding:12px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.bigst{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.bigst button{width:56px;height:56px;border-radius:18px;border:1px solid var(--line);background:var(--surface-2);font-size:24px;font-weight:700}
+.bigst .v{font-family:var(--display);font-size:42px;font-weight:700}
+.scr .btn{padding:11px;border-radius:14px;font-size:15px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:start;color:var(--ink-3);font-size:12px;font-weight:700;padding:6px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:7px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td.num,.tbl th.num{text-align:left}
+/* 9 المجموعات + الدرج */
+.grp td{background:var(--surface-2);font-weight:700;cursor:pointer}
+.foot{display:flex;gap:18px;flex-wrap:wrap;align-items:center;padding:10px 16px;background:var(--surface);border-top:1px solid var(--line);font-weight:600}
+.drawer{position:absolute;top:0;bottom:0;left:0;width:360px;background:var(--surface);border-right:1px solid var(--line);box-shadow:20px 0 50px rgba(15,23,42,.18);padding:18px;display:flex;flex-direction:column;gap:12px;z-index:3;overflow:auto}
+.dim{position:absolute;inset:0;background:rgba(15,23,42,.35);z-index:2}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld label{font-size:12.5px;color:var(--ink-3);font-weight:700}
+/* 10 الاعتماد */
+.appr{grid-template-columns:1fr 320px}
+.lead{font-family:var(--display);font-size:20px;line-height:1.6;font-weight:600;margin:0;text-wrap:balance}
+.steps3{display:flex;flex-direction:column;gap:0}
+.st3{display:grid;grid-template-columns:30px 1fr;gap:10px;padding-bottom:16px;position:relative}
+.st3:not(:last-child):before{content:"";position:absolute;right:14px;top:30px;bottom:0;width:2px;background:var(--line)}
+.st3 .nu{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--display);background:var(--surface);z-index:1}
+.st3.done .nu{background:var(--surp);border-color:var(--surp);color:var(--surface)}
+.st3.cur .nu{border-color:var(--accent);color:var(--accent)}
+.rsn{display:grid;grid-template-columns:1fr 70px 110px;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
+@media (max-width:700px){.rail{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}.tab{padding:6px 12px 6px 6px;flex:none}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="intro">
+    <h1>الجرد والتسويات: 10 نماذج بشكل جديد</h1>
+    <p>كل نموذج فكرة مختلفة في طريقة العدّ نفسها، مش نفس الشاشة بترتيب تاني. دوس على رقم النموذج فوق وجرّبه بالحجم الحقيقي: اكتب كمية، رحّل، الغي الترحيل. كل النماذج شغالة على نفس الجرد، فاللي تغيّره في واحد هتلاقيه في الباقي. البيانات كلها وهمية.</p>
+  </div>
+  <div class="rail" id="rail" role="tablist" aria-label="النماذج"></div>
+  <div class="stagewrap"><div id="stage"></div></div>
+  <div class="about" id="about"></div>
+  <div class="box" id="note"></div>
+  <div class="box" id="qs"></div>
+</div>
+
+<script>
+// ===== البيانات (وهمية) — [الكود، الاسم، الوحدة، القسم، الرف]
+const IT=[["ITM-0001","كابل نحاس 2×1.5 مم","متر","كهرباء","A-01"],["ITM-0002","مفتاح إضاءة مفرد","عدد","كهرباء","A-02"],
+ ["ITM-0003","بريزة أرضي","عدد","كهرباء","A-03"],["ITM-0007","لوحة توزيع 12 خط","عدد","كهرباء","A-04"],
+ ["ITM-0004","لمبة LED 12 وات","عدد","إنارة","B-01"],["ITM-0009","كشاف ليد 50 وات","عدد","إنارة","B-02"],
+ ["ITM-0005","ماسورة PVC 3/4","متر","سباكة","C-01"],["ITM-0010","كوع PVC 3/4","عدد","سباكة","C-02"],
+ ["ITM-0006","كشاف طوارئ","عدد","أمان","D-01"],["ITM-0008","جهاز إنذار حريق","عدد","أمان","D-02"]];
+const CATS=["كهرباء","إنارة","سباكة","أمان"];
+const WHO={"كهرباء":"أحمد","إنارة":"محمود","سباكة":"أحمد","أمان":"سارة"};
+const PEOPLE=[["أحمد","#2747D8","جهاز المخزن 1"],["محمود","#8B5CF6","جهاز المخزن 2"],["سارة","#0B8259","لابتوب الحسابات"]];
+const WH={"WH-001":"المخزن الرئيسي","WH-002":"مخزن الفرع"};
+// الرصيد الدفتري بتاريخ الجرد · المتوسط المرجّح
+const BAL={"ITM-0001|WH-001":1000,"ITM-0002|WH-001":360,"ITM-0003|WH-001":200,"ITM-0004|WH-001":96,"ITM-0005|WH-001":900,
+ "ITM-0010|WH-001":450,"ITM-0006|WH-001":35,"ITM-0007|WH-001":8,"ITM-0008|WH-001":5,"ITM-0009|WH-001":0,
+ "ITM-0001|WH-002":500,"ITM-0004|WH-002":600,"ITM-0003|WH-002":50};
+const AVG={"ITM-0001":18.5,"ITM-0002":22,"ITM-0003":35,"ITM-0004":45,"ITM-0009":0,"ITM-0005":12.75,"ITM-0010":3.5,"ITM-0006":310,"ITM-0007":1850,"ITM-0008":2400};
+const REASONS=["تالف","فقد","خطأ تسجيل","سماح قص","أخرى"];
+const C=[
+ {no:"CNT-00001",date:"31/10/2026",wh:"WH-002",st:"posted",cnt:{"ITM-0001":498,"ITM-0004":600,"ITM-0003":50},c2:{},rs:{"ITM-0001":"فقد"},pr:{},by:{},bk:{"ITM-0001":500,"ITM-0004":600,"ITM-0003":50}},
+ {no:"",date:"27/11/2026",wh:"WH-001",st:"draft",
+  cnt:{"ITM-0001":985,"ITM-0002":360,"ITM-0003":204,"ITM-0004":90,"ITM-0009":6,"ITM-0005":900,"ITM-0006":33},
+  c2:{"ITM-0002":356},rs:{"ITM-0004":"تالف"},pr:{},by:{}}];
+const ADJ=[{no:"ADJ-00001",i:"ITM-0004",q:-6,rs:"تالف",date:"15/11"}];
+let SEQ=1,ASEQ=1;
+const V={m:0,d:1,msg:"",mt:"ok",sel:"ITM-0004",kp:"",flt:"all",blind:0,de:{},by:"val",ph:{i:"ITM-0007",q:""},drawer:0,
+ adj:{i:"ITM-0006",q:-2,rs:"تالف"},ap:0,open:{"كهرباء":1,"إنارة":1,"سباكة":1,"أمان":1},last:"",np:"",
+ feed:[["11:52","محمود","ITM-0009",6],["11:47","محمود","ITM-0004",90],["11:41","أحمد","ITM-0005",900],["11:36","سارة","ITM-0006",33],["11:30","أحمد","ITM-0003",204],["11:24","أحمد","ITM-0002",360],["11:18","أحمد","ITM-0001",985]]};
+
+// ===== المنطق
+const it=c=>IT.find(i=>i[0]===c);
+const N=c=>`<bdi class="n">${c}</bdi>`;
+const mf=n=>(+n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const m0=n=>(+n||0).toLocaleString("en-US",{maximumFractionDigits:3});
+const sg=n=>(n>0?"+":n<0?"−":"")+m0(Math.abs(n));
+const D=()=>C[V.d];const ed=()=>D().st==="draft";
+const book=(d,i)=>d.st==="posted"&&d.bk&&d.bk[i]!==undefined?d.bk[i]:(BAL[`${i}|${d.wh}`]||0);
+const items=d=>IT.filter(i=>BAL[`${i[0]}|${d.wh}`]!==undefined).map(i=>i[0]);
+const has=(d,i)=>d.cnt[i]!==undefined;
+const diff=(d,i)=>has(d,i)?d.cnt[i]-book(d,i):0;
+const price=(d,i)=>d.pr[i]!==undefined?d.pr[i]:AVG[i]||0;
+const val=(d,i)=>Math.round(diff(d,i)*price(d,i)*100)/100;
+const counted=d=>items(d).filter(i=>has(d,i));const pending=d=>items(d).filter(i=>!has(d,i));
+const shorts=d=>items(d).filter(i=>diff(d,i)<0);const surps=d=>items(d).filter(i=>diff(d,i)>0);
+const sval=d=>-shorts(d).reduce((s,i)=>s+val(d,i),0);const pval=d=>surps(d).reduce((s,i)=>s+val(d,i),0);
+const noPrice=d=>surps(d).filter(i=>!price(d,i));
+const stt=(d,i)=>!has(d,i)?"pend":diff(d,i)<0?"short":diff(d,i)>0?"surp":"ok";
+const pill=(d,i)=>{const s=stt(d,i),x=diff(d,i);return `<span class="pl ${s}">${s==="pend"?"لسه":s==="ok"?"مطابق":s==="short"?"عجز "+N(m0(-x)):"زيادة "+N(m0(x))}</span>`;};
+const now=()=>{const t=new Date();return String(t.getHours()).padStart(2,"0")+":"+String(t.getMinutes()).padStart(2,"0");};
+function say(t,mt="ok"){V.msg=t;V.mt=mt;}
+function setCnt(i,v,who="أنت"){const d=D();if(!ed()){say("الجرد مرحّل. الغي الترحيل الأول عشان تعدّل.","no");return false;}
+  if(isNaN(v)||v<0){say("الكمية لازم رقم صفر أو أكتر.","no");return false;}
+  d.cnt[i]=v;V.feed.unshift([now(),who,i,v]);V.last=i;V.msg="";return true;}
+function nextPending(after){const d=D(),L=items(d),p=pending(d);if(!p.length)return null;const k=L.indexOf(after);return [...L.slice(k+1),...L.slice(0,k+1)].find(i=>!has(d,i));}
+function post(){const d=D();
+  if(!counted(d).length){say("مفيش ولا صنف اتعدّ.","no");return false;}
+  const np=noPrice(d);if(np.length){V.np=np[0];say(`${np[0]} «${it(np[0])[1]}» زيادة ومتوسط تكلفته صفر. اكتب سعر الوحدة وبعدين رحّل:`,"no");return false;}
+  const sv=sval(d),pv=pval(d);d.bk={};
+  items(d).forEach(i=>{if(has(d,i)){d.bk[i]=BAL[`${i}|${d.wh}`];BAL[`${i}|${d.wh}`]=d.cnt[i];}});
+  if(!d.no){SEQ++;d.no="CNT-"+String(SEQ).padStart(5,"0");}d.st="posted";V.np="";
+  say(`اترحّل ${d.no}. الأرصدة بقت زي المعدود، والقيد اتعمل: عجز ${mf(sv)} وزيادة ${mf(pv)}.`);return true;}
+function unpost(){const d=D();Object.keys(d.bk||{}).forEach(i=>{BAL[`${i}|${d.wh}`]=d.bk[i];});d.st="draft";V.ap=0;say(`اتلغى ترحيل ${d.no}. رجع مسودة بنفس الرقم والأرصدة رجعت.`,"inf");}
+const jeRows=d=>{const sv=sval(d),pv=pval(d),r=[];if(sv)r.push(["5205 تسوية جرد المخزون",sv,0],["1105 المخزون",0,sv]);if(pv)r.push(["1105 المخزون",pv,0],["5205 تسوية جرد المخزون",0,pv]);return r;};
+const jeBox=d=>{const r=jeRows(d);return r.length?`<table class="je"><tr><td class="muted">الحساب</td><td class="n muted">مدين</td><td class="n muted">دائن</td></tr>${r.map(x=>`<tr><td>${x[0]}</td><td class="n">${x[1]?N(mf(x[1])):""}</td><td class="n">${x[2]?N(mf(x[2])):""}</td></tr>`).join("")}</table>`:`<div class="sub">مفيش فروق لسه، فمفيش قيد.</div>`;};
+const stepper=(i,big)=>`<span class="stp"><button data-dec="${i}" aria-label="نقّص" ${ed()?"":"disabled"}>−</button><input class="inc" id="c-${V.m}-${i}" data-cnt="${i}" value="${has(D(),i)?D().cnt[i]:""}" placeholder="—" inputmode="decimal" ${ed()?"":"disabled"}><button data-inc="${i}" aria-label="زوّد" ${ed()?"":"disabled"}>+</button></span>`;
+const reasons=i=>`<div class="chips">${REASONS.map(r=>`<button class="chip ${D().rs[i]===r?"on":""}" data-rs="${i}|${r}">${r}</button>`).join("")}</div>`;
+const filt=()=>`<div class="chips">${[["all","الكل"],["dif","الفروق بس"],["un",`لسه ماتعدّش (${pending(D()).length})`]].map(f=>`<button class="chip ${V.flt===f[0]?"on":""}" data-flt="${f[0]}">${f[1]}</button>`).join("")}</div>`;
+const fitems=()=>{const d=D();let L=items(d);if(V.flt==="dif")L=L.filter(i=>has(d,i)&&diff(d,i));if(V.flt==="un")L=L.filter(i=>!has(d,i));return L;};
+const shell=(body,o={})=>{const d=D();return `<div class="app ${o.cls||""}"><header class="abar"><div class="ttl"><span class="ic">ج</span><div><b>جرد ${WH[d.wh]}</b><small>${d.no?N(d.no):"مسودة"} · ${N(d.date)} · فاتورة · جرد كلي</small></div></div>
+ <div class="acts"><span class="saved">${ed()?"بيتحفظ لوحده ✓":"مرحّل ✓"}</span><select class="sel" id="doc-${V.m}" data-doc aria-label="اختار الجرد">${C.map((c,k)=>`<option value="${k}" ${k===V.d?"selected":""}>${c.no||"مسودة"} · ${WH[c.wh]}</option>`).join("")}</select>
+ <button class="btn" data-new>جرد جديد</button>${o.extra||""}${ed()?`<button class="btn pri" data-post>ترحيل الجرد</button>`:`<button class="btn warn" data-unpost>إلغاء الترحيل</button>`}</div></header>
+ ${V.msg?`<div class="toast ${V.mt}" role="status"><span>${V.msg}</span>${V.np&&V.mt==="no"?`<input class="inc solo" id="np-${V.m}" data-pr="${V.np}" placeholder="السعر" inputmode="decimal"><button class="btn sm pri" data-post>رحّل</button>`:""}</div>`:""}${body}${o.after||""}</div>`;};
+const kpi=(t,v,c,s)=>`<div class="card"><h4>${t}</h4><div class="big ${c||""}">${v}</div>${s?`<div class="sub">${s}</div>`:""}</div>`;
+const who=n=>PEOPLE.find(p=>p[0]===n)||["أنت","#48556B",""];
+const av=n=>`<span class="av" style="background:${who(n)[1]}">${n[0]}</span>`;
+
+// ===== النماذج
+const M=[
+{s:"لوحة بنتو",t:"لوحة واحدة فيها كل حاجة",d:"مربعات بأحجام مختلفة في شاشة واحدة: دايرة نسبة الخلصان، قيمة العجز والزيادة والصافي، أكبر الفروق، اللي لسه ماتعدّش، والقيد. وتحتهم الأصناف بزرار − و + جنب الكمية.",fit:"اللي عايز يشوف الصورة كلها وهو بيعدّ، من غير ما يتنقل بين شاشات.",cost:"تتنفذ في البرنامج الحالي من غير حاجة إضافية.",
+ r:()=>{const d=D(),T=items(d).length,c=counted(d).length,p=T?c/T:0,L=[...shorts(d),...surps(d)].sort((a,b)=>Math.abs(val(d,b))-Math.abs(val(d,a))).slice(0,4),mx=Math.max(1,...L.map(i=>Math.abs(val(d,i))));
+ return shell(`<div class="main bento">
+  <div class="card ringt"><svg viewBox="0 0 120 120" role="img" aria-label="نسبة العدّ"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--line)" stroke-width="12"/><circle cx="60" cy="60" r="50" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="${(314.16*p).toFixed(1)} 314.16" transform="rotate(-90 60 60)"/><text x="60" y="58" text-anchor="middle" font-size="24" font-weight="700" fill="var(--ink)" font-family="Readex Pro,sans-serif">${Math.round(p*100)}%</text><text x="60" y="76" text-anchor="middle" font-size="10" fill="var(--ink-3)">اتعدّ</text></svg><div><b>${N(c)} من ${N(T)} صنف</b><div class="sub">باقي ${N(T-c)}</div></div></div>
+  <div class="k3">${kpi("قيمة العجز",N(mf(sval(d))),"c-short",`${N(shorts(d).length)} صنف`)}</div>
+  <div class="k3">${kpi("قيمة الزيادة",N(mf(pval(d))),"c-surp",`${N(surps(d).length)} صنف`)}</div>
+  <div class="k3">${kpi("الصافي على 5205",N(mf(pval(d)-sval(d))),pval(d)-sval(d)<0?"c-short":"c-surp","بالمتوسط المرجّح")}</div>
+  <div class="card k5"><h4>أكبر الفروق بالقيمة</h4><div class="top4">${L.map(i=>`<div><span class="nm">${it(i)[1]}</span><span class="b" style="background:var(--${diff(d,i)<0?"short":"surp"});width:${Math.max(6,Math.round(90*Math.abs(val(d,i))/mx))}px"></span><b class="n ${diff(d,i)<0?"c-short":"c-surp"}">${price(d,i)?mf(val(d,i)):"من غير سعر"}</b></div>`).join("")||'<span class="sub">مفيش فروق.</span>'}</div></div>
+  <div class="card k4"><h4>لسه ماتعدّش</h4><div class="chips">${pending(d).map(i=>`<button class="chip" data-jump="${i}">${it(i)[1]}</button>`).join("")||'<span class="pl surp">كله اتعدّ</span>'}</div></div>
+  <div class="card k8"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:6px"><h4 style="margin:0">الأصناف</h4>${filt()}</div><div class="rows scroll" style="max-height:250px">${fitems().map(i=>`<div class="row ${V.last===i?"last":""}" style="grid-template-columns:1fr 110px 140px 120px"><span class="nm">${it(i)[1]} <span class="code">${i}</span></span><span class="sub">دفتري ${N(m0(book(d,i)))} ${it(i)[2]}</span>${stepper(i)}${pill(d,i)}</div>`).join("")||'<div class="sub" style="padding:10px">مفيش أصناف بالفلتر ده.</div>'}</div></div>
+  <div class="card k4"><h4>القيد اللي هيتعمل مع الترحيل</h4>${jeBox(d)}</div></div>`);}},
+
+{s:"صنف واحد في المرة",t:"وضع التركيز: صنف واحد ولوحة أرقام",d:"الشاشة فيها صنف واحد بس بخط كبير ولوحة أرقام تتداس بالماوس أو باللمس. تكتب الكمية وتدوس «التالي» فينقلك للصنف اللي بعده لوحده. وفيه زرار يخبّي الرصيد الدفتري عن اللي بيعدّ (جرد أعمى).",fit:"العدّ الواقف في المخزن على تابلت أو لابتوب، من غير كيبورد.",cost:"تتنفذ في البرنامج الحالي. على شاشة لمس محتاجة تجربة بسيطة على الجهاز.",
+ r:()=>{const d=D(),L=items(d),i=L.includes(V.sel)?V.sel:L[0],x=it(i);
+ return shell(`<div class="main focus">
+  <div class="card scroll" style="max-height:520px"><h4>الطابور</h4>${L.map(k=>`<div class="q ${k===i?"on":""}" data-sel="${k}"><span class="dot ${stt(d,k)}"></span><span class="nm" style="flex:1">${it(k)[1]}</span>${has(d,k)?N(m0(d.cnt[k])):""}</div>`).join("")}</div>
+  <div class="card fc"><div class="seg" style="width:100%">${L.map(k=>`<i class="${stt(d,k)==="pend"?"":stt(d,k)} ${k===i?"cur":""}"></i>`).join("")}</div>
+   <div><div class="code">${i} · رف ${x[4]}</div><div style="font-family:var(--display);font-size:22px;font-weight:700">${x[1]}</div><div class="sub">${V.blind?"الرصيد الدفتري مستخبي":`الدفتري ${N(m0(book(d,i)))} ${x[2]}`}</div></div>
+   <div class="disp n">${V.kp!==""?V.kp:has(d,i)?m0(d.cnt[i]):"—"}</div>
+   <div class="pad">${[7,8,9,4,5,6,1,2,3].map(k=>`<button data-kp="${k}">${k}</button>`).join("")}<button data-kp="back" aria-label="مسح">⌫</button><button data-kp="0">0</button><button class="go" data-kpok="${i}">التالي ›</button></div>
+   ${V.blind?"":`<button class="btn ok" data-match="${i}">مطابق للدفتري (${N(m0(book(d,i)))})</button>`}</div>
+  <div style="display:grid;gap:14px;align-content:start">${kpi("اتعدّ",`${N(counted(d).length)} / ${N(L.length)}`)}${kpi("الصافي",V.blind?"مستخبي":N(mf(pval(d)-sval(d))),V.blind?"muted":pval(d)-sval(d)<0?"c-short":"c-surp")}
+   <div class="card"><h4>الجرد الأعمى</h4><button class="chip ${V.blind?"on":""}" data-blind>${V.blind?"شغال: الدفتري مستخبي":"مقفول: الدفتري ظاهر"}</button><div class="sub" style="margin-top:6px">في التنفيذ ده بيبقى بصلاحية، مش زرار.</div></div></div></div>`);}},
+
+{s:"العدّ بالاستثناء",t:"علّم المطابق بدوسة، واكتب المختلف بس",d:"كل صنف كارت عليه الرصيد الدفتري بخط كبير وزرارين: «مطابق» لو اللي على الرف زي الدفتر، و«مختلف» تكتب فيه الكمية. أغلب الأصناف بتبقى مطابقة، فالجرد بيخلص بدوسات قليلة.",fit:"الجرد الدوري السريع لما أغلب الأرصدة مظبوطة.",cost:"تتنفذ في البرنامج الحالي. عيبها إن اللي بيعدّ شايف الدفتري، فممكن يدوس «مطابق» من غير ما يعدّ.",
+ r:()=>{const d=D();return shell(`<div class="main" style="grid-template-columns:1fr"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">${filt()}<span style="margin-inline-start:auto" class="sub">اتعدّ ${N(counted(d).length)} من ${N(items(d).length)}</span><button class="btn" data-allmatch ${ed()&&pending(d).length?"":"disabled"}>الباقي كله مطابق</button></div>
+ <div class="main xgrid" style="padding:0;min-height:0">${fitems().map(i=>{const s=stt(d,i),x=it(i);return `<div class="card xc ${s} ${V.last===i?"last":""}"><div style="display:flex;justify-content:space-between;gap:6px;align-items:start"><div style="min-width:0"><b class="nm" style="display:block">${x[1]}</b><span class="code">${i} · ${x[4]}</span></div>${pill(d,i)}</div>
+  <div><span class="bk n">${m0(book(d,i))}</span> <span class="sub">${x[2]} في الدفتر</span></div>
+  ${V.de[i]&&ed()?`<div class="two"><input class="inc solo" style="flex:1" id="x-${i}" data-cnt="${i}" value="${has(d,i)?d.cnt[i]:""}" placeholder="المعدود" inputmode="decimal"><button class="btn pri sm" data-deok="${i}">تم</button></div>`
+   :`<div class="two"><button class="btn ok" data-match="${i}" ${ed()?"":"disabled"}>مطابق</button><button class="btn" data-de="${i}" ${ed()?"":"disabled"}>${has(d,i)&&diff(d,i)?"المعدود "+N(m0(d.cnt[i])):"مختلف"}</button></div>`}</div>`;}).join("")}</div></div>`);}},
+
+{s:"خريطة المخزن",t:"خريطة الممرات والرفوف",d:"المخزن مرسوم ممرات ورفوف زي ما هو على الأرض، وكل رف لونه بيقول حالته: منقّط لسه ماتعدّش، أحمر عجز، أخضر زيادة. تدوس على الرف فيفتح جنبه تفاصيل الصنف وتعدّه.",fit:"المخزن المترتب برفوف ثابتة، واللي بيعدّ ماشي ممر ممر.",cost:"محتاج خانة «الرف» تتضاف لكل صنف (مش موجودة دلوقتي) وحد يدخّلها لـ 3,117 صنف.",
+ r:()=>{const d=D(),L=items(d),i=L.includes(V.sel)?V.sel:L[0],x=it(i);
+ return shell(`<div class="main map"><div class="aisles">${CATS.map((c,k)=>{const A=L.filter(j=>it(j)[3]===c);return `<div class="aisle"><h5><span>ممر ${"ABCD"[k]} · ${c}</span><span class="muted">${N(A.filter(j=>has(d,j)).length)}/${N(A.length)}</span></h5>${A.map(j=>`<button class="shelf ${stt(d,j)} ${j===i?"sel":""}" data-sel="${j}"><span class="code">${it(j)[4]}</span><b>${it(j)[1]}</b><span class="sub">${has(d,j)?"اتعدّ "+N(m0(d.cnt[j])):"لسه"}${has(d,j)&&diff(d,j)?" · "+N(sg(diff(d,j))):""}</span></button>`).join("")||'<span class="sub">مفيش أصناف</span>'}</div>`;}).join("")}<div class="door">باب المخزن</div></div>
+ <div class="card" style="display:flex;flex-direction:column;gap:10px"><div><span class="code">${i} · رف ${x[4]}</span><div style="font-family:var(--display);font-size:18px;font-weight:700">${x[1]}</div></div>
+  <div><div class="kv"><span class="muted">الدفتري</span><b>${N(m0(book(d,i)))} ${x[2]}</b></div><div class="kv"><span class="muted">المعدود</span>${stepper(i)}</div><div class="kv"><span class="muted">الفرق</span>${pill(d,i)}</div><div class="kv"><span class="muted">القيمة</span><b class="n">${price(d,i)?mf(val(d,i)):diff(d,i)?"محتاج سعر":"0.00"}</b></div></div>
+  ${diff(d,i)?`<div><h4>السبب</h4>${reasons(i)}</div>`:""}
+  <div class="chips"><span class="pl pend">لسه</span><span class="pl ok">مطابق</span><span class="pl short">عجز</span><span class="pl surp">زيادة</span></div></div></div>`);}},
+
+{s:"شريط الأوامر",t:"اكتب وخلاص: شريط أوامر واحد",d:"مفيش جدول ولا خانات. خانة واحدة في نص الشاشة: تكتب آخر أرقام الكود أو جزء من الاسم وبعده الكمية وتدوس Enter. علامة + قبل الرقم بتزوّد على المعدود (للعدّ رف رف). والأوامر زي /ترحيل من نفس الخانة.",fit:"اللي إيده سريعة على الكيبورد أو معاه ماسح باركود.",cost:"تتنفذ في البرنامج الحالي. محتاجة يومين تعوّد، وشاشة تانية لمراجعة الفروق قبل الترحيل.",
+ r:()=>{const d=D();return shell(`<div class="main spot">
+  <div class="cmd"><div class="in"><span class="kbd">›</span><input id="cmd" autocomplete="off" placeholder="مثال: 0007 8   أو   لمبة +6   أو   /ترحيل" ${ed()?"":"disabled"}><span class="kbd">Enter</span></div><div class="sug" id="sug">${sugHtml("")}</div>
+  <div class="hints"><span><span class="kbd">0007 8</span> المعدود يبقى 8</span><span><span class="kbd">0004 +6</span> يزوّد 6</span><span><span class="kbd">/ترحيل</span> يرحّل الجرد</span></div></div>
+  <div class="nstat"><div><small>اتعدّ</small><b class="n">${counted(d).length}/${items(d).length}</b></div><div><small>عجز</small><b class="n" style="color:#FF8576">${mf(sval(d))}</b></div><div><small>زيادة</small><b class="n" style="color:#45D6A2">${mf(pval(d))}</b></div><div><small>الصافي</small><b class="n">${mf(pval(d)-sval(d))}</b></div></div>
+  <div class="logl">${V.feed.slice(0,5).map(f=>`<div><span class="n">${f[0]}</span><b>${it(f[2])[1]}</b><span>المعدود ${N(m0(f[3]))}</span><span style="margin-inline-start:auto">${f[1]}</span></div>`).join("")}</div></div>`,{cls:"night"});}},
+
+{s:"السجل الحي",t:"كذا واحد بيعدّوا مع بعض والمشرف شايف",d:"الجرد متقسّم على الناس بالأقسام. شمال مين بيعدّ إيه ونسبة كل واحد، وفي النص سجل حي بكل عدّة أول ما تتسجل من أي جهاز، ويمين الأصناف اللي اتعدّت مرتين برقمين مختلفين ومحتاجة قرار.",fit:"الجرد السنوي الكبير اللي بيشتغل عليه 2 أو 3 في نفس الوقت.",cost:"تتنفذ في البرنامج الحالي على الشبكة. التحديث الحي بيبقى كل كام ثانية، مش لحظي.",
+ r:()=>{const d=D(),L=items(d),cf=Object.keys(d.c2).filter(i=>has(d,i)&&d.c2[i]!==d.cnt[i]);
+ return shell(`<div class="main live">
+  <div class="card"><h4>الفريق</h4>${PEOPLE.map(p=>{const A=L.filter(i=>WHO[it(i)[3]]===p[0]),n=A.filter(i=>has(d,i)).length;return `<div class="who">${av(p[0])}<div class="g"><b>${p[0]}</b> <span class="sub">${p[2]}</span><div class="sub">${CATS.filter(c=>WHO[c]===p[0]).join(" · ")}</div><div class="bar"><i style="width:${A.length?Math.round(100*n/A.length):0}%;background:${p[1]}"></i></div></div><b class="n">${n}/${A.length}</b></div>`;}).join("")}
+   <button class="btn" style="width:100%;margin-top:8px" data-sim ${ed()&&pending(d).length?"":"disabled"}>حاكي عدّة من جهاز تاني</button><div class="sub" style="margin-top:6px">الزرار ده للتجربة بس: بيسجّل الصنف الجاي كأن زميلك عدّه.</div></div>
+  <div class="card"><h4>السجل</h4><div class="scroll" style="max-height:440px">${V.feed.map((f,k)=>{const b=book(d,f[2]),x=f[3]-b;return `<div class="fd ${k===0&&V.last===f[2]?"last":""}"><span class="n muted">${f[0]}</span>${av(f[1])}<span><b>${f[1]}</b> عدّ ${it(f[2])[1]}: <b class="n">${m0(f[3])}</b> ${it(f[2])[2]}</span><span class="pl ${x<0?"short":x>0?"surp":"ok"}">${x?N(sg(x)):"مطابق"}</span></div>`;}).join("")}</div></div>
+  <div style="display:grid;gap:14px;align-content:start"><div class="card"><h4>محتاج قرار</h4>${cf.map(i=>`<div class="cf"><b>${it(i)[1]}</b><span class="sub">أحمد عدّه ${N(m0(d.cnt[i]))} ومحمود عدّه ${N(m0(d.c2[i]))}. الدفتري ${N(m0(book(d,i)))}.</span><div class="chips"><button class="btn sm" data-adopt="${i}|a">اعتمد ${N(m0(d.cnt[i]))}</button><button class="btn sm" data-adopt="${i}|b">اعتمد ${N(m0(d.c2[i]))}</button></div></div>`).join("")||'<span class="pl surp">مفيش تعارض</span>'}</div>
+   ${kpi("الصافي لحد دلوقتي",N(mf(pval(d)-sval(d))),pval(d)-sval(d)<0?"c-short":"c-surp",`عجز ${N(mf(sval(d)))} · زيادة ${N(mf(pval(d)))}`)}</div></div>`);}},
+
+{s:"مستكشف الفروق",t:"رسم الفروق: العجز شمال والزيادة يمين",d:"الشاشة بتبدأ من النتيجة مش من الجدول: كل صنف شريط، العجز بالأحمر ناحية والزيادة بالأخضر الناحية التانية، وطول الشريط بقيمة الفرق بالجنيه. تدوس على الشريط فتفتح تفاصيله وتصلّح العدّة أو تكتب السبب.",fit:"المدير أو المحاسب اللي بيراجع الجرد قبل ما يرحّله وعايز يشوف الفلوس راحت فين.",cost:"تتنفذ في البرنامج الحالي. دي شاشة مراجعة، فالعدّ نفسه محتاج طريقة إدخال من نموذج تاني.",
+ r:()=>{const d=D(),L=items(d),byv=V.by==="val",f=i=>byv?val(d,i):(book(d,i)?100*diff(d,i)/book(d,i):diff(d,i)?100:0);
+ const S=[...L.filter(i=>has(d,i))].sort((a,b)=>f(a)-f(b)),U=pending(d),mx=Math.max(1,...S.map(i=>Math.abs(f(i)))),i=L.includes(V.sel)?V.sel:L[0],x=it(i);
+ const fm=v=>byv?mf(v):m0(Math.round(v*10)/10)+"%";
+ return shell(`<div class="main vx"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px"><h4 style="margin:0">الفرق لكل صنف</h4><div class="chips"><button class="chip ${byv?"on":""}" data-by="val">بالقيمة (جنيه)</button><button class="chip ${byv?"":"on"}" data-by="pct">بالنسبة من الرصيد</button></div></div>
+  <div class="vaxis"><span></span><div><span>${N("−"+fm(mx))}</span><span>0</span><span>${N("+"+fm(mx))}</span></div><span></span></div>
+  ${S.map(k=>{const v=f(k),w=Math.abs(v)/mx*50;return `<div class="vrow ${k===i?"sel":""}" data-sel="${k}"><span class="nm">${it(k)[1]}</span><div class="vtrack">${v?`<span class="vbar ${v<0?"m":"p"}" style="width:${Math.max(.6,w)}%"></span>`:""}</div><b class="n ${v<0?"c-short":v>0?"c-surp":"muted"}" style="text-align:left">${v?fm(v):diff(d,k)?"من غير سعر":"0"}</b></div>`;}).join("")}
+  ${U.map(k=>`<div class="vrow ${k===i?"sel":""}" data-sel="${k}"><span class="nm muted">${it(k)[1]}</span><div class="vtrack"><span class="vbar u"></span></div><span class="pl pend">لسه</span></div>`).join("")}
+  <div class="sub" style="margin-top:8px">الشريط المنقّط صنف لسه ماتعدّش. الصنف اللي متوسطه صفر مالوش قيمة لحد ما تكتب سعره.</div></div>
+ <div class="card" style="display:flex;flex-direction:column;gap:10px"><div><span class="code">${i}</span><div style="font-family:var(--display);font-size:18px;font-weight:700">${x[1]}</div></div>
+  <div><div class="kv"><span class="muted">الدفتري</span><b>${N(m0(book(d,i)))} ${x[2]}</b></div><div class="kv"><span class="muted">المعدود</span>${stepper(i)}</div><div class="kv"><span class="muted">الفرق</span>${pill(d,i)}</div><div class="kv"><span class="muted">المتوسط</span><b class="n">${price(d,i)?mf(price(d,i)):"صفر"}</b></div><div class="kv"><span class="muted">القيمة</span><b class="n">${mf(val(d,i))}</b></div></div>
+  ${diff(d,i)?`<div><h4>السبب</h4>${reasons(i)}</div>`:""}<div><h4>القيد</h4>${jeBox(d)}</div></div></div>`);}},
+
+{s:"الموبايل والمشرف",t:"العدّ من الموبايل والمراجعة من المكتب",d:"اللي في المخزن معاه الموبايل: يصوّر باركود الصنف بالكاميرا، يكتب الكمية بزرارين كبار ويسجّل. والمشرف على المكتب شايف الجدول بيتملى لوحده. الموبايل مابيظهرش الرصيد الدفتري.",fit:"المخزن الكبير اللي الأصناف فيه عليها باركود، ومش عملي تشيل لابتوب بين الرفوف.",cost:"أغلى نموذج: محتاج تطبيق موبايل أو صفحة ويب صغيرة جنب البرنامج، وده شغل جديد مش في الخطة الحالية.",
+ r:()=>{const d=D(),L=items(d),i=V.ph.i&&L.includes(V.ph.i)?V.ph.i:null,x=i?it(i):null;
+ return shell(`<div class="main mob"><div class="phone"><div class="scr"><div class="ph"><span>جرد ${WH[d.wh]}</span><span class="pl acc">${N(counted(d).length)}/${N(L.length)}</span></div>
+  <div class="vf"><div class="bc"></div><i></i></div>
+  <div class="bd">${i?`<div><span class="code">${i} · رف ${x[4]}</span><div style="font-weight:700;font-size:16px">${x[1]}</div></div>
+   <div class="bigst"><button data-phq="-1" aria-label="نقّص">−</button><span class="v n">${V.ph.q===""?"0":V.ph.q}</span><button data-phq="1" aria-label="زوّد">+</button></div>
+   <div class="chips" style="justify-content:center">${[5,10,50].map(k=>`<button class="chip" data-phq="${k}">+${k}</button>`).join("")}</div>
+   <button class="btn pri" data-phok ${ed()?"":"disabled"}>تسجيل ${x[2]==="متر"?"بالمتر":""}</button><button class="btn" data-phnext>امسح الصنف اللي بعده</button>`
+   :`<div style="text-align:center;margin-top:30px"><b>كل الأصناف اتعدّت</b><div class="sub">المشرف يقدر يراجع ويرحّل.</div></div>`}</div></div></div>
+ <div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h4 style="margin:0">شاشة المشرف</h4>${filt()}</div>
+  <div class="scroll" style="max-height:470px"><table class="tbl"><tr><th>الصنف</th><th>الرف</th><th class="num">الدفتري</th><th class="num">المعدود</th><th>الحالة</th><th class="num">القيمة</th></tr>${fitems().map(k=>`<tr class="${V.last===k?"last":""}"><td><b>${it(k)[1]}</b> <span class="code">${k}</span></td><td class="n">${it(k)[4]}</td><td class="num n">${m0(book(d,k))}</td><td class="num n"><b>${has(d,k)?m0(d.cnt[k]):"—"}</b></td><td>${pill(d,k)}</td><td class="num n">${val(d,k)?mf(val(d,k)):""}</td></tr>`).join("")}</table></div></div></div>`);}},
+
+{s:"جدول بمجموعات ودرج",t:"جدول حديث بالأقسام ودرج للتسوية السريعة",d:"جدول واحد متقسّم بالأقسام، كل قسم بيتقفل ويتفتح وعليه إجمالي فرقه، والكتابة بـ Enter من خانة للي بعدها. وزرار «تسوية سريعة» بيفتح درج من الجنب لتسوية صنف واحد (كسر أو تالف) من غير جرد كامل.",fit:"اللي متعوّد على «بضاعة أول المدة» وعايز نفس السرعة بشكل أنضف، ومعاها التسوية السريعة.",cost:"تتنفذ في البرنامج الحالي، وأقرب نموذج للي اتعمل قبل كده.",
+ r:()=>{const d=D(),a=V.adj,ab=BAL[`${a.i}|WH-001`]||0;
+ const drawer=V.drawer?`<div class="dim" data-drawer="0"></div><aside class="drawer"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-family:var(--display);font-size:17px">تسوية سريعة</b><button class="btn sm" data-drawer="0">قفل</button></div>
+  <div class="fld"><label for="adj-i">الصنف</label><select class="sel" id="adj-i" data-adji style="max-width:none">${IT.filter(k=>BAL[`${k[0]}|WH-001`]).map(k=>`<option value="${k[0]}" ${k[0]===a.i?"selected":""}>${k[1]}</option>`).join("")}</select></div>
+  <div class="fld"><label>الكمية (بالسالب عجز وبالموجب زيادة)</label><span class="stp" style="align-self:start"><button data-adjq="-1">−</button><input class="inc" id="adj-q" data-adjv value="${a.q}"><button data-adjq="1">+</button></span></div>
+  <div class="fld"><label>السبب</label><div class="chips">${REASONS.map(r=>`<button class="chip ${a.rs===r?"on":""}" data-adjr="${r}">${r}</button>`).join("")}</div></div>
+  <div><div class="kv"><span class="muted">الرصيد دلوقتي</span><b class="n">${m0(ab)}</b></div><div class="kv"><span class="muted">بعد التسوية</span><b class="n">${m0(ab+a.q)}</b></div><div class="kv"><span class="muted">القيمة على 5205</span><b class="n ${a.q<0?"c-short":"c-surp"}">${mf(a.q*(AVG[a.i]||0))}</b></div></div>
+  <button class="btn pri" data-adjpost>ترحيل التسوية</button>
+  <div><h4>آخر التسويات</h4>${ADJ.slice().reverse().map(x=>`<div class="kv"><span>${N(x.no)} · ${it(x.i)[1]}</span><b class="n ${x.q<0?"c-short":"c-surp"}">${sg(x.q)}</b></div>`).join("")}</div></aside>`:"";
+ return shell(`<div class="main" style="grid-template-columns:1fr;min-height:480px"><div style="display:flex;gap:10px;align-items:center">${filt()}<span class="sub" style="margin-inline-start:auto">Enter ينقلك للخانة اللي بعدها</span></div>
+  <div class="card scroll" style="padding:0;max-height:430px"><table class="tbl"><tr><th>الصنف</th><th>الرف</th><th class="num">الدفتري</th><th>المعدود</th><th>الفرق</th><th class="num">القيمة</th><th>السبب</th></tr>
+  ${CATS.map(c=>{const A=fitems().filter(i=>it(i)[3]===c);if(!A.length)return "";const tv=A.reduce((s,i)=>s+val(d,i),0);
+   return `<tr class="grp" data-open="${c}"><td colspan="5">${V.open[c]?"▾":"◂"} ${c} <span class="muted">· اتعدّ ${N(A.filter(i=>has(d,i)).length)} من ${N(A.length)}</span></td><td class="num n ${tv<0?"c-short":tv>0?"c-surp":""}">${tv?mf(tv):""}</td><td></td></tr>`+(V.open[c]?A.map(i=>`<tr class="${V.last===i?"last":""}"><td><b>${it(i)[1]}</b> <span class="code">${i}</span></td><td class="n">${it(i)[4]}</td><td class="num n">${m0(book(d,i))} <span class="muted">${it(i)[2]}</span></td><td><input class="inc solo" id="g-${i}" data-cnt="${i}" value="${has(d,i)?d.cnt[i]:""}" placeholder="—" inputmode="decimal" ${ed()?"":"disabled"}></td><td>${pill(d,i)}</td><td class="num n">${val(d,i)?mf(val(d,i)):diff(d,i)>0&&!price(d,i)?`<input class="inc solo" id="p-${i}" data-pr="${i}" placeholder="السعر؟" ${ed()?"":"disabled"}>`:""}</td><td>${diff(d,i)?`<select class="sel" id="r-${i}" data-rsel="${i}" ${ed()?"":"disabled"}><option value="">بدون</option>${REASONS.map(r=>`<option ${d.rs[i]===r?"selected":""}>${r}</option>`).join("")}</select>`:""}</td></tr>`).join(""):"");}).join("")}</table></div></div>
+  <div class="foot"><span>اتعدّ <b class="n">${counted(d).length}/${items(d).length}</b></span><span class="c-short">عجز <b class="n">${mf(sval(d))}</b></span><span class="c-surp">زيادة <b class="n">${mf(pval(d))}</b></span><span>الصافي <b class="n">${mf(pval(d)-sval(d))}</b></span></div>`,{extra:`<button class="btn" data-drawer="1">تسوية سريعة</button>`,after:drawer});}},
+
+{s:"محضر واعتماد",t:"محضر الجرد واعتماده على خطوتين",d:"بعد العدّ الشاشة بتكتب محضر مقروء: كام صنف اتعدّ، العجز والزيادة بالجنيه، والفروق متجمّعة بالسبب. وجنبه مسار الاعتماد: اللي عدّ، أمين المخزن يراجع، والمدير يعتمد. الترحيل مابيتمش إلا بعد المراجعة.",fit:"لو عايز الجرد مايترحّلش بقرار واحد لوحده، ويبقى فيه مراجعة قبل ما القيد يتعمل.",cost:"تتنفذ في البرنامج الحالي، ومحتاجة صلاحيتين جداد (مراجعة · اعتماد). ودي شاشة ختام، فالعدّ من نموذج تاني.",
+ r:()=>{const d=D(),T=items(d).length,P=d.st==="posted",by={};[...shorts(d),...surps(d)].forEach(i=>{const r=d.rs[i]||"من غير سبب";by[r]=by[r]||[0,0];by[r][0]++;by[r][1]+=val(d,i);});
+ const s1=!pending(d).length,stp=(k,t,sub,act)=>`<div class="st3 ${k<(P?4:V.ap+1+(s1?0:-0))&&(k===1?true:k===2?V.ap>=1||P:P)?"done":((k===2&&!V.ap&&!P)||(k===3&&V.ap&&!P))?"cur":""}"><span class="nu">${(k===1)||(k===2&&(V.ap||P))||(k===3&&P)?"✓":k}</span><div><b>${t}</b><div class="sub">${sub}</div>${act||""}</div></div>`;
+ return shell(`<div class="main appr"><div class="card" style="display:flex;flex-direction:column;gap:14px;padding:22px 26px">
+  <div><h4>محضر جرد ${WH[d.wh]} · ${N(d.date)}</h4><p class="lead">اتعدّ ${N(counted(d).length)} صنف من ${N(T)}. فيه ${N(shorts(d).length)} صنف عجز بقيمة <span class="c-short n">${mf(sval(d))}</span> و${N(surps(d).length)} زيادة بقيمة <span class="c-surp n">${mf(pval(d))}</span>، والصافي على المصروفات <span class="n">${mf(sval(d)-pval(d))}</span> جنيه.</p>${pending(d).length?`<div class="sub c-pend">${N(pending(d).length)} صنف ماتعدّش وهيفضل برصيده الدفتري.</div>`:""}</div>
+  <div><h4>الفروق بالسبب</h4>${Object.keys(by).map(r=>`<div class="rsn"><span>${r}</span><span class="muted">${N(by[r][0])} صنف</span><b class="n ${by[r][1]<0?"c-short":"c-surp"}" style="text-align:left">${mf(by[r][1])}</b></div>`).join("")||'<span class="sub">مفيش فروق.</span>'}</div>
+  <div><h4>الأصناف اللي فيها فرق</h4><table class="tbl"><tr><th>الصنف</th><th class="num">الدفتري</th><th class="num">المعدود</th><th>الفرق</th><th>السبب</th></tr>${[...shorts(d),...surps(d)].map(i=>`<tr><td><b>${it(i)[1]}</b></td><td class="num n">${m0(book(d,i))}</td><td class="num n">${m0(d.cnt[i])}</td><td>${pill(d,i)}</td><td>${d.rs[i]||'<span class="muted">—</span>'}</td></tr>`).join("")}</table></div>
+  <div><h4>القيد</h4>${jeBox(d)}</div></div>
+ <div class="card"><h4>مسار الاعتماد</h4><div class="steps3">
+  ${stp(1,"العدّ","أحمد · محمود · سارة")}
+  ${stp(2,"المراجعة","أمين المخزن",!V.ap&&!P?`<button class="btn sm pri" style="margin-top:6px" data-ap="1">راجعت وموافق</button>`:"")}
+  ${stp(3,"الاعتماد والترحيل","المدير المالي",V.ap&&!P?`<button class="btn sm pri" style="margin-top:6px" data-post>اعتمد ورحّل</button>`:!P?`<div class="sub">مستني المراجعة</div>`:`<div class="sub">${N(d.no)} اترحّل</div>`)}</div>
+  <div class="sub">زرار «ترحيل الجرد» اللي فوق شغال هنا للتجربة. في التنفيذ بيتقفل لحد ما المراجعة تتم.</div></div></div>`);}},
+];
+
+function sugHtml(q){const d=D();q=q.replace(/\s*[+=]?\d*(\.\d*)?$/,"").trim();let L=items(d);if(q){const u=q.toUpperCase();L=L.filter(i=>i.includes(u)||it(i)[1].includes(q));}else L=pending(d).length?pending(d):L;
+  return L.slice(0,5).map(i=>`<div><span class="code">${i}</span><span>${it(i)[1]}</span>${pill(d,i)}</div>`).join("")||`<div><span></span><span>مفيش صنف بالاسم أو الكود ده.</span><span></span></div>`;}
+function runCmd(s){const d=D();s=s.trim();if(!s)return;
+  if(s[0]==="/"){if(/ترحيل|post/i.test(s))post();else say("الأمر ده مش معروف. المتاح: /ترحيل","no");return;}
+  const m=s.match(/^(.*?)\s+([+=]?)(\d+(?:\.\d+)?)$/);if(!m){say("اكتب الصنف وبعده مسافة والكمية. مثال: 0007 8","no");return;}
+  const q=m[1].trim(),u=q.toUpperCase();let L=items(d).filter(i=>i.endsWith(u));if(!L.length)L=items(d).filter(i=>i.includes(u)||it(i)[1].includes(q));
+  if(!L.length){say(`مفيش صنف «${q}» في المخزن ده.`,"no");return;}
+  if(L.length>1){say(`«${q}» طلع ${L.length} أصناف: ${L.map(i=>it(i)[1]).join("، ")}. اكتب كود أدق.`,"no");return;}
+  const i=L[0],v=m[2]==="+"?(d.cnt[i]||0)+ +m[3]:+m[3];if(setCnt(i,v))say(`${it(i)[1]}: المعدود ${m0(v)} ${it(i)[2]}.`);}
+
+const NOTE=`<h2>الشاشة دي بتعمل إيه</h2><ul>
+<li><b>جرد مخزن:</b> بتعدّ الأصناف فعلياً وتكتب «المعدود» قصاد «الدفتري» (رصيد دفتر المخزون بتاريخ الجرد). الفرق بالسالب عجز وبالموجب زيادة. مع الترحيل الرصيد بيتظبط على المعدود، وبيتعمل قيد واحد على حساب <code>5205</code> «تسوية جرد المخزون» بالمتوسط المرجّح.</li>
+<li><b>تسوية سريعة</b> (نموذج 9): لصنف أو اتنين من غير جرد كامل، زي كسر أو تالف.</li>
+<li><b>كانت إيه في الأكسس:</b> <code>F3hoda1</code> «الجرد» على جدول <code>3hoda</code> (اسمه «عهدة» بس هو الجرد). فيه 62 جرد و180 ألف سطر، وكل جرد بينسخ كل الأصناف بالكمية والتكلفة وفاتورة/بيان. مفيش مخزن ولا فرق محسوب ولا قيد، والرصيد بيتحسب من استعلام <code>q05</code>. وتسويات <code>GARD</code> (998 سطر) و<code>Gard2</code> (787) كانت بتتستورد من إكسل. والشاشة التانية <code>Fgard</code> جدولها ناقص ومش شغالة.</li>
+<li><b>الجاهز عندنا:</b> دفتر المخزون بالمتوسط المرجّح، والحساب الافتراضي «تسوية الجرد» <code>5205</code> وقاعدة الترحيل بتاعته من المرحلة 4. المخزن الوهمي كميات بس، فجرده من غير قيد.</li>
+<li><b>القيد:</b> العجز مدين <code>5205</code> ودائن المخزون. الزيادة مدين المخزون ودائن <code>5205</code>. الزيادة لصنف متوسطه صفر (زي «كشاف ليد 50 وات» هنا) لازم تكتب سعرها، وهتلاقي الترحيل بيطلبه منك.</li>
+<li><b>الشبكة:</b> كذا جهاز يعدّوا نفس الجرد، وكل سطر بيتحفظ لوحده. الترحيل بيقفل صفوف الأصناف.</li>
+<li><b>الشكل:</b> النماذج دي بألوان وخطوط جديدة زي ما طلبت، مش ديزاين Hr GAD اللي في باقي البرنامج. السؤال الأول تحت عن ده.</li></ul>`;
+const QS=`<h2>محتاج قرارك في دول</h2><ol>
+<li><b>الشكل الجديد:</b> لو عجبك، يتطبّق على شاشة الجرد بس، ولا نمشي بيه في كل الشاشات الجاية، ولا نرجع كمان نغيّر الشاشات اللي خلصت؟ (اقتراحي: الجرد والشاشات الجاية، والقديمة تفضل زي ما هي دلوقتي.)</li>
+<li><b>النموذج:</b> أنهي واحد؟ وتقدر تركّب، مثلاً «9 للعدّ + 7 للمراجعة + 10 للاعتماد». اقتراحي 9 مع رسم الفروق من 7.</li>
+<li><b>نوع الجرد:</b> كلي (المخزن كله) وجزئي (أقسام تختارها)؟ ولا تختار أصناف بعينها كمان؟</li>
+<li><b>فاتورة / بيان:</b> كل جرد لنوع واحد (اقتراحي)، ولا الاتنين في نفس الجرد؟</li>
+<li><b>الرصيد الدفتري:</b> بتاريخ الجرد والحركات اللي بعده ماتأثرش (اقتراحي)، ولا المخزن يتقفل (ممنوع صرف وتحويل) لحد ما الجرد يترحّل؟</li>
+<li><b>الصنف اللي ماتعدّش:</b> يفضل برصيده (اقتراحي)، ولا يتحسب صفر ويبقى عجز بكل رصيده؟</li>
+<li><b>الجرد الأعمى:</b> اللي بيعدّ مايشوفش الدفتري إلا بصلاحية (اقتراحي)، ولا الكل يشوفه؟</li>
+<li><b>العدّة التانية</b> (نموذج 6): لو اتنين عدّوا نفس الصنف برقمين مختلفين، حد يقرر قبل الترحيل؟ ولا عدّة واحدة كفاية (اقتراحي)؟</li>
+<li><b>تقييم الفرق:</b> بالمتوسط المرجّح بتاريخ الجرد (اقتراحي). والزيادة لصنف متوسطه صفر تكتب سعرها (اقتراحي)، ولا تاخد آخر سعر شراء؟</li>
+<li><b>الحساب:</b> العجز والزيادة الاتنين على <code>5205</code> (اقتراحي)، ولا الزيادة على حساب إيراد لوحده؟</li>
+<li><b>السبب</b> لكل فرق (تالف · فقد · خطأ تسجيل · سماح قص · أخرى): اختياري (اقتراحي) ولا إجباري؟</li>
+<li><b>الاعتماد على خطوتين</b> (نموذج 10): مراجعة وبعدها اعتماد بصلاحيتين؟ ولا ترحيل بصلاحية واحدة زي باقي الشاشات (اقتراحي)؟</li>
+<li><b>الترقيم:</b> <code>CNT-00001</code> للجرد و<code>ADJ-00001</code> للتسوية السريعة، من أول ترحيل ويبدأ من 1 كل سنة، وإلغاء الترحيل بصلاحية في السنة المفتوحة (اقتراحي)؟</li>
+<li><b>الرفوف</b> (نموذج 4) و<b>الموبايل</b> (نموذج 8): الاتنين محتاجين شغل زيادة. عايز حد فيهم دلوقتي ولا نأجلهم؟</li>
+<li><b>جرد الأكسس القديم</b> (62 جرد): مايتنقلش، والرصيد جاي من «بضاعة أول المدة» (اقتراحي)؟</li></ol>`;
+
+function render(focusId){
+  document.getElementById("rail").innerHTML=M.map((m,k)=>`<button class="tab ${k===V.m?"on":""}" role="tab" aria-selected="${k===V.m}" data-m="${k}"><b>${k+1}</b>${m.s}</button>`).join("");
+  document.getElementById("stage").innerHTML=M[V.m].r();
+  const m=M[V.m];document.getElementById("about").innerHTML=`<div><small>النموذج ${V.m+1}</small><b>${m.t}</b><div class="sub">${m.d}</div></div><div><small>يناسب</small>${m.fit}</div><div><small>التنفيذ</small>${m.cost}</div>`;
+  if(focusId){const e=document.getElementById(focusId);if(e){e.focus();if(e.select)e.select();}}
+}
+document.getElementById("note").innerHTML=NOTE;document.getElementById("qs").innerHTML=QS;
+
+document.addEventListener("change",e=>{const t=e.target,d=D(),ds=t.dataset;
+  if(ds.doc!==undefined){V.d=+t.value;V.msg="";V.np="";render();return;}
+  if(ds.cnt!==undefined){const v=t.value.trim();if(v===""){if(ed()){delete d.cnt[ds.cnt];V.msg="";}}else setCnt(ds.cnt,+v);if(V.de[ds.cnt])delete V.de[ds.cnt];render(t._next);return;}
+  if(ds.pr!==undefined){const v=+t.value;if(v>0){d.pr[ds.pr]=v;V.np="";say(`سعر ${it(ds.pr)[1]} اتسجّل ${mf(v)}. دوس «ترحيل الجرد».`);}render();return;}
+  if(ds.rsel!==undefined){d.rs[ds.rsel]=t.value;render();return;}
+  if(ds.adji!==undefined){V.adj.i=t.value;render();return;}
+  if(ds.adjv!==undefined){V.adj.q=+t.value||0;render();return;}
+});
+document.addEventListener("input",e=>{if(e.target.id==="cmd")document.getElementById("sug").innerHTML=sugHtml(e.target.value);});
+document.addEventListener("keydown",e=>{const t=e.target;if(e.key!=="Enter"||!t.dataset)return;
+  if(t.id==="cmd"){runCmd(t.value);render("cmd");return;}
+  if(t.dataset.cnt!==undefined){e.preventDefault();const all=[...document.querySelectorAll("#stage input[data-cnt]:not(:disabled)")],k=all.indexOf(t);t._next=all[k+1]?all[k+1].id:t.id;t.blur();}
+  if(t.dataset.pr!==undefined||t.dataset.adjv!==undefined)t.blur();
+});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option"))return;
+  const g=s=>e.target.closest(s),d=D();let x;
+  if(x=g("[data-m]")){V.m=+x.dataset.m;V.msg="";V.drawer=0;render();return;}
+  if(g("[data-new]")){C.push({no:"",date:"27/11/2026",wh:"WH-002",st:"draft",cnt:{},c2:{},rs:{},pr:{},by:{}});V.d=C.length-1;V.sel="ITM-0001";V.ph={i:"ITM-0001",q:""};V.ap=0;say("جرد جديد لمخزن الفرع. ابدأ العدّ.","inf");render();return;}
+  if(g("[data-post]")){const np=document.querySelector("#stage [data-pr]");if(np&&+np.value>0){d.pr[np.dataset.pr]=+np.value;V.np="";}post();render();return;}
+  if(g("[data-unpost]")){unpost();render();return;}
+  if(x=g("[data-flt]")){V.flt=x.dataset.flt;render();return;}
+  if(x=g("[data-inc]")){setCnt(x.dataset.inc,(d.cnt[x.dataset.inc]??book(d,x.dataset.inc))+1);render();return;}
+  if(x=g("[data-dec]")){setCnt(x.dataset.dec,Math.max(0,(d.cnt[x.dataset.dec]??book(d,x.dataset.dec))-1));render();return;}
+  if(x=g("[data-rs]")){if(!ed())return;const [i,r]=x.dataset.rs.split("|");d.rs[i]=d.rs[i]===r?"":r;render();return;}
+  if(x=g("[data-jump]")){V.flt="un";render(`c-${V.m}-${x.dataset.jump}`);return;}
+  if(x=g("[data-sel]")){V.sel=x.dataset.sel;V.kp="";render();return;}
+  if(x=g("[data-kp]")){if(!ed())return;const k=x.dataset.kp;V.kp=k==="back"?V.kp.slice(0,-1):(V.kp+k).slice(0,7);render();return;}
+  if(x=g("[data-kpok]")){const i=x.dataset.kpok;if(V.kp!==""&&!setCnt(i,+V.kp)){render();return;}V.kp="";V.sel=nextPending(i)||i;if(!pending(d).length&&ed())say("كل الأصناف اتعدّت. راجع الفروق ورحّل.","inf");render();return;}
+  if(x=g("[data-match]")){const i=x.dataset.match;setCnt(i,book(d,i));delete V.de[i];if(V.m===1){V.kp="";V.sel=nextPending(i)||i;}render();return;}
+  if(g("[data-allmatch]")){pending(d).forEach(i=>setCnt(i,book(d,i)));say("الباقي كله اتعلّم مطابق.");render();return;}
+  if(x=g("[data-de]")){V.de[x.dataset.de]=1;render(`x-${x.dataset.de}`);return;}
+  if(x=g("[data-deok]")){const el=document.getElementById(`x-${x.dataset.deok}`);if(el&&el.value.trim()!=="")setCnt(x.dataset.deok,+el.value);delete V.de[x.dataset.deok];render();return;}
+  if(g("[data-blind]")){V.blind=V.blind?0:1;render();return;}
+  if(g("[data-sim]")){const i=pending(d)[0];if(i){const b=book(d,i);setCnt(i,Math.max(0,b-(b>20?5:0)),WHO[it(i)[3]]);}render();return;}
+  if(x=g("[data-adopt]")){const [i,w]=x.dataset.adopt.split("|");if(w==="b")setCnt(i,d.c2[i],"محمود");delete d.c2[i];say(`${it(i)[1]}: اتعتمد ${m0(d.cnt[i])}.`);render();return;}
+  if(x=g("[data-by]")){V.by=x.dataset.by;render();return;}
+  if(x=g("[data-phq]")){V.ph.q=String(Math.max(0,(+V.ph.q||0)+ +x.dataset.phq));render();return;}
+  if(g("[data-phok]")){const i=V.ph.i;if(setCnt(i,+V.ph.q||0,"محمود")){V.ph={i:nextPending(i),q:""};}render();return;}
+  if(g("[data-phnext]")){V.ph={i:nextPending(V.ph.i)||V.ph.i,q:""};render();return;}
+  if(x=g("[data-open]")){const c=x.dataset.open;V.open[c]=V.open[c]?0:1;render();return;}
+  if(x=g("[data-drawer]")){V.drawer=+x.dataset.drawer;render();return;}
+  if(x=g("[data-adjq]")){V.adj.q+= +x.dataset.adjq;render();return;}
+  if(x=g("[data-adjr]")){V.adj.rs=x.dataset.adjr;render();return;}
+  if(g("[data-adjpost]")){const a=V.adj,k=`${a.i}|WH-001`;if(!a.q){say("اكتب كمية غير الصفر.","no");render();return;}if((BAL[k]||0)+a.q<0){say(`الرصيد هيبقى بالسالب. ده محتاج صلاحية «من غير رصيد».`,"no");render();return;}
+    BAL[k]=(BAL[k]||0)+a.q;ASEQ++;ADJ.push({no:"ADJ-"+String(ASEQ).padStart(5,"0"),i:a.i,q:a.q,rs:a.rs});say(`اترحّلت ${ADJ[ADJ.length-1].no}. رصيد ${it(a.i)[1]} بقى ${m0(BAL[k])}.`);V.adj={i:a.i,q:-1,rs:a.rs};render();return;}
+  if(x=g("[data-ap]")){V.ap=1;say("المراجعة اتسجّلت. الاعتماد عند المدير المالي.","inf");render();return;}
+});
+render();
+</script>
+</body>
+</html>
