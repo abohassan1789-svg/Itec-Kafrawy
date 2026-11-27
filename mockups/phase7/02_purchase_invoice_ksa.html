@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج فاتورة الشراء (شكل الفاتورة السعودية) — A-H CODE</title>
+<style>
+:root{--g:#00843D;--gd:#046A31;--b:#2563EB;--bd:#1D4ED8;--r:#DC2626;--rd:#B91C1C;--gr:#4B5563;--grd:#374151;
+ --bo:#D7DEE7;--cb:#E5E7EB;--bg:#F5F7FA;--ro:#F4F6F9;--sel:#E7F6EE;--tot:#E8F5EC;--totb:#BFE6CF;--ft:#EAF6EF;--ftb:#D7EBDF;--tx:#111827}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;background:#DCE3EA;color:var(--tx);font-size:13px}
+.top{background:var(--gd);color:#fff;padding:12px 20px;position:sticky;top:0;z-index:20}
+.top h1{margin:0 0 3px;font-size:19px;font-weight:900}.top p{margin:0;font-size:13px;opacity:.92}
+.wrap{padding:16px;max-width:1560px;margin:auto}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;line-height:1.75}
+.note ul,.qs ol{margin:4px 0 0;padding-right:20px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;line-height:1.8}
+.mnav{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--cb);border-radius:10px;padding:8px 10px;margin-bottom:10px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;box-shadow:0 2px 6px rgba(15,23,42,.08)}
+.mnav b{color:var(--g);font-weight:900;margin-left:4px}
+.mnav span{cursor:pointer;border:1px solid var(--bo);border-radius:8px;padding:4px 11px;font-weight:800;background:#fff;color:#334155}
+.mnav span.on{background:var(--g);color:#fff;border-color:var(--g)}
+.mnav .go{margin-right:auto;display:flex;gap:6px}.mnav .go span{background:#F1F5F9}
+.mh{margin:0 0 4px;color:var(--g);font-size:19px;font-weight:900}.mh i{font-style:normal;display:inline-block;background:var(--g);color:#fff;border-radius:50%;width:28px;height:28px;text-align:center;line-height:28px;margin-left:6px;font-size:14px}
+.md{color:#475569;font-size:13.5px;margin:0 0 8px}
+.demo{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#FFFBEB;border:1px dashed #F59E0B;border-radius:8px;padding:6px 10px;margin-bottom:8px;font-size:12.5px;font-weight:800;color:#92400E}
+.chip{cursor:pointer;border:1px dashed #B45309;border-radius:12px;padding:2px 10px;background:#fff}
+.chip.on{background:#B45309;color:#fff;border-style:solid}
+.chip.bl{border-color:#2563EB;color:#1D4ED8}
+/* ===== الشاشة (زي فاتورة المبيعات السعودية) ===== */
+.scr{background:var(--bg);border:1px solid #94A3B8;border-radius:8px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,.15)}
+.wbar{height:30px;background:#fff;border-bottom:1px solid var(--cb);display:flex;align-items:center;gap:8px;padding:0 10px;font-size:12.5px}
+.wbar .x{margin-right:auto;color:#64748B;letter-spacing:10px}
+.body{padding:6px 12px 10px;display:flex;flex-direction:column;gap:6px}
+.hdr{display:flex;align-items:flex-start;gap:12px;padding:4px 4px 0}
+.ttl{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:800;color:#1F2D3D}
+.ttl .ic{color:var(--g);font-size:22px}
+.sub{color:#6B7280;font-size:12px;font-weight:700}
+.meta{margin-right:auto;color:#6B7280;font-size:12px;font-weight:700;line-height:1.6;text-align:left;direction:rtl}
+.st{display:inline-block;border-radius:10px;padding:1px 10px;font-size:12px;font-weight:800;border:1px solid}
+.st.dr{background:#F1F5F9;color:#475569;border-color:#CBD5E1}.st.po{background:#E8F5EC;color:#00843D;border-color:#BFE6CF}
+.tbar{display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:0 4px 6px;border-bottom:1px solid var(--cb)}
+.btn{display:inline-flex;align-items:center;gap:5px;height:34px;padding:3px 9px;border-radius:8px;font-size:12px;font-weight:700;border:1px solid;cursor:pointer;white-space:nowrap;user-select:none}
+.btn.g{background:var(--g);color:#fff;border-color:var(--g)}.btn.g:hover{background:var(--gd)}
+.btn.b{background:var(--b);color:#fff;border-color:var(--b)}.btn.b:hover{background:var(--bd)}
+.btn.r{background:var(--r);color:#fff;border-color:var(--r)}.btn.r:hover{background:var(--rd)}
+.btn.w{background:#fff;color:#374151;border-color:var(--bo)}.btn.w:hover{background:#F3F4F6}
+.btn.k{background:var(--gr);color:#fff;border-color:var(--gr)}.btn.k:hover{background:var(--grd)}
+.btn.off{background:#EAECEF!important;color:#AEB6C0!important;border-color:#EAECEF!important;cursor:default}
+.btn.sq{width:38px;justify-content:center;padding:0;font-size:15px}
+.ck{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:0 6px;cursor:pointer;white-space:nowrap}
+.ck input{width:16px;height:16px;accent-color:var(--g);cursor:pointer;margin:0}
+.secT{display:flex;align-items:center;gap:8px;color:var(--g);font-size:15px;font-weight:800;margin:2px 4px 4px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 18px;padding:0 4px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 16px}
+.fl{display:flex;flex-direction:column;gap:3px;min-width:0}
+.fl>label{font-size:12px;font-weight:700;color:#111827;min-height:16px}
+.in,.sl{height:28px;border:1px solid var(--bo);border-radius:6px;background:#fff;padding:1px 8px;color:#111827;font:inherit;font-size:12px;font-weight:700;width:100%;min-width:0;outline:none}
+.in:focus,.sl:focus{border-color:var(--g)}
+.in.ro,.in:disabled,.sl:disabled{background:var(--ro);color:#374151}
+.in.bad,.sl.bad{border-color:#DC2626;background:#FEF2F2}
+.n{direction:ltr;text-align:left}
+.lkw{display:flex;gap:4px;align-items:center}.lkw .sl,.lkw .in{flex:1}
+.lkb{width:28px;height:28px;flex-shrink:0;border-radius:6px;background:var(--g);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer}
+.tg{text-align:right;background:#F9FAFB;color:var(--g);border:1px solid var(--cb);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;cursor:pointer}
+.tg:hover{background:#F1F5F9}.tg small{color:#6B7280;font-weight:700;margin-right:8px}
+.card{background:#fff;border:1px solid var(--cb);border-radius:12px;padding:12px 16px 14px;box-shadow:0 2px 14px rgba(15,23,42,.09);min-width:0}
+.row{display:flex;gap:16px;align-items:stretch}
+.tblw{border:1px solid var(--cb);border-radius:8px;overflow:auto;background:#fff;min-height:210px;max-height:330px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;font-weight:700}
+.tbl th{background:var(--g);color:#fff;font-size:12px;font-weight:800;padding:9px 6px;text-align:center;position:sticky;top:0;z-index:1;white-space:nowrap}
+.tbl td{padding:8px 6px;border-bottom:1px solid #EEF1F4;color:#374151;text-align:center;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:#FAFBFC}
+.tbl tr.sel td{background:var(--sel);color:#0B3B23}
+.tbl tr[data-row]{cursor:pointer}
+.tbl td.nm{text-align:right}
+.tbl td .in,.tbl td .sl{height:26px;font-size:12.5px}
+.tbl td .in.q{width:70px}.tbl td .in.p{width:90px}.tbl td .in.d{width:54px}.tbl td .sl{width:auto}
+.ln-e{display:block;color:#B91C1C;font-size:11px;font-weight:800;white-space:normal;text-align:right}
+.ln-w{display:block;color:#92400E;font-size:11px;font-weight:800;white-space:normal;text-align:right}
+.ln-i{display:block;color:#1D4ED8;font-size:11px;font-weight:700;text-align:right}
+.empty{color:#94A3B8;padding:40px 0!important;font-weight:700}
+.tfoot{display:flex;justify-content:space-between;align-items:center;background:var(--ft);border:1px solid var(--ftb);border-radius:8px;height:38px;padding:0 14px;margin-top:8px;color:#0B3B23;font-weight:800}
+.tfoot b{font-size:14px;direction:ltr}
+.side{width:340px;flex-shrink:0;display:flex;flex-direction:column;gap:8px}
+.sr{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#F9FAFB;border:1px solid #EEF1F4;border-radius:8px;min-height:46px;padding:4px 12px;font-weight:700}
+.sr b{font-size:14px;font-weight:800;direction:ltr}
+.sr .in{width:110px;flex:none}
+.net{display:flex;align-items:center;justify-content:space-between;background:var(--tot);border:1px solid var(--totb);border-radius:10px;min-height:56px;padding:8px 14px;color:var(--g);font-weight:800;font-size:12.5px}
+.net b{font-size:17px;direction:ltr}
+.net.egp{min-height:40px;background:#EFF6FF;border-color:#BFDBFE;color:#1D4ED8}.net.egp b{font-size:14px}
+.strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:8px}
+.strip .sr{flex-direction:column;align-items:flex-start;justify-content:center;min-height:60px;gap:2px}
+.strip .sr small{color:#6B7280;font-size:11.5px}
+.strip .net{flex-direction:column;align-items:flex-start;justify-content:center;gap:2px}
+.add{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.add .fl.it{flex:1;min-width:260px}
+.add .fl.s{width:110px}.add .fl.m{width:150px}
+.add .btn{height:36px;font-size:12.5px}
+.info{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:12px;font-weight:700;color:#475569}
+.info b{color:#1D4ED8;direction:ltr;unicode-bidi:isolate}
+.msg{border-radius:8px;padding:6px 12px;font-weight:800;font-size:12.5px}
+.msg.ok{background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}.msg.no{background:#FEE2E2;color:#B91C1C;border:1px solid #FECACA}
+.msg.inf{background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE}
+.cf{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:8px;padding:6px 12px;font-weight:800;font-size:12.5px}
+.ckl{display:flex;flex-direction:column}
+.ckl div{display:flex;gap:6px;align-items:flex-start;font-size:12px;font-weight:700;padding:5px 2px;border-bottom:1px dashed #E2E8F0}
+.ckl b{width:16px;flex-shrink:0;text-align:center}
+.ckl .ok b{color:#087443}.ckl .no b{color:#B91C1C}.ckl .wr b{color:#B45309}.ckl .in b{color:#2563EB}
+.stabs{display:flex;gap:3px;border-bottom:2px solid var(--g)}
+.stabs span{flex:1;text-align:center;padding:6px 4px;font-weight:800;font-size:12.5px;background:#EEF2F6;color:#475569;border-radius:6px 6px 0 0;cursor:pointer}
+.stabs span.on{background:var(--g);color:#fff}
+.mini{width:100%;border-collapse:collapse;font-size:12px;font-weight:700}
+.mini th{background:#F1F5F9;color:#334155;padding:6px 5px;font-weight:800;text-align:right}
+.mini td{padding:6px 5px;border-bottom:1px solid #EEF1F4}
+.mini td.n,.mini th.n{text-align:left;direction:ltr}
+.ok-l{color:#087443;font-weight:800}.bad-l{color:#B91C1C;font-weight:800}
+.scard{border-right:4px solid #C2410C}
+.scard .tp{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.av{width:38px;height:38px;border-radius:50%;background:#C2410C;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0}
+.kv{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px dashed #E5E7EB;font-weight:700;font-size:12.5px}
+.kv b{direction:ltr;unicode-bidi:isolate}
+.htabs{display:flex;gap:4px;padding:0 4px}
+.htabs span{padding:6px 16px;border-radius:8px 8px 0 0;font-weight:800;background:#EEF2F6;color:#475569;cursor:pointer;border:1px solid var(--cb);border-bottom:none}
+.htabs span.on{background:#fff;color:var(--g)}
+.hpane{background:#fff;border:1px solid var(--cb);border-radius:0 8px 8px 8px;padding:10px 12px}
+.lst{width:290px;flex-shrink:0;display:flex;flex-direction:column;gap:6px}
+.lc{border:1px solid var(--cb);border-right:4px solid var(--g);border-radius:8px;padding:7px 9px;cursor:pointer;background:#fff;font-size:12px;font-weight:700}
+.lc.dr{border-right-color:#94A3B8}.lc.sel{outline:2px solid var(--b);background:#EFF6FF}
+.lc .r{display:flex;justify-content:space-between;gap:6px;align-items:center}
+.lc b.v{direction:ltr;font-size:13px}
+.fchips{display:flex;gap:5px}
+.fchips span{cursor:pointer;border:1px solid var(--bo);border-radius:12px;padding:2px 10px;font-weight:800;font-size:12px;background:#fff}
+.fchips span.on{background:var(--g);color:#fff;border-color:var(--g)}
+.wcell{display:inline-block;min-width:54px;border-radius:6px;padding:2px 6px;background:#F1F5F9;font-weight:800}
+.wcell.up{background:#E8F5EC;color:#087443}
+/* مضغوط */
+.cmp .ttl{font-size:17px}.cmp .sub{display:none}.cmp .meta{line-height:1.3}
+.cmp .btn{height:28px;font-size:11.5px;padding:2px 7px}.cmp .btn.sq{width:30px}
+.cmp .card{padding:8px 12px 9px}.cmp .tbl td{padding:5px 6px}.cmp .tbl th{padding:6px}
+.cmp .sr{min-height:34px}.cmp .net{min-height:42px}.cmp .grid4{gap:5px 14px}
+.cmp .tblw{max-height:360px}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج «فاتورة الشراء» بشكل «فاتورة المبيعات السعودية» (المرحلة 7)</h1>
+  <p>زي ما طلبت: نفس ترتيب الفاتورة السعودية — الأزرار فوق ← بيانات الفاتورة ← التفاصيل والإجماليات جنبها ← <b>«إضافة صنف» تحت</b>. كل نموذج في صفحة لوحده (الأرقام فوق أو الأسهم)، والبيانات وهمية، وكل النماذج شغالة على نفس الفاتورة.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="mnav" id="mnav"></div>
+  <div id="page"></div>
+</div>
+<script>
+// ===== البيانات (وهمية)
+// الموردين: [الكود، الاسم، مدة السداد، العملة، ض.ق.م الافتراضي، الرصيد بالجنيه (لينا عليه)، الرقم الضريبي]
+const SUP=[["SUB-000","مورد نقدي",0,"EGP","VAT14",0,""],["SUB-001","شركة النور للكابلات",30,"EGP","VAT14",84500,"512-334-871"],
+ ["SUB-002","المصرية للتوريدات الكهربائية",45,"EGP","VAT14",126300,"287-905-112"],["SUB-003","Global Controls Ltd",60,"USD","VAT0",392000,"GB 4471 0098"]];
+// الأصناف: [الكود، الاسم، الوحدة الأساسية، نوع الصنف، الوحدات [اسم، معامل]، كود الضريبة، خدمي]
+const IT=[["ITM-0001","كابل نحاس 2×1.5 مم","متر","MCC",[["متر",1],["لفة 100م",100]],"VAT14",0],
+ ["ITM-0002","مفتاح إضاءة مفرد","عدد","Lighting",[["عدد",1],["كرتونة 50",50]],"VAT14",0],
+ ["ITM-0004","لمبة LED 12 وات","عدد","Lighting",[["عدد",1],["كرتونة 20",20]],"VAT14",0],
+ ["ITM-0006","كشاف طوارئ","عدد","Fire Alarm",[["عدد",1]],"VAT14",0],["ITM-0008","جهاز إنذار حريق","عدد","Fire Alarm",[["عدد",1]],"VAT14",0],
+ ["ITM-0009","حساس حرارة","عدد","BMS",[["عدد",1],["علبة 10",10]],"VAT14",0],["ITM-0010","كنترولر DDC","عدد","BMS",[["عدد",1]],"VAT14",0],
+ ["ITM-0011","تركيب ومعايرة (خدمة)","خدمة","BMS",[["خدمة",1]],"VAT14",1]];
+const TX={VAT14:["14%",14],VAT0:["صفري 0%",0],EXM:["معفي",0]};
+const CUR={EGP:["جنيه",1],USD:["دولار",48.5],EUR:["يورو",52.8]};
+const WH=[["WH-001","المخزن الرئيسي",0],["WH-002","مخزن الفرع",0],["WH-003","المخزن الوهمي",1]];
+const PRJ=[["","— من غير —"],["Itec-001","Itec-001 · تشطيبات برج النخيل"],["Itec-002","Itec-002 · لوحات مصنع العاشر"]];
+const PAY=[["TRS-001","الخزينة الرئيسية","110101"],["BNK-001-01","البنك الأهلي — جاري","110201"]];
+const KN={invoice:"فاتورة",statement:"بيان"};
+const BAL={"ITM-0001|WH-001|invoice":1000,"ITM-0001|WH-002|invoice":500,"ITM-0002|WH-001|invoice":360,"ITM-0004|WH-001|invoice":96,
+ "ITM-0004|WH-002|invoice":600,"ITM-0006|WH-001|invoice":35,"ITM-0008|WH-001|invoice":5,"ITM-0010|WH-001|invoice":6,"ITM-0001|WH-001|statement":150};
+const AVG={"ITM-0001|invoice":18.5,"ITM-0001|statement":16,"ITM-0002|invoice":22,"ITM-0004|invoice":45,"ITM-0006|invoice":310,"ITM-0008|invoice":2400,"ITM-0010|invoice":5200};
+const LAST={"ITM-0001":18.2,"ITM-0002":21.5,"ITM-0004":44,"ITM-0006":305,"ITM-0008":2380,"ITM-0010":5150};
+const C=[
+ {no:"PUR-00001",date:"2026-11-05",sup:"SUB-001",sinv:"5520",einv:"EG-88123401",kind:"invoice",incl:0,cur:"EGP",rate:1,pay:"credit",due:"2026-12-05",box:"TRS-001",wh:"WH-001",prj:"",hd:0,note:"كابلات المرحلة الأولى",st:"posted",
+  lines:[{it:"ITM-0001",wh:"WH-001",u:1,q:10,p:1820,ds:0,tx:"VAT14"}]},
+ {no:"PUR-00002",date:"2026-11-12",sup:"SUB-003",sinv:"GC-2209",einv:"",kind:"invoice",incl:0,cur:"USD",rate:48.3,pay:"credit",due:"2027-01-11",box:"TRS-001",wh:"WH-001",prj:"Itec-001",hd:0,note:"كنترولرز مستوردة",st:"posted",
+  lines:[{it:"ITM-0010",wh:"WH-001",u:0,q:2,p:106,ds:0,tx:"VAT0"}]},
+ {no:"",date:"2026-11-27",sup:"SUB-002",sinv:"7781",einv:"",kind:"invoice",incl:0,cur:"EGP",rate:1,pay:"credit",due:"2027-01-11",box:"TRS-001",wh:"WH-001",prj:"Itec-001",hd:500,note:"توريد نوفمبر",st:"draft",
+  lines:[{it:"ITM-0001",wh:"WH-001",u:1,q:5,p:1850,ds:0,tx:"VAT14"},{it:"ITM-0004",wh:"WH-002",u:1,q:10,p:880,ds:5,tx:"VAT14"},
+   {it:"ITM-0009",wh:"WH-001",u:0,q:4,p:1200,ds:0,tx:"VAT14"},{it:"ITM-0011",wh:"",u:0,q:1,p:2500,ds:0,tx:"VAT14"}]}];
+let SEQ=2;
+const V={m:0,d:2,msg:"",mt:"ok",neg:0,cf:0,sel:-1,ext:0,stab:1,htab:1,lf:"all",showWh:1,showUnit:1,showDisc:1,
+ f:{it:"ITM-0006",wh:"WH-001",u:0,q:"1",p:"305",ds:"",tx:"VAT14"}};
+
+// ===== الحساب (نفس منطق النماذج الأولى)
+const sup=c=>SUP.find(s=>s[0]===c);const it=c=>IT.find(i=>i[0]===c);const wh=c=>WH.find(w=>w[0]===c);
+const r2=x=>Math.round((+x||0)*100)/100;
+const mf=n=>(+n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const m0=n=>(+n||0).toLocaleString("en-US",{maximumFractionDigits:3});
+const D=()=>C[V.d];const ed=()=>D().st==="draft";const dis=()=>ed()?'':'disabled';
+const rate=d=>d.cur==="EGP"?1:(+d.rate||0);
+const fac=l=>it(l.it)[4][l.u]?it(l.it)[4][l.u][1]:1;
+const bal=(i,w,k)=>BAL[`${i}|${w}|${k}`]||0;
+const coQty=(i,k)=>WH.filter(w=>!w[2]).reduce((s,w)=>s+bal(i,w[0],k),0);
+const avg=(i,k)=>AVG[`${i}|${k}`]||0;
+const addDays=(ds,n)=>{const x=new Date(ds+"T00:00:00Z");if(isNaN(x))return ds;x.setUTCDate(x.getUTCDate()+(+n||0));return x.toISOString().slice(0,10);};
+const reprice=(d,o)=>{const nr=rate(d);if(nr&&o&&nr!==o){d.lines.forEach(l=>{l.p=r2(l.p*o/nr);});d.hd=r2((+d.hd||0)*o/nr);}};
+function calc(d){const R=rate(d);const rows=d.lines.map(l=>{const g=r2(l.q*l.p);const ld=r2(g*(+l.ds||0)/100);return {l,g,ld,net:r2(g-ld)};});
+  const sn=r2(rows.reduce((s,r)=>s+r.net,0));let left=r2(Math.min(+d.hd||0,sn));const hd=left;
+  rows.forEach((r,i)=>{const sh=i===rows.length-1?left:r2(sn?hd*r.net/sn:0);left=r2(left-sh);r.sh=sh;r.na=r2(r.net-sh);
+    const tr=d.kind==="statement"?0:TX[r.l.tx][1]/100;r.tr=tr;if(d.incl){r.base=r2(r.na/(1+tr));r.vat=r2(r.na-r.base);}else{r.base=r.na;r.vat=r2(r.na*tr);}
+    r.tot=r2(r.base+r.vat);r.qb=Math.round(r.l.q*fac(r.l)*1e6)/1e6;r.eb=r2(r.base*R);r.ev=r2(r.vat*R);r.uc=r.qb?Math.round(r.eb/r.qb*1e6)/1e6:0;r.svc=!!it(r.l.it)[6];
+    // للعرض في الجدول: قبل الضريبة من غير خصم الفاتورة
+    r.pre=d.incl?r2(r.net/(1+tr)):r.net;});
+  const s=f=>r2(rows.reduce((a,r)=>a+r[f],0));
+  return {rows,sn,g:s("g"),ld:s("ld"),hd,hr:sn?r2(hd/sn*100):0,pre:s("pre"),base:s("base"),vat:s("vat"),tot:s("tot"),eb:s("eb"),ev:s("ev"),et:r2(s("eb")+s("ev")),
+   inv:r2(rows.filter(r=>!r.svc).reduce((a,r)=>a+r.eb,0)),svc:r2(rows.filter(r=>r.svc).reduce((a,r)=>a+r.eb,0))};}
+function lerr(d,r){const l=r.l,i=it(l.it);
+  if(!(+l.q>0))return ["no","الكمية لازم أكبر من صفر"];
+  if(+l.p<0)return ["no","السعر مايبقاش بالسالب"];
+  if(!i[6]&&!l.wh)return ["no","اختار المخزن"];
+  if(!i[6]&&wh(l.wh)[2])return ["no","المخزن الوهمي مالوش مشتريات"];
+  if(+l.p===0)return ["wr","السعر صفر — الصنف هيدخل من غير تكلفة"];
+  const lp=LAST[l.it];if(lp&&r.uc&&Math.abs(r.uc-lp)/lp>0.2)return ["wr",`السعر بعيد عن آخر سعر شراء (${mf(lp)} للـ${i[2]}) بأكتر من 20%`];
+  return null;}
+const dupInv=d=>d.sinv?C.find(x=>x!==d&&x.sup===d.sup&&x.sinv===d.sinv&&x.st==="posted"):null;
+function checks(d){const c=calc(d),r=[];const s=sup(d.sup);
+  r.push(s?["ok",`المورد: ${s[0]} «${s[1]}»`]:["no","اختار المورد"]);
+  if(!d.lines.length)r.push(["no","مفيش ولا صنف في الفاتورة"]);
+  c.rows.forEach((x,i)=>{const e=lerr(d,x);if(e)r.push([e[0],`سطر ${i+1} (${x.l.it}): ${e[1]}`]);});
+  const du=dupInv(d);if(du)r.push(["no",`رقم فاتورة المورد «${d.sinv}» اتسجل قبل كده لنفس المورد (${du.no})`]);else if(!d.sinv)r.push(["wr","رقم فاتورة المورد فاضي"]);
+  if(d.cur!=="EGP")r.push(+d.rate>0?["in",`العملة ${CUR[d.cur][0]} بسعر ${d.rate} — التكلفة والقيد بالجنيه`]:["no","اكتب سعر الصرف"]);
+  if(d.kind==="statement")r.push(["in","«بيان»: من غير ض.ق.م، والبضاعة بتدخل رصيد «بيان»"]);else if(!d.einv)r.push(["wr","الرقم الإلكتروني فاضي"]);
+  r.push(d.pay==="credit"?["in",`آجل — الاستحقاق ${d.due}`]:["in",`نقدي — سند صرف لوحده من «${PAY.find(p=>p[0]===d.box)[1]}»`]);
+  if(c.hd)r.push(["in",`خصم الفاتورة ${mf(c.hd)} اتوزّع على الأصناف بالقيمة وقلّل تكلفتها`]);
+  c.rows.filter(x=>!x.svc&&!avg(x.l.it,d.kind)&&!coQty(x.l.it,d.kind)).forEach(x=>r.push(["in",`${x.l.it} مالوش متوسط — هيبقى ${mf(x.uc)}`]));
+  if(c.svc)r.push(["in",`صنف خدمي ${mf(c.svc)} ← مصروف من غير مخزون`]);
+  if(V.cf&&ed())r.push(["no","الفاتورة اتعدّلت من جهاز تاني — اعمل «تحديث» الأول"]);
+  return r;}
+function je(d){const c=calc(d),s=sup(d.sup),r=[];if(!s)return [];
+  if(c.inv)r.push(["1105 المخزون",c.inv,0]);if(c.svc)r.push(["5201 تكلفة المبيعات — خدمات",c.svc,0]);if(c.ev)r.push(["110601 ض.ق.م — مدخلات",c.ev,0]);
+  r.push([`2101 الموردين — ${s[0]}`,0,c.et]);
+  if(d.pay==="cash"){const b=PAY.find(p=>p[0]===d.box);r.push([`2101 الموردين — ${s[0]} (سند صرف)`,c.et,0],[`${b[2]} ${b[1]}`,0,c.et]);}
+  return r;}
+function stockFx(d){const c=calc(d),m={};c.rows.filter(x=>!x.svc&&x.l.wh&&!wh(x.l.wh)[2]).forEach(x=>{const k=x.l.it;(m[k]||(m[k]={q:0,v:0}));m[k].q+=x.qb;m[k].v+=x.eb;});
+  return Object.keys(m).map(k=>{const Q=coQty(k,d.kind),A=avg(k,d.kind);const P=d.st==="posted";const q0=P?Q-m[k].q:Q;const a1=P?A:(q0+m[k].q?(q0*A+m[k].v)/(q0+m[k].q):0);
+   const a0=P?(q0>0?Math.max(0,(Q*A-m[k].v)/q0):0):A;return {k,q0,q1:q0+m[k].q,a0,a1};});}
+
+// ===== أجزاء الشاشة
+const esc=s=>String(s??"").replace(/"/g,"&quot;");
+const fl=(lab,inner,cls)=>`<div class="fl ${cls||''}"><label>${lab}</label>${inner}</div>`;
+const inH=(k,v,ph,cls)=>`<input class="in ${cls||''}" data-h="${k}" value="${esc(v)}" ${dis()} ${ph?`placeholder="${ph}"`:''}>`;
+const ro=v=>`<input class="in ro" value="${esc(v)}" readonly>`;
+const sel=(attr,opts,v,cls)=>`<select class="sl ${cls||''}" ${attr} ${dis()}>${opts.map(o=>`<option value="${o[0]}" ${String(v)===String(o[0])?'selected':''}>${o[1]}</option>`).join("")}</select>`;
+const lookup=inner=>`<div class="lkw">${inner}<span class="lkb" title="بحث">🔍</span></div>`;
+const btn=(t,ic,k,attr,on=true)=>`<span class="btn ${k} ${on?'':'off'}" ${on?attr:''}>${ic} ${t}</span>`;
+const stB=d=>d.st==="posted"?'<span class="st po">مرحّلة</span>':'<span class="st dr">مسودة</span>';
+function header(){const d=D(),E=ed();return `<div class="wbar"><span>🧾 فاتورة الشراء — A-H CODE</span><span class="x">— ❐ ✕</span></div>
+ <div class="body"><div class="hdr"><div><div class="ttl"><span class="ic">🧾</span>فاتورة الشراء ${stB(d)}</div><div class="sub">تسجيل فواتير الموردين — البضاعة بتدخل المخزن والقيد بيتعمل لوحده</div></div>
+ <div class="meta">المستخدم: مدير النظام<br>التاريخ: 27-11-2026<br>الوقت: 17:48:51</div></div>
+ <div class="tbar"><span class="btn g sq" title="بحث عن فاتورة (F1)">🔍</span>${btn("جديد","＋","g",'data-new="1"')}${btn("تكرار الفاتورة","⧉","g",'data-dup="1"')}${btn("حفظ","💾","g",'data-save="1"',E)}
+ ${btn("تعديل","✎","b",'data-edit="1"',!E)}${btn("تحديث","⟳","b",'data-ref="1"')}${btn("ترحيل","✔✔","b",'data-post="1"',E)}${btn("إلغاء الترحيل","↩","b",'data-unpost="1"',!E)}
+ ${btn("حذف","🗑","r",'data-del="1"',E)}${btn("إلغاء","✕","w",'data-can="1"',E)}${btn("خروج","⇥","k",'')}${btn("طباعة","🖨","k",'')}
+ <label class="ck"><input type="checkbox" data-show="showWh" ${V.showWh?'checked':''}>إظهار عمود المخزن</label><label class="ck"><input type="checkbox" data-show="showUnit" ${V.showUnit?'checked':''}>إظهار عمود الوحدة</label><label class="ck"><input type="checkbox" data-show="showDisc" ${V.showDisc?'checked':''}>إظهار الخصم</label></div>`;}
+const msgs=()=>(V.cf&&ed()?'<div class="cf">⚠ الفاتورة دي اتعدّلت من جهاز تاني بعد ما فتحتها — «حفظ» و«ترحيل» هيترفضوا لحد ما تعمل «⟳ تحديث» (مفيش حد بيمسح شغل التاني)</div>':'')+(V.msg?`<div class="msg ${V.mt}">${V.msg}</div>`:'');
+// حقول الرأس
+const F={
+ no:()=>fl("رقم الفاتورة",ro(D().no||"بيتولّد مع الترحيل")),
+ date:()=>fl("التاريخ",inH("date",D().date)),
+ sup:()=>fl("اسم المورد",lookup(sel('data-h="sup"',SUP.map(s=>[s[0],`${s[0]} — ${s[1]}`]),D().sup))),
+ vat:()=>fl("الرقم الضريبي للمورد",ro(sup(D().sup)[6]||"—")),
+ sinv:()=>fl("رقم فاتورة المورد",inH("sinv",D().sinv,"رقمها عند المورد",dupInv(D())?'bad':'')),
+ kind:()=>fl("النوع",sel('data-h="kind"',[["invoice","فاتورة"],["statement","بيان"]],D().kind)),
+ pay:()=>fl("نوع الدفع",sel('data-h="pay"',[["credit","آجل"],["cash","نقدي"]],D().pay)),
+ wh:()=>fl("المخزن الافتراضي",sel('data-h="wh"',WH.map(w=>[w[0],w[1]+(w[2]?' 👻':'')]),D().wh)),
+ cur:()=>{const d=D();return fl("العملة وسعر الصرف",`<div class="lkw">${sel('data-h="cur"',Object.keys(CUR).map(k=>[k,`${k} — ${CUR[k][0]}`]),d.cur)}${d.cur!=="EGP"?`<input class="in n" data-h="rate" value="${d.rate}" ${dis()} style="max-width:80px">`:''}</div>`);},
+ incl:()=>fl("الأسعار",sel('data-h="incl"',[["0","غير شاملة الضريبة"],["1","شاملة الضريبة"]],D().incl)),
+ due:()=>{const d=D();return d.pay==="credit"?fl("تاريخ الاستحقاق",inH("due",d.due)):fl("الدفع من",sel('data-h="box"',PAY.map(p=>[p[0],p[1]]),d.box));},
+ prj:()=>fl("أمر التوريد",sel('data-h="prj"',PRJ,D().prj)),
+ einv:()=>fl("الرقم الإلكتروني",inH("einv",D().einv,D().kind==="statement"?"مالوش (بيان)":"اختياري")),
+ note:()=>fl("ملاحظات",inH("note",D().note))};
+const grid=(keys,cls)=>`<div class="${cls||'grid4'}">${keys.map(k=>F[k]()).join("")}</div>`;
+const extToggle=()=>`<div class="tg" data-ext="1">${V.ext?'▾':'▸'}&nbsp;&nbsp; بيانات إضافية <small>العملة · الأسعار شاملة؟ · ${D().pay==="credit"?'الاستحقاق':'الدفع من'} · أمر التوريد · الرقم الإلكتروني · ملاحظات</small></div>${V.ext?`<div class="card">${grid(["cur","incl","due","prj","einv","note"],"grid3")}</div>`:''}`;
+const invCard=()=>`<div><div class="secT">📅 بيانات الفاتورة</div>${grid(["no","date","sup","vat","sinv","kind","pay","wh"])}</div>${extToggle()}`;
+// جدول التفاصيل
+function table(o={}){const d=D(),c=calc(d),E=ed()&&o.inline;
+  const cols=["رقم الصنف","اسم الصنف",V.showWh&&"المخزن",V.showUnit&&"الوحدة","الكمية","السعر",V.showDisc&&"الخصم %","إجمالي قبل الضريبة","نسبة الضريبة","قيمة الضريبة","إجمالي شامل الضريبة"].filter(Boolean);
+  const body=c.rows.map((r,i)=>{const l=r.l,x=it(l.it),e=lerr(d,r);
+   const whC=x[6]?'—':E?sel(`data-l="${i}|wh"`,WH.map(w=>[w[0],w[1]]),l.wh,e&&e[1].includes("الوهمي")?'bad':''):wh(l.wh)[1];
+   const uC=E&&x[4].length>1?sel(`data-l="${i}|u"`,x[4].map((u,j)=>[j,u[0]]),l.u):x[4][l.u][0];
+   const q=E?`<input class="in q n" data-l="${i}|q" value="${l.q}">`:m0(l.q);
+   const p=E?`<input class="in p n" data-l="${i}|p" value="${l.p}">`:mf(l.p);
+   const ds=E?`<input class="in d n" data-l="${i}|ds" value="${l.ds||''}" placeholder="0">`:(l.ds?l.ds+'%':'—');
+   const tx=d.kind==="statement"?'—':E?sel(`data-l="${i}|tx"`,Object.keys(TX).map(k=>[k,TX[k][0]]),l.tx):TX[l.tx][0];
+   return `<tr class="${V.sel===i?'sel':''}" data-row="${i}"><td>${l.it}</td><td class="nm">${x[1]}${x[6]?' <span class="ln-i" style="display:inline">(خدمي)</span>':''}${e?`<span class="${e[0]==='no'?'ln-e':'ln-w'}">${e[0]==='no'?'✖':'⚠'} ${e[1]}</span>`:''}</td>
+   ${V.showWh?`<td>${whC}</td>`:''}${V.showUnit?`<td>${uC}</td>`:''}<td>${q}</td><td>${p}</td>${V.showDisc?`<td>${ds}</td>`:''}<td>${mf(r.pre)}</td><td>${tx}</td><td>${mf(r.vat)}</td><td><b>${mf(r.tot)}</b></td></tr>`;}).join("");
+  return `<div class="tblw" ${o.h?`style="max-height:${o.h}px;min-height:${o.h}px"`:''}><table class="tbl"><tr>${cols.map(h=>`<th>${h}</th>`).join("")}</tr>${body||`<tr><td colspan="${cols.length}" class="empty">مفيش أصناف — ضيف من «إضافة صنف» تحت</td></tr>`}</table></div>
+   <div class="tfoot"><span>إجمالي الأصناف قبل الضريبة</span><b>${mf(c.pre)}</b></div>`;}
+const details=o=>`<div class="card" style="flex:1"><div class="secT">☰ تفاصيل الفاتورة <span style="margin-right:auto;color:#6B7280;font-size:12px;font-weight:700">${D().lines.length} صنف · اضغط على سطر عشان تعدّله تحت</span></div>${table(o)}</div>`;
+// الإجماليات
+function totals(){const d=D(),c=calc(d);return `<div class="sr"><span>إجمالي الفاتورة قبل الضريبة</span><b>${mf(c.pre)}</b></div>
+ <div class="sr"><span>نسبة خصم الفاتورة</span><span style="display:flex;gap:6px;align-items:center"><input class="in n" data-hr="1" value="${c.hr.toFixed(2)}" ${dis()}>%</span></div>
+ <div class="sr"><span>قيمة الخصم</span><input class="in n" data-h="hd" value="${mf(c.hd).replace(/,/g,'')}" ${dis()}></div>
+ <div class="sr"><span>الإجمالي بعد الخصم</span><b>${mf(c.base)}</b></div><div class="sr"><span>قيمة الضريبة</span><b>${mf(c.vat)}</b></div>
+ <div class="net"><span>الإجمالي النهائي شامل الضريبة (${d.cur})</span><b>${mf(c.tot)}</b></div>${d.cur!=="EGP"?`<div class="net egp"><span>بالجنيه × ${d.rate}</span><b>${mf(c.et)}</b></div>`:''}`;}
+const ckList=()=>`<div class="ckl">${checks(D()).map(c=>`<div class="${c[0]}"><b>${{ok:"✔",no:"✖",wr:"⚠",in:"ℹ"}[c[0]]}</b><span>${c[1]}</span></div>`).join("")}</div>`;
+function jeTbl(){const j=je(D());const dr=r2(j.reduce((a,x)=>a+x[1],0)),cr=r2(j.reduce((a,x)=>a+x[2],0));
+  return `<table class="mini"><tr><th>الحساب</th><th class="n">مدين</th><th class="n">دائن</th></tr>${j.map(x=>`<tr><td>${x[0]}</td><td class="n">${x[1]?mf(x[1]):''}</td><td class="n">${x[2]?mf(x[2]):''}</td></tr>`).join("")}
+   <tr><td><b>${dr===cr?'<span class="ok-l">✔ متوازن</span>':'<span class="bad-l">✖ مش متوازن</span>'}</b></td><td class="n"><b>${mf(dr)}</b></td><td class="n"><b>${mf(cr)}</b></td></tr></table>`;}
+const stockTbl=()=>{const d=D();return `<table class="mini"><tr><th>الصنف</th><th class="n">الرصيد قبل ← بعد</th><th class="n">المتوسط قبل ← بعد</th></tr>${stockFx(d).map(x=>`<tr><td>${x.k}</td><td class="n">${m0(x.q0)} ← <b>${m0(x.q1)}</b></td><td class="n">${x.a0?mf(x.a0):'—'} ← <b>${mf(x.a1)}</b></td></tr>`).join("")||'<tr><td colspan="3">مفيش أصناف مخزنية</td></tr>'}</table>`;};
+const side=o=>{let inner=`<div class="secT">◔ الإجماليات</div>${totals()}`;
+  if(o.side==="review")inner+=`<div class="secT" style="margin-top:6px">🔎 مراجعة قبل الترحيل</div>${ckList()}`;
+  if(o.side==="tabs"){const T=["الإجماليات","القيد","المخزون","المراجعة"];const nb=checks(D()).filter(x=>x[0]==="no").length;
+    inner=`<div class="stabs">${T.map((t,i)=>`<span class="${V.stab===i+1?'on':''}" data-stab="${i+1}">${t}${i===3&&nb?` ✖${nb}`:''}</span>`).join("")}</div>${V.stab===1?totals():V.stab===2?jeTbl():V.stab===3?stockTbl():ckList()}`;}
+  return `<div class="card side">${inner}</div>`;};
+// إضافة صنف (تحت)
+function addCard(o={}){const d=D(),f=V.f,x=it(f.it),E=ed();const isEdit=V.sel>=0&&d.lines[V.sel];
+  const av=x[6]?'خدمي — مالوش مخزون':`المتاح في «${wh(f.wh)[1]}»: <b>${m0(bal(f.it,f.wh,d.kind))} ${x[2]}</b>`;
+  const rich=o.rich?`<div class="grid4" style="padding:0;margin-top:10px;grid-template-columns:1.4fr 1fr 1fr 1fr">
+    <div><table class="mini"><tr><th>المخزن</th><th class="n">فاتورة</th><th class="n">بيان</th></tr>${WH.map(w=>`<tr><td>${w[1]}${w[2]?' 👻':''}</td><td class="n"><span class="wcell ${w[0]===f.wh&&d.kind==='invoice'?'up':''}">${m0(bal(f.it,w[0],"invoice"))}</span></td><td class="n"><span class="wcell ${w[0]===f.wh&&d.kind==='statement'?'up':''}">${m0(bal(f.it,w[0],"statement"))}</span></td></tr>`).join("")}</table></div>
+    <div class="sr" style="flex-direction:column;align-items:flex-start"><small>آخر سعر شراء</small><b>${LAST[f.it]?mf(LAST[f.it])+' / '+x[2]:'—'}</b></div>
+    <div class="sr" style="flex-direction:column;align-items:flex-start"><small>المتوسط دلوقتي (${KN[d.kind]})</small><b>${avg(f.it,d.kind)?mf(avg(f.it,d.kind)):'— مالوش'}</b></div>
+    <div class="sr" style="flex-direction:column;align-items:flex-start"><small>إجمالي السطر</small><b>${mf(r2((+f.q||0)*(+f.p||0)*(1-(+f.ds||0)/100)))}</b></div></div>`:'';
+  return `<div class="card"><div class="secT">🏷 ${isEdit?`تعديل السطر ${V.sel+1}`:'إضافة صنف'}</div><div class="add">
+   ${fl("الصنف",lookup(`<select class="sl" data-f="it" ${E?'':'disabled'}>${IT.map(i=>`<option value="${i[0]}" ${f.it===i[0]?'selected':''}>${i[1]}</option>`).join("")}</select>`),"it")}
+   ${fl("رقم الصنف",`<input class="in" data-f="code" value="${f.it}" ${E?'':'disabled'} placeholder="ITM-0001">`,"s")}
+   ${fl("المخزن",`<select class="sl" data-f="wh" ${E&&!x[6]?'':'disabled'}>${WH.map(w=>`<option value="${w[0]}" ${f.wh===w[0]?'selected':''}>${w[1]}</option>`).join("")}</select>`,"m")}
+   ${fl("الوحدة",`<select class="sl" data-f="u" ${E?'':'disabled'}>${x[4].map((u,j)=>`<option value="${j}" ${+f.u===j?'selected':''}>${u[0]}</option>`).join("")}</select>`,"s")}
+   ${fl("الكمية",`<input class="in n" data-f="q" value="${f.q}" ${E?'':'disabled'}>`,"s")}
+   ${fl("السعر",`<input class="in n" data-f="p" value="${f.p}" ${E?'':'disabled'}>`,"s")}
+   ${o.rich?fl("الخصم %",`<input class="in n" data-f="ds" value="${f.ds}" ${E?'':'disabled'} placeholder="0">`,"s")+fl("الضريبة",`<select class="sl" data-f="tx" ${E&&d.kind!=='statement'?'':'disabled'}>${Object.keys(TX).map(k=>`<option value="${k}" ${f.tx===k?'selected':''}>${TX[k][0]}</option>`).join("")}</select>`,"s"):''}
+   ${btn(isEdit?"تحديث السطر":"إضافة إلى الفاتورة",isEdit?"✎":"＋",isEdit?"b":"g",isEdit?'data-upd="1"':'data-add="1"',E)}
+   ${btn(isEdit?"سطر جديد":"تفريغ","✎","w",'data-clr="1"',E)}${btn("حذف الصنف","🗑","w",'data-rm="1"',E&&isEdit)}</div>
+   <div class="info"><span>${av}</span>${!x[6]&&LAST[f.it]&&!o.rich?`<span>آخر سعر شراء: <b>${mf(LAST[f.it])}</b> / ${x[2]}</span>`:''}<span>الوحدة الأساسية: ${x[2]}${x[4][f.u]&&x[4][f.u][1]>1?` · «${x[4][f.u][0]}» = ${x[4][f.u][1]} ${x[2]}`:''}</span><span style="color:#94A3B8">Enter في الكمية أو السعر = إضافة</span></div>${rich}</div>`;}
+// قائمة الفواتير (النموذج 10)
+const listPanel=()=>{const L=C.map((d,i)=>[d,i]).filter(([d])=>V.lf==="all"||(V.lf==="draft")===(d.st==="draft"));return `<div class="card lst"><div class="secT">📂 الفواتير</div><input class="in" placeholder="🔍 بحث برقم أو مورد…"><div class="fchips">${[["all","الكل"],["draft","مسودات"],["posted","مرحّلة"]].map(x=>`<span class="${V.lf===x[0]?'on':''}" data-lf="${x[0]}">${x[1]}</span>`).join("")}</div>
+ ${L.map(([d,i])=>`<div class="lc ${d.st==='draft'?'dr':''} ${V.d===i?'sel':''}" data-doc="${i}"><div class="r"><b>${d.no||'مسودة'}</b><span>${d.date}</span></div><div class="r"><span>${sup(d.sup)[1]}</span><b class="v">${mf(calc(d).tot)} ${d.cur}</b></div><div class="r">${stB(d)}<span>${d.pay==="cash"?'نقدي':'آجل'}</span></div></div>`).join("")}<div style="color:#6B7280;font-size:12px;font-weight:700">${C.length} فاتورة · السنة 2026</div></div>`;};
+// كارت المورد (النموذج 5)
+const supCard=()=>{const d=D(),s=sup(d.sup),c=calc(d);const after=d.pay==="credit"&&ed()?s[5]+c.et:s[5];const n=C.filter(x=>x.sup===d.sup&&x.st==="posted").length;
+ return `<div class="card scard" style="width:340px;flex-shrink:0"><div class="tp"><span class="av">${s[1].slice(0,1)}</span><div><b style="font-size:15px">${s[1]}</b><div style="color:#6B7280;font-size:12px;font-weight:700">${s[0]} · ${s[6]||'من غير رقم ضريبي'}</div></div></div>
+ <div class="kv"><span>الرصيد دلوقتي (لينا عليه)</span><b>${mf(s[5])}</b></div>${ed()?`<div class="kv"><span>بعد الفاتورة دي</span><b style="color:${d.pay==='credit'?'#B91C1C':'#111827'}">${mf(after)}</b></div>`:''}
+ <div class="kv"><span>مدة السداد</span><b>${s[2]} يوم</b></div><div class="kv"><span>العملة · الضريبة</span><b>${s[3]} · ${TX[s[4]][0]}</b></div><div class="kv" style="border:none"><span>فواتير مرحّلة</span><b>${n}</b></div></div>`;};
+
+// ===== النماذج العشرة — كلها: الأزرار فوق ← البيانات ← التفاصيل + الإجماليات ← «إضافة صنف» تحت
+const screen=(inner,o={})=>`<div class="scr ${o.cmp?'cmp':''}">${header()}${msgs()}${inner}${addCard(o)}</div></div>`;
+const M=[
+["زي فاتورة المبيعات السعودية بالظبط","نفس الترتيب والأحجام والألوان: بيانات الفاتورة في صفين (4 خانات)، و«▸ بيانات إضافية» مقفولة، والإجماليات يمين (340) والتفاصيل جنبها، و«إضافة صنف» تحت. اضغط على سطر ← بينزل تحت للتعديل.",
+ ()=>screen(`${invCard()}<div class="row">${side({})}${details({})}</div>`)],
+["الإجماليات شريط تحت الجدول","الجدول بعرض الشاشة كلها (أعمدة أكتر تبان)، والإجماليات صف كروت تحته بدل العمود الجانبي.",
+ ()=>{const d=D(),c=calc(d);return screen(`${invCard()}<div class="card"><div class="secT">☰ تفاصيل الفاتورة</div>${table({})}<div class="strip">
+  <div class="sr"><small>قبل الضريبة</small><b>${mf(c.pre)}</b></div><div class="sr"><small>نسبة الخصم %</small><input class="in n" data-hr="1" value="${c.hr.toFixed(2)}" ${dis()}></div>
+  <div class="sr"><small>قيمة الخصم</small><input class="in n" data-h="hd" value="${mf(c.hd).replace(/,/g,'')}" ${dis()}></div><div class="sr"><small>بعد الخصم</small><b>${mf(c.base)}</b></div>
+  <div class="sr"><small>الضريبة</small><b>${mf(c.vat)}</b></div><div class="net"><small>النهائي شامل الضريبة (${d.cur})</small><b>${mf(c.tot)}</b></div></div></div>`);}],
+["+ مراجعة قبل الترحيل تحت الإجماليات","زي 1 بالظبط، بس تحت الإجماليات قايمة بتتحسب وانت بتكتب (✔ ✖ ⚠ ℹ) — «ترحيل» بيوقف لو فيها ✖ (زي شاشة التحويل).",
+ ()=>screen(`${invCard()}<div class="row">${side({side:"review"})}${details({})}</div>`)],
+["العمود الجانبي بتبويبات: الإجماليات · القيد · المخزون · المراجعة","نفس 1، والعمود اليمين فيه 4 تبويبات: تشوف القيد اللي هيتعمل، والرصيد والمتوسط قبل / بعد، والمراجعة — من غير ما تفتح شاشة تانية.",
+ ()=>screen(`${invCard()}<div class="row">${side({side:"tabs"})}${details({})}</div>`)],
+["كارت المورد جنب بيانات الفاتورة","بيانات الفاتورة في 3 خانات، وعلى الشمال كارت المورد (رصيده قبل وبعد الفاتورة · مدة السداد · العملة) — بتعرف «احنا مديونين له بكام» وانت بتكتب.",
+ ()=>screen(`<div class="row"><div style="flex:1"><div class="secT">📅 بيانات الفاتورة</div>${grid(["no","date","sup","sinv","kind","pay","wh","due","cur"],"grid3")}</div>${supCard()}</div>${extToggle()}<div class="row">${side({})}${details({})}</div>`)],
+["«إضافة صنف» فيها كل حاجة عن الصنف","تحت: الخصم والضريبة كمان، وتحتهم رصيد الصنف في كل مخزن (فاتورة / بيان) وآخر سعر شراء والمتوسط — قبل ما تضيفه.",
+ ()=>screen(`${invCard()}<div class="row">${side({})}${details({})}</div>`,{rich:1})],
+["التعديل في الجدول نفسه + إضافة صنف تحت","الإضافة من تحت زي 1، بس الكمية والسعر والخصم والمخزن والوحدة والضريبة بتتعدّل في الجدول على طول من غير ما تنزل تحت.",
+ ()=>screen(`${invCard()}<div class="row">${side({})}${details({inline:1})}</div>`)],
+["مضغوط للشاشات الصغيرة (لابتوب 768)","نفس 1 بالظبط بأحجام أصغر (الأزرار والصفوف والكروت) — عشان الجدول ياخد أصناف أكتر على الشاشة الصغيرة. ينفع يبقى أوتوماتيك حسب طول الشاشة زي الفاتورة السعودية.",
+ ()=>screen(`${invCard()}<div class="row">${side({})}${details({h:300})}</div>`,{cmp:1})],
+["بيانات الفاتورة بتبويبات","البيانات في 3 تبويبات صغيرة (الأساسية · الدفع والعملة · إضافية) بدل صفين + «▸» — الجدول بياخد مساحة أكبر.",
+ ()=>{const T=[["الأساسية",["no","date","sup","vat","sinv","kind","wh","prj"]],["الدفع والعملة",["pay","due","cur","incl"]],["إضافية",["einv","note"]]];
+  return screen(`<div class="htabs">${T.map((t,i)=>`<span class="${V.htab===i+1?'on':''}" data-htab="${i+1}">${t[0]}</span>`).join("")}</div><div class="hpane">${grid(T[V.htab-1][1])}</div><div class="row">${side({})}${details({h:330})}</div>`);}],
+["+ قائمة الفواتير على الشمال","نفس 1، وعلى الشمال قايمة الفواتير (بحث · مسودات / مرحّلة) — تفتح أي فاتورة بضغطة بدل شاشة البحث (F1).",
+ ()=>`<div class="row" style="align-items:flex-start"><div style="flex:1;min-width:0">${screen(`${invCard()}<div class="row">${side({})}${details({})}</div>`)}</div>${listPanel()}</div>`],
+];
+
+const NOTE=`<b>📌 الجديد هنا:</b> نفس الفاتورة ونفس المنطق بتوع <a href="01_purchase_invoice.html">النماذج الأولى</a>، بس <b>بشكل «فاتورة المبيعات السعودية»</b> (<span dir="ltr">D:\\PHASEINV2\\InvoicesKSA_publish</span> — قريته بس): الأزرار بأيقونات (أخضر للإضافة والحفظ · أزرق للتعديل والترحيل · أحمر للحذف · أبيض للإلغاء · رمادي للخروج والطباعة) · بيانات الفاتورة خانات العنوان فوقها في 4 أعمدة · «▸ بيانات إضافية» بتتفتح · الإجماليات في عمود 340 يمين (نسبة الخصم وقيمته بيتحسبوا من بعض) · <b>«إضافة صنف» تحت</b> (الصنف + 🔍 · رقم الصنف · الكمية · السعر · «إضافة إلى الفاتورة» · «حذف الصنف») · تشيك بوكس «إظهار عمود …» في شريط الأزرار.
+<ul>
+<li><b>اللي زاد عشان دي فاتورة شراء:</b> المخزن والوحدة على كل سطر · المتاح وآخر سعر شراء تحت خانة الصنف · فاتورة / بيان · آجل / نقدي · العملة · رقم فاتورة المورد · «ترحيل» و«إلغاء الترحيل» بدل «اعتماد».</li>
+<li>اللي ماخدتوش من الفاتورة السعودية: «حفظ وإرسال واتساب» · «حذف الكل» · «إظهار الختم / أعمدة الذهب» · «بيانات المرحلة الثانية» (ZATCA) — ولو عايز أي حاجة منهم قول.</li>
+<li>جرّب: اضغط على سطر (بينزل تحت ويبقى «تحديث السطر») · Enter في الكمية = إضافة · اكتب كود في «رقم الصنف» · «ترحيل» ثم «إلغاء الترحيل» · والشريط الأصفر فوق كل نموذج: 🔑 الصلاحية و🔁 جهاز تاني.</li>
+</ul>`;
+const QS=`<b>❓ محتاج منك:</b>
+<ol>
+<li><b>رقم النموذج</b> من هنا (1–10) — ولو عايز تخلط قول (مثلاً «1 + كارت المورد من 5 + التبويبات من 4»).</li>
+<li><b>الـ 20 سؤال</b> بتوعين فاتورة الشراء في <a href="01_purchase_invoice.html">ملف النماذج الأولى</a> لسه محتاجين ردّك (أو «بالاقتراح»).</li>
+<li><b>شكل الفاتورة السعودية يبقى لكل الفواتير؟</b> (المشتريات · مرتجع المشتريات · المبيعات · مرتجع المبيعات) — اقتراحي أيوه عشان كلهم يبقوا شبه بعض.</li>
+<li><b>الألوان:</b> أخضر الفاتورة السعودية <span dir="ltr">#00843D</span> (مستخدم هنا) ولا أخضر Hr GAD <span dir="ltr">#137A38</span> بتاع باقي البرنامج؟ قريبين جداً — اقتراحي أخضر البرنامج عشان الشاشات تبقى زي بعض.</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;document.getElementById("qs").innerHTML=QS;
+  document.getElementById("mnav").innerHTML=`<b>النموذج:</b>${M.map((m,i)=>`<span class="${V.m===i?'on':''}" data-m="${i}" title="${m[0]}">${i+1}</span>`).join("")}<div class="go"><span data-m="${Math.max(0,V.m-1)}">→ السابق</span><span data-m="${Math.min(M.length-1,V.m+1)}">التالي ←</span></div>`;
+  const m=M[V.m];
+  document.getElementById("page").innerHTML=`<h2 class="mh"><i>${V.m+1}</i>${m[0]}</h2><p class="md">${m[1]}</p>
+   <div class="demo">🧪 للتجربة بس (مش جزء من الشاشة): <span class="chip ${V.neg?'on':''}" data-neg="1">🔑 صلاحية «من غير رصيد»: ${V.neg?'عنده':'مالوش'}</span><span class="chip bl" data-other="1">🔁 جهاز تاني ${ed()?'عدّل الفاتورة':'صرف من البضاعة'}</span><span>الفاتورة: ${C.map((d,i)=>`<span class="chip ${V.d===i?'on':''}" data-doc="${i}">${d.no||'مسودة'}</span>`).join(" ")}</span></div>${m[2]()}`;
+}
+function say(t,mt="ok"){V.msg=t;V.mt=mt;}
+function loadF(i){const l=D().lines[i];V.sel=i;V.f={it:l.it,wh:l.wh||D().wh,u:l.u,q:String(l.q),p:String(l.p),ds:String(l.ds||""),tx:l.tx};}
+function clearF(keep){const d=D();V.sel=-1;const c=keep||V.f.it;const x=it(c);V.f={it:c,wh:d.wh,u:0,q:"1",p:LAST[c]?String(r2(LAST[c]/rate(d))):"0",ds:"",tx:sup(d.sup)[4]==="VAT0"?"VAT0":x[5]};}
+function lineFromF(){const d=D(),f=V.f,x=it(f.it);return {it:f.it,wh:x[6]?"":f.wh,u:+f.u||0,q:+f.q||0,p:+f.p||0,ds:+f.ds||0,tx:d.kind==="statement"?f.tx:f.tx};}
+function post(d){if(V.cf){say("✖ مارحّلتش: الفاتورة اتعدّلت من جهاز تاني — اعمل «⟳ تحديث» الأول","no");return;}
+  const b=checks(d).filter(c=>c[0]==="no");if(b.length){say("✖ مارحّلتش: "+b[0][1]+(b.length>1?` (و${b.length-1} تاني)`:""),"no");return;}
+  const c=calc(d);c.rows.filter(r=>!r.svc).forEach(r=>{const k=r.l.it+"|"+d.kind;const Q=coQty(r.l.it,d.kind),A=avg(r.l.it,d.kind);AVG[k]=Math.round((Q*A+r.eb)/(Q+r.qb)*1e6)/1e6;const bk=`${r.l.it}|${r.l.wh}|${d.kind}`;BAL[bk]=r2((BAL[bk]||0)+r.qb);LAST[r.l.it]=r.uc;});
+  if(d.pay==="credit")sup(d.sup)[5]=r2(sup(d.sup)[5]+c.et);
+  if(!d.no){SEQ++;d.no="PUR-"+String(SEQ).padStart(5,"0");}d.st="posted";V.sel=-1;
+  say(`✔ اترحّلت ${d.no}: البضاعة دخلت المخزن والقيد اتعمل بـ ${mf(c.et)} جنيه${d.pay==="cash"?' + سند صرف':''}`);}
+function unpost(d){const c=calc(d);const bad=c.rows.find(r=>!r.svc&&bal(r.l.it,r.l.wh,d.kind)-r.qb<0);
+  if(bad&&!V.neg){say(`✖ إلغاء الترحيل هيخلّي ${bad.l.it} في «${wh(bad.l.wh)[1]}» بالسالب (البضاعة اتصرفت بعد الفاتورة) — محتاج صلاحية «من غير رصيد»`,"no");return;}
+  c.rows.filter(r=>!r.svc).forEach(r=>{const k=r.l.it+"|"+d.kind;const Q=coQty(r.l.it,d.kind),A=avg(r.l.it,d.kind);const q0=Q-r.qb;if(q0>0)AVG[k]=Math.max(0,Math.round((Q*A-r.eb)/q0*1e6)/1e6);const bk=`${r.l.it}|${r.l.wh}|${d.kind}`;BAL[bk]=r2((BAL[bk]||0)-r.qb);});
+  if(d.pay==="credit")sup(d.sup)[5]=r2(sup(d.sup)[5]-c.et);
+  d.st="draft";say(`↩ اتلغى ترحيل ${d.no} — رجعت مسودة والرقم ثابت`,"inf");}
+function other(){const d=D();
+  if(d.st==="posted"){const r=calc(d).rows.find(x=>!x.svc&&bal(x.l.it,x.l.wh,d.kind)>=2);if(r){const bk=`${r.l.it}|${r.l.wh}|${d.kind}`;const take=r2(BAL[bk]-Math.max(0,r.qb-2));BAL[bk]=r2(BAL[bk]-take);say(`🔁 جهاز تاني صرف ${m0(take)} ${it(r.l.it)[2]} «${it(r.l.it)[1]}» — جرّب «إلغاء الترحيل» دلوقتي`,"inf");}else say("مفيش رصيد كفاية للتجربة","no");return;}
+  V.cf=1;say("🔁 جهاز تاني فتح نفس الفاتورة وعدّل فيها وحفظ — جرّب «حفظ» دلوقتي","inf");}
+function setSup(d,c){const s=sup(c),o=rate(d);d.sup=c;d.cur=s[3];d.rate=CUR[s[3]][1];reprice(d,o);d.due=addDays(d.date,s[2]);d.lines.forEach(l=>{l.tx=s[4]==="VAT0"?"VAT0":it(l.it)[5];});if(c==="SUB-000")d.pay="cash";}
+document.addEventListener("change",e=>{const t=e.target,d=D();
+  if(t.dataset.show){V[t.dataset.show]=t.checked?1:0;render();return;}
+  if(t.dataset.hr!==undefined){const c=calc(d);d.hd=r2(c.sn*Math.max(0,Math.min(100,+t.value||0))/100);V.msg="";render();return;}
+  if(t.dataset.h){const k=t.dataset.h,v=t.value;
+    if(k==="sup")setSup(d,v);else if(k==="hd")d.hd=Math.max(0,+String(v).replace(/,/g,"")||0);else if(k==="rate")d.rate=Math.max(0,+v||0);else if(k==="incl")d.incl=+v;
+    else if(k==="date"){d.date=v;if(d.pay==="credit")d.due=addDays(v,sup(d.sup)[2]);}else if(k==="cur"){const o=rate(d);d.cur=v;d.rate=CUR[v][1];reprice(d,o);}
+    else if(k==="pay"){d.pay=v;if(v==="credit")d.due=addDays(d.date,sup(d.sup)[2]);}else d[k]=v;V.msg="";render();return;}
+  if(t.dataset.l){const [i,f]=t.dataset.l.split("|");const l=d.lines[+i];if(["q","p","ds"].includes(f))l[f]=+t.value||0;else if(f==="u")l.u=+t.value;else l[f]=t.value;V.msg="";render();return;}
+  if(t.dataset.f){const k=t.dataset.f;if(k==="it"){clearF(t.value);}else if(k==="code"){const c=t.value.trim().toUpperCase();if(it(c))clearF(c);else say(`✖ الكود «${c}» مش موجود`,"no");}
+    else{V.f[k]=t.value;if(k==="u"){const x=it(V.f.it);V.f.p=LAST[V.f.it]?String(r2(LAST[V.f.it]*x[4][+t.value][1]/rate(d))):V.f.p;}}render();return;}
+});
+document.addEventListener("keydown",e=>{const t=e.target;
+  if(e.key==="Enter"&&t.dataset&&["q","p","ds"].includes(t.dataset.f)){t.dispatchEvent(new Event("change",{bubbles:true}));const b=document.querySelector("[data-add],[data-upd]");if(b)b.click();return;}
+  if(t.matches&&t.matches("input,select,textarea"))return;
+  if(e.key==="ArrowLeft"&&V.m<M.length-1){V.m++;render();}if(e.key==="ArrowRight"&&V.m>0){V.m--;render();}});
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option"))return;
+  const g=s=>e.target.closest(s);const d=D();let x;
+  if(x=g("[data-m]")){V.m=+x.dataset.m;V.msg="";render();window.scrollTo({top:document.getElementById("mnav").offsetTop-60,behavior:"smooth"});return;}
+  if(g("[data-neg]")){V.neg=V.neg?0:1;V.msg="";render();return;}
+  if(g("[data-other]")){other();render();return;}
+  if(x=g("[data-doc]")){V.d=+x.dataset.doc;V.msg="";V.cf=0;clearF();render();return;}
+  if(g("[data-ext]")){V.ext=V.ext?0:1;render();return;}
+  if(x=g("[data-stab]")){V.stab=+x.dataset.stab;render();return;}
+  if(x=g("[data-htab]")){V.htab=+x.dataset.htab;render();return;}
+  if(x=g("[data-lf]")){V.lf=x.dataset.lf;render();return;}
+  if(g("[data-ref]")){V.cf=0;say("⟳ اتحدّثت من القاعدة — آخر إصدار للفاتورة قدامك","inf");render();return;}
+  if(g("[data-save]")){if(V.cf)say("✖ ماتحفظتش: الفاتورة اتعدّلت من جهاز تاني بعد ما فتحتها — اعمل «⟳ تحديث» وراجع","no");else say("💾 اتحفظت مسودة (من غير قيد ولا حركة مخزون)");render();return;}
+  if(g("[data-edit]")){say("المرحّلة ماتتعدّلش — اعمل «إلغاء الترحيل» الأول (بصلاحية)","inf");render();return;}
+  if(g("[data-new]")){C.push({no:"",date:"2026-11-27",sup:"SUB-001",sinv:"",einv:"",kind:"invoice",incl:0,cur:"EGP",rate:1,pay:"credit",due:addDays("2026-11-27",30),box:"TRS-001",wh:"WH-001",prj:"",hd:0,note:"",st:"draft",lines:[]});V.d=C.length-1;V.cf=0;clearF();say("＋ فاتورة جديدة (مسودة) — اختار المورد وضيف الأصناف من تحت","inf");render();return;}
+  if(g("[data-dup]")){const s=D();C.push({...JSON.parse(JSON.stringify(s)),no:"",sinv:"",einv:"",st:"draft",date:"2026-11-27"});V.d=C.length-1;V.cf=0;clearF();say(`⧉ نسخة جديدة (مسودة) من ${s.no||'المسودة'} بنفس المورد والأصناف — اكتب رقم فاتورة المورد`,"inf");render();return;}
+  if(g("[data-post]")){post(d);render();return;}
+  if(g("[data-unpost]")){unpost(d);render();return;}
+  if(g("[data-del]")){if(C.length>1){C.splice(V.d,1);V.d=C.length-1;clearF();say("🗑 المسودة اتمسحت","inf");}render();return;}
+  if(g("[data-can]")){V.sel=-1;clearF();say("✕ اتلغى التعديل اللي ماتحفظش","inf");render();return;}
+  if(x=g("[data-row]")){if(ed())loadF(+x.dataset.row);else V.sel=+x.dataset.row;render();return;}
+  if(g("[data-add]")){const l=lineFromF();if(!(l.q>0)){say("✖ اكتب الكمية","no");render();return;}
+    const ex=d.lines.findIndex(z=>z.it===l.it&&z.wh===l.wh&&z.u===l.u&&z.p===l.p&&!z.ds&&!l.ds);
+    if(ex>=0){d.lines[ex].q=r2(d.lines[ex].q+l.q);say(`✔ ${l.it} موجود بنفس السعر — الكمية بقت ${m0(d.lines[ex].q)}`);}else{d.lines.push(l);say(`✔ ${l.it} ${it(l.it)[1]} اتضاف للفاتورة`);}
+    clearF(l.it);render();return;}
+  if(g("[data-upd]")){if(V.sel>=0){d.lines[V.sel]=lineFromF();say(`✎ السطر ${V.sel+1} اتعدّل`);}clearF();render();return;}
+  if(g("[data-clr]")){clearF();V.msg="";render();return;}
+  if(g("[data-rm]")){if(V.sel>=0){const z=d.lines.splice(V.sel,1)[0];say(`🗑 ${z.it} اتشال من الفاتورة`,"inf");}clearF();render();return;}
+});
+clearF();render();
+</script>
+</body>
+</html>
