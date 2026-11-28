@@ -264,10 +264,10 @@ def test_grouped_matrix_follows_sidebar(sec_db):
     assert sys_header == {"kind": "header", "gid": "sys", "level": 0, "title": "🔐  النظام والصلاحيات", "count": 8}
     targets = [e["row"]["target_code"] for e in entries if e["kind"] == "target"]
     sales_header = next(e for e in entries if e["kind"] == "header" and e["gid"] == "sales")
-    assert sales_header["count"] == 3
+    assert sales_header["count"] == 4
     purch_header = next(e for e in entries if e["kind"] == "header" and e["gid"] == "purch")
     assert purch_header["count"] == 4
-    assert targets == ["chart_of_accounts", "default_accounts", "cost_centers", "journal_entries", "opening_balances", "account_statement", "trial_balance", "partners", "partner_transactions", "expense_types", "customer_groups", "customers", "projects", "supplier_groups", "suppliers", "purchase_invoices", "purchase_returns", "employees", "custody", "warehouses", "units_brands", "item_categories", "items", "opening_stock", "stock_transfers", "stock_counts", "treasuries", "banks", "cash_transfers", "customer_receipts", "supplier_payments", "customer_cheques", "supplier_cheques", "company", "fiscal_years", "currencies", "tax_codes", "users", "roles", "user_permissions", "login_logs"]
+    assert targets == ["chart_of_accounts", "default_accounts", "cost_centers", "journal_entries", "opening_balances", "account_statement", "trial_balance", "partners", "partner_transactions", "expense_types", "customer_groups", "customers", "sales_invoices", "projects", "supplier_groups", "suppliers", "purchase_invoices", "purchase_returns", "employees", "custody", "warehouses", "units_brands", "item_categories", "items", "opening_stock", "stock_transfers", "stock_counts", "treasuries", "banks", "cash_transfers", "customer_receipts", "supplier_payments", "customer_cheques", "supplier_cheques", "company", "fiscal_years", "currencies", "tax_codes", "users", "roles", "user_permissions", "login_logs"]
 
 
 def test_action_password(sec_db, monkeypatch):

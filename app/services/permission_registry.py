@@ -34,6 +34,10 @@ SCREEN_ACTIONS: tuple[tuple[str, str, str], ...] = (
     ("negative", "من غير رصيد", "Without Stock"),
     # «إظهار الدفتري» (2026-11-27 — الجرد): من غيرها المستخدم بيعدّ «أعمى» من غير ما يشوف الرصيد الدفتري والفروق.
     ("show_book", "إظهار الدفتري", "Show Book Qty"),
+    # فاتورة البيع (2026-11-28): «تجاوز حد الائتمان» = يرحّل فاتورة آجلة رصيد العميل بعدها أكبر من حده ·
+    # «إظهار التكلفة والربح» = يشوف تكلفة البضاعة والربح (من غيرها التكلفة والمتوسط مابيبانوش).
+    ("over_credit", "تجاوز حد الائتمان", "Over Credit Limit"),
+    ("show_cost", "إظهار التكلفة والربح", "Show Cost & Profit"),
     ("lock", "قفل / فتح", "Lock / Unlock"),
 )
 
@@ -145,6 +149,11 @@ SECTIONS: tuple[Section, ...] = (
                    actions=("view", "create", "edit", "save", "delete", "export")),
             Target("customers", "العملاء", "Customers", icon="👥",
                    actions=("view", "create", "edit", "save", "delete", "export")),
+            # فاتورة البيع / إذن الصرف (2026-11-28 — النموذج 1 «زي فاتورة الشراء وعكسها»): مسودة + ترحيل ·
+            # «من غير رصيد» = البيع أكتر من المتاح · «تجاوز حد الائتمان» · «إظهار التكلفة والربح» · الطباعة مع مرحلتها.
+            Target("sales_invoices", "فاتورة البيع", "Sales Invoice", icon="🧾",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost", "negative",
+                            "over_credit", "show_cost")),
         ), icon="👥"),
         Group("أوامر التوريد", (
             Target("projects", "أوامر التوريد", "Supply Orders", icon="📋",

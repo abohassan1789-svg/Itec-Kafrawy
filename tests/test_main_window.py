@@ -67,7 +67,7 @@ def test_menu_tree_admin_sees_everything():
     acc = tree[0]
     assert not acc["coming_soon"] and acc["count"] == 10                # «الحسابات» ← شجرة الحسابات + الحسابات الافتراضية + مراكز التكلفة + القيود اليومية + الأرصدة الافتتاحية + كشف الحساب + ميزان المراجعة + الشركاء + حركات الشركاء + أنواع المصروفات
     sales = tree[1]
-    assert not sales["coming_soon"] and sales["count"] == 3             # «المبيعات» ← مجموعات العملاء + العملاء + أوامر التوريد
+    assert not sales["coming_soon"] and sales["count"] == 4             # «المبيعات» ← مجموعات العملاء + العملاء + فاتورة البيع + أوامر التوريد
     purch = tree[2]
     assert not purch["coming_soon"] and purch["count"] == 4             # «المشتريات» ← مجموعات الموردين + الموردين + فاتورة الشراء + مرتجع المشتريات
     hr = tree[3]
