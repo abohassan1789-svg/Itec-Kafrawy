@@ -122,6 +122,10 @@ def test_database_rules(env):
         {"doc_type": "supplier_payment", "role": "bank", "side": "cr", "party_kind": None},
         {"doc_type": "supplier_payment", "role": "fx_loss", "side": "dr", "party_kind": None},   # فروق العملة (0050)
         {"doc_type": "supplier_payment", "role": "fx_gain", "side": "cr", "party_kind": None}]
+    assert db.fetch_all("SELECT role, side FROM acc.posting_rules WHERE doc_type = 'customer_receipt' "
+                        "ORDER BY sort_order") == [
+        {"role": "cash", "side": "dr"}, {"role": "bank", "side": "dr"}, {"role": "receivable", "side": "cr"},
+        {"role": "fx_loss", "side": "dr"}, {"role": "fx_gain", "side": "cr"}]        # فروق العملة مع القبض (0054)
     assert one(db, "SELECT to_regclass('cash.customer_payments')") is None    # «سند صرف العملاء» اتشال (0036)
 
     def ins(table="customer_receipts", **kw):
@@ -146,7 +150,7 @@ def test_database_rules(env):
         ins(customer_id=other)
     db.execute("UPDATE core.currencies SET is_active = true WHERE code = 'USD'")
     db.execute("UPDATE cash.treasuries SET currency_code = 'USD' WHERE code = 'TRS-002'")
-    with pytest.raises(psycopg.errors.RaiseException, match="العملة الأساسية"):
+    with pytest.raises(psycopg.errors.RaiseException, match="بنفس عملة السند"):   # القبض بعملة (0054)
         ins(treasury_id=treasury(db, "TRS-002"))
     vid = ins()
     assert row(db, "customer_receipts", vid)["fiscal_year_id"] == one(db, "SELECT id FROM core.fiscal_years "

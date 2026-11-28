@@ -23,6 +23,13 @@
   الفرق على «فروق عملة مدينة / دائنة».
 * وقت الترحيل: **قفل الفواتير** ``FOR UPDATE`` بترتيب ثابت ← المتبقي بيتحسب تاني ← القاعدة بتتأكد آخر الـ transaction
   (جهازين بيدفعوا نفس الفاتورة ← التاني يترفض). توزيع المرحّل مايتغيّرش غير بـ «إلغاء الترحيل» (القيد بيتبني عليه).
+
+**«تحصيل العملاء + الدفعات المقدمة» (المرحلة 8 — سكريبت 0054، قرار المستخدم 2026-11-28: «نفس الفكرة اللي عملناها في
+سند الصرف هننفذها في سند القبض»):** سند القبض بقى زي سند الصرف بالظبط — **بعملة** و«استلمنا في» خزنة / بنك بنفس
+العملة · **التوزيع على فواتير البيع** (``allocations`` = [{sales_invoice_id, amount}]) بالتوتال (الإجمالي − المرتجع الآجل
+المربوط − التحصيل المرحّل) · اللي مااتوزّعش = دفعة مقدمة على حساب العميل · **فرق العملة**: العميل بيتقفل بسعر الفاتورة
+والخزنة بسعر السند — استلمنا جنيه أكتر ← «فروق عملة دائنة» · أقل ← «مدينة». الترحيل: قفل الفواتير ← قفل العميل ←
+المتبقي من جديد ← التوزيع ← القيد. كل الفرق بين النوعين في ``VoucherKind`` (الجدول والفواتير والكلام).
 """
 
 from __future__ import annotations
@@ -35,7 +42,7 @@ from typing import Any
 import psycopg
 
 from app.database.db import Database, Executor, get_db
-from app.repositories.voucher_repository import STATUSES, VoucherRepository
+from app.repositories.voucher_repository import ALLOC, STATUSES, VoucherRepository
 from app.security.session import SESSION
 from app.services.audit_service import AuditService
 from app.services.concurrency import ConcurrencyGuard
@@ -66,6 +73,10 @@ class VoucherKind:
     party: str           # customer / supplier (بُعد الطرف في سطر القيد)
     party_label: str     # «العميل» / «المورد»
     party_role: str      # receivable / payable (دور سطر الطرف في قواعد الترحيل)
+    invoice_key: str     # مفتاح الفاتورة في سطر التوزيع: purchase_invoice_id / sales_invoice_id
+    invoice_title: str   # «فاتورة الشراء» / «فاتورة البيع»
+    paid_verb: str       # «اتسددت» / «اتحصّلت»
+    pay_verb: str        # «يتسدد» / «يتحصّل»
 
     @property
     def perm(self) -> str:
@@ -74,9 +85,11 @@ class VoucherKind:
 
 KINDS = {
     "receipt": VoucherKind("receipt", "customer_receipt", "cash.customer_receipts", "customer_receipts",
-                           "سند قبض", "سند القبض", "RV", "استلمنا من", "في", "customer", "العميل", "receivable"),
+                           "سند قبض", "سند القبض", "RV", "استلمنا من", "في", "customer", "العميل", "receivable",
+                           "sales_invoice_id", "فاتورة البيع", "اتحصّلت", "يتحصّل"),
     "payment": VoucherKind("payment", "supplier_payment", "cash.supplier_payments", "supplier_payments",
-                           "سند صرف", "سند الصرف", "PV", "صرفنا إلى", "من", "supplier", "المورد", "payable"),
+                           "سند صرف", "سند الصرف", "PV", "صرفنا إلى", "من", "supplier", "المورد", "payable",
+                           "purchase_invoice_id", "فاتورة الشراء", "اتسددت", "يتسدد"),
 }
 
 
@@ -140,21 +153,25 @@ class VoucherService:
         return {"total": int(row["total"]), "drafts": int(row["drafts"]), "posted": int(row["posted"]),
                 "posted_amount": Decimal(row["posted_amount"])}
 
+    @property
+    def ik(self) -> str:
+        """مفتاح الفاتورة في سطر التوزيع (``purchase_invoice_id`` / ``sales_invoice_id``)."""
+        return self.kind.invoice_key
+
     def _load(self, voucher_id: int, ex: Executor | None = None, for_update: bool = False) -> dict[str, Any] | None:
-        """السند (+ سطور توزيعه لو سند صرف)."""
+        """السند + سطور توزيعه على الفواتير."""
         row = self.repository.get_voucher(self.kind.code, int(voucher_id), ex=ex, for_update=for_update)
-        if row is not None and not self.is_receipt:
-            row["allocations"] = self.repository.allocations(int(voucher_id), ex=ex)
+        if row is not None:
+            row["allocations"] = self.repository.allocations(int(voucher_id), ex=ex, kind=self.kind.code)
         return row
 
     def get_voucher(self, voucher_id: int) -> dict[str, Any] | None:
         row = self._load(int(voucher_id))
         if row is not None:
             row["label"] = voucher_label(row)
-            if not self.is_receipt:
-                allocated = sum((Decimal(a["amount"]) for a in row["allocations"]), ZERO)
-                row["allocated"] = allocated
-                row["unallocated"] = Decimal(row["amount"]) - allocated
+            allocated = sum((Decimal(a["amount"]) for a in row["allocations"]), ZERO)
+            row["allocated"] = allocated
+            row["unallocated"] = Decimal(row["amount"]) - allocated
         return row
 
     def choices(self) -> dict[str, Any]:
@@ -211,15 +228,14 @@ class VoucherService:
         out = {"voucher_date": voucher_date, "party_id": party_id, "source_kind": source_kind,
                "treasury_id": treasury_id, "bank_account_id": bank_account_id, "amount": amount,
                "description": description, "paper_no": paper_no, "project_id": self._id(data.get("project_id"))}
-        if not self.is_receipt:
-            currency, rate = self._clean_currency(data, voucher_date)
-            source = self._source(source_kind, treasury_id or bank_account_id)
-            if source is not None and source["currency_code"] != currency:
-                what = "الخزنة" if source_kind == "treasury" else "الحساب البنكي"
-                raise BusinessError(f"{what} «{self._source_name(source)}» بعملة {source['currency_code']} — والسند "
-                                    f"بعملة {currency}؛ اختار خزنة أو بنك بنفس عملة السند.")
-            out.update(currency_code=currency, fx_rate=rate,
-                       allocations=self._clean_allocations(data.get("allocations"), amount))
+        currency, rate = self._clean_currency(data, voucher_date)
+        source = self._source(source_kind, treasury_id or bank_account_id)
+        if source is not None and source["currency_code"] != currency:
+            what = "الخزنة" if source_kind == "treasury" else "الحساب البنكي"
+            raise BusinessError(f"{what} «{self._source_name(source)}» بعملة {source['currency_code']} — والسند "
+                                f"بعملة {currency}؛ اختار خزنة أو بنك بنفس عملة السند.")
+        out.update(currency_code=currency, fx_rate=rate,
+                   allocations=self._clean_allocations(data.get("allocations"), amount))
         return out
 
     def _clean_currency(self, data: dict[str, Any], voucher_date: dt.date) -> tuple[str, Decimal]:
@@ -240,11 +256,12 @@ class VoucherService:
         return currency, rate.quantize(RATE, rounding=ROUND_HALF_UP)
 
     def _clean_allocations(self, raw: Any, amount: Decimal) -> list[dict[str, Any]]:
-        """[{purchase_invoice_id, amount}] — الفاضي والصفر بيتشالوا · الفاتورة مرة واحدة · المجموع ≤ مبلغ السند."""
+        """[{purchase_invoice_id / sales_invoice_id, amount}] — الفاضي والصفر بيتشالوا · الفاتورة مرة واحدة ·
+        المجموع ≤ مبلغ السند."""
         out: dict[int, Decimal] = {}
         for item in raw or []:
-            invoice_id = self._id(item.get("purchase_invoice_id"))
-            value = parse_money(item.get("amount"), "المبلغ المدفوع على الفاتورة")
+            invoice_id = self._id(item.get(self.ik))
+            value = parse_money(item.get("amount"), "المبلغ على الفاتورة")
             if invoice_id is None or value <= 0:
                 continue
             if invoice_id in out:
@@ -253,125 +270,133 @@ class VoucherService:
         total = sum(out.values(), ZERO)
         if total > amount:
             raise BusinessError(f"الموزّع على الفواتير ({fmt(total)}) أكتر من مبلغ السند ({fmt(amount)}).")
-        return [{"purchase_invoice_id": k, "amount": v} for k, v in out.items()]
+        return [{self.ik: k, "amount": v} for k, v in out.items()]
 
-    # ---- التوزيع على الفواتير (سند الصرف) ------------------------------------------------
+    # ---- التوزيع على الفواتير (الصرف ← فواتير الشراء · القبض ← فواتير البيع) ----------------------
     def _allocation_rows(self, v: dict[str, Any], ex: Executor | None = None) -> list[dict[str, Any]]:
-        """سطور التوزيع النهائية: سعر الفاتورة والمبلغ بالجنيه بسعرها — وبتتأكد إن الفاتورة مرحّلة آجلة لنفس المورد
+        """سطور التوزيع النهائية: سعر الفاتورة والمبلغ بالجنيه بسعرها — وبتتأكد إن الفاتورة مرحّلة آجلة لنفس الطرف
         وفيها عملة السند والمبلغ مايعدّيش المتبقي (المرحّل بس). لازم الفواتير تتقفل الأول لو ده وقت الترحيل."""
         allocations = v.get("allocations") or []
         if not allocations:
             return []
+        k, ik, code = self.kind, self.ik, self.kind.code
         currency = v["currency_code"]
-        ids = [int(a["purchase_invoice_id"]) for a in allocations]
-        dues = self.repository.dues_for(ids, currency, ex=ex)
+        ids = [int(a[ik]) for a in allocations]
+        dues = self.repository.dues_for(ids, currency, ex=ex, kind=code)
         missing = [i for i in ids if i not in dues]
         if missing:
-            inv = self.repository.invoice_labels(missing, ex=ex).get(missing[0])
+            inv = self.repository.invoice_labels(missing, ex=ex, kind=code).get(missing[0])
             if inv is None:
                 raise BusinessError("فاتورة في التوزيع مش موجودة (ممكن تكون اتمسحت) — دوس «تحديث».")
             label = invoice_label(inv)
             if inv["status"] != "posted":
-                raise BusinessError(f"فاتورة الشراء {label} مش مرحّلة — مايتسددش عليها.")
+                raise BusinessError(f"{k.invoice_title} {label} مش مرحّلة — ما{k.pay_verb}ش عليها.")
             if inv["pay_kind"] != "credit":
-                raise BusinessError(f"فاتورة الشراء {label} نقدية — اتسددت مع الفاتورة.")
-            raise BusinessError(f"فاتورة الشراء {label} مافيهاش مبلغ بعملة {currency} — كل فاتورة بتتسدد بعملتها.")
+                raise BusinessError(f"{k.invoice_title} {label} نقدية — {k.paid_verb} مع الفاتورة.")
+            raise BusinessError(f"{k.invoice_title} {label} مافيهاش مبلغ بعملة {currency} — كل فاتورة "
+                                f"{'بتتحصّل' if self.is_receipt else 'بتتسدد'} بعملتها.")
         rows: list[dict[str, Any]] = []
+        other = "لعميل تاني" if self.is_receipt else "لمورد تاني"
         for a in allocations:
-            d = dues[int(a["purchase_invoice_id"])]
+            d = dues[int(a[ik])]
             amount = Decimal(a["amount"])
-            if int(d["supplier_id"]) != int(v["party_id"]):
-                raise BusinessError(f"فاتورة الشراء {d['invoice_no']} لمورد تاني — السند بيتوزّع على فواتير مورده بس.")
+            if int(d["party_id"]) != int(v["party_id"]):
+                raise BusinessError(f"{k.invoice_title} {d['invoice_no']} {other} — السند بيتوزّع على فواتير "
+                                    f"{'عميله' if self.is_receipt else 'مورده'} بس.")
             remaining = Decimal(d["remaining_amount"])
             if amount > remaining:
-                raise BusinessError(f"فاتورة الشراء {d['invoice_no']}: المبلغ {fmt(amount)} أكتر من المتبقي عليها "
-                                    f"({fmt(max(remaining, ZERO))} {currency}) — ممكن تكون اتسددت من جهاز تاني.")
+                raise BusinessError(f"{k.invoice_title} {d['invoice_no']}: المبلغ {fmt(amount)} أكتر من المتبقي عليها "
+                                    f"({fmt(max(remaining, ZERO))} {currency}) — ممكن تكون {k.paid_verb} من جهاز تاني.")
             total, total_base = Decimal(d["total_amount"]), Decimal(d["total_base"])
             rate = (total_base / total).quantize(RATE, rounding=ROUND_HALF_UP) if total > 0 else Decimal("1")
-            # آخر دفعة بتقفل الفاتورة بالظبط بالجنيه (من غير كسور تقريب متعلّقة على المورد).
+            # آخر دفعة بتقفل الفاتورة بالظبط بالجنيه (من غير كسور تقريب متعلّقة على الطرف).
             amount_base = (max(Decimal(d["remaining_base"]), ZERO) if amount == remaining
                            else _money2(amount * rate))
-            rows.append({"purchase_invoice_id": int(d["invoice_id"]), "currency_code": currency, "amount": amount,
+            rows.append({ik: int(d["invoice_id"]), "currency_code": currency, "amount": amount,
                          "invoice_rate": rate if rate > 0 else Decimal("1"), "amount_base": amount_base,
                          "invoice_no": d["invoice_no"]})
         return rows
 
-    def open_invoices(self, supplier_id: Any, currency_code: str, keyword: str = "", page: int = 1,
+    def open_invoices(self, party_id: Any, currency_code: str, keyword: str = "", page: int = 1,
                       page_size: int | None = PAGE_SIZE, order: str = "due") -> list[dict[str, Any]]:
-        """فواتير المورد الآجلة المرحّلة اللي لسه عليها متبقي **بعملة السند** (بالتوتال) — الأقدم الأول."""
-        sid = self._id(supplier_id)
-        if sid is None or not currency_code:
+        """فواتير الطرف الآجلة المرحّلة اللي لسه عليها متبقي **بعملة السند** (بالتوتال) — الأقدم الأول."""
+        pid = self._id(party_id)
+        if pid is None or not currency_code:
             return []
         offset = (max(1, int(page)) - 1) * page_size if page_size else 0
-        return self.repository.open_dues(sid, str(currency_code).upper(), keyword,
+        return self.repository.open_dues(pid, str(currency_code).upper(), keyword,
                                          order if order in ALLOCATION_ORDERS else "due",
-                                         limit=page_size, offset=offset)
+                                         limit=page_size, offset=offset, kind=self.kind.code)
 
-    def count_open_invoices(self, supplier_id: Any, currency_code: str, keyword: str = "") -> dict[str, Any]:
-        sid = self._id(supplier_id)
-        if sid is None or not currency_code:
+    def count_open_invoices(self, party_id: Any, currency_code: str, keyword: str = "") -> dict[str, Any]:
+        pid = self._id(party_id)
+        if pid is None or not currency_code:
             return {"total": 0, "remaining": ZERO}
-        row = self.repository.count_open_dues(sid, str(currency_code).upper(), keyword)
+        row = self.repository.count_open_dues(pid, str(currency_code).upper(), keyword, kind=self.kind.code)
         return {"total": int(row["total"]), "remaining": Decimal(row["remaining"])}
 
-    def auto_allocate(self, supplier_id: Any, currency_code: str, amount: Any, order: str = "due",
+    def auto_allocate(self, party_id: Any, currency_code: str, amount: Any, order: str = "due",
                       keep: list[dict[str, Any]] | None = None) -> list[dict[str, Any]]:
-        """«وزّع الأقدم الأول»: المبلغ بيتوزّع على فواتير المورد المفتوحة بعملة السند بالترتيب (الاستحقاق أو
+        """«وزّع الأقدم الأول»: المبلغ بيتوزّع على فواتير الطرف المفتوحة بعملة السند بالترتيب (الاستحقاق أو
         تاريخ الفاتورة) لحد ما يخلص. ``keep`` = توزيع موجود بيفضل زي ما هو والباقي بس اللي بيتوزّع."""
+        ik = self.ik
         left = parse_money(amount, "المبلغ")
-        kept = {int(k["purchase_invoice_id"]): Decimal(str(k["amount"])) for k in (keep or [])
-                if self._id(k.get("purchase_invoice_id")) and Decimal(str(k.get("amount") or 0)) > 0}
+        kept = {int(k[ik]): Decimal(str(k["amount"])) for k in (keep or [])
+                if self._id(k.get(ik)) and Decimal(str(k.get("amount") or 0)) > 0}
         left -= sum(kept.values(), ZERO)
-        out = [{"purchase_invoice_id": k, "amount": v} for k, v in kept.items()]
-        for d in self.open_invoices(supplier_id, currency_code, page_size=None, order=order):
+        out = [{ik: k, "amount": v} for k, v in kept.items()]
+        for d in self.open_invoices(party_id, currency_code, page_size=None, order=order):
             if left <= 0:
                 break
             if int(d["invoice_id"]) in kept:
                 continue
             take = min(left, Decimal(d["remaining_amount"]))
             if take > 0:
-                out.append({"purchase_invoice_id": int(d["invoice_id"]), "amount": take})
+                out.append({ik: int(d["invoice_id"]), "amount": take})
                 left -= take
         return out
 
-    def allocation_details(self, supplier_id: Any, currency_code: str,
+    def allocation_details(self, party_id: Any, currency_code: str,
                            allocations: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """بيانات الفواتير اللي في التوزيع للعرض تحت السند (الرقم · الاستحقاق · الإجمالي · المرتجع · المسدد · المتبقي)."""
-        ids = [int(a["purchase_invoice_id"]) for a in allocations if self._id(a.get("purchase_invoice_id"))]
-        dues = self.repository.dues_for(ids, str(currency_code or "").upper())
-        labels = self.repository.invoice_labels([i for i in ids if i not in dues])
+        ik, code = self.ik, self.kind.code
+        ids = [int(a[ik]) for a in allocations if self._id(a.get(ik))]
+        dues = self.repository.dues_for(ids, str(currency_code or "").upper(), kind=code)
+        labels = self.repository.invoice_labels([i for i in ids if i not in dues], kind=code)
         out = []
         for a in allocations:
-            iid = self._id(a.get("purchase_invoice_id"))
+            iid = self._id(a.get(ik))
             if iid is None:
                 continue
             d = dues.get(iid)
-            row = {"purchase_invoice_id": iid, "amount": a.get("amount")}
+            row = {ik: iid, "amount": a.get("amount")}
             if d is None:
                 inv = labels.get(iid) or {}
                 row.update({"invoice_no": invoice_label(inv) if inv else "؟", "missing": True})
             else:
-                row.update({k: d[k] for k in ("invoice_no", "invoice_date", "due_date", "supplier_invoice_no",
+                row.update({k: d[k] for k in ("invoice_no", "invoice_date", "due_date", "ref_no",
                                                "total_amount", "returned_amount", "paid_amount", "remaining_amount")})
+                if not self.is_receipt:
+                    row["supplier_invoice_no"] = d["supplier_invoice_no"]
             out.append(row)
         return out
 
     # ---- سطور القيد ---------------------------------------------------------------
     def _posting_lines(self, v: dict[str, Any], rows: list[dict[str, Any]] | None = None) -> list[PostingLine]:
+        """الطرف بيتقفل بسعر الفاتورة (والباقي غير الموزّع بسعر السند) · الخزنة / البنك بسعر السند · الفرق فروق عملة.
+        الجنب (مدين / دائن) من قواعد الترحيل: الصرف = مدين المورد / دائن الخزنة · القبض = مدين الخزنة / دائن العميل."""
         party = (self.kind.party, int(v["party_id"]))
-        if self.is_receipt:
-            source = (PostingLine("cash", v["amount"], treasury_id=v["treasury_id"])
-                      if v["source_kind"] == "treasury"
-                      else PostingLine("bank", v["amount"], bank_account_id=v["bank_account_id"]))
-            return [source, PostingLine(self.kind.party_role, v["amount"], party=party)]
-        # سند الصرف: المورد بيتقفل بسعر الفاتورة (والباقي غير الموزّع بسعر السند) · الخزنة بسعر السند · الفرق فروق عملة.
         currency, base = v["currency_code"], self.base_currency
         amount, rate = Decimal(v["amount"]), Decimal(v["fx_rate"])
 
         def fc(line_rate: Decimal, value: Decimal) -> dict[str, Any]:
             return {} if currency == base else {"currency_code": currency, "fx_rate": line_rate, "amount_fc": value}
 
-        lines: list[PostingLine] = []
+        amount_base = _money2(amount * rate)
+        source = (PostingLine("cash", amount_base, treasury_id=v["treasury_id"], **fc(rate, amount))
+                  if v["source_kind"] == "treasury"
+                  else PostingLine("bank", amount_base, bank_account_id=v["bank_account_id"], **fc(rate, amount)))
+        lines: list[PostingLine] = [source] if self.is_receipt else []
         closed = allocated = ZERO
         for r in rows or []:
             lines.append(PostingLine(self.kind.party_role, r["amount_base"], party=party,
@@ -383,12 +408,13 @@ class VoucherService:
             rest_base = _money2(rest * rate)
             lines.append(PostingLine(self.kind.party_role, rest_base, party=party, **fc(rate, rest)))
             closed += rest_base
-        amount_base = _money2(amount * rate)
-        lines.append(PostingLine("cash", amount_base, treasury_id=v["treasury_id"], **fc(rate, amount))
-                     if v["source_kind"] == "treasury"
-                     else PostingLine("bank", amount_base, bank_account_id=v["bank_account_id"], **fc(rate, amount)))
+        if not self.is_receipt:
+            lines.append(source)
+        # الصرف: دفعنا جنيه أكتر من اللي متسجل على المورد ← خسارة · القبض: استلمنا جنيه أكتر من اللي على العميل ← مكسب.
         diff = amount_base - closed
-        if diff > 0:                                       # دفعنا جنيه أكتر من اللي متسجل على المورد ← خسارة
+        if self.is_receipt:
+            diff = -diff
+        if diff > 0:
             lines.append(PostingLine("fx_loss", diff))
         elif diff < 0:
             lines.append(PostingLine("fx_gain", -diff))
@@ -398,7 +424,7 @@ class VoucherService:
     def preview(self, data: dict[str, Any]) -> list[dict[str, Any]]:
         """سطور القيد اللي هيتعمل (الحساب · مدين · دائن) — أي نقص ← ``BusinessError`` بالعربي."""
         v = self._clean(data)
-        rows = None if self.is_receipt else self._allocation_rows(v)
+        rows = self._allocation_rows(v)
         lines = self.posting.build(self.kind.doc_type, self._posting_lines(v, rows), project_id=v["project_id"])
         names = self.repository.accounts([ln["account_id"] for ln in lines])
         return [{"account_id": ln["account_id"], "account_code": names[ln["account_id"]]["code"],
@@ -433,7 +459,7 @@ class VoucherService:
         except BusinessError:
             value = ZERO
         base = self.base_currency
-        currency = base if self.is_receipt else str(currency_code or base).upper()
+        currency = str(currency_code or base).upper()
         foreign = currency != base
         rate = Decimal("1")
         if foreign:
@@ -469,7 +495,8 @@ class VoucherService:
             if foreign and source["currency_code"] == currency:
                 fc = self.repository.account_balance(int(source["account_id"]), currency=currency, base=False)
                 out["source_fc"] = fc
-                out["source_fc_after"] = fc - (ZERO if posted else value)
+                moved = ZERO if posted else value
+                out["source_fc_after"] = fc + moved if self.is_receipt else fc - moved
         return out
 
     def funds_warning(self, data: dict[str, Any]) -> str | None:
@@ -509,10 +536,9 @@ class VoucherService:
         def head(r: dict | None) -> dict | None:
             return {k: v for k, v in r.items() if k != "allocations"} if r else None
 
-        lines = None
-        if not self.is_receipt:
-            lines = {"cash.voucher_allocations": {"before": (before or {}).get("allocations") or [],
-                                                  "after": (after or {}).get("allocations") or []}}
+        table = ALLOC[self.kind.code].table
+        lines = {table: {"before": (before or {}).get("allocations") or [],
+                         "after": (after or {}).get("allocations") or []}}
         self.audit.record(tx, action=action, entity=self.kind.entity, entity_id=voucher_id,
                           entity_label=self.kind.title,
                           record_label=f"{voucher_label(row)} — {row.get('party_name') or ''} — "
@@ -521,20 +547,21 @@ class VoucherService:
 
     def _write_allocations(self, tx: Executor, voucher_id: int, v: dict[str, Any], *,
                            lock: bool = False) -> list[dict[str, Any]]:
-        """بيكتب سطور التوزيع (بسعر الفاتورة والمبلغ بالجنيه) — ``lock`` = قفل الفواتير الأول (وقت الترحيل)."""
+        """بيكتب سطور التوزيع (بسعر الفاتورة والمبلغ بالجنيه) — ``lock`` = قفل الفواتير ثم الطرف الأول (وقت الترحيل:
+        جهازين بيحصّلوا / بيدفعوا نفس الفاتورة أو لنفس الطرف ← واحد بيستنى التاني ويشوف شغله)."""
+        code = self.kind.code
         if lock:
-            self.repository.lock_invoices([int(a["purchase_invoice_id"]) for a in v.get("allocations") or []], tx)
+            self.repository.lock_invoices([int(a[self.ik]) for a in v.get("allocations") or []], tx, kind=code)
+            self.repository.lock_party(code, int(v["party_id"]), tx)
         rows = self._allocation_rows(v, ex=tx)
-        self.repository.replace_allocations(voucher_id, rows, SESSION.user_id, ex=tx)
+        self.repository.replace_allocations(voucher_id, rows, SESSION.user_id, ex=tx, kind=code)
         return rows
 
     def _post(self, tx: Executor, voucher_id: int, before: dict[str, Any],
               expected_version: int | None = None) -> dict[str, Any]:
         """الحالة ← مرحّل (القاعدة بتصرف الرقم) ← القيد بمحرك الترحيل — كله في نفس الـ transaction."""
-        rows = None
-        if not self.is_receipt:
-            # قفل الفواتير ← المتبقي من جديد ← سطور التوزيع النهائية (قبل ما السند يتقفل على التعديل).
-            rows = self._write_allocations(tx, voucher_id, before, lock=True)
+        # قفل الفواتير والطرف ← المتبقي من جديد ← سطور التوزيع النهائية (قبل ما السند يتقفل على التعديل).
+        rows = self._write_allocations(tx, voucher_id, before, lock=True)
         updated = self.repository.set_status(self.kind.code, voucher_id, "posted", SESSION.user_id, ex=tx,
                                              expected_version=expected_version)
         self.guard.ensure(tx, updated, expected_version, entity=self.kind.entity, entity_id=voucher_id)
@@ -565,14 +592,14 @@ class VoucherService:
                                                                 ex=tx)
                 else:
                     before = self._lock(tx, int(voucher_id), expected_version, draft_only=True)
-                    if not self.is_receipt and before.get("allocations"):
-                        # التوزيع القديم بيتشال الأول عشان المورد / العملة يتغيّروا من غير ما القاعدة ترفض.
-                        self.repository.replace_allocations(int(voucher_id), [], SESSION.user_id, ex=tx)
+                    if before.get("allocations"):
+                        # التوزيع القديم بيتشال الأول عشان الطرف / العملة يتغيّروا من غير ما القاعدة ترفض.
+                        self.repository.replace_allocations(int(voucher_id), [], SESSION.user_id, ex=tx,
+                                                            kind=self.kind.code)
                     updated = self.repository.update_voucher(self.kind.code, int(voucher_id), clean, ex=tx,
                                                              expected_version=expected_version)
                     self.guard.ensure(tx, updated, expected_version, entity=self.kind.entity, entity_id=voucher_id)
-                if not self.is_receipt:
-                    self._write_allocations(tx, int(voucher_id), clean)
+                self._write_allocations(tx, int(voucher_id), clean)
                 after = self._load(int(voucher_id), ex=tx)
                 self._record(tx, "create" if before is None else "update", int(voucher_id), before, after)
                 if post:

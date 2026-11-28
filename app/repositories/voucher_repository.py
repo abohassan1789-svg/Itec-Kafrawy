@@ -7,10 +7,10 @@
 * القائمة **بفلتر فترة وصفحات** (الـ index على ``voucher_date DESC, id DESC``) · رقم السند الكامل من الـ unique index.
 * الترحيل وإلغاؤه = تغيير ``status`` بس، والقاعدة بتصرف رقم RV / PV جوه قفل العدّاد وبتتأكد من السنة والعميل والخزنة.
 * أرصدة الطرف والخزنة / البنك **من سطور القيود المرحّلة** (الـ indexes بتوع 0031 / 0034).
-* **سند الصرف بعملة** (0050): ``currency_code`` / ``fx_rate`` / ``amount_base`` — القبض لسه بالعملة الأساسية
-  (الأعمدة دي بترجعله ثابتة عشان الشكل واحد).
-* **التوزيع** (``cash.voucher_allocations``): سطور السند على فواتير الشراء · المستحق من ``purch.purchase_invoice_dues``
-  (فاتورة + عملة) · قفل الفواتير ``FOR UPDATE`` بترتيب ثابت وقت الترحيل.
+* **السندين بعملة** (الصرف 0050 · القبض 0054): ``currency_code`` / ``fx_rate`` / ``amount_base``.
+* **التوزيع** (``ALLOC[kind]``): سند الصرف ← ``cash.voucher_allocations`` على فواتير الشراء
+  (``purch.purchase_invoice_dues``) · سند القبض ← ``cash.receipt_allocations`` على فواتير البيع
+  (``sales.sales_invoice_dues``) — المستحق لكل (فاتورة + عملة) · قفل الفواتير ``FOR UPDATE`` بترتيب ثابت وقت الترحيل.
 كل دالة بتاخد ``ex`` اختياري (``Tx`` من ``db.atomic()``).
 """
 
@@ -19,6 +19,7 @@ from __future__ import annotations
 import re
 from datetime import date
 from decimal import Decimal
+from dataclasses import dataclass
 from typing import Any
 
 from app.database.db import Database, Executor, get_db
@@ -31,12 +32,27 @@ _FULL_NO = re.compile(r"^(RV|PV)-\d{4}-\d+$", re.IGNORECASE)
 STATUSES = ("all", "draft", "posted")
 FIELDS = ("voucher_date", "party_id", "source_kind", "treasury_id", "bank_account_id", "amount", "description",
           "paper_no", "project_id")
-PAYMENT_FIELDS = (*FIELDS, "currency_code", "fx_rate")           # سند الصرف بس (0050)
-# أعمدة العملة: سند الصرف من الجدول · القبض ثابتة (العملة الأساسية).
-_CURRENCY_COLS = {
-    "payment": "v.currency_code, v.fx_rate, v.amount_base",
-    "receipt": "(SELECT code FROM core.currencies WHERE is_base) AS currency_code, 1::numeric AS fx_rate, "
-               "v.amount AS amount_base",
+CURRENCY_FIELDS = (*FIELDS, "currency_code", "fx_rate")          # السندين بعملة (0050 · 0054)
+_CURRENCY_COLS = "v.currency_code, v.fx_rate, v.amount_base"
+
+
+@dataclass(frozen=True)
+class AllocSpec:
+    """جدول التوزيع والفواتير بتاعة كل نوع سند (الأسماء ثابتة هنا — عمرها ما بتيجي من برّا)."""
+    table: str           # جدول التوزيع
+    voucher_col: str     # عمود السند فيه
+    invoice_col: str     # عمود الفاتورة فيه (= مفتاح سطر التوزيع في الـ Python)
+    invoices: str        # جدول الفواتير
+    dues: str            # view المستحق (فاتورة + عملة)
+    party_col: str       # عمود الطرف في الفاتورة / الـ view
+    ref_col: str         # رقم الفاتورة عند الطرف (رقم فاتورة المورد / أمر شراء العميل)
+
+
+ALLOC = {
+    "payment": AllocSpec("cash.voucher_allocations", "supplier_payment_id", "purchase_invoice_id",
+                         "purch.purchase_invoices", "purch.purchase_invoice_dues", "supplier_id", "supplier_invoice_no"),
+    "receipt": AllocSpec("cash.receipt_allocations", "customer_receipt_id", "sales_invoice_id",
+                         "sales.sales_invoices", "sales.sales_invoice_dues", "customer_id", "customer_ref"),
 }
 
 _SELECT = """
@@ -76,12 +92,11 @@ _LIST = """
 
 def _sql(template: str, kind: str) -> str:
     party, party_table = PARTIES[kind]
-    return template.format(table=TABLES[kind], party=party, party_table=party_table,
-                           currency=_CURRENCY_COLS[kind])
+    return template.format(table=TABLES[kind], party=party, party_table=party_table, currency=_CURRENCY_COLS)
 
 
 def fields(kind: str) -> tuple[str, ...]:
-    return PAYMENT_FIELDS if kind == "payment" else FIELDS
+    return CURRENCY_FIELDS
 
 
 def _cols(kind: str) -> list[str]:
@@ -137,7 +152,7 @@ class VoucherRepository:
         return self._x(ex).fetch_one(
             "SELECT count(*) AS total, count(*) FILTER (WHERE v.status = 'draft') AS drafts, "
             "count(*) FILTER (WHERE v.status = 'posted') AS posted, "
-            f"coalesce(sum(v.{'amount_base' if kind == 'payment' else 'amount'}) "
+            "coalesce(sum(v.amount_base) "
             "FILTER (WHERE v.status = 'posted'), 0) AS posted_amount "
             + _sql("FROM {table} v JOIN {party_table} c ON c.id = v.{party}", kind) + where, params)
 
@@ -160,10 +175,8 @@ class VoucherRepository:
     def update_voucher(self, kind: str, voucher_id: int, data: dict[str, Any], ex: Executor,
                        expected_version: int | None = None) -> int:
         clause, extra = version_clause(expected_version)
-        sets = ", ".join(f"{k} = %s" for k in _cols(kind))
-        if kind == "payment":
-            # سطور التوزيع ممكن تتغيّر والرأس زي ما هو ← الإصدار بيزيد صريح (جهاز تاني بنسخة قديمة يترفض).
-            sets += ", row_version = row_version + 1"
+        # سطور التوزيع ممكن تتغيّر والرأس زي ما هو ← الإصدار بيزيد صريح (جهاز تاني بنسخة قديمة يترفض).
+        sets = ", ".join(f"{k} = %s" for k in _cols(kind)) + ", row_version = row_version + 1"
         return ex.execute(f"UPDATE {TABLES[kind]} SET {sets} WHERE id = %s AND status = 'draft'" + clause,
                           [*[data[k] for k in fields(kind)], voucher_id, *extra])
 
@@ -183,7 +196,7 @@ class VoucherRepository:
             return self._x(ex).fetch_all(
                 "SELECT id, code, name_ar, is_active, currency_code FROM party.suppliers ORDER BY seq")
         return self._x(ex).fetch_all(
-            "SELECT id, code, name_ar, is_active FROM party.customers "
+            "SELECT id, code, name_ar, is_active, currency_code FROM party.customers "
             "ORDER BY CASE WHEN code ~ '^[0-9]+$' THEN lpad(code, 10, '0') ELSE code END")
 
     def treasury_choices(self, ex: Executor | None = None) -> list[dict]:
@@ -217,7 +230,7 @@ class VoucherRepository:
     def party_balance(self, kind: str, party_id: int, ex: Executor | None = None, *,
                       currency: str | None = None, base: bool = True) -> Decimal:
         """رصيد الطرف على حسابات الرقابة بجنبه الطبيعي: العميل (مدين − دائن) = عليه لينا كام ·
-        المورد (دائن − مدين) = ليه علينا كام. ``currency`` = رصيده بالعملة دي بس (سند الصرف — 0050)."""
+        المورد (دائن − مدين) = ليه علينا كام. ``currency`` = رصيده بالعملة دي بس (للعلم — 0050 / 0054)."""
         side = "l.debit - l.credit" if kind == "receipt" else "l.credit - l.debit"
         expr, cond, params = self._amount_expr(side, currency, base)
         return Decimal(self._x(ex).fetch_value(
@@ -234,7 +247,7 @@ class VoucherRepository:
             f"JOIN acc.journal_entries e ON e.id = l.entry_id AND e.status = 'posted' WHERE l.account_id = %s{cond}",
             [account_id, *params]))
 
-    # ---- العملات (سند الصرف — 0050) ---------------------------------------------------
+    # ---- العملات (0050 / 0054) ---------------------------------------------------
     def currencies(self, ex: Executor | None = None) -> list[dict]:
         return self._x(ex).fetch_all(
             "SELECT code, name_ar, symbol, is_base, is_active FROM core.currencies ORDER BY NOT is_base, code")
@@ -246,93 +259,112 @@ class VoucherRepository:
         value = self._x(ex).fetch_value("SELECT core.rate_on(%s, %s)", [code, day])
         return Decimal(value) if value is not None else None
 
-    # ---- التوزيع على فواتير الشراء (0050) ------------------------------------------------
-    _DUE_COLS = ("d.invoice_id, d.invoice_no, d.invoice_date, d.due_date, d.supplier_invoice_no, d.stock_kind, "
-                 "d.currency_mode, d.currency_code, d.total_amount, d.total_base, d.returned_amount, d.returned_base, "
-                 "d.paid_amount, d.paid_base, d.remaining_amount, d.remaining_base")
+    # ---- التوزيع على الفواتير (الصرف 0050 ← فواتير الشراء · القبض 0054 ← فواتير البيع) -----------------
+    @staticmethod
+    def _due_cols(kind: str) -> str:
+        a = ALLOC[kind]
+        return ("d.invoice_id, d.invoice_no, d.invoice_date, d.due_date, "
+                f"d.{a.ref_col}, d.{a.ref_col} AS ref_no, d.stock_kind, "
+                "d.currency_mode, d.currency_code, d.total_amount, d.total_base, d.returned_amount, d.returned_base, "
+                "d.paid_amount, d.paid_base, d.remaining_amount, d.remaining_base")
 
     @staticmethod
-    def _dues_where(supplier_id: int, currency: str, keyword: str) -> tuple[str, list[Any]]:
-        conds = ["d.supplier_id = %s", "d.currency_code = %s", "d.remaining_amount > 0"]
-        params: list[Any] = [supplier_id, currency]
+    def _dues_where(kind: str, party_id: int, currency: str, keyword: str) -> tuple[str, list[Any]]:
+        a = ALLOC[kind]
+        conds = [f"d.{a.party_col} = %s", "d.currency_code = %s", "d.remaining_amount > 0"]
+        params: list[Any] = [party_id, currency]
         keyword = keyword.strip()
         if keyword:
-            conds.append("(d.invoice_no ILIKE %s OR d.supplier_invoice_no ILIKE %s)")
+            conds.append(f"(d.invoice_no ILIKE %s OR d.{a.ref_col} ILIKE %s)")
             params += [f"%{keyword}%", f"%{keyword}%"]
         return " WHERE " + " AND ".join(conds), params
 
-    def open_dues(self, supplier_id: int, currency: str, keyword: str = "", order: str = "due",
-                  limit: int | None = None, offset: int = 0, ex: Executor | None = None) -> list[dict]:
-        """فواتير المورد الآجلة المرحّلة اللي لسه عليها متبقي **بالعملة دي** — الأقدم الأول."""
-        where, params = self._dues_where(supplier_id, currency, keyword)
+    def open_dues(self, party_id: int, currency: str, keyword: str = "", order: str = "due",
+                  limit: int | None = None, offset: int = 0, ex: Executor | None = None, *,
+                  kind: str = "payment") -> list[dict]:
+        """فواتير الطرف الآجلة المرحّلة اللي لسه عليها متبقي **بالعملة دي** — الأقدم الأول."""
+        where, params = self._dues_where(kind, party_id, currency, keyword)
         first = "coalesce(d.due_date, d.invoice_date), d.invoice_date" if order == "due" else "d.invoice_date"
-        sql = f"SELECT {self._DUE_COLS} FROM purch.purchase_invoice_dues d{where} ORDER BY {first}, d.invoice_id"
+        sql = (f"SELECT {self._due_cols(kind)} FROM {ALLOC[kind].dues} d{where} "
+               f"ORDER BY {first}, d.invoice_id")
         if limit is not None:
             sql += " LIMIT %s OFFSET %s"
             params += [limit, offset]
         return self._x(ex).fetch_all(sql, params)
 
-    def count_open_dues(self, supplier_id: int, currency: str, keyword: str = "",
-                        ex: Executor | None = None) -> dict:
-        where, params = self._dues_where(supplier_id, currency, keyword)
+    def count_open_dues(self, party_id: int, currency: str, keyword: str = "", ex: Executor | None = None, *,
+                        kind: str = "payment") -> dict:
+        where, params = self._dues_where(kind, party_id, currency, keyword)
         return self._x(ex).fetch_one(
             "SELECT count(*) AS total, coalesce(sum(d.remaining_amount), 0) AS remaining "
-            f"FROM purch.purchase_invoice_dues d{where}", params)
+            f"FROM {ALLOC[kind].dues} d{where}", params)
 
-    def dues_for(self, invoice_ids: list[int], currency: str, ex: Executor | None = None) -> dict[int, dict]:
+    def dues_for(self, invoice_ids: list[int], currency: str, ex: Executor | None = None, *,
+                 kind: str = "payment") -> dict[int, dict]:
         """المستحق على الفواتير دي بالعملة دي (الفاتورة اللي مش مرحّلة / نقدية / مافيهاش العملة مابترجعش)."""
         if not invoice_ids:
             return {}
+        a = ALLOC[kind]
         rows = self._x(ex).fetch_all(
-            f"SELECT {self._DUE_COLS}, d.supplier_id FROM purch.purchase_invoice_dues d "
+            f"SELECT {self._due_cols(kind)}, d.{a.party_col} AS party_id FROM {a.dues} d "
             "WHERE d.invoice_id = ANY(%s) AND d.currency_code = %s", [list(invoice_ids), currency])
         return {int(r["invoice_id"]): r for r in rows}
 
-    def invoice_labels(self, invoice_ids: list[int], ex: Executor | None = None) -> dict[int, dict]:
+    def invoice_labels(self, invoice_ids: list[int], ex: Executor | None = None, *,
+                       kind: str = "payment") -> dict[int, dict]:
         if not invoice_ids:
             return {}
+        a = ALLOC[kind]
         rows = self._x(ex).fetch_all(
-            "SELECT id, invoice_no, draft_no, status, pay_kind, supplier_id FROM purch.purchase_invoices "
+            f"SELECT id, invoice_no, draft_no, status, pay_kind, {a.party_col} AS party_id FROM {a.invoices} "
             "WHERE id = ANY(%s)", [list(invoice_ids)])
         return {int(r["id"]): r for r in rows}
 
-    def lock_invoices(self, invoice_ids: list[int], ex: Executor) -> None:
-        """قفل الفواتير بترتيب ثابت قبل حساب المتبقي (جهازين بيدفعوا نفس الفاتورة ← واحد بيستنى التاني)."""
+    def lock_invoices(self, invoice_ids: list[int], ex: Executor, *, kind: str = "payment") -> None:
+        """قفل الفواتير بترتيب ثابت قبل حساب المتبقي (جهازين بيدفعوا / بيحصّلوا نفس الفاتورة ← واحد بيستنى التاني)."""
         if invoice_ids:
-            ex.fetch_all("SELECT id FROM purch.purchase_invoices WHERE id = ANY(%s) ORDER BY id FOR UPDATE",
+            ex.fetch_all(f"SELECT id FROM {ALLOC[kind].invoices} WHERE id = ANY(%s) ORDER BY id FOR UPDATE",
                          [sorted(set(invoice_ids))])
 
-    def allocations(self, payment_id: int, ex: Executor | None = None) -> list[dict]:
+    def lock_party(self, kind: str, party_id: int, ex: Executor) -> None:
+        """قفل صف الطرف ``FOR UPDATE`` وقت الترحيل (بعد الفواتير — نفس ترتيب المرتجع)."""
+        ex.fetch_all(f"SELECT id FROM {PARTIES[kind][1]} WHERE id = %s FOR UPDATE", [party_id])
+
+    def allocations(self, voucher_id: int, ex: Executor | None = None, *, kind: str = "payment") -> list[dict]:
         """سطور توزيع السند + المستحق على كل فاتورة **من غير السند ده** (لو مرحّل توزيعه جوه المسدد)."""
+        a = ALLOC[kind]
         return self._x(ex).fetch_all(
-            "SELECT a.id, a.purchase_invoice_id, a.currency_code, a.amount, a.invoice_rate, a.amount_base, "
-            "i.invoice_no, i.draft_no, i.invoice_date, i.due_date, i.supplier_invoice_no, i.stock_kind, "
-            "i.status AS invoice_status, d.total_amount, d.returned_amount, "
+            f"SELECT a.id, a.{a.invoice_col}, a.currency_code, a.amount, a.invoice_rate, a.amount_base, "
+            f"i.invoice_no, i.draft_no, i.invoice_date, i.due_date, i.{a.ref_col}, i.{a.ref_col} AS ref_no, "
+            "i.stock_kind, i.status AS invoice_status, d.total_amount, d.returned_amount, "
             "d.paid_amount - CASE WHEN v.status = 'posted' THEN a.amount ELSE 0 END AS paid_amount, "
             "d.remaining_amount + CASE WHEN v.status = 'posted' THEN a.amount ELSE 0 END AS remaining_amount "
-            "FROM cash.voucher_allocations a "
-            "JOIN cash.supplier_payments v ON v.id = a.supplier_payment_id "
-            "JOIN purch.purchase_invoices i ON i.id = a.purchase_invoice_id "
-            "LEFT JOIN purch.purchase_invoice_dues d ON d.invoice_id = a.purchase_invoice_id "
-            "AND d.currency_code = a.currency_code "
-            "WHERE a.supplier_payment_id = %s ORDER BY coalesce(i.due_date, i.invoice_date), i.id", [payment_id])
+            f"FROM {a.table} a "
+            f"JOIN {TABLES[kind]} v ON v.id = a.{a.voucher_col} "
+            f"JOIN {a.invoices} i ON i.id = a.{a.invoice_col} "
+            f"LEFT JOIN {a.dues} d ON d.invoice_id = a.{a.invoice_col} AND d.currency_code = a.currency_code "
+            f"WHERE a.{a.voucher_col} = %s ORDER BY coalesce(i.due_date, i.invoice_date), i.id", [voucher_id])
 
-    def replace_allocations(self, payment_id: int, rows: list[dict[str, Any]], user_id: int | None,
-                            ex: Executor) -> None:
-        ex.execute("DELETE FROM cash.voucher_allocations WHERE supplier_payment_id = %s", [payment_id])
+    def replace_allocations(self, voucher_id: int, rows: list[dict[str, Any]], user_id: int | None,
+                            ex: Executor, *, kind: str = "payment") -> None:
+        a = ALLOC[kind]
+        ex.execute(f"DELETE FROM {a.table} WHERE {a.voucher_col} = %s", [voucher_id])
         for r in rows:
             ex.execute(
-                "INSERT INTO cash.voucher_allocations (supplier_payment_id, purchase_invoice_id, currency_code, amount, "
+                f"INSERT INTO {a.table} ({a.voucher_col}, {a.invoice_col}, currency_code, amount, "
                 "invoice_rate, amount_base, created_by) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                [payment_id, r["purchase_invoice_id"], r["currency_code"], r["amount"], r["invoice_rate"],
+                [voucher_id, r[a.invoice_col], r["currency_code"], r["amount"], r["invoice_rate"],
                  r["amount_base"], user_id])
 
-    def unallocated_credit(self, supplier_id: int, currency: str, ex: Executor | None = None) -> Decimal:
-        """الرصيد غير الموزّع (دفعات مقدمة) من سندات الصرف المرحّلة للمورد بالعملة دي."""
+    def unallocated_credit(self, party_id: int, currency: str, ex: Executor | None = None, *,
+                           kind: str = "payment") -> Decimal:
+        """الرصيد غير الموزّع (دفعات مقدمة) من سندات الطرف المرحّلة بالعملة دي."""
+        a = ALLOC[kind]
         return Decimal(self._x(ex).fetch_value(
-            "SELECT coalesce(sum(v.amount - coalesce((SELECT sum(a.amount) FROM cash.voucher_allocations a "
-            "WHERE a.supplier_payment_id = v.id), 0)), 0) FROM cash.supplier_payments v "
-            "WHERE v.supplier_id = %s AND v.currency_code = %s AND v.status = 'posted'", [supplier_id, currency]))
+            f"SELECT coalesce(sum(v.amount - coalesce((SELECT sum(x.amount) FROM {a.table} x "
+            f"WHERE x.{a.voucher_col} = v.id), 0)), 0) FROM {TABLES[kind]} v "
+            f"WHERE v.{PARTIES[kind][0]} = %s AND v.currency_code = %s AND v.status = 'posted'",
+            [party_id, currency]))
 
     def accounts(self, ids: list[int], ex: Executor | None = None) -> dict[int, dict]:
         rows = self._x(ex).fetch_all("SELECT id, code, name_ar FROM acc.accounts WHERE id = ANY(%s)", [list(ids)])
