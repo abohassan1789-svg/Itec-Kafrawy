@@ -90,10 +90,15 @@ class PurchaseReturnRepository:
         return ex.execute("DELETE FROM purch.return_reasons WHERE id = %s", [reason_id])
 
     # ---- فواتير الشراء المرحّلة (الأصل) --------------------------------------------
-    def supplier_invoices(self, supplier_id: int, stock_kind: str | None = None, currency_code: str | None = None,
-                          ex: Executor | None = None) -> list[dict]:
-        """فواتير المورد المرحّلة اللي لسه فيها حاجة ترجع (الأحدث فوق)."""
-        conds, params = ["v.supplier_id = %s", "v.status = 'posted'"], [supplier_id]
+    @staticmethod
+    def _returnable(supplier_id: int | None, stock_kind: str | None, currency_code: str | None,
+                    date_from: date | None, date_to: date | None, keyword: str,
+                    exclude_return_id: int | None) -> tuple[str, list[Any]]:
+        """فواتير الشراء المرحّلة ومعاها عدد السطور اللي لسه فيها حاجة ترجع (``remaining_lines``) — بفلاتر."""
+        conds, params = ["v.status = 'posted'"], []
+        if supplier_id:
+            conds.append("v.supplier_id = %s")
+            params.append(supplier_id)
         if stock_kind:
             conds.append("v.stock_kind = %s")
             params.append(stock_kind)
@@ -101,11 +106,53 @@ class PurchaseReturnRepository:
             conds.append("EXISTS (SELECT 1 FROM purch.purchase_invoice_lines l WHERE l.invoice_id = v.id "
                          "AND l.currency_code = %s)")
             params.append(currency_code)
-        return self._x(ex).fetch_all(
-            "SELECT v.id, v.invoice_no, v.invoice_date, v.supplier_invoice_no, v.stock_kind, v.currency_mode, "
-            "v.currency_code, v.fx_rate, v.total_amount, v.project_id "
-            "FROM purch.purchase_invoices v WHERE " + " AND ".join(conds) +
-            " ORDER BY v.invoice_date DESC, v.id DESC", params)
+        if date_from is not None:
+            conds.append("v.invoice_date >= %s")
+            params.append(date_from)
+        if date_to is not None:
+            conds.append("v.invoice_date <= %s")
+            params.append(date_to)
+        keyword = (keyword or "").strip()
+        if keyword:
+            like = f"%{keyword}%"
+            conds.append("(v.invoice_no ILIKE %s OR v.supplier_invoice_no ILIKE %s OR s.name_ar ILIKE %s "
+                         "OR s.code ILIKE %s OR EXISTS (SELECT 1 FROM purch.purchase_invoice_lines l "
+                         "JOIN inv.items i ON i.id = l.item_id WHERE l.invoice_id = v.id "
+                         "AND (i.code ILIKE %s OR i.name ILIKE %s)))")
+            params += [like] * 6
+        sql = f"""
+            WITH inv AS (
+                SELECT v.id, v.invoice_no, v.invoice_date, v.supplier_id, v.supplier_invoice_no, v.stock_kind,
+                       v.currency_mode, v.currency_code, v.fx_rate, v.total_amount, v.total_base, v.project_id,
+                       s.code AS supplier_code, s.name_ar AS supplier_name,
+                       (SELECT count(*) FROM purch.purchase_invoice_lines pl WHERE pl.invoice_id = v.id) AS line_count,
+                       (SELECT count(*) FROM purch.purchase_invoice_lines pl WHERE pl.invoice_id = v.id
+                           AND pl.base_qty > {_RETURNED}) AS remaining_lines
+                FROM purch.purchase_invoices v JOIN party.suppliers s ON s.id = v.supplier_id
+                WHERE {" AND ".join(conds)})
+            SELECT * FROM inv WHERE remaining_lines > 0"""
+        return sql, [exclude_return_id, *params]
+
+    def returnable_invoices(self, supplier_id: int | None = None, stock_kind: str | None = None,
+                            currency_code: str | None = None, date_from: date | None = None,
+                            date_to: date | None = None, keyword: str = "", exclude_return_id: int | None = None,
+                            limit: int | None = None, offset: int = 0, ex: Executor | None = None) -> list[dict]:
+        """فواتير الشراء المرحّلة اللي لسه فيها حاجة ترجع (الأحدث فوق) — للاختيار في المرتجع."""
+        sql, params = self._returnable(supplier_id, stock_kind, currency_code, date_from, date_to, keyword,
+                                       exclude_return_id)
+        sql += " ORDER BY invoice_date DESC, id DESC"
+        if limit is not None:
+            sql += " LIMIT %s OFFSET %s"
+            params += [limit, offset]
+        return self._x(ex).fetch_all(sql, params)
+
+    def count_returnable_invoices(self, supplier_id: int | None = None, stock_kind: str | None = None,
+                                  currency_code: str | None = None, date_from: date | None = None,
+                                  date_to: date | None = None, keyword: str = "", exclude_return_id: int | None = None,
+                                  ex: Executor | None = None) -> int:
+        sql, params = self._returnable(supplier_id, stock_kind, currency_code, date_from, date_to, keyword,
+                                       exclude_return_id)
+        return int(self._x(ex).fetch_value(f"SELECT count(*) FROM ({sql}) q", params))
 
     def invoice_lines_for(self, *, invoice_id: int | None = None, line_ids: list[int] | None = None,
                           exclude_return_id: int | None = None, ex: Executor | None = None) -> list[dict]:

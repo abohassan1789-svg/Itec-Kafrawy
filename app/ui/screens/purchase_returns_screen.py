@@ -32,7 +32,7 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QFont, QFontMetrics
+from PySide6.QtGui import QColor, QFont, QFontMetrics
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QButtonGroup,
@@ -51,8 +51,10 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QPushButton,
     QSizePolicy,
+    QSplitter,
     QStackedWidget,
     QTableWidget,
+    QTableWidgetItem,
     QVBoxLayout,
     QWidget,
 )
@@ -500,8 +502,16 @@ class PurchaseReturnsScreen(BaseScreen):
         self.all_button.setFixedHeight(34)
         self.all_button.setToolTip("كل اللي فاضل من الفاتورة المختارة ينزل في المرتجع")
         self.all_button.clicked.connect(self.return_all)
-        inv_box = self._field("من فاتورة", self.inv_combo)
-        inv_box.setMinimumWidth(180)
+        # «📋 فواتير المشتريات» (طلب المستخدم 2026-11-28): واجهة منبثقة — الفواتير فوق وتفاصيل المختارة تحت.
+        self.pick_button = QPushButton("📋 فواتير المشتريات")
+        self.pick_button.setStyleSheet(button_qss("green"))
+        self.pick_button.setFixedHeight(34)
+        self.pick_button.setCursor(Qt.PointingHandCursor)
+        self.pick_button.setToolTip("اختار الأصناف الراجعة من فواتير الشراء المرحّلة (الفواتير فوق والتفاصيل تحت)")
+        self.pick_button.clicked.connect(self.pick_from_invoices)
+        self.inv_lookup = self._small_button("📋", self.pick_from_invoices, "فواتير المشتريات")
+        inv_box = self._field("من فاتورة", self.inv_combo, self.inv_lookup)
+        inv_box.setMinimumWidth(200)
         row.addWidget(inv_box, 2)
         self.src_box = self._field("الصنف من الفاتورة", self.src_combo)
         self.src_box.setMinimumWidth(240)
@@ -524,7 +534,7 @@ class PurchaseReturnsScreen(BaseScreen):
         self.info_label.setObjectName("infoLabel")
         self.info_label.setWordWrap(True)
         row2.addWidget(self.info_label, 1)
-        for b in (self.add_button, self.clear_button, self.remove_button, self.all_button):
+        for b in (self.pick_button, self.add_button, self.clear_button, self.remove_button, self.all_button):
             font = QFont(b.font())
             font.setPixelSize(12)
             font.setBold(True)
@@ -900,6 +910,38 @@ class PurchaseReturnsScreen(BaseScreen):
         self._show_lines()
         self._refresh_review()
 
+    def pick_from_invoices(self) -> None:
+        """«📋 فواتير المشتريات»: الواجهة المنبثقة ← الأصناف المختارة بتنزل في المرتجع (والمورد لو لسه فاضي)."""
+        if self.mode not in EDITING:
+            return
+        used: dict[int, Decimal] = {}
+        for ln in self._lines:
+            if ln.get("source_line_id"):
+                used[int(ln["source_line_id"])] = used.get(int(ln["source_line_id"]), Decimal("0")) +                     _dec(ln["qty"]) * self._factor_of(ln["item_id"], ln["unit_id"])
+        supplier = self.supplier_edit.currentData()
+        dialog = InvoicePickerDialog(self.service, self, suppliers=self._choices["suppliers"], supplier_id=supplier,
+                                     lock_supplier=bool(supplier and self._lines),
+                                     stock_kind=self.kind_combo.currentData() or "invoice",
+                                     currency_code=self._currency() if supplier else None,
+                                     exclude_return_id=self.current_id if self.mode != "new" else None, used=used)
+        if not dialog.exec() or not dialog.result:
+            return
+        if dialog.result_supplier != supplier:
+            self.supplier_edit.set_value(dialog.result_supplier)       # بيشيل أصناف فواتير المورد القديم
+        if dialog.result_currency and dialog.result_currency != self._currency():
+            self._set_combo(self.currency_combo, dialog.result_currency)
+        for line in dialog.result:
+            same = next((ln for ln in self._lines if all(ln.get(k) == line.get(k) for k in (
+                "source_line_id", "warehouse_id", "unit_id", "unit_price"))), None)
+            if same is not None:
+                same["qty"] = _dec(same["qty"]) + line["qty"]
+            else:
+                self._lines.append(line)
+        self._fill_invoices()
+        self.clear_entry()
+        self._show_lines()
+        self._refresh_review()
+
     def clear_entry(self) -> None:
         self._sel = -1
         self.lines_table.clearSelection()
@@ -967,6 +1009,8 @@ class PurchaseReturnsScreen(BaseScreen):
         self.clear_button.setEnabled(editing)
         self.remove_button.setEnabled(editing and updating)
         self.all_button.setEnabled(editing and not self._free())
+        self.pick_button.setEnabled(editing)
+        self.inv_lookup.setEnabled(editing)
         free = self._free()
         self.add_tax.setEnabled(editing and free and self.kind_combo.currentData() != "statement")
         self.inv_combo.setEnabled(editing)
@@ -1317,6 +1361,298 @@ class PurchaseReturnsScreen(BaseScreen):
         self.service.delete_return(int(record_id), expected_version=self.current_version)
 
 
+class InvoicePickerDialog(QDialog):
+    """«📋 فواتير المشتريات» (طلب المستخدم 2026-11-28): فوق صفوف الفواتير المرحّلة اللي لسه فيها حاجة ترجع (مورد ·
+    فترة · بحث · صفحات) — والضغط على فاتورة بيعرض تفاصيلها تحت: ✔ لكل صنف + «هيرجع» (الفاضي = الفاضل كله).
+    الاختيار بيفضل محفوظ وانت بتتنقّل بين الفواتير، و«إضافة المختار» بيرجّع كل الأصناف المختارة للمرتجع."""
+
+    INV_HEADERS = ["رقم الفاتورة", "التاريخ", "المورد", "رقم فاتورة المورد", "النوع", "العملة", "الإجمالي",
+                   "أصناف فاضلة"]
+    (L_CHECK, L_CODE, L_NAME, L_WH, L_UNIT, L_BOUGHT, L_BEFORE, L_LEFT, L_QTY, L_PRICE) = range(10)
+    LINE_HEADERS = ["✔", "رقم الصنف", "اسم الصنف", "المخزن", "الوحدة", "اتشرى", "رجع قبل كده", "فاضل",
+                    "↩ هيرجع", "السعر"]
+
+    def __init__(self, service: PurchaseReturnService, parent: QWidget | None = None, *,
+                 suppliers: list[dict], supplier_id: int | None, lock_supplier: bool, stock_kind: str,
+                 currency_code: str | None, exclude_return_id: int | None, used: dict[int, Decimal]) -> None:
+        super().__init__(parent)
+        self.service = service
+        self.kind = stock_kind
+        self.currency = currency_code                  # None = لسه مفيش مورد ← أي عملة (وكل المختار عملة واحدة)
+        self.exclude_id = exclude_return_id
+        self.used = used                               # اللي في المرتجع المفتوح من كل سطر فاتورة (بالأساسية)
+        self.page = 1
+        self.picks: dict[int, tuple[dict, Decimal]] = {}   # سطر الفاتورة ← (السطر، الكمية بوحدته)
+        self.result: list[dict] = []
+        self.result_supplier: int | None = None
+        self.result_currency: str | None = None
+        self._lines: list[dict] = []
+        self._loading = False
+        self.setWindowTitle("📋 فواتير المشتريات — اختار الأصناف الراجعة")
+        self.setLayoutDirection(Qt.RightToLeft)
+        self.setStyleSheet(QSS)
+        self.resize(1100, 680)
+        layout = QVBoxLayout(self)
+        top = QHBoxLayout()
+        self.supplier = QComboBox()
+        self.supplier.addItem("كل الموردين", None)
+        for s in suppliers:
+            if s["is_active"] or s["id"] == supplier_id:
+                self.supplier.addItem(f"{s['code']} — {s['name_ar']}", int(s["id"]))
+        index = self.supplier.findData(supplier_id)
+        self.supplier.setCurrentIndex(max(index, 0))
+        self.supplier.setEnabled(not lock_supplier)
+        if lock_supplier:
+            self.supplier.setToolTip("المرتجع فيه أصناف من فواتير المورد ده — المورد مايتغيّرش")
+        today = dt.date.today()
+        self.date_from, self.date_to = _date_edit(), _date_edit()
+        self.date_from.setDate(_qdate(today.replace(month=1, day=1)))
+        self.keyword = QLineEdit()
+        self.keyword.setPlaceholderText("🔍 رقم الفاتورة أو رقمها عند المورد أو الصنف…")
+        for w, label in ((self.supplier, "المورد"), (self.date_from, "من"), (self.date_to, "إلى")):
+            top.addWidget(QLabel(label))
+            top.addWidget(w, 2 if w is self.supplier else 0)
+        top.addWidget(self.keyword, 2)
+        layout.addLayout(top)
+
+        split = QSplitter(Qt.Vertical)
+        upper = QWidget()
+        ul = QVBoxLayout(upper)
+        ul.setContentsMargins(0, 0, 0, 0)
+        cap = QLabel("🧾 الفواتير (المرحّلة اللي لسه فيها حاجة ترجع) — اضغط على فاتورة تظهر تفاصيلها تحت")
+        cap.setObjectName("sectionTitle")
+        ul.addWidget(cap)
+        self.invoices = QTableWidget(0, len(self.INV_HEADERS))
+        self.invoices.setHorizontalHeaderLabels(self.INV_HEADERS)
+        self._table_look(self.invoices, stretch=2)
+        self.invoices.currentCellChanged.connect(lambda r, _c, _pr, _pc: self._show_invoice(r))
+        ul.addWidget(self.invoices, 1)
+        pager = QHBoxLayout()
+        self.count = QLabel("")
+        self.count.setObjectName("infoLabel")
+        pager.addWidget(self.count, 1)
+        self.prev_button = QPushButton("→ السابق")
+        self.next_button = QPushButton("التالي ←")
+        for b in (self.prev_button, self.next_button):
+            b.setStyleSheet(button_qss("white"))
+            pager.addWidget(b)
+        ul.addLayout(pager)
+        split.addWidget(upper)
+        lower = QWidget()
+        ll = QVBoxLayout(lower)
+        ll.setContentsMargins(0, 0, 0, 0)
+        self.detail_title = QLabel("☰ تفاصيل الفاتورة")
+        self.detail_title.setObjectName("sectionTitle")
+        ll.addWidget(self.detail_title)
+        self.lines = QTableWidget(0, len(self.LINE_HEADERS))
+        self.lines.setHorizontalHeaderLabels(self.LINE_HEADERS)
+        self._table_look(self.lines, stretch=self.L_NAME)
+        self.lines.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        self.lines.itemChanged.connect(self._on_line_item)
+        ll.addWidget(self.lines, 1)
+        self.hint = QLabel("✔ = يرجع الفاضل كله · أو اكتب في «هيرجع» كمية أقل (بوحدة الفاتورة) — الاختيار بيفضل "
+                           "محفوظ لو اتنقلت لفاتورة تانية")
+        self.hint.setObjectName("infoLabel")
+        self.hint.setWordWrap(True)
+        ll.addWidget(self.hint)
+        split.addWidget(lower)
+        split.setSizes([300, 320])
+        layout.addWidget(split, 1)
+
+        bottom = QHBoxLayout()
+        self.picked_label = QLabel("")
+        self.picked_label.setStyleSheet("font-weight:800; color:#137A38;")
+        bottom.addWidget(self.picked_label, 1)
+        self.all_button = QPushButton("☑ كل أصناف الفاتورة")
+        self.all_button.setStyleSheet(button_qss("white"))
+        self.add_button = QPushButton("＋ إضافة المختار للمرتجع")
+        self.add_button.setStyleSheet(button_qss("green"))
+        close = QPushButton("إغلاق")
+        close.setStyleSheet(button_qss("gray"))
+        for b in (self.all_button, self.add_button, close):
+            b.setFixedHeight(34)
+            bottom.addWidget(b)
+        layout.addLayout(bottom)
+        self.prev_button.clicked.connect(lambda: self._go(self.page - 1))
+        self.next_button.clicked.connect(lambda: self._go(self.page + 1))
+        self.all_button.clicked.connect(self.pick_all)
+        self.add_button.clicked.connect(self.apply)
+        close.clicked.connect(self.reject)
+        self.keyword.textChanged.connect(lambda _t: self._go(1))
+        for w in (self.date_from, self.date_to):
+            w.dateChanged.connect(lambda _d: self._go(1))
+        self.supplier.currentIndexChanged.connect(lambda _i: self._go(1))
+        self._rows: list[dict] = []
+        self._go(1)
+        self._update_picked()
+
+    @staticmethod
+    def _table_look(table: QTableWidget, stretch: int) -> None:
+        table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        table.setSelectionMode(QAbstractItemView.SingleSelection)
+        table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        table.setAlternatingRowColors(True)
+        table.verticalHeader().setVisible(False)
+        table.verticalHeader().setDefaultSectionSize(30)
+        header = table.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(stretch, QHeaderView.Stretch)
+
+    # ---- الفواتير ---------------------------------------------------------------
+    def _args(self) -> dict[str, Any]:
+        return {"supplier_id": self.supplier.currentData(), "stock_kind": self.kind,
+                "currency_code": self.currency, "date_from": _pydate(self.date_from.date()),
+                "date_to": _pydate(self.date_to.date()), "keyword": self.keyword.text().strip(),
+                "exclude_return_id": self.exclude_id}
+
+    def _go(self, page: int) -> None:
+        try:
+            total = self.service.count_returnable_invoices(**self._args())
+            pages = max(1, -(-total // PAGE_SIZE))
+            self.page = min(max(1, page), pages)
+            self._rows = self.service.returnable_invoices(**self._args(), page=self.page)
+        except Exception as exc:  # noqa: BLE001
+            messages.show_error(self, "تعذّر تحميل الفواتير", exc)
+            total, pages, self._rows = 0, 1, []
+        t = self.invoices
+        t.blockSignals(True)
+        t.setRowCount(len(self._rows))
+        for r, row in enumerate(self._rows):
+            cur = row["currency_code"] if row["currency_mode"] == "single" else "متعدد"
+            values = [row["invoice_no"], f"{row['invoice_date']:%d-%m-%Y}", row["supplier_name"],
+                      row["supplier_invoice_no"] or "—", "فاتورة" if row["stock_kind"] == "invoice" else "بيان", cur,
+                      money(row["total_amount"]), f"{row['remaining_lines']} من {row['line_count']}"]
+            for c, value in enumerate(values):
+                t.setItem(r, c, _cell(str(value), number=c == 6, bold=c == 0))
+        t.blockSignals(False)
+        self.count.setText(f"{total} فاتورة · صفحة {self.page} من {pages}")
+        self.prev_button.setEnabled(self.page > 1)
+        self.next_button.setEnabled(self.page < pages)
+        if self._rows:
+            t.selectRow(0)
+            self._show_invoice(0)
+        else:
+            self._show_invoice(-1)
+
+    def _show_invoice(self, row: int) -> None:
+        if not 0 <= row < len(self._rows):
+            self._lines = []
+            self.detail_title.setText("☰ تفاصيل الفاتورة — مفيش فواتير بالفلتر ده")
+            self.lines.setRowCount(0)
+            return
+        inv = self._rows[row]
+        try:
+            self._lines = self.service.invoice_lines(int(inv["id"]), self.exclude_id)
+        except Exception as exc:  # noqa: BLE001
+            messages.show_error(self, "تعذّر تحميل التفاصيل", exc)
+            self._lines = []
+        self.detail_title.setText(f"☰ تفاصيل الفاتورة {inv['invoice_no']} — {inv['supplier_name']} · "
+                                  f"{inv['invoice_date']:%d-%m-%Y}")
+        self._loading = True
+        t = self.lines
+        t.setRowCount(len(self._lines))
+        for r, ln in enumerate(self._lines):
+            factor = Decimal(ln["factor"])
+            left = self._left(ln)
+            ok = left > 0 and (self.currency is None or ln["currency_code"] == self.currency)
+            pick = self.picks.get(int(ln["id"]))
+            check = QTableWidgetItem("")
+            check.setFlags((Qt.ItemIsUserCheckable | Qt.ItemIsEnabled) if ok else Qt.ItemIsUserCheckable)
+            check.setCheckState(Qt.Checked if pick else Qt.Unchecked)
+            t.setItem(r, self.L_CHECK, check)
+            cells = [(self.L_CODE, ln["item_code"]), (self.L_NAME, ln["item_name"] + (" (خدمي)" if ln["is_service"] else "")),
+                     (self.L_WH, ln["warehouse_name"] or "—"), (self.L_UNIT, ln["unit_name"]),
+                     (self.L_BOUGHT, fmt_qty(Decimal(ln["qty"]))),
+                     (self.L_BEFORE, fmt_qty(Decimal(ln["returned_qty"] or 0) / factor)),
+                     (self.L_LEFT, fmt_qty(left / factor)),
+                     (self.L_PRICE, f"{money(ln['source_price'])} {ln['currency_code']}")]
+            for c, text in cells:
+                t.setItem(r, c, _cell(str(text), number=c in (self.L_BOUGHT, self.L_BEFORE, self.L_LEFT, self.L_PRICE),
+                                      bold=c == self.L_LEFT, color=None if ok else "#94A3B8"))
+            qty = QTableWidgetItem(num(pick[1]) if pick else "")
+            qty.setTextAlignment(Qt.AlignLeft | Qt.AlignAbsolute | Qt.AlignVCenter)
+            qty.setFlags((Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsSelectable) if ok else Qt.ItemIsSelectable)
+            qty.setBackground(QColor("#FFF7ED"))
+            qty.setToolTip("الكمية بوحدة الفاتورة — الفاضي مع ✔ = الفاضل كله")
+            t.setItem(r, self.L_QTY, qty)
+            if not ok:
+                t.item(r, self.L_NAME).setToolTip("مفيش حاجة فاضلة ترجع" if left <= 0 else
+                                                  f"عملة السطر {ln['currency_code']} غير عملة المرتجع {self.currency}")
+        self._loading = False
+
+    def _left(self, ln: dict) -> Decimal:
+        return max(Decimal("0"), Decimal(ln["remaining_base"]) - self.used.get(int(ln["id"]), Decimal("0")))
+
+    # ---- الاختيار --------------------------------------------------------------
+    def _set_pick(self, ln: dict, qty: Decimal | None) -> str | None:
+        """بيرجّع الغلط (لو فيه) — ``qty`` None = الفاضل كله · 0 = شيل الاختيار."""
+        lid = int(ln["id"])
+        factor = Decimal(ln["factor"])
+        left = self._left(ln) / factor
+        if qty is None:
+            qty = left
+        if qty <= 0:
+            self.picks.pop(lid, None)
+            return None
+        if qty > left:
+            return f"{ln['item_code']}: الفاضل {fmt_qty(left)} {ln['unit_name']} بس."
+        others = {p[0]["supplier_id"] for p in self.picks.values() if int(p[0]["id"]) != lid}
+        if others and ln["supplier_id"] not in others:
+            return "المرتجع الواحد لمورد واحد — الأصناف المختارة من مورد تاني (شيلها الأول)."
+        currencies = {p[0]["currency_code"] for p in self.picks.values() if int(p[0]["id"]) != lid}
+        if currencies and ln["currency_code"] not in currencies:
+            return "المرتجع الواحد بعملة واحدة — الأصناف المختارة بعملة تانية."
+        self.picks[lid] = (ln, qty)
+        return None
+
+    def _on_line_item(self, item: QTableWidgetItem) -> None:
+        if self._loading or not 0 <= item.row() < len(self._lines):
+            return
+        ln = self._lines[item.row()]
+        error = None
+        if item.column() == self.L_CHECK:
+            error = self._set_pick(ln, None if item.checkState() == Qt.Checked else Decimal("0"))
+        elif item.column() == self.L_QTY:
+            text = item.text().strip()
+            error = self._set_pick(ln, None if not text and self.lines.item(item.row(), self.L_CHECK).checkState()
+                                   == Qt.Checked else _dec(text))
+        if error:
+            messages.warn(self, "اختيار الأصناف", error)
+        # بعد ما الإشارة تخلص: الكمية والعلامة زي ما اتحفظوا
+        QTimer.singleShot(0, lambda: (self._show_invoice(self.invoices.currentRow()), self._update_picked()))
+
+    def pick_all(self) -> None:
+        """«☑ كل أصناف الفاتورة»: كل اللي فاضل من الفاتورة المعروضة."""
+        errors = [e for ln in self._lines if self._left(ln) > 0 and (self.currency is None or ln["currency_code"]
+                                                                   == self.currency)
+                  for e in [self._set_pick(ln, None)] if e]
+        if errors:
+            messages.warn(self, "اختيار الأصناف", errors[0])
+        self._show_invoice(self.invoices.currentRow())
+        self._update_picked()
+
+    def _update_picked(self) -> None:
+        invoices = sorted({p[0]["invoice_no"] for p in self.picks.values()})
+        self.picked_label.setText(f"المختار: {len(self.picks)} صنف" + (f" من {'، '.join(invoices)}" if invoices else "")
+                                  if self.picks else "ماختارتش أصناف لسه")
+        self.add_button.setText(f"＋ إضافة المختار للمرتجع ({len(self.picks)})" if self.picks
+                                else "＋ إضافة المختار للمرتجع")
+        self.add_button.setEnabled(bool(self.picks))
+
+    def apply(self) -> None:
+        if not self.picks:
+            return
+        statement = self.kind == "statement"
+        self.result = [{"source_line_id": int(ln["id"]), "item_id": int(ln["item_id"]), "unit_id": int(ln["unit_id"]),
+                        "warehouse_id": ln["warehouse_id"], "qty": qty, "unit_price": Decimal(ln["source_price"]),
+                        "tax_code_id": None if statement else ln["tax_code_id"], "invoice_no": ln["invoice_no"],
+                        "supplier_id": ln["supplier_id"]} for ln, qty in self.picks.values()]
+        first = next(iter(self.picks.values()))[0]
+        self.result_supplier = int(first["supplier_id"])
+        self.result_currency = first["currency_code"]
+        self.accept()
+
+
 class ReasonsDialog(QDialog):
     """«⚙ أسباب المرتجع»: إضافة · تعديل الاسم · إيقاف / تشغيل · مسح (اللي اتستعمل بيتوقف بس)."""
 
@@ -1497,4 +1833,4 @@ class ReturnSearchDialog(QDialog):
         self.accept()
 
 
-__all__ = ["PurchaseReturnsScreen", "ReasonsDialog", "ReturnSearchDialog", "fmt_rate"]
+__all__ = ["PurchaseReturnsScreen", "InvoicePickerDialog", "ReasonsDialog", "ReturnSearchDialog", "fmt_rate"]

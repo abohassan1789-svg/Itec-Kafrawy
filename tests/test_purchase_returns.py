@@ -435,3 +435,59 @@ def test_screen_return_all_cash_and_reasons(env):
     dialog.close()
     screen.close()
     screen.deleteLater()
+
+
+def test_returnable_invoices_and_picker_dialog(env, monkeypatch):
+    from PySide6.QtCore import Qt
+
+    from app.ui.screens.purchase_returns_screen import InvoicePickerDialog, PurchaseReturnsScreen
+
+    s = env["service"]
+    a, la = buy(env, [(env["item"], "10", "100"), (env["item2"], "4", "50")])
+    b, _lb = buy(env, [(env["item"], "5", "200")], sup=env["sup2"], d=D2)
+    rows = s.returnable_invoices(stock_kind="invoice")
+    assert [r["id"] for r in rows] == [b, a] and rows[1]["remaining_lines"] == 2
+    assert s.count_returnable_invoices(stock_kind="invoice") == 2
+    assert [r["id"] for r in s.returnable_invoices(env["sup"], "invoice", keyword="لمبة")] == [a]
+    assert s.returnable_invoices(stock_kind="statement") == []
+    # الواجهة المنبثقة: الفواتير فوق ← الضغط على فاتورة بيعرض تفاصيلها تحت
+    suppliers = s.choices()["suppliers"]
+    dialog = InvoicePickerDialog(s, None, suppliers=suppliers, supplier_id=None, lock_supplier=False,
+                                 stock_kind="invoice", currency_code=None, exclude_return_id=None, used={})
+    assert dialog.invoices.rowCount() == 2 and dialog.lines.rowCount() == 1           # أحدث فاتورة (B)
+    dialog.invoices.setCurrentCell(1, 0)                                                # الفاتورة A
+    assert dialog.lines.rowCount() == 2 and "PUR-2026-00001" in dialog.detail_title.text()
+    dialog.lines.item(0, dialog.L_CHECK).setCheckState(Qt.Checked)                       # الكابل كله (10)
+    dialog.lines.item(1, dialog.L_QTY).setText("2")                                     # لمبتين بس
+    QApplication.processEvents()
+    assert {int(k): v[1] for k, v in dialog.picks.items()} == {la[0]["id"]: 10, la[1]["id"]: 2}
+    dialog.lines.item(1, dialog.L_QTY).setText("9")                                     # أكتر من الفاضل
+    QApplication.processEvents()
+    assert dialog.picks[la[1]["id"]][1] == 2 and "الفاضل 4" in env["shown"][-1]
+    dialog.invoices.setCurrentCell(0, 0)                                                # فاتورة مورد تاني
+    dialog.pick_all()
+    assert len(dialog.picks) == 2 and "لمورد واحد" in env["shown"][-1]
+    dialog.apply()
+    assert dialog.result_supplier == env["sup"] and len(dialog.result) == 2
+    dialog.deleteLater()
+
+    # الزرار في الشاشة: المورد بيتملى والأصناف بتنزل
+    def fake_exec(self):
+        self.invoices.setCurrentCell(next(r for r, row in enumerate(self._rows) if row["id"] == a), 0)
+        self.pick_all()
+        self.apply()
+        return True
+
+    monkeypatch.setattr(InvoicePickerDialog, "exec", fake_exec)
+    screen = PurchaseReturnsScreen(service=s)
+    screen.new_record()
+    assert screen.pick_button.isEnabled()
+    screen.pick_from_invoices()
+    assert screen.supplier_edit.currentData() == env["sup"]
+    assert [(ln["source_line_id"], ln["qty"]) for ln in screen._lines] == [(la[0]["id"], 10), (la[1]["id"], 4)]
+    screen.pick_from_invoices()                                                          # مفيش حاجة فاضلة
+    assert len(screen._lines) == 2
+    screen.save()
+    assert screen.current_record["total_base"] == D_("1368.00")
+    screen.close()
+    screen.deleteLater()

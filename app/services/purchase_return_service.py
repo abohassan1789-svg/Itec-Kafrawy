@@ -157,12 +157,25 @@ class PurchaseReturnService:
 
     def supplier_invoices(self, supplier_id: int, stock_kind: str | None = None,
                           currency_code: str | None = None, exclude_return_id: int | None = None) -> list[dict]:
-        """فواتير المورد المرحّلة ومعاها ``remaining_lines`` = عدد السطور اللي لسه فيها حاجة ترجع."""
-        rows = self.repository.supplier_invoices(int(supplier_id), stock_kind, currency_code)
-        for r in rows:
-            lines = self.invoice_lines(int(r["id"]), exclude_return_id)
-            r["remaining_lines"] = sum(1 for ln in lines if ln["remaining_base"] > 0)
-        return rows
+        """فواتير المورد المرحّلة اللي لسه فيها حاجة ترجع ومعاها ``remaining_lines`` (عدد السطور دي)."""
+        return self.repository.returnable_invoices(int(supplier_id), stock_kind, currency_code,
+                                                   exclude_return_id=exclude_return_id)
+
+    def returnable_invoices(self, supplier_id: int | None = None, stock_kind: str | None = None,
+                            currency_code: str | None = None, date_from: dt.date | None = None,
+                            date_to: dt.date | None = None, keyword: str = "", exclude_return_id: int | None = None,
+                            page: int = 1, page_size: int | None = PAGE_SIZE) -> list[dict]:
+        """نافذة «فواتير المشتريات» في المرتجع: الفواتير المرحّلة اللي لسه فيها حاجة ترجع — بفترة وكلمة وصفحات."""
+        offset = (max(1, int(page)) - 1) * page_size if page_size else 0
+        return self.repository.returnable_invoices(supplier_id, stock_kind, currency_code, date_from, date_to,
+                                                   keyword, exclude_return_id, limit=page_size, offset=offset)
+
+    def count_returnable_invoices(self, supplier_id: int | None = None, stock_kind: str | None = None,
+                                  currency_code: str | None = None, date_from: dt.date | None = None,
+                                  date_to: dt.date | None = None, keyword: str = "",
+                                  exclude_return_id: int | None = None) -> int:
+        return self.repository.count_returnable_invoices(supplier_id, stock_kind, currency_code, date_from, date_to,
+                                                         keyword, exclude_return_id)
 
     def invoice_lines(self, invoice_id: int, exclude_return_id: int | None = None) -> list[dict]:
         """سطور فاتورة شراء للمرتجع: اتشرى · رجع قبل كده · فاضل (بالوحدة الأساسية) · ``source_price`` لكل وحدة."""
