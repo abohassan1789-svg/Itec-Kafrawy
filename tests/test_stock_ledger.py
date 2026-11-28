@@ -268,7 +268,7 @@ def test_line_validation(env):
         ([S(service, env["main"], 1, unit_cost=1)], "خدمي"),
         ([S(env["item"], env["main"], 1)], "تكلفة الوحدة مطلوبة"),
         ([S(env["item"], env["main"], 1, unit_cost=-1)], "بالسالب"),
-        ([S(env["item"], env["main"], -1, unit_cost=1)], "بمتوسط التكلفة"),
+        ([S(env["item"], env["main"], -1, unit_cost=-1)], "بالسالب"),     # خارج بتكلفة (مرتجع الشراء — 0049)
         ([S(env["item"], env["main"], 0, unit_cost=1)], "صفر"),
         ([S(env["item"], env["main"], "1.0000001", unit_cost=1)], "6 أرقام"),
         ([S(env["item"], env["main"], 1, "x", unit_cost=1)], "فاتورة"),

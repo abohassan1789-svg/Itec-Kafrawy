@@ -8,7 +8,8 @@
 2. بيمسح حركات المستند القديمة (لو بيتعدّل) ويسجّل الجديدة — **التاريخ القديم مسموح** (رد المستخدم).
 3. **بيعيد حساب** الصنف من أقدم يوم اتأثر لحد آخر حركة:
    * **متوسط مرجّح مستمر على مستوى الشركة لكل (صنف + فاتورة/بيان)** — الداخل بتكلفته بيغيّر المتوسط، والخارج
-     بيطلع بالمتوسط ومابيغيّروش · التحويل بين مخزنين حقيقيين: الخارج بالمتوسط والداخل **بنفس القيمة**.
+     بيطلع بالمتوسط ومابيغيّروش · التحويل بين مخزنين حقيقيين: الخارج بالمتوسط والداخل **بنفس القيمة** ·
+     **مرتجع المشتريات** (0049): الخارج **بالتكلفة اللي المستند بعتها** (سعر الشراء) والمتوسط بيتحسب من الباقي.
    * ترتيب نفس اليوم: **الوارد بتكلفة ← التحويلات ← الصادر** (وجوه كل مجموعة بالترتيب اللي اتسجلت بيه).
    * آخر خروج بيصفّر الكمية بياخد **كل القيمة الباقية** (مفيش قروش معلّقة في المخزون).
    * **الرصيد السالب بالصلاحية بس** (رد المستخدم — صلاحية «من غير رصيد» في كل شاشة لوحدها، والمستند بيبعت
@@ -189,9 +190,16 @@ class StockLedgerService:
                     raise BusinessError(f"{label}: تكلفة الوحدة أكبر من المسموح.")
                 row["given_cost"] = cost.quantize(COST_STEP, rounding=ROUND_HALF_UP)
                 row["mode"] = "given"
+            elif line.unit_cost not in (None, ""):
+                # خارج بتكلفة من المستند (مرتجع المشتريات — رد المستخدم 2026-11-28: «بنفس السعر اللي اشتريت بيه»).
+                cost = _decimal(line.unit_cost, "تكلفة الوحدة")
+                if cost < 0:
+                    raise BusinessError(f"{label}: تكلفة الوحدة مينفعش تبقى بالسالب.")
+                if cost > MAX_COST:
+                    raise BusinessError(f"{label}: تكلفة الوحدة أكبر من المسموح.")
+                row["given_cost"] = cost.quantize(COST_STEP, rounding=ROUND_HALF_UP)
+                row["mode"] = "given_out"
             else:
-                if line.unit_cost not in (None, ""):
-                    raise BusinessError(f"{label}: الخارج بيطلع بمتوسط التكلفة — ماتكتبلوش تكلفة.")
                 row["mode"] = "average"
             if row["is_virtual"] and line.unit_cost not in (None, "") and line.transfer_of is None:
                 raise BusinessError(f"{label}: المخزن الوهمي كميات بس — ماتكتبلوش تكلفة.")
@@ -374,6 +382,9 @@ class StockLedgerService:
         if m["qty"] > 0:                                              # داخل بتكلفة من المستند
             self._receive(m, chain, m["given_cost"], None, results)
             return
+        if m["cost_mode"] == "given_out":                             # خارج بتكلفة من المستند (مرتجع شراء)
+            self._issue_given(m, chain, results)
+            return
         if pair is not None and not pair["is_virtual"] and pair["stock_kind"] == m["stock_kind"]:
             # تحويل بين مخزنين حقيقيين بنفس النوع: الشركة مااتغيّرش — الخارج بالمتوسط والداخل بنفس القيمة.
             value = _money(m["qty"] * chain["avg"])
@@ -411,6 +422,27 @@ class StockLedgerService:
             chain["short"].append([int(m["id"]), missing, avg, qty])   # [الحركة، الناقص، بكام طلع، كميتها]
         chain["qty"] += qty
         chain["value"] += value
+        results[int(m["id"])] = {"unit_cost": unit_cost, "value": value, **self._snapshot(chain)}
+
+    def _issue_given(self, m: dict[str, Any], chain: dict[str, Any], results: dict[int, dict]) -> None:
+        """خارج **بالتكلفة اللي المستند بعتها** (مرتجع المشتريات بسعر الشراء) — والمتوسط بيتحسب من الباقي.
+
+        * لو الرصيد مش مغطّي الكمية (أو بالسالب) ← بيطلع زي أي خارج (بالمتوسط + «ناقص» يتصلّح بالشراء الجاي).
+        * لو بيصفّر الكمية ← بياخد كل القيمة الباقية · ولو السعر أكبر من قيمة الباقي ← بياخد القيمة كلها (المتوسط صفر).
+        * الفرق بين القيمة دي وسعر المستند بيتقيّد في «فروق تكلفة المخزون» من المستند نفسه.
+        """
+        qty, have = m["qty"], chain["qty"]
+        if have <= 0 or have + qty < 0:
+            self._issue(m, chain, results)
+            return
+        value = -chain["value"] if have + qty == 0 else _money(qty * m["given_cost"])
+        if chain["value"] + value < 0:
+            value = -chain["value"]
+        chain["qty"] += qty
+        chain["value"] += value
+        if chain["qty"] > 0:
+            chain["avg"] = max(ZERO, (chain["value"] / chain["qty"]).quantize(COST_STEP, rounding=ROUND_HALF_UP))
+        unit_cost = (value / qty).quantize(COST_STEP, rounding=ROUND_HALF_UP)
         results[int(m["id"])] = {"unit_cost": unit_cost, "value": value, **self._snapshot(chain)}
 
     @staticmethod

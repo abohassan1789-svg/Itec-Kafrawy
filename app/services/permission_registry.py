@@ -161,6 +161,10 @@ SECTIONS: tuple[Section, ...] = (
             # ترحيل · «من غير رصيد» = إلغاء ترحيل فاتورة بضاعتها اتصرفت (الرصيد هيبقى بالسالب) · الطباعة مع مرحلتها.
             Target("purchase_invoices", "فاتورة الشراء", "Purchase Invoice", icon="🧾",
                    actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost", "negative")),
+            # مرتجع المشتريات (2026-11-28 — النموذج 1 «زي فاتورة الشراء»): الربط بالفاتورة اختياري · الخروج بسعر
+            # الشراء · «من غير رصيد» = ترجيع بضاعة اتصرفت (الرصيد هيبقى بالسالب) · الطباعة مع مرحلتها.
+            Target("purchase_returns", "مرتجع المشتريات", "Purchase Return", icon="↩️",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost", "negative")),
         ), icon="🚚"),
     )),
     # قسم لوحده (قرار المستخدم 2026-11-11) عشان يتضاف فيه حاجات تانية بعدين.
