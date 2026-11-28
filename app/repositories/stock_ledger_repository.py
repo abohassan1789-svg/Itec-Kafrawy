@@ -185,6 +185,23 @@ class StockLedgerRepository:
             "JOIN inv.stock_doc_types t ON t.code = m.source_type WHERE m.value <> m.booked_value "
             "GROUP BY m.source_type, t.name_ar, m.source_id, m.source_no ORDER BY m.source_type, m.source_id")
 
+    # ---- طلبات إعادة الحساب (0052) -----------------------------------------------------
+    def pending_recompute(self, ex: Executor) -> list[dict]:
+        """الطلبات اللي لسه ماتنفذتش — مقفولة (اللي جهاز تاني ماسكها بتتعدّى)."""
+        if not ex.fetch_value("SELECT to_regclass('inv.stock_recompute_requests') IS NOT NULL"):
+            return []
+        return ex.fetch_all("SELECT id, reason FROM inv.stock_recompute_requests WHERE done_at IS NULL "
+                            "ORDER BY id FOR UPDATE SKIP LOCKED")
+
+    def finish_recompute(self, request_ids: list[int], items_done: int, ex: Executor) -> None:
+        ex.execute("UPDATE inv.stock_recompute_requests SET done_at = now(), items_done = %s WHERE id = ANY(%s)",
+                   [items_done, request_ids])
+
+    def first_movement_dates(self, ex: Executor) -> dict[int, date]:
+        """كل صنف ليه حركات ← أول تاريخ."""
+        rows = ex.fetch_all("SELECT item_id, min(movement_date) AS first_date FROM inv.stock_movements GROUP BY item_id")
+        return {int(r["item_id"]): r["first_date"] for r in rows}
+
     def source_lines(self, source_type: str, source_id: int, ex: Executor | None = None) -> list[dict]:
         return self._x(ex).fetch_all(
             "SELECT id AS movement_id, line_no, item_id, warehouse_id, stock_kind, qty, unit_cost, value, booked_value "

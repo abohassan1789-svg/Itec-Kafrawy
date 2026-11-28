@@ -10,7 +10,11 @@
    * **متوسط مرجّح مستمر على مستوى الشركة لكل (صنف + فاتورة/بيان)** — الداخل بتكلفته بيغيّر المتوسط، والخارج
      بيطلع بالمتوسط ومابيغيّروش · التحويل بين مخزنين حقيقيين: الخارج بالمتوسط والداخل **بنفس القيمة** ·
      **مرتجع المشتريات** (0049): الخارج **بالتكلفة اللي المستند بعتها** (سعر الشراء) والمتوسط بيتحسب من الباقي.
-   * ترتيب نفس اليوم: **الوارد بتكلفة ← التحويلات ← الصادر** (وجوه كل مجموعة بالترتيب اللي اتسجلت بيه).
+   * ترتيب نفس اليوم: **بترتيب الترحيل الفعلي** (رد المستخدم 2026-11-28 — اللي اترحّل الأول يتحسب الأول، والمستند
+     اللي بيترحّل تاني بيروح آخر اليوم) · داخل التحويل ورا خارجه على طول. كان قبل كده «الوارد ← التحويلات ← الصادر»،
+     فشراء بعد ما الرصيد صفّر في نفس اليوم كان بيدخل في متوسط البيع اللي قبله — دلوقتي المتوسط بيبدأ من الأول.
+     والبيع اللي اترحّل قبل شراء نفس اليوم وأكبر من الرصيد (بصلاحية «من غير رصيد» — الشراء لسه مااتسجلش) بيطلع
+     «ناقص» ويتصلّح بسعر الشراء ده.
    * آخر خروج بيصفّر الكمية بياخد **كل القيمة الباقية** (مفيش قروش معلّقة في المخزون).
    * **الرصيد السالب بالصلاحية بس** (رد المستخدم — صلاحية «من غير رصيد» في كل شاشة لوحدها، والمستند بيبعت
      ``allow_negative``): من غيرها أي يوم في أي مخزن يبقى آخره بالسالب **أكتر من الأول** ← ``NegativeStockError``.
@@ -320,12 +324,15 @@ class StockLedgerService:
             by_day.setdefault(m["movement_date"], []).append(m)
         results: dict[int, dict[str, Any]] = {}
         for current, rows in by_day.items():
+            # بترتيب الترحيل الفعلي (الـ id — الصفوف جاية مترتبة بيه) · داخل التحويل ورا خارجه على طول.
             ins = {int(m["pair_id"]): m for m in rows if m["pair_id"] is not None}
-            ordered = [m for m in rows if m["qty"] > 0 and m["pair_id"] is None]
+            ordered = []
             for m in rows:
+                if m["pair_id"] is not None:
+                    continue
+                ordered.append(m)
                 if m["qty"] < 0 and int(m["id"]) in ins:
-                    ordered += [m, ins[int(m["id"])]]
-            ordered += [m for m in rows if m["qty"] < 0 and int(m["id"]) not in ins]
+                    ordered.append(ins[int(m["id"])])
             for seq, m in enumerate(ordered, start=1):
                 pair = ins.get(int(m["id"])) if m["qty"] < 0 else None
                 if int(m["id"]) not in results:
@@ -479,6 +486,28 @@ class StockLedgerService:
             chain["avg"] = unit_cost
         results[int(m["id"])] = {"unit_cost": unit_cost, "value": value, "kind_qty_after": chain["qty"],
                                  "kind_value_after": chain["value"], "avg_cost_after": chain["avg"]}
+
+    # ---- إعادة حساب كل الأصناف (بعد تغيير قاعدة الحساب — 0052) ------------------------------
+    def run_recompute_requests(self) -> int:
+        """ينفّذ طلبات إعادة الحساب المتسجلة (وقت فتح البرنامج) ← عدد الأصناف اللي اتعاد حسابها (صفر لو مفيش طلب).
+
+        كل الأصناف اللي ليها حركات بتتقفل وتتحسب من أول حركة — في transaction واحدة · الطلب مقفول ``SKIP LOCKED``
+        (جهاز تاني بيفتح في نفس اللحظة مابيستناش ولا بيكرّر) · السالب مابيوقفش إعادة الحساب (الحركات اترحّلت قبل كده
+        بصلاحياتها) · ``booked_value`` مابيتغيّرش — الفرق في «فروق التكلفة»."""
+        with self.db.atomic() as tx:
+            requests = self.repository.pending_recompute(tx)
+            if not requests:
+                return 0
+            start = self.repository.first_movement_dates(tx)
+            if start:
+                items = self.repository.lock_items(list(start), tx)
+                history = {i: _History(self.repository.daily_qty(i, ex=tx)) for i in start}
+                try:
+                    self._replay_all(tx, items, start, history, allow_negative=True)
+                except psycopg.errors.RaiseException as exc:
+                    raise _db_message(exc) from exc
+            self.repository.finish_recompute([int(r["id"]) for r in requests], len(start), tx)
+            return len(start)
 
     # ---- قراية --------------------------------------------------------------------
     def available(self, item_id: int, warehouse_id: int | None = None, stock_kind: str | None = None, *,

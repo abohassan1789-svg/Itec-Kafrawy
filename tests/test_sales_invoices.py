@@ -210,6 +210,67 @@ def test_post_stock_out_at_weighted_average_one_balanced_entry(env):
         s.save_draft(iid, data(env, [line(env)]))
 
 
+def test_average_restarts_after_stock_reaches_zero(env):
+    """رد المستخدم (2026-11-28): البيع بالمتوسط طول ما فيه رصيد — ولما الرصيد يصفّر ويتشترى تاني، المتوسط يبدأ من
+    الأول بسعر الشراء الجديد (مفيش أثر للأسعار القديمة)."""
+    s, db = env["service"], env["db"]
+    buy(env, qty="10", price="105", d=dt.date(2026, 1, 5))
+    buy(env, qty="10", price="106", d=dt.date(2026, 1, 6))
+    buy(env, qty="10", price="106.5", d=dt.date(2026, 1, 7))
+    assert avg(env) == D_("105.833333")
+    a = s.save_draft(None, data(env, [line(env, qty="12")], d=dt.date(2026, 1, 10)), post=True)
+    b = s.save_draft(None, data(env, [line(env, qty="18")], d=dt.date(2026, 1, 11)), post=True)
+    assert stock(env) == 0
+    # البيعتين بالمتوسط، والأخيرة اللي صفّرت الرصيد خدت الباقي كله (مفيش قروش معلّقة)
+    cost_a, cost_b = -s.movements(a)[0]["booked_value"], -s.movements(b)[0]["booked_value"]
+    assert cost_a == D_("1270.00") and cost_a + cost_b == D_("3175.00")         # 1050 + 1060 + 1065
+    buy(env, qty="5", price="170", d=dt.date(2026, 2, 1))                       # رجعت اشتريته بعد ما صفّر
+    assert avg(env) == D_("170")
+    c = s.save_draft(None, data(env, [line(env, qty="2", price="250")], d=dt.date(2026, 2, 2)), post=True)
+    assert -s.movements(c)[0]["booked_value"] == D_("340.00")                    # أول بيع = سعر الشراء الجديد
+    assert by_role(entry(db, "sales_invoice", c))["cogs"] == [(D_("340.00"), 0)]
+    buy(env, qty="3", price="180", d=dt.date(2026, 2, 3))                       # شراء والرصيد لسه موجود ← متوسط عادي
+    assert avg(env) == D_("175")                                                 # (3 × 170 + 3 × 180) ÷ 6
+
+
+def test_same_day_follows_posting_order(env):
+    """رد المستخدم (2026-11-28 — «ليه 108»): كله في نفس اليوم بترتيب الترحيل: 10 × 100 ← 5 × 115 ← بيع 15 ← شراء
+    1 × 160 ← البيع بـ 105 (1,575 زي قيده) والقطعة الباقية بـ 160 مش 108.44 · ومفيش فروق تكلفة."""
+    s, db, ledger = env["service"], env["db"], env["ledger"]
+    buy(env, qty="10", price="100", d=D1)
+    buy(env, qty="5", price="115", d=D1)
+    sale = s.save_draft(None, data(env, [line(env, qty="15", price="200")], d=D1), post=True)
+    buy(env, qty="1", price="160", d=D1)
+    mv = s.movements(sale)[0]
+    assert mv["value"] == mv["booked_value"] == D_("-1575.00")                  # الشراء اللي بعده مالمسهوش
+    assert avg(env) == D_("160") and stock(env) == 1
+    assert not [d for d in ledger.cost_differences() if d["source_type"] == "sales_invoice"]
+    r = s.review(data(env, [line(env, qty="1", price="120")], d=D1))
+    assert r["profit"]["cost"] == D_("160.00") and r["profit"]["profit"] == D_("-40.00")
+    assert any("بخسارة" in c[1] for c in r["checks"])
+    # بيع اترحّل قبل شراء نفس اليوم (بصلاحية «من غير رصيد» — الأدمن) ← تكلفته بتتصلّح بسعر الشراء ده
+    early = s.save_draft(None, data(env, [line(env, qty="3", price="300")], d=D2), post=True)
+    buy(env, qty="5", price="170", d=D2)
+    assert -s.movements(early)[0]["value"] == D_("500.00")                      # 160 + 2 × 170
+    assert stock(env) == 3 and avg(env) == D_("170")
+
+
+def test_recompute_request_fixes_old_same_day_order(env):
+    """0052: طلب إعادة الحساب بيتنفذ مرة واحدة ويصلّح الحركات اللي اتحسبت بالترتيب القديم."""
+    db, ledger = env["db"], env["ledger"]
+    buy(env, qty="10", price="100", d=D1)
+    sale = env["service"].save_draft(None, data(env, [line(env, qty="10")], d=D1), post=True)
+    buy(env, qty="1", price="160", d=D1)
+    # نرجّع الحسبة لشكل الترتيب القديم (البيع بمتوسط الـ 11 قطعة) ونطلب إعادة الحساب
+    db.execute("UPDATE inv.stock_movements SET value = -1054.55, unit_cost = 105.454545 "
+               "WHERE source_type = 'sales_invoice' AND source_id = %s", [sale])
+    db.execute("INSERT INTO inv.stock_recompute_requests (reason) VALUES ('اختبار')")
+    assert ledger.run_recompute_requests() == 1
+    assert env["service"].movements(sale)[0]["value"] == D_("-1000.00") and avg(env) == D_("160")
+    assert db.fetch_value("SELECT count(*) FROM inv.stock_recompute_requests WHERE done_at IS NULL") == 0
+    assert ledger.run_recompute_requests() == 0                                  # مرة واحدة بس
+
+
 def test_cash_receipt_and_cash_customer_cash_only(env):
     s, db = env["service"], env["db"]
     buy(env)

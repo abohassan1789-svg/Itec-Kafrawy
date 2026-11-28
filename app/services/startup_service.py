@@ -52,6 +52,13 @@ def prepare_database(db: Database, step: StepFn | None = None) -> StartupResult:
         step(96, "مزامنة الصلاحيات…")
         sync = PermissionsSyncService(db).sync()
         logger.info("مزامنة الصلاحيات: %s", sync)
+
+        from app.services.stock_ledger_service import StockLedgerService
+
+        step(98, "مراجعة دفتر المخزون…")
+        recomputed = StockLedgerService(db).run_recompute_requests()     # مرة واحدة بعد تغيير قاعدة الحساب (0052)
+        if recomputed:
+            logger.info("دفتر المخزون: اتعاد حساب %s صنف", recomputed)
         step(100, "جاهز")
     except migrator.MigrationError as exc:
         logger.exception("فشل تحديث هيكل القاعدة")

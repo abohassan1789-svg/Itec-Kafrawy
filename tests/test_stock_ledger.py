@@ -132,15 +132,25 @@ def test_last_out_takes_remaining_value(env):
     check_books(env)
 
 
-def test_same_day_in_before_out(env):
-    # الصرف اتسجل الأول والشراء بعده في نفس اليوم ← عادي (الوارد قبل الصادر)
+def test_same_day_follows_posting_order(env):
+    # 0052 (رد المستخدم 2026-11-28): جوه نفس اليوم بترتيب الترحيل — الصرف اللي صفّر الرصيد مايتأثرش بشراء اتسجل
+    # بعده في نفس اليوم، والمتوسط بيبدأ من الأول بالسعر الجديد.
     buy(env, 1, 5, "10", D1)
     with pytest.raises(BusinessError):
         sell(env, 10, 8, D1)                        # لسه مفيش غير 5
     sell(env, 10, 5, D2)
     buy(env, 2, 5, "20", D2)                        # نفس يوم الصرف واتسجل بعده
     row = env["db"].fetch_one("SELECT unit_cost FROM inv.stock_movements WHERE source_type = 'sales_invoice'")
-    assert row["unit_cost"] == Decimal("15")        # (5×10 + 5×20) / 10
+    assert row["unit_cost"] == Decimal("10")        # طلع بالمتوسط وقت ترحيله
+    assert cost_row(env)["avg_cost"] == Decimal("20")
+    # صرف أكبر من الرصيد اترحّل قبل شراء نفس اليوم (بصلاحية «من غير رصيد» — الشراء لسه مااتسجلش) ← تكلفته
+    # بتتصلّح بسعر الشراء اللي غطّاه
+    sell(env, 11, 8, D3, allow=True)                # الرصيد 5 بـ 20 ← 3 ناقصين
+    buy(env, 3, 10, "26", D3)
+    row = env["db"].fetch_one("SELECT unit_cost FROM inv.stock_movements WHERE source_type = 'sales_invoice' "
+                              "AND source_id = 11")
+    assert row["unit_cost"] == Decimal("22.25")     # (5×20 + 3×26) / 8
+    assert cost_row(env)["avg_cost"] == Decimal("26")
     check_books(env)
 
 
