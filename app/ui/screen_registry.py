@@ -181,6 +181,12 @@ def _sales_invoices() -> QWidget:
     return SalesInvoicesScreen()
 
 
+def _sales_returns() -> QWidget:
+    from app.ui.screens.sales_returns_screen import SalesReturnsScreen
+
+    return SalesReturnsScreen()
+
+
 def _purchase_invoices() -> QWidget:
     from app.ui.screens.purchase_invoices_screen import PurchaseInvoicesScreen
 
@@ -278,6 +284,7 @@ SCREEN_FACTORIES: dict[str, ScreenFactory] = {
     "customers": _customers,
     "projects": _projects,
     "sales_invoices": _sales_invoices,
+    "sales_returns": _sales_returns,
     "supplier_groups": _supplier_groups,
     "suppliers": _suppliers,
     "purchase_invoices": _purchase_invoices,

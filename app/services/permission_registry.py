@@ -154,6 +154,10 @@ SECTIONS: tuple[Section, ...] = (
             Target("sales_invoices", "فاتورة البيع", "Sales Invoice", icon="🧾",
                    actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost", "negative",
                             "over_credit", "show_cost")),
+            # مرتجع المبيعات (2026-11-28 — «هي هي زي مرتجع المشتريات بس للعميل»): الربط بفاتورة البيع اختياري ·
+            # البضاعة بترجع بتكلفتها الأصلية · «من غير رصيد» = إلغاء ترحيل مرتجع بضاعته اتباعت تاني.
+            Target("sales_returns", "مرتجع المبيعات", "Sales Return", icon="↩️",
+                   actions=("view", "create", "edit", "save", "delete", "export", "post", "unpost", "negative")),
         ), icon="👥"),
         Group("أوامر التوريد", (
             Target("projects", "أوامر التوريد", "Supply Orders", icon="📋",
