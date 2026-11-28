@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج مرتجع المشتريات — A-H CODE</title>
+<style>
+:root{--g:#137A38;--gd:#0F6330;--b:#2563EB;--bd:#1D4ED8;--r:#DC2626;--rd:#B91C1C;--gr:#4B5563;--grd:#374151;
+ --bo:#D7DEE7;--cb:#E5E7EB;--bg:#F5F7FA;--ro:#F4F6F9;--sel:#E7F6EE;--tot:#E8F5EC;--totb:#BFE6CF;--ft:#EAF6EF;--ftb:#D7EBDF;--tx:#111827}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;background:#DCE3EA;color:var(--tx);font-size:13px}
+.top{background:var(--gd);color:#fff;padding:12px 20px;position:sticky;top:0;z-index:20}
+.top h1{margin:0 0 3px;font-size:19px;font-weight:900}.top p{margin:0;font-size:13px;opacity:.92}
+.wrap{padding:16px;max-width:1560px;margin:auto}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;line-height:1.75}
+.note ul,.qs ol{margin:4px 0 0;padding-right:20px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;line-height:1.8}
+.mnav{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--cb);border-radius:10px;padding:8px 10px;margin-bottom:10px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;box-shadow:0 2px 6px rgba(15,23,42,.08)}
+.mnav b{color:var(--g);font-weight:900;margin-left:4px}
+.mnav span{cursor:pointer;border:1px solid var(--bo);border-radius:8px;padding:4px 11px;font-weight:800;background:#fff;color:#334155}
+.mnav span.on{background:var(--g);color:#fff;border-color:var(--g)}
+.mnav .go{margin-right:auto;display:flex;gap:6px}.mnav .go span{background:#F1F5F9}
+.mh{margin:0 0 4px;color:var(--g);font-size:19px;font-weight:900}.mh i{font-style:normal;display:inline-block;background:var(--g);color:#fff;border-radius:50%;width:28px;height:28px;text-align:center;line-height:28px;margin-left:6px;font-size:14px}
+.md{color:#475569;font-size:13.5px;margin:0 0 8px}
+.demo{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#FFFBEB;border:1px dashed #F59E0B;border-radius:8px;padding:6px 10px;margin-bottom:8px;font-size:12.5px;font-weight:800;color:#92400E}
+.chip{cursor:pointer;border:1px dashed #B45309;border-radius:12px;padding:2px 10px;background:#fff}
+.chip.on{background:#B45309;color:#fff;border-style:solid}
+.chip.bl{border-color:#2563EB;color:#1D4ED8}
+.scr{background:var(--bg);border:1px solid #94A3B8;border-radius:8px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,.15);position:relative}
+.wbar{height:30px;background:#fff;border-bottom:1px solid var(--cb);display:flex;align-items:center;gap:8px;padding:0 10px;font-size:12.5px}
+.wbar .x{margin-right:auto;color:#64748B;letter-spacing:10px}
+.body{padding:6px 12px 10px;display:flex;flex-direction:column;gap:6px}
+.hdr{display:flex;align-items:flex-start;gap:12px;padding:4px 4px 0}
+.ttl{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:800;color:#1F2D3D}
+.ttl .ic{color:var(--g);font-size:22px}
+.sub{color:#6B7280;font-size:12px;font-weight:700}
+.meta{margin-right:auto;color:#6B7280;font-size:12px;font-weight:700;line-height:1.6;text-align:left;direction:rtl}
+.st{display:inline-block;border-radius:10px;padding:1px 10px;font-size:12px;font-weight:800;border:1px solid}
+.st.dr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}.st.po{background:#E8F5EC;color:var(--g);border-color:#BFE6CF}
+.tbar{display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:0 4px 6px;border-bottom:1px solid var(--cb)}
+.btn{display:inline-flex;align-items:center;gap:5px;height:34px;padding:3px 9px;border-radius:8px;font-size:12px;font-weight:700;border:1px solid;cursor:pointer;white-space:nowrap;user-select:none}
+.btn.g{background:var(--g);color:#fff;border-color:var(--g)}.btn.g:hover{background:var(--gd)}
+.btn.b{background:var(--b);color:#fff;border-color:var(--b)}.btn.b:hover{background:var(--bd)}
+.btn.r{background:var(--r);color:#fff;border-color:var(--r)}.btn.r:hover{background:var(--rd)}
+.btn.w{background:#fff;color:#374151;border-color:var(--bo)}.btn.w:hover{background:#F3F4F6}
+.btn.k{background:var(--gr);color:#fff;border-color:var(--gr)}.btn.k:hover{background:var(--grd)}
+.btn.o{background:#fff;color:var(--g);border-color:var(--g)}.btn.o:hover{background:var(--sel)}
+.btn.off{background:#EAECEF!important;color:#AEB6C0!important;border-color:#EAECEF!important;cursor:default}
+.btn.sq{width:38px;justify-content:center;padding:0;font-size:15px}
+.ck{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:0 6px;cursor:pointer;white-space:nowrap}
+.ck input{width:16px;height:16px;accent-color:var(--g);cursor:pointer;margin:0}
+.secT{display:flex;align-items:center;gap:8px;color:var(--g);font-size:15px;font-weight:800;margin:2px 4px 4px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 18px;padding:0 4px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 16px}
+.fl{display:flex;flex-direction:column;gap:3px;min-width:0}
+.fl>label{font-size:12px;font-weight:700;color:#111827;min-height:16px}
+.in,.sl{height:28px;border:1px solid var(--bo);border-radius:6px;background:#fff;padding:1px 8px;color:#111827;font:inherit;font-size:12px;font-weight:700;width:100%;min-width:0;outline:none}
+.in:focus,.sl:focus{border-color:var(--g)}
+.in.ro,.in:disabled,.sl:disabled{background:var(--ro);color:#374151}
+.in.bad,.sl.bad{border-color:#DC2626;background:#FEF2F2}
+.n{direction:ltr;text-align:left}
+.lkw{display:flex;gap:4px;align-items:center}.lkw .sl,.lkw .in{flex:1}
+.lkb{width:28px;height:28px;flex-shrink:0;border-radius:6px;background:var(--g);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer}
+.card{background:#fff;border:1px solid var(--cb);border-radius:12px;padding:12px 16px 14px;box-shadow:0 2px 14px rgba(15,23,42,.09);min-width:0}
+.row{display:flex;gap:16px;align-items:stretch}
+.tblw{border:1px solid var(--cb);border-radius:8px;overflow:auto;background:#fff;min-height:210px;max-height:330px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;font-weight:700}
+.tbl th{background:var(--g);color:#fff;font-size:12px;font-weight:800;padding:9px 6px;text-align:center;position:sticky;top:0;z-index:1;white-space:nowrap}
+.tbl th.rt{background:#C2410C}
+.tbl td{padding:8px 6px;border-bottom:1px solid #EEF1F4;color:#374151;text-align:center;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:#FAFBFC}
+.tbl tr.sel td{background:var(--sel);color:#0B3B23}
+.tbl tr.zero td{color:#94A3B8}
+.tbl tr[data-row]{cursor:pointer}
+.tbl td.nm{text-align:right}
+.tbl td.rt{background:#FFF7ED!important}
+.tbl td .in,.tbl td .sl{height:26px;font-size:12.5px}
+.tbl td .in.q{width:72px}.tbl td .sl{width:auto}
+.ln-e{display:block;color:#B91C1C;font-size:11px;font-weight:800;white-space:normal;text-align:right}
+.ln-w{display:block;color:#92400E;font-size:11px;font-weight:800;white-space:normal;text-align:right}
+.ln-i{display:block;color:#1D4ED8;font-size:11px;font-weight:700;text-align:right;white-space:normal}
+.empty{color:#94A3B8;padding:40px 0!important;font-weight:700}
+.tfoot{display:flex;justify-content:space-between;align-items:center;background:var(--ft);border:1px solid var(--ftb);border-radius:8px;height:38px;padding:0 14px;margin-top:8px;color:#0B3B23;font-weight:800}
+.tfoot b{font-size:14px;direction:ltr}
+.side{width:340px;flex-shrink:0;display:flex;flex-direction:column;gap:8px}
+.sr{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#F9FAFB;border:1px solid #EEF1F4;border-radius:8px;min-height:44px;padding:4px 12px;font-weight:700}
+.sr b{font-size:14px;font-weight:800;direction:ltr}
+.net{display:flex;align-items:center;justify-content:space-between;background:var(--tot);border:1px solid var(--totb);border-radius:10px;min-height:56px;padding:8px 14px;color:var(--g);font-weight:800;font-size:12.5px}
+.net b{font-size:17px;direction:ltr}
+.net.egp{min-height:40px;background:#EFF6FF;border-color:#BFDBFE;color:#1D4ED8}.net.egp b{font-size:14px}
+.ready{font-weight:800;font-size:13px;padding:4px 6px}.ready.ok{color:#087443}.ready.no{color:#B91C1C}
+.add{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.add .fl.it{flex:1;min-width:300px}
+.add .fl.s{width:110px}.add .fl.m{width:150px}
+.add .btn{height:36px;font-size:12.5px}
+.info{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:12px;font-weight:700;color:#475569}
+.info b{color:#1D4ED8;direction:ltr;unicode-bidi:isolate}
+.msg{border-radius:8px;padding:6px 12px;font-weight:800;font-size:12.5px}
+.msg.ok{background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}.msg.no{background:#FEE2E2;color:#B91C1C;border:1px solid #FECACA}
+.msg.inf{background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE}
+.cf{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:8px;padding:6px 12px;font-weight:800;font-size:12.5px}
+.ckl{display:flex;flex-direction:column}
+.ckl div{display:flex;gap:6px;align-items:flex-start;font-size:12px;font-weight:700;padding:5px 2px;border-bottom:1px dashed #E2E8F0}
+.ckl b{width:16px;flex-shrink:0;text-align:center}
+.ckl .ok b{color:#087443}.ckl .no b{color:#B91C1C}.ckl .wr b{color:#B45309}.ckl .in b{color:#2563EB}
+.stabs{display:flex;gap:3px;border-bottom:2px solid var(--g)}
+.stabs span{flex:1;text-align:center;padding:6px 3px;font-weight:800;font-size:12px;background:#EEF2F6;color:#475569;border-radius:6px 6px 0 0;cursor:pointer}
+.stabs span.on{background:var(--g);color:#fff}
+.mini{width:100%;border-collapse:collapse;font-size:12px;font-weight:700}
+.mini th{background:#F1F5F9;color:#334155;padding:6px 5px;font-weight:800;text-align:right}
+.mini td{padding:6px 5px;border-bottom:1px solid #EEF1F4}
+.mini td.n,.mini th.n{text-align:left;direction:ltr}
+.mini tr[data-pick]{cursor:pointer}.mini tr[data-pick]:hover td{background:#F0FDF4}
+.ok-l{color:#087443;font-weight:800}.bad-l{color:#B91C1C;font-weight:800}
+.htabs{display:flex;gap:4px;padding:0 4px}
+.htabs span{padding:6px 16px;border-radius:8px 8px 0 0;font-weight:800;background:#EEF2F6;color:#475569;cursor:pointer;border:1px solid var(--cb);border-bottom:none}
+.htabs span.on{background:#fff;color:var(--g)}
+.hpane{background:#fff;border:1px solid var(--cb);border-radius:0 8px 8px 8px;padding:10px 12px}
+.orig{width:380px;flex-shrink:0;border-right:4px solid #C2410C}
+.orig .kv{display:flex;justify-content:space-between;gap:8px;padding:3px 0;font-weight:700;font-size:12.5px;border-bottom:1px dashed #E5E7EB}
+.orig .kv b{direction:ltr;unicode-bidi:isolate}
+.seg{display:inline-flex;border:1px solid var(--bo);border-radius:10px;overflow:hidden;margin-right:10px}
+.seg span{padding:5px 16px;font-weight:800;font-size:13px;cursor:pointer;background:#fff;color:#475569}
+.seg span.on{background:#C2410C;color:#fff}
+.banner{background:#FFF7ED;border:1px solid #FED7AA;color:#9A3412;border-radius:8px;padding:6px 12px;font-weight:800;font-size:12.5px}
+/* النافذة المنبثقة */
+.ov{position:absolute;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:flex-start;justify-content:center;padding-top:70px;z-index:30}
+.dlg{background:#fff;border-radius:12px;width:860px;max-width:95%;box-shadow:0 20px 50px rgba(0,0,0,.3);overflow:hidden}
+.dlg .dh{background:var(--g);color:#fff;padding:10px 16px;font-weight:900;font-size:15px;display:flex;align-items:center}
+.dlg .dh span{margin-right:auto;cursor:pointer}
+.dlg .db{padding:12px 16px}
+.dlg .df{display:flex;gap:8px;justify-content:flex-start;padding:10px 16px;border-top:1px solid var(--cb);background:#F9FAFB}
+/* شكل الأكسس */
+.acc{background:#ECE9D8;border:2px solid #7A96DF;border-radius:4px;font-family:Tahoma,Arial,sans-serif;font-size:12px;color:#000;flex:1}
+.acc .at{background:linear-gradient(#0A246A,#3A6EA5);color:#fff;padding:4px 8px;font-weight:bold}
+.acc .ab{padding:10px}
+.acc .ar{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 14px;margin-bottom:8px}
+.acc label{display:block;font-weight:bold;color:#000080}
+.acc .ai{background:#fff;border:1px solid #7F9DB9;height:22px;padding:2px 4px;font-weight:normal}
+.acc table{width:100%;border-collapse:collapse;background:#fff}
+.acc th{background:#D4D0C8;border:1px solid #808080;padding:3px;font-weight:bold}
+.acc td{border:1px solid #C0C0C0;padding:3px;text-align:center}
+.acc .abt{display:flex;gap:6px;margin-top:8px}.acc .abt span{background:#D4D0C8;border:2px outset #fff;padding:3px 12px}
+.chg{width:520px;flex-shrink:0}
+.chg li{margin-bottom:6px;line-height:1.6;font-weight:700;font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج «مرتجع المشتريات» (المرحلة 7)</h1>
+  <p>نفس شكل «فاتورة الشراء» اللي اخترته (النموذج 9 — شكل الفاتورة السعودية وأخضر البرنامج): الأزرار فوق ← بيانات المرتجع ← التفاصيل والإجماليات جنبها ← «إضافة صنف» تحت. كل نموذج في صفحة لوحده (الأرقام فوق أو الأسهم)، والبيانات وهمية، وكل النماذج شغالة على نفس المرتجعات.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="mnav" id="mnav"></div>
+  <div id="page"></div>
+</div>
+<script>
+// ===== البيانات (وهمية)
+// الموردين: [الكود، الاسم، مدة السداد، العملة، ض.ق.م الافتراضي، الرصيد بالجنيه (علينا)، الرقم الضريبي]
+const SUP=[["SUB-001","شركة النور للكابلات",30,"EGP","VAT14",84500,"512-334-871"],
+ ["SUB-002","المصرية للتوريدات الكهربائية",45,"EGP","VAT14",126300,"287-905-112"],["SUB-003","Global Controls Ltd",60,"USD","VAT0",392000,"GB 4471 0098"]];
+// الأصناف: [الكود، الاسم، الوحدة الأساسية، نوع الصنف، الوحدات [اسم، معامل]، كود الضريبة، خدمي]
+const IT=[["ITM-0001","كابل نحاس 2×1.5 مم","متر","MCC",[["متر",1],["لفة 100م",100]],"VAT14",0],
+ ["ITM-0002","مفتاح إضاءة مفرد","عدد","Lighting",[["عدد",1],["كرتونة 50",50]],"VAT14",0],
+ ["ITM-0004","لمبة LED 12 وات","عدد","Lighting",[["عدد",1],["كرتونة 20",20]],"VAT14",0],
+ ["ITM-0006","كشاف طوارئ","عدد","Fire Alarm",[["عدد",1]],"VAT14",0],
+ ["ITM-0009","حساس حرارة","عدد","BMS",[["عدد",1],["علبة 10",10]],"VAT14",0],["ITM-0010","كنترولر DDC","عدد","BMS",[["عدد",1]],"VAT14",0],
+ ["ITM-0011","تركيب ومعايرة (خدمة)","خدمة","BMS",[["خدمة",1]],"VAT14",1]];
+const TX={VAT14:["14%",14],VAT0:["صفري 0%",0],EXM:["معفي",0]};
+const CUR={EGP:["جنيه",1],USD:["دولار",48.5],EUR:["يورو",52.8]};
+const WH=[["WH-001","المخزن الرئيسي",0],["WH-002","مخزن الفرع",0],["WH-003","المخزن الوهمي",1]];
+const PRJ={"":"— من غير —","Itec-001":"Itec-001 · تشطيبات برج النخيل","Itec-002":"Itec-002 · لوحات مصنع العاشر"};
+const PAY=[["TRS-001","الخزينة الرئيسية","110101"],["BNK-001-01","البنك الأهلي — جاري","110201"]];
+const KN={invoice:"فاتورة",statement:"بيان"};
+const RS=["","تالف / مكسور","مش مطابق للمواصفات","زيادة عن المطلوب","غلط في الطلب","تاني"];
+const BAL={"ITM-0001|WH-001|invoice":1000,"ITM-0001|WH-002|invoice":500,"ITM-0001|WH-001|statement":200,"ITM-0002|WH-001|invoice":80,
+ "ITM-0004|WH-001|invoice":160,"ITM-0006|WH-002|invoice":4,"ITM-0009|WH-001|invoice":12,"ITM-0010|WH-001|invoice":9};
+const AVG={"ITM-0001|invoice":18.5,"ITM-0001|statement":16,"ITM-0002|invoice":22,"ITM-0004|invoice":45,"ITM-0006|invoice":310,"ITM-0009|invoice":118,"ITM-0010|invoice":5200};
+const LAST={"ITM-0001":18.2,"ITM-0002":21.5,"ITM-0004":44,"ITM-0006":305,"ITM-0009":120,"ITM-0010":5150};
+// فواتير الشراء المرحّلة (الأصل)
+const INV=[
+ {no:"PUR-2026-00012",date:"2026-11-05",sup:"SUB-001",sinv:"5520",kind:"invoice",incl:0,cur:"EGP",rate:1,hd:0,prj:"",
+  lines:[{it:"ITM-0001",wh:"WH-001",u:1,q:10,p:1820,ds:0,tx:"VAT14"},{it:"ITM-0004",wh:"WH-001",u:1,q:5,p:880,ds:5,tx:"VAT14"},{it:"ITM-0011",wh:"",u:0,q:1,p:2500,ds:0,tx:"VAT14"}]},
+ {no:"PUR-2026-00015",date:"2026-11-12",sup:"SUB-002",sinv:"7781",kind:"invoice",incl:0,cur:"EGP",rate:1,hd:500,prj:"Itec-001",
+  lines:[{it:"ITM-0002",wh:"WH-001",u:0,q:100,p:22,ds:0,tx:"VAT14"},{it:"ITM-0006",wh:"WH-002",u:0,q:10,p:305,ds:0,tx:"VAT14"},{it:"ITM-0009",wh:"WH-001",u:1,q:4,p:1200,ds:0,tx:"VAT14"}]},
+ {no:"PUR-2026-00018",date:"2026-11-20",sup:"SUB-003",sinv:"GC-2231",kind:"invoice",incl:0,cur:"USD",rate:48.3,hd:0,prj:"Itec-002",
+  lines:[{it:"ITM-0010",wh:"WH-001",u:0,q:3,p:106,ds:0,tx:"VAT0"}]},
+ {no:"PUR-2026-00020",date:"2026-11-22",sup:"SUB-001",sinv:"5561",kind:"statement",incl:0,cur:"EGP",rate:1,hd:0,prj:"",
+  lines:[{it:"ITM-0001",wh:"WH-001",u:0,q:200,p:16,ds:0,tx:"VAT14"}]},
+ {no:"PUR-2026-00021",date:"2026-11-24",sup:"SUB-002",sinv:"7810",kind:"invoice",incl:0,cur:"EGP",rate:1,hd:0,prj:"",
+  lines:[{it:"ITM-0002",wh:"WH-001",u:1,q:1,p:1050,ds:0,tx:"VAT14"},{it:"ITM-0004",wh:"WH-001",u:0,q:40,p:44,ds:0,tx:"VAT14"}]}];
+// المرتجعات
+const C=[
+ {no:"PRT-2026-00001",date:"2026-11-14",sup:"SUB-002",inv:"PUR-2026-00015",cn:"CN-118",pay:"credit",box:"TRS-001",rs:"مش مطابق للمواصفات",note:"",st:"posted",
+  lines:[{inv:"PUR-2026-00015",src:0,u:0,q:20,wh:"WH-001"}]},
+ {no:"",date:"2026-11-28",sup:"SUB-001",inv:"PUR-2026-00012",cn:"",pay:"credit",box:"TRS-001",rs:"تالف / مكسور",note:"لفتين كابل مقطوعين + كشافات مكسورة",st:"draft",
+  lines:[{inv:"PUR-2026-00012",src:0,u:1,q:2,wh:"WH-001"},{inv:"PUR-2026-00012",src:1,u:0,q:8,wh:"WH-001"}]},
+ {no:"",date:"2026-11-28",sup:"SUB-003",inv:"PUR-2026-00018",cn:"GC-CN-07",pay:"credit",box:"TRS-001",rs:"مش مطابق للمواصفات",note:"",st:"draft",
+  lines:[{inv:"PUR-2026-00018",src:0,u:0,q:1,wh:"WH-001"}]},
+ {no:"",date:"2026-11-28",sup:"SUB-002",inv:"",kind:"invoice",cur:"EGP",rate:1,incl:0,cn:"",pay:"credit",box:"TRS-001",rs:"زيادة عن المطلوب",note:"بضاعة من قبل البرنامج (أول المدة)",st:"draft",
+  lines:[{inv:"",src:null,it:"ITM-0002",u:0,q:15,wh:"WH-001",p:21.5,tx:"VAT14"}]}];
+let SEQ=1;
+const V={m:0,d:1,msg:"",mt:"ok",neg:0,free:0,cf:0,sel:-1,stab:1,htab:1,modal:0,mk:{},seg:"ret",showWh:1,showUnit:1,showDisc:1,f:{}};
+
+// ===== الحساب
+const sup=c=>SUP.find(s=>s[0]===c);const it=c=>IT.find(i=>i[0]===c);const wh=c=>WH.find(w=>w[0]===c);const invOf=n=>INV.find(x=>x.no===n);
+const r2=x=>Math.round((+x||0)*100)/100;const r6=x=>Math.round((+x||0)*1e6)/1e6;
+const mf=n=>(+n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const m0=n=>(+n||0).toLocaleString("en-US",{maximumFractionDigits:3});
+const D=()=>C[V.d];const ed=()=>D().st==="draft";const dis=()=>ed()?'':'disabled';
+const fu=(i,u)=>it(i)[4][u]?it(i)[4][u][1]:1;
+const bal=(i,w,k)=>BAL[`${i}|${w}|${k}`]||0;
+const avg=(i,k)=>AVG[`${i}|${k}`]||0;
+const ol=l=>l.inv?invOf(l.inv).lines[l.src]:null;
+const lit=l=>l.inv?ol(l).it:l.it;
+const hdR=o=>{const sn=o.lines.reduce((s,x)=>s+r2(x.q*x.p*(1-(x.ds||0)/100)),0);return sn?Math.min(o.hd,sn)/sn:0;};
+function hd(d){const n=d.inv||(d.lines.find(l=>l.inv)||{}).inv;const o=n?invOf(n):null;
+  return o?{kind:o.kind,cur:o.cur,rate:o.rate,incl:o.incl,prj:o.prj,o}:{kind:d.kind||"invoice",cur:d.cur||"EGP",rate:d.rate||1,incl:d.incl||0,prj:"",o:null};}
+const bought=(inv,src)=>{const O=invOf(inv).lines[src];return r6(O.q*fu(O.it,O.u));};
+const retBefore=(d,inv,src)=>r6(C.filter(x=>x!==d&&x.st==="posted").reduce((s,x)=>s+x.lines.filter(l=>l.inv===inv&&l.src===src).reduce((a,l)=>a+l.q*fu(lit(l),l.u),0),0));
+const inDoc=(d,inv,src,ex)=>r6(d.lines.reduce((s,l,i)=>i!==ex&&l.inv===inv&&l.src===src?s+l.q*fu(lit(l),l.u):s,0));
+const remain=(d,inv,src,ex=-1)=>r6(bought(inv,src)-retBefore(d,inv,src)-inDoc(d,inv,src,ex));
+function calc(d){const H=hd(d),R=H.cur==="EGP"?1:(+H.rate||0);
+  const rows=d.lines.map((l,idx)=>{const i=lit(l),x=it(i),O=ol(l),o=l.inv?invOf(l.inv):null;const qb=r6(l.q*fu(i,l.u));
+    let pb,txc,dsc=0,lp;
+    if(O){lp=O.p/fu(i,O.u);const h=hdR(o);pb=lp*(1-(O.ds||0)/100)*(1-h);txc=O.tx;dsc=r2(100-100*(1-(O.ds||0)/100)*(1-h));}else{lp=(+l.p||0)/fu(i,l.u);pb=lp;txc=l.tx;}
+    const tr=H.kind==="statement"?0:TX[txc][1]/100;const net=r2(qb*pb);let base,vat;
+    if(H.incl){base=r2(net/(1+tr));vat=r2(net-base);}else{base=net;vat=r2(net*tr);}
+    const svc=!!x[6];const eb=r2(base*R),ev=r2(vat*R);const cost=svc?0:r2(qb*avg(i,H.kind));
+    return {l,idx,i,x,O,qb,lpU:r2(lp*fu(i,l.u)),pU:r2(pb*fu(i,l.u)),dsc,tr,txc,net,base,vat,tot:r2(base+vat),eb,ev,svc,cost,diff:svc?0:r2(eb-cost)};});
+  const s=f=>r2(rows.reduce((a,r)=>a+r[f],0));
+  return {rows,H,R,base:s("base"),vat:s("vat"),tot:s("tot"),eb:s("eb"),ev:s("ev"),et:r2(s("eb")+s("ev")),cost:s("cost"),diff:s("diff"),svc:r2(rows.filter(r=>r.svc).reduce((a,r)=>a+r.eb,0))};}
+function lerr(d,r){const l=r.l,H=hd(d);
+  if(!(+l.q>0))return ["no","الكمية لازم أكبر من صفر"];
+  if(l.inv){const rm=remain(d,l.inv,l.src,r.idx);if(r.qb>rm+1e-9)return ["no",`أكتر من اللي فاضل يرجع من الفاتورة (فاضل ${m0(Math.max(0,rm)/fu(r.i,l.u))} ${r.x[4][l.u][0]})`];}
+  else if(!V.free)return ["no","مرتجع من غير فاتورة أصلية محتاج صلاحية «مرتجع من غير فاتورة»"];
+  if(!r.svc&&!l.wh)return ["no","اختار المخزن"];
+  if(!r.svc&&wh(l.wh)[2])return ["no","المخزن الوهمي مالوش مرتجع مشتريات"];
+  if(!r.svc){const b=bal(r.i,l.wh,H.kind);if(b<r.qb-1e-9)return V.neg?["wr",`المتاح في «${wh(l.wh)[1]}» ${m0(b)} ${r.x[2]} بس — هيبقى بالسالب (عندك صلاحية «من غير رصيد»)`]:["no",`المتاح في «${wh(l.wh)[1]}» ${m0(b)} ${r.x[2]} بس — البضاعة اتصرفت (محتاج «من غير رصيد»)`];}
+  if(!l.inv)return ["wr",`من غير فاتورة — السعر مكتوب باليد (آخر سعر شراء ${LAST[r.i]?mf(LAST[r.i]):'—'})`];
+  return null;}
+function checks(d){const c=calc(d),r=[],s=sup(d.sup),H=c.H;
+  r.push(s?["ok",`المورد: ${s[0]} «${s[1]}»`]:["no","اختار المورد"]);
+  if(d.inv)r.push(["ok",`الفاتورة الأصلية ${d.inv} (${KN[H.kind]} · ${H.cur}${H.cur!=="EGP"?' × '+H.rate:''})`]);
+  else if(d.lines.some(l=>l.inv))r.push(["in","المرتجع على أكتر من فاتورة — كل سطر مربوط بفاتورته"]);
+  else r.push(V.free?["wr","من غير فاتورة أصلية (بصلاحية)"]:["no","اختار فاتورة الشراء الأصلية"]);
+  if(!d.lines.length)r.push(["no","مفيش ولا صنف في المرتجع"]);
+  c.rows.forEach((x,i)=>{const e=lerr(d,x);if(e)r.push([e[0],`سطر ${i+1} (${x.i}): ${e[1]}`]);});
+  if(!d.cn)r.push(["wr","رقم إشعار المورد فاضي (اختياري)"]);
+  if(!d.rs)r.push(["wr","سبب المرتجع فاضي"]);
+  if(H.cur!=="EGP")r.push(["in",`بعملة الفاتورة الأصلية ${H.cur} وسعرها ${H.rate} — مش بسعر النهارده`]);
+  if(c.ev)r.push(["in",`ض.ق.م مدخلات بتتعكس ${mf(c.ev)} جنيه`]);
+  if(c.diff)r.push(["in",`الفرق بين سعر الفاتورة (${mf(r2(c.eb-c.svc))}) والمتوسط (${mf(c.cost)}) = ${mf(c.diff)} ← 5206 فروق تكلفة المخزون`]);
+  r.push(d.pay==="credit"?["in",`آجل — رصيد المورد بيقل ${mf(c.et)} جنيه`]:["in",`نقدي — المورد رجّع الفلوس ← قيد قبض في «${PAY.find(p=>p[0]===d.box)[1]}»`]);
+  if(V.cf&&ed())r.push(["no","المرتجع اتعدّل من جهاز تاني — اعمل «تحديث» الأول"]);
+  return r;}
+function je(d){const c=calc(d),s=sup(d.sup),r=[];if(!s||!d.lines.length)return r;const H=c.H;
+  r.push([`2101 الموردين — ${s[0]}${H.cur!=="EGP"?` (${H.cur} ${mf(c.tot)} × ${H.rate})`:''}`,c.et,0]);
+  if(c.cost)r.push(["1105 المخزون (بالمتوسط)",0,c.cost]);
+  if(c.svc)r.push(["تكلفة الخدمات (من نوع الصنف)",0,c.svc]);
+  if(c.ev)r.push(["110601 ض.ق.م — مدخلات (عكس)",0,c.ev]);
+  if(c.diff>0)r.push(["5206 فروق تكلفة المخزون",0,c.diff]);else if(c.diff<0)r.push(["5206 فروق تكلفة المخزون",-c.diff,0]);
+  if(d.pay==="cash"){const b=PAY.find(p=>p[0]===d.box);r.push([`${b[2]} ${b[1]} (قبض)`,c.et,0],[`2101 الموردين — ${s[0]} (قبض)`,0,c.et]);}
+  return r;}
+function stockFx(d){const c=calc(d),H=c.H,m={};c.rows.filter(x=>!x.svc&&x.l.wh&&!wh(x.l.wh)[2]).forEach(x=>{const k=x.i+"|"+x.l.wh;(m[k]||(m[k]={i:x.i,w:x.l.wh,q:0}));m[k].q+=x.qb;});
+  const P=d.st==="posted";return Object.values(m).map(z=>{const b=bal(z.i,z.w,H.kind);const q0=P?b+z.q:b;return {...z,q0,q1:r6(q0-z.q),a:avg(z.i,H.kind)};});}
+
+// ===== أجزاء الشاشة
+const esc=s=>String(s??"").replace(/"/g,"&quot;");
+const fl=(lab,inner,cls)=>`<div class="fl ${cls||''}"><label>${lab}</label>${inner}</div>`;
+const inH=(k,v,ph,cls)=>`<input class="in ${cls||''}" data-h="${k}" value="${esc(v)}" ${dis()} ${ph?`placeholder="${ph}"`:''}>`;
+const ro=v=>`<input class="in ro" value="${esc(v)}" readonly>`;
+const sel=(attr,opts,v,cls,off)=>`<select class="sl ${cls||''}" ${attr} ${off||!ed()?'disabled':''}>${opts.map(o=>`<option value="${o[0]}" ${String(v)===String(o[0])?'selected':''}>${o[1]}</option>`).join("")}</select>`;
+const lookup=inner=>`<div class="lkw">${inner}<span class="lkb" title="بحث">🔍</span></div>`;
+const btn=(t,ic,k,attr,on=true)=>`<span class="btn ${k} ${on?'':'off'}" ${on?attr:''}>${ic} ${t}</span>`;
+const stB=d=>d.st==="posted"?'<span class="st po">مرحّل</span>':'<span class="st dr">مسودة</span>';
+function header(o={}){const d=D(),E=ed();return `<div class="wbar"><span>↩ مرتجع المشتريات — A-H CODE</span><span class="x">— ❐ ✕</span></div>
+ <div class="body"><div class="hdr"><div><div class="ttl"><span class="ic">↩</span>${o.seg?`<span class="seg"><span class="${V.seg==='inv'?'on':''}" data-seg="inv">🧾 فاتورة شراء</span><span class="${V.seg==='ret'?'on':''}" data-seg="ret">↩ مرتجع</span></span>`:'مرتجع المشتريات'} ${stB(d)}</div><div class="sub">رجوع بضاعة للمورد — مربوط بفاتورة الشراء الأصلية، وبيعكس الضريبة والقيد</div></div>
+ <div class="meta">المستخدم: مدير النظام<br>التاريخ: 28-11-2026<br>الوقت: 11:20:05</div></div>
+ <div class="tbar"><span class="btn g sq" title="بحث عن مرتجع (F1)">🔍</span>${btn("جديد","＋","g",'data-new="1"')}${btn("حفظ","💾","g",'data-save="1"',E)}
+ ${btn("تعديل","✎","b",'data-edit="1"',!E)}${btn("تحديث","⟳","b",'data-ref="1"')}${btn("ترحيل","✔✔","b",'data-post="1"',E)}${btn("إلغاء الترحيل","↩","b",'data-unpost="1"',!E)}
+ ${btn("حذف","🗑","r",'data-del="1"',E)}${btn("إلغاء","✕","w",'data-can="1"',E)}${btn("تصدير","⇩","w",'')}${btn("خروج","⇥","k",'')}
+ <label class="ck"><input type="checkbox" data-show="showWh" ${V.showWh?'checked':''}>المخزن</label><label class="ck"><input type="checkbox" data-show="showUnit" ${V.showUnit?'checked':''}>الوحدة</label><label class="ck"><input type="checkbox" data-show="showDisc" ${V.showDisc?'checked':''}>سعر الفاتورة والخصم</label></div>`;}
+const msgs=()=>(V.cf&&ed()?'<div class="cf">⚠ المرتجع ده اتعدّل من جهاز تاني بعد ما فتحته — «حفظ» و«ترحيل» هيترفضوا لحد ما تعمل «⟳ تحديث»</div>':'')+(V.msg?`<div class="msg ${V.mt}">${V.msg}</div>`:'');
+const invOpts=d=>{const L=INV.filter(o=>o.sup===d.sup).map(o=>[o.no,`${o.no} · ${o.date} · ${KN[o.kind]} · ${mf(calc({inv:o.no,lines:o.lines.map((x,j)=>({inv:o.no,src:j,u:x.u,q:x.q,wh:x.wh}))}).tot)} ${o.cur}`]);
+  return [["",V.free||!d.inv?"— من غير فاتورة —":"— اختار الفاتورة —"],...L];};
+const F={
+ no:()=>fl("رقم المرتجع",ro(D().no||"بيتولّد مع الترحيل")),
+ date:()=>fl("التاريخ",inH("date",D().date)),
+ sup:()=>fl("اسم المورد",lookup(sel('data-h="sup"',SUP.map(s=>[s[0],`${s[0]} — ${s[1]}`]),D().sup))),
+ inv:()=>fl("فاتورة الشراء الأصلية",lookup(sel('data-h="inv"',invOpts(D()),D().inv,!D().inv&&!V.free&&D().lines.every(l=>!l.inv)?'bad':''))),
+ sinvo:()=>{const o=hd(D()).o;return fl("رقم فاتورة المورد",ro(o?o.sinv:"—"));},
+ cn:()=>fl("رقم إشعار المورد",inH("cn",D().cn,"Credit Note — اختياري")),
+ kind:()=>{const d=D(),H=hd(d);return fl("النوع",H.o?ro(KN[H.kind]+" (من الفاتورة)"):sel('data-h="kind"',[["invoice","فاتورة"],["statement","بيان"]],H.kind));},
+ cur:()=>{const d=D(),H=hd(d);return fl("العملة وسعر الصرف",H.o?ro(H.cur==="EGP"?"EGP — جنيه":`${H.cur} × ${H.rate} (سعر الفاتورة)`):sel('data-h="cur"',Object.keys(CUR).map(k=>[k,`${k} — ${CUR[k][0]}`]),H.cur));},
+ pay:()=>fl("نوع المرتجع",sel('data-h="pay"',[["credit","آجل (يقلّل رصيد المورد)"],["cash","نقدي (المورد رجّع فلوس)"]],D().pay)),
+ box:()=>D().pay==="cash"?fl("الفلوس دخلت في",sel('data-h="box"',PAY.map(p=>[p[0],p[1]]),D().box)):fl("رصيد المورد (علينا)",ro(mf(sup(D().sup)[5]))),
+ rs:()=>fl("سبب المرتجع",sel('data-h="rs"',RS.map(x=>[x,x||"— اختار —"]),D().rs)),
+ prj:()=>fl("أمر التوريد",ro(PRJ[hd(D()).prj]||"—")),
+ note:()=>fl("ملاحظات",inH("note",D().note))};
+const grid=(keys,cls)=>`<div class="${cls||'grid4'}">${keys.map(k=>F[k]()).join("")}</div>`;
+const HT=[["الأساسية",["no","date","sup","inv","sinvo","cn","kind","rs"]],["الدفع والعملة",["pay","box","cur","prj"]],["إضافية",["note"]]];
+const tabsCard=()=>`<div><div class="htabs"><span style="background:none;border:none;color:var(--g);padding:6px 4px">📅 بيانات المرتجع</span>${HT.map((t,i)=>`<span class="${V.htab===i+1?'on':''}" data-htab="${i+1}">${t[0]}</span>`).join("")}</div><div class="hpane">${grid(HT[V.htab-1][1])}</div></div>`;
+// جدول التفاصيل
+function table(o={}){const d=D(),c=calc(d),E=ed();
+  const cols=["رقم الصنف","اسم الصنف",V.showWh&&"المخزن",V.showUnit&&"الوحدة","اتشرى","رجع قبل كده","↩ المرتجع",V.showDisc&&"سعر الفاتورة",V.showDisc&&"الخصم %","السعر بعد الخصم","قبل الضريبة","الضريبة","قيمة الضريبة","الإجمالي"].filter(Boolean);
+  const body=c.rows.map((r,i)=>{const l=r.l,x=r.x,e=lerr(d,r),un=x[4][l.u][0];const inl=E&&o.inline;
+   const b=l.inv?m0(bought(l.inv,l.src)/fu(r.i,l.u)):'—',rb=l.inv?m0(retBefore(d,l.inv,l.src)/fu(r.i,l.u)):'—';
+   const whC=x[6]?'—':inl?sel(`data-l="${i}|wh"`,WH.map(w=>[w[0],w[1]]),l.wh):wh(l.wh)[1];
+   const uC=inl&&x[4].length>1?sel(`data-l="${i}|u"`,x[4].map((u,j)=>[j,u[0]]),l.u):un;
+   const q=inl?`<input class="in q n" data-l="${i}|q" value="${l.q}">`:`<b>${m0(l.q)}</b>`;
+   return `<tr class="${V.sel===i?'sel':''}" data-row="${i}"><td>${r.i}</td><td class="nm">${x[1]}${x[6]?' <span class="ln-i" style="display:inline">(خدمي)</span>':''}${l.inv&&!d.inv?`<span class="ln-i">من ${l.inv}</span>`:''}${e?`<span class="${e[0]==='no'?'ln-e':'ln-w'}">${e[0]==='no'?'✖':'⚠'} ${e[1]}</span>`:''}</td>
+   ${V.showWh?`<td>${whC}</td>`:''}${V.showUnit?`<td>${uC}</td>`:''}<td>${b}</td><td>${rb}</td><td class="rt">${q}</td>${V.showDisc?`<td>${mf(r.lpU)}</td><td>${r.dsc?r.dsc+'%':'—'}</td>`:''}<td>${mf(r.pU)}</td><td>${mf(r.base)}</td><td>${hd(d).kind==="statement"?'—':TX[r.txc][0]}</td><td>${mf(r.vat)}</td><td><b>${mf(r.tot)}</b></td></tr>`;}).join("");
+  return `<div class="tblw" ${o.h?`style="max-height:${o.h}px;min-height:${o.h}px"`:''}><table class="tbl"><tr>${cols.map(h=>`<th class="${h==='↩ المرتجع'?'rt':''}">${h}</th>`).join("")}</tr>${body||`<tr><td colspan="${cols.length}" class="empty">مفيش أصناف — اختار من أصناف الفاتورة الأصلية تحت</td></tr>`}</table></div>
+   <div class="tfoot"><span>إجمالي المرتجع قبل الضريبة</span><b>${mf(c.base)}</b></div>`;}
+const details=o=>`<div class="card" style="flex:1"><div class="secT">☰ تفاصيل المرتجع <span style="margin-right:auto;color:#6B7280;font-size:12px;font-weight:700">${D().lines.length} صنف · اضغط على سطر عشان تعدّله تحت</span></div>${table(o||{})}</div>`;
+// الإجماليات
+function totals(){const d=D(),c=calc(d),s=sup(d.sup),H=c.H;const nb=checks(d).filter(x=>x[0]==="no").length,nw=checks(d).filter(x=>x[0]==="wr").length;
+  const after=d.pay==="credit"?(ed()?s[5]-c.et:s[5]):s[5];
+  return `<div class="sr"><span>إجمالي المرتجع قبل الضريبة</span><b>${mf(c.base)}</b></div><div class="sr"><span>قيمة الضريبة (عكس المدخلات)</span><b>${mf(c.vat)}</b></div>
+  <div class="net"><span>الإجمالي شامل الضريبة (${H.cur})</span><b>${mf(c.tot)}</b></div>${H.cur!=="EGP"?`<div class="net egp"><span>بالجنيه × ${H.rate} (سعر الفاتورة)</span><b>${mf(c.et)}</b></div>`:''}
+  <div class="sr"><span>رصيد المورد (علينا) ${ed()?'قبل ← بعد':''}</span><b>${ed()?mf(s[5])+' ← ':''}${mf(after)}</b></div>
+  <div class="ready ${nb?'no':'ok'}">${nb?`✖ ${nb} مشكلة لازم تتحل قبل الترحيل`:'✔ جاهز للترحيل'}${nw?` · ⚠ ${nw} تنبيه`:''}</div>`;}
+const ckList=()=>`<div class="ckl">${checks(D()).map(c=>`<div class="${c[0]}"><b>${{ok:"✔",no:"✖",wr:"⚠",in:"ℹ"}[c[0]]}</b><span>${c[1]}</span></div>`).join("")}</div>`;
+function jeTbl(){const j=je(D());const dr=r2(j.reduce((a,x)=>a+x[1],0)),cr=r2(j.reduce((a,x)=>a+x[2],0));
+  return `<table class="mini"><tr><th>الحساب</th><th class="n">مدين</th><th class="n">دائن</th></tr>${j.map(x=>`<tr><td>${x[0]}</td><td class="n">${x[1]?mf(x[1]):''}</td><td class="n">${x[2]?mf(x[2]):''}</td></tr>`).join("")}
+   <tr><td><b>${dr===cr?'<span class="ok-l">✔ متوازن</span>':'<span class="bad-l">✖ مش متوازن</span>'}</b></td><td class="n"><b>${mf(dr)}</b></td><td class="n"><b>${mf(cr)}</b></td></tr></table>`;}
+const stockTbl=()=>`<table class="mini"><tr><th>الصنف · المخزن</th><th class="n">الرصيد قبل ← بعد</th><th class="n">المتوسط</th></tr>${stockFx(D()).map(x=>`<tr><td>${x.i} · ${wh(x.w)[1]}</td><td class="n">${m0(x.q0)} ← <b class="${x.q1<0?'bad-l':''}">${m0(x.q1)}</b></td><td class="n">${mf(x.a)} (زي ما هو)</td></tr>`).join("")||'<tr><td colspan="3">مفيش أصناف مخزنية</td></tr>'}</table><div style="font-size:11.5px;color:#6B7280;font-weight:700;margin-top:4px">الخارج بيطلع بالمتوسط فالمتوسط مابيتغيّرش — والفرق مع سعر الفاتورة على 5206</div>`;
+function origTbl(o={}){const d=D(),n=d.inv;if(!n)return '<div style="color:#94A3B8;font-weight:700;padding:10px">مفيش فاتورة أصلية</div>';const I=invOf(n);
+  return `<table class="mini"><tr><th>الصنف</th><th class="n">اتشرى</th><th class="n">رجع قبل</th><th class="n">في المرتجع</th><th class="n">فاضل</th></tr>${I.lines.map((O,j)=>{const x=it(O.it),f=fu(O.it,O.u),un=x[4][O.u][0];const a=bought(n,j),b=retBefore(d,n,j),c=inDoc(d,n,j,-1);
+   return `<tr ${o.pick&&ed()?`data-pick="${j}" title="اضغط عشان تضيفه"`:''}><td>${O.it}<br><small style="color:#6B7280">${x[1]}</small></td><td class="n">${m0(a/f)} ${un}</td><td class="n">${m0(b/f)}</td><td class="n" style="color:#C2410C">${m0(c/f)}</td><td class="n"><b class="${a-b-c<=0?'bad-l':'ok-l'}">${m0((a-b-c)/f)}</b></td></tr>`;}).join("")}</table>`;}
+const side=o=>{o=o||{};let inner=`<div class="secT">◔ الإجماليات</div>${totals()}`;
+  if(o.side==="review")inner+=`<div class="secT" style="margin-top:6px">🔎 مراجعة قبل الترحيل</div>${ckList()}`;
+  if(o.side==="tabs"){const T=["الإجماليات","القيد","المخزون","الفاتورة الأصلية"];
+    inner=`<div class="stabs">${T.map((t,i)=>`<span class="${V.stab===i+1?'on':''}" data-stab="${i+1}">${t}</span>`).join("")}</div>${V.stab===1?totals():V.stab===2?jeTbl():V.stab===3?stockTbl():origTbl()}`;}
+  return `<div class="card side">${inner}</div>`;};
+// إضافة صنف (تحت)
+function clearF(){const d=D();V.sel=-1;
+  if(d.inv){const I=invOf(d.inv);let j=I.lines.findIndex((O,k)=>remain(d,d.inv,k)>0);if(j<0)j=0;const O=I.lines[j];V.f={src:j,wh:O.wh,u:O.u,q:String(m0(Math.max(0,remain(d,d.inv,j))/fu(O.it,O.u))).replace(/,/g,"")};}
+  else{const c="ITM-0002";V.f={src:"",it:c,wh:"WH-001",u:0,q:"1",p:String(LAST[c]||0),tx:"VAT14"};}}
+function loadF(i){const l=D().lines[i];V.sel=i;V.f=l.inv?{src:l.src,wh:l.wh,u:l.u,q:String(l.q)}:{src:"",it:l.it,wh:l.wh,u:l.u,q:String(l.q),p:String(l.p),tx:l.tx};}
+function lineFromF(){const d=D(),f=V.f;if(d.inv){const O=invOf(d.inv).lines[+f.src];return {inv:d.inv,src:+f.src,u:+f.u||0,q:+f.q||0,wh:it(O.it)[6]?"":f.wh};}
+  return {inv:"",src:null,it:f.it,u:+f.u||0,q:+f.q||0,wh:it(f.it)[6]?"":f.wh,p:+f.p||0,tx:f.tx};}
+function addCard(o={}){const d=D(),f=V.f,E=ed(),H=hd(d);const isEdit=V.sel>=0&&d.lines[V.sel];
+  let itSel,itCode,extra='',info='';
+  if(d.inv){const I=invOf(d.inv);const O=I.lines[+f.src]||I.lines[0];const x=it(O.it);
+    itSel=`<select class="sl" data-f="src" ${E?'':'disabled'}>${I.lines.map((L,j)=>{const xx=it(L.it),ff=fu(L.it,L.u);return `<option value="${j}" ${+f.src===j?'selected':''}>${L.it} — ${xx[1]} · اتشرى ${m0(L.q)} ${xx[4][L.u][0]} · فاضل ${m0(Math.max(0,remain(d,d.inv,j,isEdit?V.sel:-1))/ff)}</option>`;}).join("")}</select>`;
+    itCode=O.it;const pr=calc({inv:d.inv,lines:[{inv:d.inv,src:+f.src,u:+f.u||0,q:1,wh:f.wh}]}).rows[0];
+    info=`<span>${x[6]?'خدمي — مالوش مخزون':`المتاح في «${wh(f.wh)[1]}»: <b>${m0(bal(O.it,f.wh,H.kind))} ${x[2]}</b>`}</span><span>سعر الفاتورة بعد الخصم: <b>${mf(pr.pU)} ${H.cur}</b> / ${x[4][+f.u||0][0]}</span>${x[6]?'':`<span>المتوسط دلوقتي: <b>${mf(avg(O.it,H.kind))}</b></span>`}<span>اتشرى في «${wh(O.wh||'WH-001')[1]}»</span>`;
+    extra='';}
+  else{const x=it(f.it);itSel=`<select class="sl" data-f="it" ${E?'':'disabled'}>${IT.map(i=>`<option value="${i[0]}" ${f.it===i[0]?'selected':''}>${i[1]}</option>`).join("")}</select>`;itCode=f.it;
+    extra=fl("السعر",`<input class="in n" data-f="p" value="${f.p}" ${E?'':'disabled'}>`,"s")+fl("الضريبة",`<select class="sl" data-f="tx" ${E&&H.kind!=='statement'?'':'disabled'}>${Object.keys(TX).map(k=>`<option value="${k}" ${f.tx===k?'selected':''}>${TX[k][0]}</option>`).join("")}</select>`,"s");
+    info=`<span>المتاح في «${wh(f.wh)[1]}»: <b>${m0(bal(f.it,f.wh,H.kind))} ${x[2]}</b></span><span>آخر سعر شراء: <b>${LAST[f.it]?mf(LAST[f.it]):'—'}</b></span><span style="color:#B45309">من غير فاتورة: السعر باليد</span>`;}
+  const x=it(itCode);
+  return `<div class="card"><div class="secT">🏷 ${isEdit?`تعديل السطر ${V.sel+1}`:d.inv?`إضافة صنف من ${d.inv}`:'إضافة صنف (من غير فاتورة)'}${o.modalBtn&&d.inv?`<span style="margin-right:auto">${btn("اختار من الفاتورة","📋","o",'data-mopen="1"',E)}</span>`:''}</div><div class="add">
+   ${fl(d.inv?"الصنف من الفاتورة الأصلية":"الصنف",lookup(itSel),"it")}
+   ${fl("رقم الصنف",ro(itCode),"s")}
+   ${fl("المخزن",`<select class="sl" data-f="wh" ${E&&!x[6]?'':'disabled'}>${WH.map(w=>`<option value="${w[0]}" ${f.wh===w[0]?'selected':''}>${w[1]}</option>`).join("")}</select>`,"m")}
+   ${fl("الوحدة",`<select class="sl" data-f="u" ${E?'':'disabled'}>${x[4].map((u,j)=>`<option value="${j}" ${+f.u===j?'selected':''}>${u[0]}</option>`).join("")}</select>`,"s")}
+   ${fl("الكمية المرتجعة",`<input class="in n" data-f="q" value="${f.q}" ${E?'':'disabled'}>`,"s")}${extra}
+   ${btn(isEdit?"تحديث السطر":"إضافة للمرتجع",isEdit?"✎":"＋",isEdit?"b":"g",isEdit?'data-upd="1"':'data-add="1"',E)}
+   ${btn(isEdit?"سطر جديد":"تفريغ","✎","w",'data-clr="1"',E)}${btn("حذف الصنف","🗑","w",'data-rm="1"',E&&isEdit)}${d.inv?btn("إرجاع كل الفاتورة","⤺","o",'data-all="1"',E):''}</div>
+   <div class="info">${info}<span style="color:#94A3B8">Enter في الكمية = إضافة</span></div></div>`;}
+// النافذة المنبثقة (النموذج 3)
+function modal(){const d=D();if(!V.modal||!d.inv)return '';const I=invOf(d.inv);
+  return `<div class="ov"><div class="dlg"><div class="dh">📋 اختار الأصناف اللي راجعة من ${d.inv} — ${sup(d.sup)[1]}<span data-mclose="1">✕</span></div><div class="db">
+  <table class="tbl"><tr><th>✔</th><th>الصنف</th><th>المخزن</th><th>اتشرى</th><th>رجع قبل كده</th><th>فاضل</th><th class="rt">هيرجع</th><th>المتاح في المخزن</th></tr>
+  ${I.lines.map((O,j)=>{const x=it(O.it),f=fu(O.it,O.u),un=x[4][O.u][0],rm=Math.max(0,remain(d,d.inv,j)),k=V.mk[j];const av=x[6]?'—':m0(bal(O.it,O.wh,I.kind)/f)+' '+un;
+   return `<tr class="${rm<=0?'zero':''}"><td><input type="checkbox" data-mk="${j}" ${k?'checked':''} ${rm<=0?'disabled':''}></td><td class="nm">${O.it} — ${x[1]}</td><td>${x[6]?'—':wh(O.wh)[1]}</td><td>${m0(O.q)} ${un}</td><td>${m0(retBefore(d,d.inv,j)/f)}</td><td><b>${m0(rm/f)}</b></td>
+   <td class="rt"><input class="in q n" data-mq="${j}" value="${k?k:''}" placeholder="${m0(rm/f)}" ${rm<=0?'disabled':''}></td><td>${av}</td></tr>`;}).join("")}</table>
+  <div class="info"><span>✔ = يرجع كله (الفاضل) · أو اكتب كمية أقل · الوحدة زي الفاتورة</span></div></div>
+  <div class="df">${btn("إضافة المختار للمرتجع","＋","g",'data-mapply="1"')}${btn("اختار الكل","☑","w",'data-mall="1"')}${btn("إلغاء","✕","w",'data-mclose="1"')}</div></div></div>`;}
+// كل أصناف الفاتورة في الجدول (النموذج 2) / كل أصناف المورد (النموذج 8)
+function fullTable(mode){const d=D(),E=ed(),H=hd(d);let src=[];
+  if(mode==="inv"){if(!d.inv)return '<div class="empty" style="padding:30px;text-align:center">اختار الفاتورة الأصلية الأول</div>';src=invOf(d.inv).lines.map((O,j)=>[d.inv,j,O]);}
+  else INV.filter(o=>o.sup===d.sup&&o.kind===H.kind&&o.cur===H.cur).forEach(o=>o.lines.forEach((O,j)=>src.push([o.no,j,O])));
+  const rows=src.map(([n,j,O])=>{const x=it(O.it),f=fu(O.it,O.u),un=x[4][O.u][0];const li=d.lines.findIndex(l=>l.inv===n&&l.src===j);const l=d.lines[li];
+    const rm=Math.max(0,remain(d,n,j,li));const r=li>=0?calc(d).rows[li]:null;const e=r?lerr(d,r):null;
+    return `<tr class="${l?'sel':''} ${rm<=0&&!l?'zero':''}">${mode==="sup"?`<td>${n}<br><small style="color:#6B7280">${invOf(n).date}</small></td>`:''}<td>${O.it}</td><td class="nm">${x[1]}${e?`<span class="${e[0]==='no'?'ln-e':'ln-w'}">${e[0]==='no'?'✖':'⚠'} ${e[1]}</span>`:''}</td><td>${x[6]?'—':wh(O.wh)[1]}</td><td>${un}</td><td>${m0(O.q)}</td><td>${m0(retBefore(d,n,j)/f)}</td><td><b>${m0(rm/f)}</b></td>
+     <td class="rt"><input class="in q n" data-fq="${n}|${j}" value="${l?l.q:''}" placeholder="0" ${E&&(rm>0||l)?'':'disabled'}></td><td>${r?mf(r.pU):'—'}</td><td>${r?mf(r.base):'—'}</td><td>${r?mf(r.vat):'—'}</td><td><b>${r?mf(r.tot):'—'}</b></td></tr>`;}).join("");
+  const c=calc(d);
+  return `<div class="tblw" style="max-height:340px;min-height:240px"><table class="tbl"><tr>${mode==="sup"?'<th>الفاتورة</th>':''}<th>رقم الصنف</th><th>اسم الصنف</th><th>المخزن</th><th>الوحدة</th><th>اتشرى</th><th>رجع قبل كده</th><th>فاضل</th><th class="rt">↩ هيرجع</th><th>السعر بعد الخصم</th><th>قبل الضريبة</th><th>الضريبة</th><th>الإجمالي</th></tr>${rows||'<tr><td colspan="13" class="empty">مفيش مشتريات من المورد ده</td></tr>'}</table></div>
+  <div class="tfoot"><span>${d.lines.length} صنف راجع · إجمالي المرتجع قبل الضريبة</span><b>${mf(c.base)}</b></div>`;}
+
+// ===== النماذج العشرة
+const screen=(inner,o={})=>`<div class="scr">${header(o)}${msgs()}${inner}${o.noAdd?'':addCard(o)}</div>${o.modal?modal():''}</div>`;
+const M=[
+["زي «فاتورة الشراء» (النموذج 9) بالظبط","نفس الشاشة اللي اخترتها للشراء: بيانات المرتجع في 3 تبويبات، والإجماليات يمين، و«إضافة صنف» تحت — بس الصنف بيتختار من أصناف الفاتورة الأصلية (جنب كل واحد اتشرى كام وفاضل كام)، والسعر والخصم والضريبة جايين من الفاتورة لوحدهم.",
+ ()=>screen(`${tabsCard()}<div class="row">${side()}${details({h:300})}</div>`)],
+["كل أصناف الفاتورة نازلة في الجدول","أول ما تختار الفاتورة الأصلية، كل أصنافها بتنزل في الجدول وقصاد كل صنف (اتشرى · رجع قبل كده · فاضل) وخانة «هيرجع» برتقاني تكتب فيها — اللي فاضي مش راجع. مفيش «إضافة صنف» تحت.",
+ ()=>screen(`${tabsCard()}<div class="row">${side()}<div class="card" style="flex:1"><div class="secT">☰ أصناف الفاتورة الأصلية <span style="margin-right:auto">${btn("إرجاع كل الفاتورة","⤺","o",'data-all="1"',ed()&&!!D().inv)} ${btn("تصفير","↺","w",'data-zero="1"',ed())}</span></div>${fullTable("inv")}</div></div>`,{noAdd:1})],
+["نافذة «اختار من الفاتورة» بتشيك بوكس","زي 1، وتحت زرار «📋 اختار من الفاتورة» بيفتح نافذة فيها أصناف الفاتورة بتشيك بوكس (✔ = يرجع كله) أو تكتب كمية — زي نافذة العهد المفتوحة. بتفتح لوحدها أول ما تختار الفاتورة.",
+ ()=>screen(`${tabsCard()}<div class="row">${side()}${details({h:300})}</div>`,{modalBtn:1,modal:1})],
+["العمود الجانبي بتبويبات: الإجماليات · القيد · المخزون · الفاتورة الأصلية","نفس 1، والعمود اليمين فيه 4 تبويبات: القيد اللي هيتعمل (المورد مدين · المخزون والضريبة دائن · الفرق على 5206) · الرصيد قبل / بعد في كل مخزن · وملخص الفاتورة الأصلية (اتشرى / رجع / فاضل).",
+ ()=>screen(`${tabsCard()}<div class="row">${side({side:"tabs"})}${details({h:300})}</div>`)],
+["الفاتورة الأصلية جنب المرتجع","على الشمال كارت الفاتورة الأصلية (رقمها · تاريخها · عملتها · خصمها) وجدول أصنافها — اضغط على أي صنف ← بيتضاف للمرتجع بالفاضل كله. بتشوف الأصل والمرتجع قدام بعض.",
+ ()=>{const d=D(),o=hd(d).o;return screen(`${tabsCard()}<div class="row">${side()}${details({h:300})}<div class="card orig"><div class="secT" style="color:#C2410C">🧾 الفاتورة الأصلية</div>${o?`<div class="kv"><span>الرقم</span><b>${o.no}</b></div><div class="kv"><span>التاريخ</span><b>${o.date}</b></div><div class="kv"><span>رقمها عند المورد</span><b>${o.sinv}</b></div><div class="kv"><span>النوع · العملة</span><b>${KN[o.kind]} · ${o.cur}${o.cur!=="EGP"?' × '+o.rate:''}</b></div><div class="kv"><span>خصم الفاتورة</span><b>${mf(o.hd)}</b></div>`:''}<div style="margin-top:6px">${origTbl({pick:1})}</div><div class="info"><span>اضغط على صنف = يرجع الفاضل كله</span></div></div></div>`);}],
+["+ مراجعة قبل الترحيل تحت الإجماليات","زي 1، وتحت الإجماليات قايمة بتتحسب وانت بتكتب (✔ ✖ ⚠ ℹ): الكمية أكبر من اللي فاضل · البضاعة اتصرفت من المخزن · العملة وسعرها · عكس الضريبة · الفرق مع المتوسط — «ترحيل» بيقف لو فيها ✖.",
+ ()=>screen(`${tabsCard()}<div class="row">${side({side:"review"})}${details({h:330})}</div>`)],
+["مرتجع حر (من غير فاتورة) بصلاحية","زي 1، بس «الفاتورة الأصلية» اختيارية بصلاحية «مرتجع من غير فاتورة» (للبضاعة اللي اتشرت قبل البرنامج — أول المدة): الصنف من كل الأصناف، والسعر والضريبة بتتكتب باليد (الافتراضي آخر سعر شراء). جرّب المرتجع الرابع في الشريط الأصفر.",
+ ()=>screen(`${tabsCard()}<div class="row">${side({side:"review"})}${details({h:300})}</div>`)],
+["يبدأ من المورد: كل اللي اتشرى منه","تختار المورد بس ← الجدول فيه كل الأصناف اللي اتشرت منه من كل الفواتير (بنفس النوع والعملة) والفاضل من كل واحدة — المرتجع ممكن يبقى على أكتر من فاتورة، وكل سطر بيتربط بفاتورته لوحده.",
+ ()=>screen(`${tabsCard()}<div class="row">${side()}<div class="card" style="flex:1"><div class="secT">☰ كل مشتريات «${sup(D().sup)[1]}» (${KN[hd(D()).kind]} · ${hd(D()).cur})</div>${fullTable("sup")}</div></div>`,{noAdd:1})],
+["شاشة واحدة للشراء والمرتجع","نفس شاشة «فاتورة الشراء» وفوق مفتاح «🧾 فاتورة شراء | ↩ مرتجع» — ومن أي فاتورة مرحّلة زرار «↩ مرتجع من الفاتورة دي» بيفتح المرتجع جاهز عليها. نفس الأزرار والمكان، والفرق اللون البرتقاني للمرتجع.",
+ ()=>screen(`${V.seg==="inv"?`<div class="banner">🧾 هنا بتبقى شاشة «فاتورة الشراء» زي ما هي — ولو الفاتورة مرحّلة فيه زرار «↩ مرتجع من الفاتورة دي». دوس «↩ مرتجع» فوق عشان ترجع.</div>`:`<div class="banner">↩ اتفتح من فاتورة ${D().inv||'—'} بزرار «مرتجع من الفاتورة دي» — المورد والفاتورة متملّيين لوحدهم</div>`}${tabsCard()}<div class="row">${side()}${details({h:300})}</div>`,{seg:1})],
+["زي الأكسس SallesInvoice2 + اللي اتغيّر","على اليمين شكل «إذن مرتجع مشتريات» في الأكسس (PurchaseHead2 / Purchasedata2) بنفس الخانات، وعلى الشمال كل اللي اتغيّر في البرنامج الجديد.",
+ ()=>{const d=D(),c=calc(d),H=c.H;return `<div class="row" style="align-items:flex-start"><div class="acc"><div class="at">SallesInvoice2 — إذن مرتجع مشتريات</div><div class="ab">
+  <div class="ar"><div><label>رقم الإذن</label><div class="ai">${d.no?d.no.slice(-2):'(جديد)'}</div></div><div><label>التاريخ</label><div class="ai">${d.date}</div></div><div><label>المورد</label><div class="ai">${sup(d.sup)[1]}</div></div>
+  <div><label>نوع العملية</label><div class="ai">م.مشتريات</div></div><div><label>أجل / نقدي</label><div class="ai">${d.pay==="cash"?'نقدي':'أجل'}</div></div><div><label>فاتورة / بيان</label><div class="ai">${KN[H.kind]}</div></div>
+  <div><label>أمر التوريد (YADNUMBER)</label><div class="ai">${H.prj||''}</div></div><div><label>ملاحظات</label><div class="ai">${d.note}</div></div><div><label>المستخدم</label><div class="ai">admin</div></div></div>
+  <table><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الضريبة</th><th>الإجمالي</th></tr>${c.rows.map(r=>`<tr><td>${r.x[1]}</td><td>${m0(r.qb)}</td><td>${mf(r.pU/fu(r.i,r.l.u))}</td><td>${mf(r.vat)}</td><td>${mf(r.tot)}</td></tr>`).join("")}</table>
+  <div class="abt"><span>جديد</span><span>حفظ</span><span>طباعة</span><span>خروج</span></div></div></div>
+  <div class="card chg"><div class="secT">✨ اللي اتغيّر في البرنامج الجديد</div><ul>
+  <li>🔗 <b>مربوط بفاتورة الشراء الأصلية</b> (الأكسس مكانش فيه أي ربط) — ومينفعش ترجّع أكتر من اللي اتشرى ناقص اللي رجع قبل كده.</li>
+  <li>💲 <b>السعر والخصم والضريبة والعملة وسعرها من الفاتورة</b> لوحدهم — في الأكسس السعر كان بيتكتب باليد.</li>
+  <li>🧾 <b>قيد أوتوماتيك:</b> المورد مدين · المخزون (بالمتوسط) وض.ق.م المدخلات دائن · والفرق على 5206 — الأكسس مكانش بيعمل قيد.</li>
+  <li>📦 البضاعة بتخرج من المخزن اللي على السطر، ولو اتصرفت ← محتاج صلاحية «من غير رصيد».</li>
+  <li>📝 مسودة ← ترحيل برقم <span dir="ltr">PRT-2026-00001</span> ← إلغاء ترحيل بصلاحية · وحماية الجهازين.</li>
+  <li>🏷 «سبب المرتجع» و«رقم إشعار المورد» جداد.</li>
+  <li>❌ «الخزنة (txtsaf) / المدفوع (paid)» مش هيتنقلوا: النقدي بقى قيد قبض للخزنة أو البنك.</li></ul></div></div>`;}],
+];
+
+const NOTE=`<b>📌 الشاشة بتعمل إيه:</b> لما بضاعة <b>ترجع للمورد</b> (تالفة · مش مطابقة · زيادة) — تختار <b>فاتورة الشراء الأصلية</b> ← تختار الأصناف اللي راجعة وكميتها ← البرنامج ياخد <b>السعر والخصم والضريبة والعملة وسعرها من الفاتورة</b> ← مع الترحيل: البضاعة <b>بتخرج من المخزن</b>، و<b>القيد بيتعمل لوحده</b> (المورد مدين · المخزون وض.ق.م المدخلات دائن)، و<b>رصيد المورد بيقل</b>.
+<ul>
+<li><b>كانت إيه في الأكسس:</b> شاشة <span dir="ltr">SallesInvoice2</span> «إذن مرتجع مشتريات» في قسم «الموردين» (جدول <span dir="ltr">PurchaseHead2</span> + <span dir="ltr">Purchasedata2</span> — <b>8 مرتجعات بس</b>، كلهم أجل): التاريخ · المورد · فاتورة / بيان · أمر التوريد · الصنف والكمية والسعر والضريبة. <b>مكانش مربوط بالفاتورة الأصلية</b> (أي صنف بأي سعر)، و<b>مكانش بيعمل قيد</b> — كان بيقلّل الرصيد في استعلام المخزن وحساب المورد بس.</li>
+<li><b>البضاعة الخارجة بتكلفتها إيه؟</b> دفتر المخزون عندنا بيطلّع أي خارج <b>بالمتوسط</b>، فالمتوسط مابيتغيّرش. المورد بيرجّعلنا بسعر الفاتورة، والفرق الصغير بينهم بيروح على <b>5206 «فروق تكلفة المخزون»</b>. مثال: الكابل اتشرى بـ 18.20 للمتر والمتوسط دلوقتي 18.50 ← 200 متر راجعين = 3,640 للمورد و3,700 من المخزون ← 60 جنيه على 5206.</li>
+<li>جرّب: «فاضل» بيقل وانت بتضيف · اكتب كمية أكبر من الفاضل ← ✖ · «حساس حرارة» في المرتجع الأول متاح منه 12 بس في المخزن (الباقي اتصرف) · المرتجع التالت بالدولار بسعر الفاتورة · المرتجع الرابع من غير فاتورة · والشريط الأصفر: 🔑 الصلاحيات و🔁 جهاز تاني.</li>
+</ul>`;
+const QS=`<b>❓ محتاج منك (وجنب كل سؤال اقتراحي — لو مارديتش هنفّذ بالاقتراح زي فاتورة الشراء):</b>
+<ol>
+<li><b>رقم النموذج</b> (1–10) — أو خلط (مثلاً «1 + النافذة من 3 + تبويب الفاتورة الأصلية من 4»).</li>
+<li><b>الربط بالفاتورة الأصلية إجباري؟</b> اقتراحي: أيوه · و«مرتجع من غير فاتورة» (النموذج 7) بصلاحية لوحدها للبضاعة اللي اتشرت قبل البرنامج.</li>
+<li><b>المرتجع على فاتورة واحدة بس؟</b> اقتراحي: أيوه (أوضح في الضريبة والربط) — والنموذج 8 لو عايز أكتر من فاتورة.</li>
+<li><b>السعر:</b> من الفاتورة الأصلية بخصم السطر ونصيبه من خصم الفاتورة وضريبتها وعملتها وسعر صرفها — <b>ومايتعدّلش</b> (اقتراحي).</li>
+<li><b>التكلفة:</b> البضاعة تطلع <b>بالمتوسط</b> والفرق مع سعر الفاتورة على 5206 (اقتراحي) — ولا تطلع بسعر الفاتورة والمتوسط يتعدّل (محتاج تغيير في دفتر المخزون)؟</li>
+<li><b>الكمية:</b> مايتعدّاش (اللي اتشرى − اللي رجع قبل كده) أبداً · ولو البضاعة اتصرفت من المخزن ← صلاحية «من غير رصيد» (اقتراحي).</li>
+<li><b>آجل / نقدي:</b> الافتراضي «آجل» (رصيد المورد بيقل) · «نقدي» = المورد رجّع فلوس ← قيد قبض لخزنة أو بنك مع المرتجع، زي النقدي في فاتورة الشراء (اقتراحي).</li>
+<li><b>سبب المرتجع:</b> قايمة (تالف · مش مطابق · زيادة · غلط في الطلب · تاني) — اختياري (اقتراحي) ولا إجباري؟</li>
+<li><b>الأرقام:</b> <span dir="ltr">PRT-2026-00001</span> كل سنة · «رقم إشعار المورد» اختياري (اقتراحي).</li>
+<li><b>المسودة والترحيل:</b> مسودة ← ترحيل ← إلغاء ترحيل بصلاحية · و<b>فاتورة الشراء مينفعش يتلغي ترحيلها طول ما عليها مرتجع مرحّل</b> (اقتراحي).</li>
+<li><b>المخزن:</b> الافتراضي مخزن السطر في الفاتورة ويتغيّر · الوهمي ممنوع · وأمر التوريد والنوع (فاتورة / بيان) من الفاتورة الأصلية (اقتراحي).</li>
+<li><b>نقل الأكسس:</b> الـ 8 مرتجعات مش هيتنقلوا — أثرهم داخل في «بضاعة أول المدة» وأرصدة الموردين (اقتراحي).</li>
+<li><b>المكان والصلاحيات:</b> «المشتريات» ← «الموردين» ← «مرتجع المشتريات» تحت «فاتورة الشراء» · عرض · إضافة · تعديل · حفظ · حذف · تصدير · ترحيل · إلغاء ترحيل · من غير رصيد · <b>مرتجع من غير فاتورة</b> (اقتراحي) — والطباعة مع مرحلتها.</li>
+<li><b>«مصاريف الشراء الإضافية» اتأجّلت</b> زي ما قلت ✅ — هترجعلها لما تحب.</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;document.getElementById("qs").innerHTML=QS;
+  document.getElementById("mnav").innerHTML=`<b>النموذج:</b>${M.map((m,i)=>`<span class="${V.m===i?'on':''}" data-m="${i}" title="${m[0]}">${i+1}</span>`).join("")}<div class="go"><span data-m="${Math.max(0,V.m-1)}">→ السابق</span><span data-m="${Math.min(M.length-1,V.m+1)}">التالي ←</span></div>`;
+  const m=M[V.m];
+  document.getElementById("page").innerHTML=`<h2 class="mh"><i>${V.m+1}</i>${m[0]}</h2><p class="md">${m[1]}</p>
+   <div class="demo">🧪 للتجربة بس (مش جزء من الشاشة): <span class="chip ${V.neg?'on':''}" data-neg="1">🔑 «من غير رصيد»: ${V.neg?'عنده':'مالوش'}</span><span class="chip ${V.free?'on':''}" data-free="1">🔑 «مرتجع من غير فاتورة»: ${V.free?'عنده':'مالوش'}</span>
+   <span class="chip bl" data-other="cf">🔁 جهاز تاني عدّل المرتجع ده</span><span class="chip bl" data-other="ret">🔁 جهاز تاني رحّل مرتجع على نفس الفاتورة</span>
+   <span>المرتجع: ${C.map((d,i)=>`<span class="chip ${V.d===i?'on':''}" data-doc="${i}">${d.no||'مسودة '+(i+1)}</span>`).join(" ")}</span></div><div style="position:relative">${m[2]()}</div>`;
+}
+function say(t,mt="ok"){V.msg=t;V.mt=mt;}
+function post(d){if(V.cf){say("✖ مارحّلتش: المرتجع اتعدّل من جهاز تاني — اعمل «⟳ تحديث» الأول","no");return;}
+  const b=checks(d).filter(c=>c[0]==="no");if(b.length){say("✖ مارحّلتش: "+b[0][1]+(b.length>1?` (و${b.length-1} تاني)`:""),"no");return;}
+  const c=calc(d);c.rows.filter(r=>!r.svc).forEach(r=>{const k=`${r.i}|${r.l.wh}|${c.H.kind}`;BAL[k]=r6((BAL[k]||0)-r.qb);});
+  if(d.pay==="credit")sup(d.sup)[5]=r2(sup(d.sup)[5]-c.et);
+  if(!d.no){SEQ++;d.no="PRT-2026-"+String(SEQ).padStart(5,"0");}d.st="posted";V.sel=-1;
+  say(`✔ اترحّل ${d.no}: البضاعة خرجت من المخزن والقيد اتعمل بـ ${mf(c.et)} جنيه${d.pay==="cash"?' + قيد قبض':' ورصيد المورد قل'}`);}
+function unpost(d){const c=calc(d);c.rows.filter(r=>!r.svc).forEach(r=>{const k=`${r.i}|${r.l.wh}|${c.H.kind}`;BAL[k]=r6((BAL[k]||0)+r.qb);});
+  if(d.pay==="credit")sup(d.sup)[5]=r2(sup(d.sup)[5]+c.et);d.st="draft";say(`↩ اتلغى ترحيل ${d.no} — رجع مسودة والرقم ثابت، والبضاعة رجعت المخزن`,"inf");}
+function other(k){const d=D();
+  if(k==="cf"){if(!ed()){say(`🔁 جهاز تاني حاول «يلغي ترحيل» الفاتورة الأصلية ${d.inv||''} ← اترفض: عليها مرتجع مرحّل (${d.no})`,"inf");return;}V.cf=1;say("🔁 جهاز تاني فتح نفس المرتجع وعدّل فيه وحفظ — جرّب «حفظ» دلوقتي","inf");return;}
+  const l=d.lines.find(x=>x.inv);if(!l||!ed()){say("التجربة دي على مرتجع مسودة مربوط بفاتورة","no");return;}
+  const O=ol(l),f=fu(O.it,O.u);const avail=r6(remain(d,l.inv,l.src,-1)+inDoc(d,l.inv,l.src,-1));const take=Math.floor(avail/f)-1;
+  if(take<=0){say("مفيش كمية كفاية للتجربة","no");return;}SEQ++;
+  C.splice(C.length,0,{no:"PRT-2026-"+String(SEQ).padStart(5,"0"),date:"2026-11-28",sup:d.sup,inv:l.inv,cn:"",pay:"credit",box:"TRS-001",rs:"تاني",note:"من جهاز تاني",st:"posted",lines:[{inv:l.inv,src:l.src,u:O.u,q:take,wh:O.wh}]});
+  say(`🔁 جهاز تاني رحّل مرتجع على ${l.inv}: ${m0(take)} ${it(O.it)[4][O.u][0]} «${it(O.it)[1]}» — «فاضل» قل، جرّب «ترحيل» دلوقتي`,"inf");}
+function setFull(n,j,v){const d=D();const q=Math.max(0,+v||0);const li=d.lines.findIndex(l=>l.inv===n&&l.src===j);const O=invOf(n).lines[j];
+  if(!q){if(li>=0)d.lines.splice(li,1);return;}if(li>=0)d.lines[li].q=q;else d.lines.push({inv:n,src:j,u:O.u,q,wh:O.wh});}
+function returnAll(){const d=D();if(!d.inv)return;const I=invOf(d.inv);let n=0;
+  I.lines.forEach((O,j)=>{const li=d.lines.findIndex(l=>l.inv===d.inv&&l.src===j);const rm=remain(d,d.inv,j,li);if(rm<=0)return;const q=r6(rm/fu(O.it,O.u));if(li>=0){d.lines[li].u=O.u;d.lines[li].q=q;}else d.lines.push({inv:d.inv,src:j,u:O.u,q,wh:O.wh});n++;});
+  say(n?`⤺ كل الفاضل من ${d.inv} اتحط في المرتجع (${n} صنف) — شيل اللي مش راجع`:"مفيش حاجة فاضلة ترجع من الفاتورة دي",n?"ok":"inf");}
+function addLine(l){const d=D();const ex=d.lines.findIndex(z=>z.inv&&z.inv===l.inv&&z.src===l.src&&z.wh===l.wh&&z.u===l.u);
+  if(ex>=0){d.lines[ex].q=r6(d.lines[ex].q+l.q);say(`✔ ${lit(l)} موجود — الكمية بقت ${m0(d.lines[ex].q)}`);}else{d.lines.push(l);say(`✔ ${lit(l)} ${it(lit(l))[1]} اتضاف للمرتجع`);}}
+document.addEventListener("change",e=>{const t=e.target,d=D();
+  if(t.dataset.show){V[t.dataset.show]=t.checked?1:0;render();return;}
+  if(t.dataset.h){const k=t.dataset.h,v=t.value;
+    if(k==="sup"){d.sup=v;d.inv="";d.lines=[];const f=INV.find(o=>o.sup===v);if(f&&!V.free)d.inv=f.no;clearF();V.mk={};if(V.m===2&&d.inv)V.modal=1;say(`المورد اتغيّر — اختار فاتورته${d.inv?` (اتختار آخرها ${d.inv})`:''}`,"inf");}
+    else if(k==="inv"){const n0=d.lines.length;d.inv=v;d.lines=d.lines.filter(l=>v&&l.inv===v);if(!v){d.kind="invoice";d.cur="EGP";d.rate=1;d.incl=0;}clearF();V.mk={};if(V.m===2&&v)V.modal=1;
+      if(n0>d.lines.length)say(`الفاتورة اتغيّرت ← ${n0-d.lines.length} صنف من الفاتورة القديمة اتشالوا (في الشاشة الحقيقية بيسأل الأول)`,"inf");else V.msg="";}
+    else if(k==="rate")d.rate=+v||0;else if(k==="cur"){d.cur=v;d.rate=CUR[v][1];}else d[k]=v;
+    if(k!=="sup"&&k!=="inv")V.msg="";render();return;}
+
+  if(t.dataset.l){const [i,f]=t.dataset.l.split("|");const l=d.lines[+i];if(f==="q")l.q=+t.value||0;else if(f==="u")l.u=+t.value;else l[f]=t.value;V.msg="";render();return;}
+  if(t.dataset.fq){const [n,j]=t.dataset.fq.split("|");setFull(n,+j,t.value);V.msg="";render();return;}
+  if(t.dataset.mk!==undefined){const j=+t.dataset.mk;if(t.checked){const O=invOf(d.inv).lines[j];V.mk[j]=String(m0(Math.max(0,remain(d,d.inv,j))/fu(O.it,O.u))).replace(/,/g,"");}else delete V.mk[j];render();return;}
+  if(t.dataset.mq!==undefined){const j=+t.dataset.mq;if(+t.value>0)V.mk[j]=t.value;else delete V.mk[j];render();return;}
+  if(t.dataset.f){const k=t.dataset.f;
+    if(k==="src"){const O=invOf(d.inv).lines[+t.value];V.f={src:+t.value,wh:O.wh,u:O.u,q:String(m0(Math.max(0,remain(d,d.inv,+t.value))/fu(O.it,O.u))).replace(/,/g,"")};}
+    else if(k==="it"){V.f={...V.f,it:t.value,u:0,p:String(LAST[t.value]||0),tx:it(t.value)[5]};}
+    else V.f[k]=t.value;render();return;}
+});
+document.addEventListener("keydown",e=>{const t=e.target;
+  if(e.key==="Enter"&&t.dataset&&(t.dataset.f==="q"||t.dataset.f==="p")){t.dispatchEvent(new Event("change",{bubbles:true}));const b=document.querySelector("[data-add],[data-upd]");if(b)b.click();return;}
+  if(t.matches&&t.matches("input,select,textarea"))return;
+  if(e.key==="ArrowLeft"&&V.m<M.length-1)goM(V.m+1);if(e.key==="ArrowRight"&&V.m>0)goM(V.m-1);});
+function goM(i){V.m=i;V.msg="";V.modal=0;
+  if(i===6){V.free=1;const k=C.findIndex(x=>x.st==="draft"&&!x.inv&&x.lines.some(l=>!l.inv));if(k>=0&&V.d!==k){V.d=k;V.cf=0;clearF();}}render();}
+document.addEventListener("click",e=>{
+  if(e.target.matches("input,select,option"))return;
+  const g=s=>e.target.closest(s);const d=D();let x;
+  if(x=g("[data-m]")){goM(+x.dataset.m);window.scrollTo({top:document.getElementById("mnav").offsetTop-60,behavior:"smooth"});return;}
+  if(g("[data-neg]")){V.neg=V.neg?0:1;V.msg="";render();return;}
+  if(g("[data-free]")){V.free=V.free?0:1;V.msg="";render();return;}
+  if(x=g("[data-other]")){other(x.dataset.other);render();return;}
+  if(x=g("[data-doc]")){V.d=+x.dataset.doc;V.msg="";V.cf=0;V.modal=0;V.mk={};clearF();render();return;}
+  if(x=g("[data-htab]")){V.htab=+x.dataset.htab;render();return;}
+  if(x=g("[data-stab]")){V.stab=+x.dataset.stab;render();return;}
+  if(x=g("[data-seg]")){V.seg=x.dataset.seg;render();return;}
+  if(g("[data-mopen]")){V.modal=1;V.mk={};render();return;}
+  if(g("[data-mclose]")){V.modal=0;render();return;}
+  if(g("[data-mall]")){invOf(d.inv).lines.forEach((O,j)=>{const rm=remain(d,d.inv,j);if(rm>0)V.mk[j]=String(m0(rm/fu(O.it,O.u))).replace(/,/g,"");});render();return;}
+  if(g("[data-mapply]")){const ks=Object.keys(V.mk);ks.forEach(j=>{const O=invOf(d.inv).lines[+j];addLine({inv:d.inv,src:+j,u:O.u,q:+V.mk[j]||0,wh:O.wh});});
+    V.modal=0;V.mk={};clearF();say(ks.length?`✔ ${ks.length} صنف اتضافوا للمرتجع`:"ماختارتش حاجة",ks.length?"ok":"inf");render();return;}
+  if(x=g("[data-pick]")){const j=+x.dataset.pick,O=invOf(d.inv).lines[j];const rm=remain(d,d.inv,j);if(rm<=0){say(`✖ ${O.it} مفيش منه حاجة فاضلة ترجع`,"no");render();return;}
+    addLine({inv:d.inv,src:j,u:O.u,q:r6(rm/fu(O.it,O.u)),wh:O.wh});clearF();render();return;}
+  if(g("[data-ref]")){V.cf=0;say("⟳ اتحدّث من القاعدة — آخر إصدار للمرتجع قدامك","inf");render();return;}
+  if(g("[data-save]")){if(V.cf)say("✖ ماتحفظش: المرتجع اتعدّل من جهاز تاني بعد ما فتحته — اعمل «⟳ تحديث» وراجع","no");else say("💾 اتحفظ مسودة (من غير قيد ولا حركة مخزون)");render();return;}
+  if(g("[data-edit]")){say("المرحّل مايتعدّلش — اعمل «إلغاء الترحيل» الأول (بصلاحية)","inf");render();return;}
+  if(g("[data-new]")){C.push({no:"",date:"2026-11-28",sup:"SUB-001",inv:V.free?"":"PUR-2026-00012",kind:"invoice",cur:"EGP",rate:1,incl:0,cn:"",pay:"credit",box:"TRS-001",rs:"",note:"",st:"draft",lines:[]});V.d=C.length-1;V.cf=0;clearF();if(V.m===2&&D().inv)V.modal=1;say("＋ مرتجع جديد (مسودة) — اختار المورد والفاتورة الأصلية وبعدين الأصناف","inf");render();return;}
+  if(g("[data-post]")){post(d);render();return;}
+  if(g("[data-unpost]")){unpost(d);render();return;}
+  if(g("[data-del]")){C.splice(V.d,1);V.d=Math.min(V.d,C.length-1);V.cf=0;clearF();say("🗑 المسودة اتمسحت","inf");render();return;}
+  if(g("[data-can]")){clearF();say("✕ اتلغى التعديل اللي ماتحفظش","inf");render();return;}
+  if(g("[data-all]")){returnAll();clearF();render();return;}
+  if(g("[data-zero]")){d.lines=[];say("↺ المرتجع اتصفّر","inf");render();return;}
+  if(x=g("[data-row]")){if(ed())loadF(+x.dataset.row);else V.sel=+x.dataset.row;render();return;}
+  if(g("[data-add]")){const l=lineFromF();if(!(l.q>0)){say("✖ اكتب الكمية","no");render();return;}addLine(l);clearF();render();return;}
+  if(g("[data-upd]")){if(V.sel>=0){d.lines[V.sel]=lineFromF();say(`✎ السطر ${V.sel+1} اتعدّل`);}clearF();render();return;}
+  if(g("[data-clr]")){clearF();V.msg="";render();return;}
+  if(g("[data-rm]")){if(V.sel>=0){const z=d.lines.splice(V.sel,1)[0];say(`🗑 ${lit(z)} اتشال من المرتجع`,"inf");}clearF();render();return;}
+});
+clearF();render();
+</script>
+</body>
+</html>
