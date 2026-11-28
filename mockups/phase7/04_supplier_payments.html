@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نماذج سداد الموردين — A-H CODE</title>
+<style>
+:root{--g:#137A38;--gd:#0F6330;--b:#2563EB;--bd:#1D4ED8;--r:#DC2626;--rd:#B91C1C;--gr:#4B5563;--grd:#374151;
+ --bo:#D7DEE7;--cb:#E5E7EB;--bg:#F5F7FA;--ro:#F4F6F9;--sel:#E7F6EE;--tot:#E8F5EC;--totb:#BFE6CF;--ft:#EAF6EF;--ftb:#D7EBDF;--tx:#111827}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;background:#DCE3EA;color:var(--tx);font-size:13px}
+.top{background:var(--gd);color:#fff;padding:12px 20px;position:sticky;top:0;z-index:20}
+.top h1{margin:0 0 3px;font-size:19px;font-weight:900}.top p{margin:0;font-size:13px;opacity:.92}
+.wrap{padding:16px;max-width:1560px;margin:auto}
+.note{background:#FFF7ED;color:#9A3412;border:1px solid #FED7AA;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;line-height:1.75}
+.note ul,.qs ol{margin:4px 0 0;padding-right:20px}
+.qs{background:#EFF6FF;color:#1E3A8A;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;line-height:1.8}
+.mnav{position:sticky;top:54px;z-index:15;background:#fff;border:1px solid var(--cb);border-radius:10px;padding:8px 10px;margin-bottom:10px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;box-shadow:0 2px 6px rgba(15,23,42,.08)}
+.mnav b{color:var(--g);font-weight:900;margin-left:4px}
+.mnav span{cursor:pointer;border:1px solid var(--bo);border-radius:8px;padding:4px 11px;font-weight:800;background:#fff;color:#334155}
+.mnav span.on{background:var(--g);color:#fff;border-color:var(--g)}
+.mnav .go{margin-right:auto;display:flex;gap:6px}.mnav .go span{background:#F1F5F9}
+.mh{margin:0 0 4px;color:var(--g);font-size:19px;font-weight:900}.mh i{font-style:normal;display:inline-block;background:var(--g);color:#fff;border-radius:50%;width:28px;height:28px;text-align:center;line-height:28px;margin-left:6px;font-size:14px}
+.md{color:#475569;font-size:13.5px;margin:0 0 8px}
+.demo{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#FFFBEB;border:1px dashed #F59E0B;border-radius:8px;padding:6px 10px;margin-bottom:8px;font-size:12.5px;font-weight:800;color:#92400E}
+.chip{cursor:pointer;border:1px dashed #B45309;border-radius:12px;padding:2px 10px;background:#fff}
+.chip.on{background:#B45309;color:#fff;border-style:solid}
+.chip.bl{border-color:#2563EB;color:#1D4ED8}
+.scr{background:var(--bg);border:1px solid #94A3B8;border-radius:8px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,.15);position:relative}
+.wbar{height:30px;background:#fff;border-bottom:1px solid var(--cb);display:flex;align-items:center;gap:8px;padding:0 10px;font-size:12.5px}
+.wbar .x{margin-right:auto;color:#64748B;letter-spacing:10px}
+.body{padding:6px 12px 10px;display:flex;flex-direction:column;gap:6px}
+.hdr{display:flex;align-items:flex-start;gap:12px;padding:4px 4px 0}
+.ttl{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:800;color:#1F2D3D}
+.ttl .ic{color:var(--g);font-size:22px}
+.sub{color:#6B7280;font-size:12px;font-weight:700}
+.meta{margin-right:auto;color:#6B7280;font-size:12px;font-weight:700;line-height:1.6;text-align:left;direction:rtl}
+.st{display:inline-block;border-radius:10px;padding:1px 10px;font-size:12px;font-weight:800;border:1px solid}
+.st.dr{background:#FEF3C7;color:#92400E;border-color:#FDE68A}.st.po{background:#E8F5EC;color:var(--g);border-color:#BFE6CF}
+.tbar{display:flex;gap:7px;align-items:center;flex-wrap:wrap;padding:0 4px 6px;border-bottom:1px solid var(--cb)}
+.btn{display:inline-flex;align-items:center;gap:5px;height:34px;padding:3px 9px;border-radius:8px;font-size:12px;font-weight:700;border:1px solid;cursor:pointer;white-space:nowrap;user-select:none}
+.btn.g{background:var(--g);color:#fff;border-color:var(--g)}.btn.g:hover{background:var(--gd)}
+.btn.b{background:var(--b);color:#fff;border-color:var(--b)}.btn.b:hover{background:var(--bd)}
+.btn.r{background:var(--r);color:#fff;border-color:var(--r)}.btn.r:hover{background:var(--rd)}
+.btn.w{background:#fff;color:#374151;border-color:var(--bo)}.btn.w:hover{background:#F3F4F6}
+.btn.k{background:var(--gr);color:#fff;border-color:var(--gr)}.btn.k:hover{background:var(--grd)}
+.btn.o{background:#fff;color:var(--g);border-color:var(--g)}.btn.o:hover{background:var(--sel)}
+.btn.off{background:#EAECEF!important;color:#AEB6C0!important;border-color:#EAECEF!important;cursor:default}
+.btn.sq{width:38px;justify-content:center;padding:0;font-size:15px}
+.ck{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:0 6px;cursor:pointer;white-space:nowrap}
+.ck input{width:16px;height:16px;accent-color:var(--g);cursor:pointer;margin:0}
+.secT{display:flex;align-items:center;gap:8px;color:var(--g);font-size:15px;font-weight:800;margin:2px 4px 4px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 18px;padding:0 4px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 16px}
+.fl{display:flex;flex-direction:column;gap:3px;min-width:0}
+.fl>label{font-size:12px;font-weight:700;color:#111827;min-height:16px}
+.in,.sl{height:28px;border:1px solid var(--bo);border-radius:6px;background:#fff;padding:1px 8px;color:#111827;font:inherit;font-size:12px;font-weight:700;width:100%;min-width:0;outline:none}
+.in:focus,.sl:focus{border-color:var(--g)}
+.in.ro,.in:disabled,.sl:disabled{background:var(--ro);color:#374151}
+.in.bad,.sl.bad{border-color:#DC2626;background:#FEF2F2}
+.n{direction:ltr;text-align:left}
+.lkw{display:flex;gap:4px;align-items:center}.lkw .sl,.lkw .in{flex:1}
+.lkb{width:28px;height:28px;flex-shrink:0;border-radius:6px;background:var(--g);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer}
+.card{background:#fff;border:1px solid var(--cb);border-radius:12px;padding:12px 16px 14px;box-shadow:0 2px 14px rgba(15,23,42,.09);min-width:0}
+.row{display:flex;gap:16px;align-items:stretch}
+.tblw{border:1px solid var(--cb);border-radius:8px;overflow:auto;background:#fff;min-height:210px;max-height:330px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;font-weight:700}
+.tbl th{background:var(--g);color:#fff;font-size:12px;font-weight:800;padding:9px 6px;text-align:center;position:sticky;top:0;z-index:1;white-space:nowrap}
+.tbl th.rt{background:#C2410C}
+.tbl td{padding:8px 6px;border-bottom:1px solid #EEF1F4;color:#374151;text-align:center;white-space:nowrap}
+.tbl tr:nth-child(even) td{background:#FAFBFC}
+.tbl tr.sel td{background:var(--sel);color:#0B3B23}
+.tbl tr.zero td{color:#94A3B8}
+.tbl tr[data-row]{cursor:pointer}
+.tbl td.nm{text-align:right}
+.tbl td.rt{background:#FFF7ED!important}
+.tbl td .in,.tbl td .sl{height:26px;font-size:12.5px}
+.tbl td .in.q{width:72px}.tbl td .sl{width:auto}
+.ln-e{display:block;color:#B91C1C;font-size:11px;font-weight:800;white-space:normal;text-align:right}
+.ln-w{display:block;color:#92400E;font-size:11px;font-weight:800;white-space:normal;text-align:right}
+.ln-i{display:block;color:#1D4ED8;font-size:11px;font-weight:700;text-align:right;white-space:normal}
+.empty{color:#94A3B8;padding:40px 0!important;font-weight:700}
+.tfoot{display:flex;justify-content:space-between;align-items:center;background:var(--ft);border:1px solid var(--ftb);border-radius:8px;height:38px;padding:0 14px;margin-top:8px;color:#0B3B23;font-weight:800}
+.tfoot b{font-size:14px;direction:ltr}
+.side{width:340px;flex-shrink:0;display:flex;flex-direction:column;gap:8px}
+.sr{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#F9FAFB;border:1px solid #EEF1F4;border-radius:8px;min-height:44px;padding:4px 12px;font-weight:700}
+.sr b{font-size:14px;font-weight:800;direction:ltr}
+.net{display:flex;align-items:center;justify-content:space-between;background:var(--tot);border:1px solid var(--totb);border-radius:10px;min-height:56px;padding:8px 14px;color:var(--g);font-weight:800;font-size:12.5px}
+.net b{font-size:17px;direction:ltr}
+.net.egp{min-height:40px;background:#EFF6FF;border-color:#BFDBFE;color:#1D4ED8}.net.egp b{font-size:14px}
+.ready{font-weight:800;font-size:13px;padding:4px 6px}.ready.ok{color:#087443}.ready.no{color:#B91C1C}
+.add{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.add .fl.it{flex:1;min-width:300px}
+.add .fl.s{width:110px}.add .fl.m{width:150px}
+.add .btn{height:36px;font-size:12.5px}
+.info{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:12px;font-weight:700;color:#475569}
+.info b{color:#1D4ED8;direction:ltr;unicode-bidi:isolate}
+.msg{border-radius:8px;padding:6px 12px;font-weight:800;font-size:12.5px}
+.msg.ok{background:#ECFDF3;color:#087443;border:1px solid #B7E4C7}.msg.no{background:#FEE2E2;color:#B91C1C;border:1px solid #FECACA}
+.msg.inf{background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE}
+.cf{background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:8px;padding:6px 12px;font-weight:800;font-size:12.5px}
+.ckl{display:flex;flex-direction:column}
+.ckl div{display:flex;gap:6px;align-items:flex-start;font-size:12px;font-weight:700;padding:5px 2px;border-bottom:1px dashed #E2E8F0}
+.ckl b{width:16px;flex-shrink:0;text-align:center}
+.ckl .ok b{color:#087443}.ckl .no b{color:#B91C1C}.ckl .wr b{color:#B45309}.ckl .in b{color:#2563EB}
+.stabs{display:flex;gap:3px;border-bottom:2px solid var(--g)}
+.stabs span{flex:1;text-align:center;padding:6px 3px;font-weight:800;font-size:12px;background:#EEF2F6;color:#475569;border-radius:6px 6px 0 0;cursor:pointer}
+.stabs span.on{background:var(--g);color:#fff}
+.mini{width:100%;border-collapse:collapse;font-size:12px;font-weight:700}
+.mini th{background:#F1F5F9;color:#334155;padding:6px 5px;font-weight:800;text-align:right}
+.mini td{padding:6px 5px;border-bottom:1px solid #EEF1F4}
+.mini td.n,.mini th.n{text-align:left;direction:ltr}
+.mini tr[data-pick]{cursor:pointer}.mini tr[data-pick]:hover td{background:#F0FDF4}
+.ok-l{color:#087443;font-weight:800}.bad-l{color:#B91C1C;font-weight:800}
+.htabs{display:flex;gap:4px;padding:0 4px}
+.htabs span{padding:6px 16px;border-radius:8px 8px 0 0;font-weight:800;background:#EEF2F6;color:#475569;cursor:pointer;border:1px solid var(--cb);border-bottom:none}
+.htabs span.on{background:#fff;color:var(--g)}
+.hpane{background:#fff;border:1px solid var(--cb);border-radius:0 8px 8px 8px;padding:10px 12px}
+.orig{width:380px;flex-shrink:0;border-right:4px solid #C2410C}
+.orig .kv{display:flex;justify-content:space-between;gap:8px;padding:3px 0;font-weight:700;font-size:12.5px;border-bottom:1px dashed #E5E7EB}
+.orig .kv b{direction:ltr;unicode-bidi:isolate}
+.seg{display:inline-flex;border:1px solid var(--bo);border-radius:10px;overflow:hidden;margin-right:10px}
+.seg span{padding:5px 16px;font-weight:800;font-size:13px;cursor:pointer;background:#fff;color:#475569}
+.seg span.on{background:#C2410C;color:#fff}
+.banner{background:#FFF7ED;border:1px solid #FED7AA;color:#9A3412;border-radius:8px;padding:6px 12px;font-weight:800;font-size:12.5px}
+/* النافذة المنبثقة */
+.ov{position:absolute;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:flex-start;justify-content:center;padding-top:70px;z-index:30}
+.dlg{background:#fff;border-radius:12px;width:860px;max-width:95%;box-shadow:0 20px 50px rgba(0,0,0,.3);overflow:hidden}
+.dlg .dh{background:var(--g);color:#fff;padding:10px 16px;font-weight:900;font-size:15px;display:flex;align-items:center}
+.dlg .dh span{margin-right:auto;cursor:pointer}
+.dlg .db{padding:12px 16px}
+.dlg .df{display:flex;gap:8px;justify-content:flex-start;padding:10px 16px;border-top:1px solid var(--cb);background:#F9FAFB}
+/* شكل الأكسس */
+.acc{background:#ECE9D8;border:2px solid #7A96DF;border-radius:4px;font-family:Tahoma,Arial,sans-serif;font-size:12px;color:#000;flex:1}
+.acc .at{background:linear-gradient(#0A246A,#3A6EA5);color:#fff;padding:4px 8px;font-weight:bold}
+.acc .ab{padding:10px}
+.acc .ar{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 14px;margin-bottom:8px}
+.acc label{display:block;font-weight:bold;color:#000080}
+.acc .ai{background:#fff;border:1px solid #7F9DB9;height:22px;padding:2px 4px;font-weight:normal}
+.acc table{width:100%;border-collapse:collapse;background:#fff}
+.acc th{background:#D4D0C8;border:1px solid #808080;padding:3px;font-weight:bold}
+.acc td{border:1px solid #C0C0C0;padding:3px;text-align:center}
+.acc .abt{display:flex;gap:6px;margin-top:8px}.acc .abt span{background:#D4D0C8;border:2px outset #fff;padding:3px 12px}
+.chg{width:520px;flex-shrink:0}
+.chg li{margin-bottom:6px;line-height:1.6;font-weight:700;font-size:12.5px}
+</style>
+<style>
+/* إضافات «سداد الموردين» */
+.tbl.al th{padding:8px 4px;font-size:11.5px}.tbl.al td{padding:6px 4px;font-size:12.5px}
+.scr .side{width:300px}
+.tbl td .in.pay{width:92px;background:#FFF7ED;border-color:#FDBA74}
+.tbl td .in.pay:disabled{background:var(--ro);border-color:var(--bo)}
+.tbl tr.full td{color:#94A3B8}
+.tbl tr.ovd td.due{color:#B91C1C}
+.tbl tr.paid td{background:#F0FDF4!important}
+.bdg{display:inline-block;border-radius:9px;padding:0 8px;font-size:11px;font-weight:800;border:1px solid}
+.bdg.op{background:#FEF3C7;color:#92400E;border-color:#FDE68A}.bdg.pt{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}
+.bdg.pd{background:#E8F5EC;color:var(--g);border-color:#BFE6CF}.bdg.od{background:#FEE2E2;color:#B91C1C;border-color:#FECACA}
+.bdg.fx{background:#F1F5F9;color:#475569;border-color:#CBD5E1}
+.abar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.sum3{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.sum3 .k{background:#F9FAFB;border:1px solid #EEF1F4;border-radius:10px;padding:6px 10px;font-weight:800;font-size:12px;color:#475569}
+.sum3 .k b{display:block;font-size:16px;color:#111827;direction:ltr;text-align:right}
+.sum3 .k.g{background:var(--tot);border-color:var(--totb)}.sum3 .k.g b{color:var(--g)}
+.sum3 .k.o{background:#FFF7ED;border-color:#FED7AA}.sum3 .k.o b{color:#C2410C}
+.sum3 .k.r{background:#FEF2F2;border-color:#FECACA}.sum3 .k.r b{color:#B91C1C}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kp{background:#fff;border:1px solid var(--cb);border-radius:10px;padding:8px 12px;font-weight:800;font-size:12px;color:#475569;box-shadow:0 1px 6px rgba(15,23,42,.06)}
+.kp b{display:block;font-size:17px;color:#111827;direction:ltr;text-align:right}.kp small{color:#64748B;font-weight:700}
+.kp.g{border-right:4px solid var(--g)}.kp.b{border-right:4px solid var(--b)}.kp.o{border-right:4px solid #C2410C}
+.steps{display:flex;gap:6px;margin-bottom:8px}
+.steps span{flex:1;text-align:center;padding:8px;border-radius:8px;background:#EEF2F6;color:#64748B;font-weight:800;cursor:pointer}
+.steps span.on{background:var(--g);color:#fff}.steps span.dn{background:var(--sel);color:var(--g)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.ic2{background:#fff;border:1px solid var(--cb);border-radius:12px;padding:10px 12px;box-shadow:0 2px 8px rgba(15,23,42,.07);border-top:4px solid var(--g)}
+.ic2.ovd{border-top-color:#DC2626}.ic2.fx{border-top-color:#94A3B8;opacity:.75}.ic2.on{outline:2px solid #F59E0B}
+.ic2 .t{display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:13px}
+.ic2 .kv{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#475569;padding:2px 0}.ic2 .kv b{direction:ltr;color:#111827}
+.pbar{height:9px;background:#E5E7EB;border-radius:6px;overflow:hidden;margin:6px 0;display:flex}
+.pbar i{display:block;height:100%}.pbar .p1{background:var(--g)}.pbar .p2{background:#F59E0B}.pbar .p3{background:#C2410C}
+.age td.hot{color:#B91C1C}.age tr.on td{background:var(--sel)!important}
+.crd{border:1px solid var(--cb);border-radius:10px;padding:8px 10px;margin-bottom:6px;cursor:pointer;background:#fff;font-weight:700;font-size:12.5px}
+.crd.on{border-color:var(--g);background:var(--sel)}.crd b{direction:ltr;unicode-bidi:isolate}
+.stm td.dr{color:#1D4ED8}.stm td.cr{color:#C2410C}
+.lgd{display:flex;gap:12px;font-size:11.5px;font-weight:700;color:#475569;margin-top:4px}.lgd i{display:inline-block;width:12px;height:9px;border-radius:3px;margin-left:4px;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>A-H CODE — نماذج «سداد الموردين» (المرحلة 7)</h1>
+  <p>ربط سند الصرف بفواتير الشراء + الدفعات المقدمة. نفس ديزاين وألوان البرنامج (أخضر #137A38). كل نموذج في صفحة لوحده (الأرقام فوق أو الأسهم)، والبيانات وهمية، وكل النماذج شغالة على نفس السندات والفواتير.</p>
+</div>
+<div class="wrap">
+  <div class="note" id="note"></div>
+  <div class="qs" id="qs"></div>
+  <div class="mnav" id="mnav"></div>
+  <div id="page"></div>
+</div>
+<script>
+// ===== البيانات (وهمية)
+const TODAY="2026-11-28";
+// الموردين: [الكود، الاسم، العملة، مدة السداد]
+const SUP=[["SUB-001","شركة النور للكابلات","EGP",30],["SUB-002","المصرية للتوريدات الكهربائية","EGP",45],["SUB-003","Global Controls Ltd","USD",60]];
+// خزن وبنوك: [الكود، الاسم، الحساب، الرصيد]
+const PAY=[["TRS-001","الخزينة الرئيسية","110101",185000],["TRS-002","خزينة النثريات","110102",8500],["BNK-001-01","البنك الأهلي — جاري","110201",640000]];
+const PRJ={"":"— من غير —","Itec-001":"Itec-001 · تشطيبات برج النخيل","Itec-002":"Itec-002 · لوحات مصنع العاشر"};
+const TN={inv:"فاتورة",st:"بيان",ob:"رصيد أول المدة"};
+// المستحق على كل مستند: tot الإجمالي · ret مرتجع مربوط بيها (مرحّل) · paid اللي اتسدد قبل كده (توزيعات قديمة)
+const DOCS=[
+ {no:"OB-SUB-001",t:"ob",sup:"SUB-001",date:"2026-01-01",due:"2026-01-01",ref:"—",cur:"EGP",tot:12000,ret:0,paid:0},
+ {no:"PUR-2026-00003",t:"inv",sup:"SUB-001",date:"2026-09-10",due:"2026-10-10",ref:"5390",cur:"EGP",tot:34200,ret:0,paid:20000},
+ {no:"PUR-2026-00009",t:"inv",sup:"SUB-001",date:"2026-10-02",due:"",ref:"5444",cur:"EGP",tot:6840,ret:0,paid:6840,cash:1},
+ {no:"PUR-2026-00012",t:"inv",sup:"SUB-001",date:"2026-11-05",due:"2026-12-05",ref:"5520",cur:"EGP",tot:31590,ret:4377,paid:0},
+ {no:"PUR-2026-00020",t:"st",sup:"SUB-001",date:"2026-11-22",due:"2026-12-22",ref:"5561",cur:"EGP",tot:3200,ret:0,paid:0},
+ {no:"PUR-2026-00006",t:"inv",sup:"SUB-002",date:"2026-08-20",due:"2026-10-04",ref:"7702",cur:"EGP",tot:48000,ret:0,paid:12000},
+ {no:"PUR-2026-00015",t:"inv",sup:"SUB-002",date:"2026-11-12",due:"2026-12-27",ref:"7781",cur:"EGP",tot:61000,ret:5016,paid:0},
+ {no:"PUR-2026-00021",t:"inv",sup:"SUB-002",date:"2026-11-24",due:"2027-01-08",ref:"7810",cur:"EGP",tot:3467,ret:0,paid:0},
+ {no:"PUR-2026-00011",t:"inv",sup:"SUB-003",date:"2026-10-01",due:"2026-11-30",ref:"GC-2190",cur:"USD",rate:47.9,tot:2450,ret:0,paid:0},
+ {no:"PUR-2026-00018",t:"inv",sup:"SUB-003",date:"2026-11-20",due:"2027-01-19",ref:"GC-2231",cur:"USD",rate:48.3,tot:318,ret:106,paid:0}];
+// الرصيد غير الموزّع (دفعات مقدمة قديمة + مرتجع من غير فاتورة) — بيتوزّع بعدين في النموذج 6
+const CR=[
+ {no:"PV-2026-00007",t:"pv",sup:"SUB-001",date:"2026-10-15",amt:15000,used:10000,desc:"دفعة تحت الحساب"},
+ {no:"PRT-2026-00004",t:"ret",sup:"SUB-001",date:"2026-11-26",amt:1710,used:0,desc:"مرتجع من غير فاتورة (آجل)"},
+ {no:"PV-2026-00019",t:"pv",sup:"SUB-002",date:"2026-11-02",amt:8000,used:0,desc:"مقدم على أمر توريد",prj:"Itec-001"}];
+// سندات الصرف
+const VO=[
+ {no:"",date:TODAY,sup:"SUB-001",src:"TRS-001",amt:40000,desc:"سداد فواتير شركة النور",paper:"",prj:"",st:"draft",al:{},adv:"gen"},
+ {no:"PV-2026-00031",date:"2026-11-20",sup:"SUB-002",src:"BNK-001-01",amt:25000,desc:"سداد دفعة من الحساب",paper:"118",prj:"",st:"posted",al:{"PUR-2026-00006":18000,"PUR-2026-00015":7000},adv:"gen"},
+ {no:"",date:TODAY,sup:"SUB-002",src:"BNK-001-01",amt:10000,desc:"مقدم على أمر التوريد Itec-002",paper:"",prj:"Itec-002",st:"draft",al:{},adv:"po"}];
+let SEQ=31;
+const V={m:0,d:0,msg:"",mt:"ok",cf:0,ord:"due",acc:0,realloc:0,modal:0,tab:1,step:1,cr:-1,cal:{},s8:"SUB-001",pk:{}};
+
+// ===== الحساب
+const r2=x=>Math.round((+x||0)*100)/100;
+const mf=n=>(+n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const sup=c=>SUP.find(s=>s[0]===c);const src=c=>PAY.find(p=>p[0]===c);const doc=n=>DOCS.find(x=>x.no===n);
+const D=()=>VO[V.d];const ed=()=>D().st==="draft";const canAl=()=>ed()||V.realloc;
+const days=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
+// المتبقي على المستند = الإجمالي − المرتجع المربوط − المسدد قبل كده − توزيعات السندات المرحّلة التانية (المسودات مابتخصمش)
+const othersPaid=(n,v)=>r2(VO.filter(x=>x!==v&&x.st==="posted").reduce((s,x)=>s+(+x.al[n]||0),0));
+const remain=(o,v)=>r2(o.tot-o.ret-o.paid-othersPaid(o.no,v));
+const openDocs=(v,all)=>DOCS.filter(o=>o.sup===v.sup&&(all||remain(o,v)>0.004||(+v.al[o.no]||0)>0));
+const sumAl=v=>r2(Object.values(v.al).reduce((s,x)=>s+(+x||0),0));
+const unal=v=>r2(v.amt-sumAl(v));
+const crLeft=c=>r2(c.amt-c.used);
+const postedUnal=s=>r2(VO.filter(x=>x.st==="posted"&&x.sup===s).reduce((a,x)=>a+unal(x),0));
+function supBal(s){ // رصيد المورد بالجنيه (دائن = علينا) — المستندات بالجنيه بس
+  const docs=DOCS.filter(o=>o.sup===s&&o.cur==="EGP").reduce((a,o)=>a+o.tot-o.ret-o.paid,0);
+  const pv=VO.filter(x=>x.st==="posted"&&x.sup===s).reduce((a,x)=>a+x.amt,0);
+  const cr=CR.filter(c=>c.sup===s).reduce((a,c)=>a+crLeft(c),0);return r2(docs-pv-cr);}
+const srcBal=c=>r2(src(c)[3]-VO.filter(x=>x.st==="posted"&&x.src===c&&x.date>="2026-11-21").reduce((a,x)=>a+x.amt,0));
+function status(o,v){const t=r2(o.tot-o.ret),rm=remain(o,v)-(+v.al[o.no]||0);
+  if(o.cur!=="EGP")return ["fx","بالدولار — المرحلة 8"];
+  if(rm<=0.004)return ["pd","مسددة"];if(o.due&&o.due<TODAY)return ["od",`متأخرة ${days(o.due,TODAY)} يوم`];
+  if(rm<t-0.004)return ["pt","مسددة جزئي"];return ["op","مفتوحة"];}
+function autoAl(v){v.al={};let left=+v.amt||0;
+  const L=openDocs(v,0).filter(o=>o.cur==="EGP").sort((a,b)=>V.ord==="due"?(a.due||a.date).localeCompare(b.due||b.date):a.date.localeCompare(b.date));
+  for(const o of L){if(left<=0)break;const x=Math.min(left,remain(o,v));if(x>0){v.al[o.no]=r2(x);left=r2(left-x);}}
+  return L;}
+function alErr(o,v){const a=+v.al[o.no]||0;if(!a)return null;
+  if(o.cur!=="EGP")return "الفاتورة بالدولار — توزيعها مع فروق العملة (المرحلة 8)";
+  if(a<0)return "المبلغ بالسالب";if(a>remain(o,v)+0.004)return `أكتر من المتبقي (${mf(remain(o,v))})`;return null;}
+function checks(v){const r=[],s=sup(v.sup),A=sumAl(v),U=unal(v);
+  r.push(s?["ok",`المورد: ${s[0]} «${s[1]}» — رصيده ${mf(supBal(v.sup))} علينا`]:["no","اختار المورد"]);
+  r.push(+v.amt>0?["ok",`المبلغ ${mf(v.amt)} جنيه من «${src(v.src)[1]}»`]:["no","اكتب المبلغ"]);
+  if(!String(v.desc||"").trim())r.push(["no","البيان فاضي"]);
+  if(ed()&&+v.amt>srcBal(v.src))r.push(["wr",`رصيد «${src(v.src)[1]}» ${mf(srcBal(v.src))} بس — هيبقى بالسالب (تحذير بس)`]);
+  DOCS.filter(o=>o.sup===v.sup).forEach(o=>{const e=alErr(o,v);if(e)r.push(["no",`${o.no}: ${e}`]);});
+  if(A>(+v.amt||0)+0.004)r.push(["no",`الموزّع ${mf(A)} أكتر من مبلغ السند ${mf(v.amt)}`]);
+  else if(A>0)r.push(["ok",`اتوزّع ${mf(A)} على ${Object.values(v.al).filter(x=>+x>0).length} مستند`]);
+  if(U>0.004)r.push(["in",v.adv==="po"&&v.prj?`الباقي ${mf(U)} دفعة مقدمة على أمر التوريد ${v.prj} — تتخصم من فواتيره بعدين`:`الباقي ${mf(U)} «رصيد غير موزّع» (دفعة مقدمة) على حساب المورد — يتوزّع بعدين على أي فاتورة`]);
+  if(U>0.004&&v.adv==="po"&&!v.prj)r.push(["no","الدفعة على أمر توريد — اختار أمر التوريد"]);
+  const ov=openDocs(v,0).filter(o=>o.cur==="EGP"&&o.due&&o.due<TODAY&&!(+v.al[o.no]>0));if(ov.length)r.push(["wr",`فيه ${ov.length} مستند متأخر مااتسددش في السند ده (${ov.map(o=>o.no).join("، ")})`]);
+  if(DOCS.some(o=>o.sup===v.sup&&o.cur!=="EGP"))r.push(["in","فواتير المورد بالدولار بتظهر بس — السداد عليها مع فروق العملة في المرحلة 8"]);
+  r.push(["in","التوزيع مابيغيّرش القيد — القيد واحد: مدين المورد / دائن الخزنة أو البنك"]);
+  if(V.cf&&ed())r.push(["no","السند اتعدّل من جهاز تاني — اعمل «⟳ تحديث» الأول"]);
+  return r;}
+const hasErr=v=>checks(v).some(x=>x[0]==="no");
+function je(v){const s=sup(v.sup),p=src(v.src),U=unal(v);if(!s||!(+v.amt>0))return [];
+  if(V.acc&&U>0.004)return [[`2101 الموردين — ${s[0]} (الموزّع)`,r2(v.amt-U),0],[`1107 دفعات مقدمة للموردين — ${s[0]}`,U,0],[`${p[2]} ${p[1]}`,0,+v.amt]].filter(x=>x[1]||x[2]);
+  return [[`2101 الموردين — ${s[0]}${v.prj?' · '+v.prj:''}`,+v.amt,0],[`${p[2]} ${p[1]}`,0,+v.amt]];}
+
+// ===== أجزاء الشاشة
+const esc=s=>String(s??"").replace(/"/g,"&quot;");
+const dis=()=>ed()?'':'disabled';
+const fl=(lab,inner,cls)=>`<div class="fl ${cls||''}"><label>${lab}</label>${inner}</div>`;
+const inH=(k,v,ph,cls)=>`<input class="in ${cls||''}" data-h="${k}" value="${esc(v)}" ${dis()} ${ph?`placeholder="${ph}"`:''}>`;
+const ro=v=>`<input class="in ro" value="${esc(v)}" readonly>`;
+const sel=(attr,opts,v,off)=>`<select class="sl" ${attr} ${off||!ed()?'disabled':''}>${opts.map(o=>`<option value="${o[0]}" ${String(v)===String(o[0])?'selected':''}>${o[1]}</option>`).join("")}</select>`;
+const lookup=inner=>`<div class="lkw">${inner}<span class="lkb" title="بحث">🔍</span></div>`;
+const btn=(t,ic,k,attr,on=true)=>`<span class="btn ${k} ${on?'':'off'}" ${on?attr:''}>${ic} ${t}</span>`;
+const stB=v=>v.st==="posted"?'<span class="st po">مرحّل</span>':'<span class="st dr">مسودة</span>';
+function header(t,ic,sub){const v=D(),E=ed();return `<div class="wbar"><span>${ic} ${t} — A-H CODE</span><span class="x">— ❐ ✕</span></div>
+ <div class="body"><div class="hdr"><div><div class="ttl"><span class="ic">${ic}</span>${t} ${stB(v)}</div><div class="sub">${sub||'صرفنا إلى المورد — والمبلغ بيتوزّع على فواتيره المفتوحة'}</div></div>
+ <div class="meta">المستخدم: مدير النظام<br>التاريخ: 28-11-2026<br>الوقت: 11:20:05</div></div>
+ <div class="tbar"><span class="btn g sq" title="بحث (F1)">🔍</span>${btn("جديد","＋","g",'data-new="1"')}${btn("حفظ","💾","g",'data-save="1"',E||V.realloc)}
+ ${btn("تعديل","✎","b",'data-edit="1"',!E)}${btn("تحديث","⟳","b",'data-ref="1"')}${btn("ترحيل","✔✔","b",'data-post="1"',E)}${btn("إلغاء الترحيل","↩","b",'data-unpost="1"',!E)}
+ ${btn("حذف","🗑","r",'data-del="1"',E)}${btn("إلغاء","✕","w",'data-can="1"',E)}${btn("تصدير","⇩","w",'')}${btn("خروج","⇥","k",'')}</div>`;}
+const msgs=()=>(V.cf&&ed()?'<div class="cf">⚠ السند ده اتعدّل من جهاز تاني بعد ما فتحته — «حفظ» و«ترحيل» هيترفضوا لحد ما تعمل «⟳ تحديث»</div>':'')+(V.msg?`<div class="msg ${V.mt}">${V.msg}</div>`:'');
+const F={
+ no:()=>fl("رقم السند",ro(D().no||"بيتولّد مع الترحيل")),
+ date:()=>fl("التاريخ",inH("date",D().date)),
+ sup:()=>fl("صرفنا إلى (المورد)",lookup(sel('data-h="sup"',SUP.map(s=>[s[0],`${s[0]} — ${s[1]}`]),D().sup))),
+ src:()=>fl("صرف من",sel('data-h="src"',PAY.map(p=>[p[0],`${p[0]} — ${p[1]}`]),D().src)),
+ amt:()=>fl("المبلغ (جنيه)",inH("amt",D().amt,"","n")),
+ desc:()=>fl("البيان",inH("desc",D().desc)),
+ paper:()=>fl("رقم الدفتر",inH("paper",D().paper,"اختياري")),
+ prj:()=>fl("أمر التوريد",sel('data-h="prj"',Object.entries(PRJ),D().prj)),
+ adv:()=>fl("الباقي اللي مااتوزّعش",sel('data-h="adv"',[["gen","دفعة مقدمة عامة على حساب المورد"],["po","دفعة مقدمة على أمر التوريد"]],D().adv))};
+const grid=(keys,cls)=>`<div class="${cls||'grid4'}">${keys.map(k=>F[k]()).join("")}</div>`;
+const FORM=["no","date","sup","src","amt","desc","paper","prj"];
+function kpis(v){const b=supBal(v.sup),sb=srcBal(v.src),P=v.st==="posted",a=+v.amt||0;
+  const b0=P?r2(b+a):b,b1=P?b:r2(b-a),s0=P?r2(sb+a):sb,s1=P?sb:r2(sb-a);
+  return `<div class="kpis"><div class="kp g">💸 مبلغ السند<b>${mf(a)}</b><small>الموزّع ${mf(sumAl(v))} · غير موزّع ${mf(Math.max(0,unal(v)))}</small></div>
+  <div class="kp o">🏭 رصيد المورد (علينا)<b>${mf(b0)} ← ${mf(b1)}</b><small>قبل السند ← بعده${postedUnal(v.sup)+CR.filter(c=>c.sup===v.sup).reduce((s,c)=>s+crLeft(c),0)>0?` · منه رصيد غير موزّع ${mf(postedUnal(v.sup)+CR.filter(c=>c.sup===v.sup).reduce((s,c)=>s+crLeft(c),0))}`:''}</small></div>
+  <div class="kp b">🏦 رصيد «${src(v.src)[1]}»<b>${mf(s0)} ← ${mf(s1)}</b><small>قبل السند ← بعده</small></div></div>`;}
+function sum3(v){const A=sumAl(v),U=unal(v);return `<div class="sum3"><div class="k">مبلغ السند<b>${mf(v.amt)}</b></div><div class="k g">الموزّع على الفواتير<b>${mf(A)}</b></div>
+ <div class="k ${U<-0.004?'r':'o'}">${U<-0.004?'زيادة عن السند ✖':'غير موزّع (دفعة مقدمة)'}<b>${mf(Math.abs(U))}</b></div><div class="k">متبقي على المورد بعد السند<b>${mf(r2(openDocs(v,1).filter(o=>o.cur==="EGP").reduce((s,o)=>s+remain(o,v),0)-A))}</b></div></div>`;}
+const abar=v=>`<div class="abar">${btn("وزّع الأقدم الأول","⚡","g",'data-auto="1"',canAl())}<span class="ck">الترتيب: ${sel('data-ord="1"',[["due","بتاريخ الاستحقاق"],["date","بتاريخ الفاتورة"]],V.ord,!canAl())}</span>
+ ${btn("صفّر التوزيع","↺","w",'data-zero="1"',canAl())}<span style="margin-right:auto;font-size:12px;font-weight:700;color:#64748B">اكتب في «يدفع» أو دوس ⤶ عشان تدفع المتبقي كله</span></div>`;
+// جدول الفواتير المفتوحة
+function alTable(v,o={}){const L=openDocs(v,V.showAll).sort((a,b)=>(a.due||a.date).localeCompare(b.due||b.date));const C=canAl();
+  const cols=[o.ck&&"✔","المستند","التاريخ","الاستحقاق","رقم المورد","الإجمالي","المرتجع","مسدد قبل كده","المتبقي","يدفع","الباقي بعد","الحالة"].filter(Boolean);
+  const body=L.map(d=>{const a=+v.al[d.no]||0,rm=remain(d,v),e=alErr(d,v),st=status(d,v),fx=d.cur!=="EGP",ov=d.due&&d.due<TODAY&&rm>0;
+   const pay=fx?`<span class="bdg fx">—</span>`:`<div class="lkw" style="justify-content:center"><input class="in pay n" data-al="${d.no}" value="${a||''}" ${C?'':'disabled'} placeholder="0.00">${C&&rm>0?`<span class="lkb" data-full="${d.no}" title="ادفع المتبقي كله">⤶</span>`:''}</div>`;
+   return `<tr class="${a>0?'paid':''} ${rm<=0&&!a?'full':''} ${ov?'ovd':''}">${o.ck?`<td><input type="checkbox" data-ck="${d.no}" ${a>0?'checked':''} ${C&&!fx&&rm>0?'':'disabled'}></td>`:''}<td><b>${d.no}</b><span class="ln-i" style="text-align:center">${TN[d.t]}${d.cash?' (نقدي)':''}</span>${e?`<span class="ln-e">✖ ${e}</span>`:''}</td><td>${d.date}</td><td class="due">${d.due||'—'}</td><td>${d.ref}</td>
+   <td>${mf(d.tot)}${fx?' '+d.cur:''}</td><td>${d.ret?mf(d.ret):'—'}</td><td>${mf(d.tot-d.ret-rm)}</td><td><b>${mf(rm)}</b></td><td>${pay}</td><td>${fx?'—':mf(rm-a)}</td><td><span class="bdg ${st[0]}">${st[1]}</span></td></tr>`;}).join("");
+  return `<div class="tblw" ${o.h?`style="max-height:${o.h}px;min-height:${Math.min(o.h,210)}px"`:''}><table class="tbl al"><tr>${cols.map(h=>`<th class="${h==='يدفع'?'rt':''}">${h}</th>`).join("")}</tr>${body||`<tr><td colspan="${cols.length}" class="empty">مفيش فواتير مفتوحة للمورد ده</td></tr>`}</table></div>
+  <div class="tfoot"><span><label class="ck" style="display:inline-flex"><input type="checkbox" data-sall="1" ${V.showAll?'checked':''}>اعرض المسددة كمان</label></span><span>الموزّع: <b>${mf(sumAl(v))}</b> من <b>${mf(v.amt)}</b></span></div>`;}
+const ckl=v=>`<div class="ckl">${checks(v).map(c=>`<div class="${c[0]==='in'?'in':c[0]}"><b>${{ok:'✔',no:'✖',wr:'⚠',in:'ℹ'}[c[0]]}</b><span>${c[1]}</span></div>`).join("")}</div>`;
+function jeBox(v){const r=je(v);const t=r.reduce((s,x)=>s+x[1],0);return `<table class="mini"><tr><th>الحساب</th><th class="n">مدين</th><th class="n">دائن</th></tr>${r.map(x=>`<tr><td>${x[0]}</td><td class="n">${x[1]?mf(x[1]):''}</td><td class="n">${x[2]?mf(x[2]):''}</td></tr>`).join("")}<tr><th>الإجمالي ${r.length?'<span class="ok-l">✔ متوازن</span>':''}</th><th class="n">${mf(t)}</th><th class="n">${mf(t)}</th></tr></table>
+ <div class="ln-i" style="margin-top:6px">${v.st==="posted"?`القيد المرحّل JV — ${v.no}`:'القيد اللي هيتعمل مع الترحيل'} · العملة: جنيه</div>`;}
+const side=v=>`<div class="side"><div class="card"><div class="secT">✔ المراجعة</div>${ckl(v)}</div><div class="card"><div class="secT">📒 القيد</div>${jeBox(v)}</div></div>`;
+const advRow=v=>unal(v)>0.004?`<div class="banner">💡 الباقي <b dir="ltr">${mf(unal(v))}</b> مااتوزّعش ← ${sel('data-h="adv"',[["gen","دفعة مقدمة عامة على حساب المورد (تتوزّع بعدين)"],["po","دفعة مقدمة على أمر توريد"]],v.adv)} ${v.adv==="po"?sel('data-h="prj"',Object.entries(PRJ),v.prj):''}</div>`:'';
+const card=(t,inner,st)=>`<div class="card" ${st?`style="${st}"`:''}><div class="secT">${t}</div>${inner}</div>`;
+const end=()=>`</div>`;
+
+// ===== النماذج
+const M=[
+["سند الصرف + جدول التوزيع تحته (اقتراحي)","نفس شاشة «سند الصرف» الموجودة (المرحلة 5) — الفورم والكروت زي ما هم، وتحتهم جدول بفواتير المورد المفتوحة وخانة «يدفع» لكل فاتورة + «⚡ وزّع الأقدم الأول». الباقي اللي مااتوزّعش بيبقى دفعة مقدمة. المراجعة والقيد على الجنب.",
+ ()=>{const v=D();return `<div class="scr">${header("سند صرف","📤")}${msgs()}${card("📄 بيانات السند",grid(FORM))}${kpis(v)}
+ <div class="row"><div class="card" style="flex:1"><div class="secT">🧾 التوزيع على فواتير المورد</div>${abar(v)}${alTable(v,{h:300})}<div style="margin-top:8px">${sum3(v)}</div>${advRow(v)}</div>${side(v)}</div>${end()}</div>`;}],
+["سند الصرف + نافذة «📋 فواتير المورد»","الشاشة نفسها من غير جدول كبير: تحت البيانات «التوزيع» سطور بس للفواتير اللي اتدفع عليها، وزرار «📋 فواتير المورد» بيفتح نافذة منبثقة (زي نافذة «فواتير المشتريات» في المرتجع) تختار منها وتكتب المبلغ.",
+ ()=>{const v=D(),L=DOCS.filter(o=>+v.al[o.no]>0);return `<div class="scr">${header("سند صرف","📤")}${msgs()}${card("📄 بيانات السند",grid(FORM))}${kpis(v)}
+ <div class="row"><div class="card" style="flex:1"><div class="secT">🧾 التوزيع ${btn("فواتير المورد","📋","g",'data-mopen="1"',canAl())}${btn("وزّع الأقدم الأول","⚡","o",'data-auto="1"',canAl())}</div>
+ <table class="mini"><tr><th>المستند</th><th>الاستحقاق</th><th class="n">المتبقي قبل</th><th class="n">يدفع</th><th class="n">الباقي بعد</th><th></th></tr>${L.map(o=>`<tr><td><b>${o.no}</b> ${TN[o.t]}${alErr(o,v)?`<span class="ln-e">✖ ${alErr(o,v)}</span>`:''}</td><td>${o.due||'—'}</td><td class="n">${mf(remain(o,v))}</td><td class="n"><b>${mf(v.al[o.no])}</b></td><td class="n">${mf(remain(o,v)-v.al[o.no])}</td><td>${canAl()?`<span class="bad-l" style="cursor:pointer" data-rmal="${o.no}">✕</span>`:''}</td></tr>`).join("")||`<tr><td colspan="6" class="empty" style="text-align:center">لسه مااتوزّعش — دوس «📋 فواتير المورد»</td></tr>`}</table>
+ <div style="margin-top:8px">${sum3(v)}</div>${advRow(v)}</div>${side(v)}</div>${end()}
+ ${V.modal?`<div class="ov"><div class="dlg" style="width:1100px"><div class="dh">📋 فواتير المورد المفتوحة — ${sup(v.sup)[1]}<span data-mclose="1">✕</span></div><div class="db">${abar(v)}${alTable(v,{h:330,ck:1})}</div><div class="df">${btn("تمام","✔","g",'data-mclose="1"')}${btn("صفّر","↺","w",'data-zero="1"')}</div></div></div>`:''}</div>`;}],
+["شاشة «سداد الموردين» — ابدأ بالفواتير","شاشة جديدة لوحدها: تختار المورد ← تعلّم على الفواتير اللي هتدفعها (أو تكتب جزء) ← <b>المبلغ بيتحسب لوحده</b> = مجموع اللي اخترته ← تختار الخزنة أو البنك ← «💸 سداد» بيعمل سند صرف PV مربوط. سند الصرف العادي يفضل للدفعات المقدمة.",
+ ()=>{const v=D();return `<div class="scr">${header("سداد الموردين","💸","اختار الفواتير اللي هتتدفع — والسند بيتعمل لوحده")}${msgs()}
+ ${card("🏭 المورد والدفع",grid(["sup","date","src","desc","no","paper"]))}
+ <div class="row"><div class="card" style="flex:1"><div class="secT">🧾 فواتير المورد — علّم على اللي هيتدفع</div>${alTable(v,{h:310,ck:1})}<div style="margin-top:8px">${sum3(v)}</div></div>
+ <div class="side"><div class="net"><span>💸 هيتصرف</span><b>${mf(v.amt)}</b></div>${btn(ed()?"سداد (سند صرف + ترحيل)":"اتسدد ✔ "+v.no,"💸","g",'data-post="1" style="height:44px;justify-content:center;font-size:14px"',ed())}
+ <div class="card"><div class="secT">✔ المراجعة</div>${ckl(v)}</div><div class="card"><div class="secT">📒 القيد</div>${jeBox(v)}</div></div></div>${end()}</div>`;}],
+["سند الصرف بتبويبات","نفس سند الصرف بس متقسّم تبويبات: «البيانات» · «التوزيع على الفواتير» · «المراجعة والقيد» · «سندات المورد السابقة» — الشاشة أهدى في الشاشات الصغيرة.",
+ ()=>{const v=D(),T=["📄 البيانات","🧾 التوزيع على الفواتير","✔ المراجعة والقيد","🕘 سندات المورد السابقة"];
+  const P=[()=>card("📄 بيانات السند",grid(FORM))+kpis(v),()=>card("🧾 التوزيع",abar(v)+alTable(v,{h:300})+`<div style="margin-top:8px">${sum3(v)}</div>`+advRow(v)),
+   ()=>`<div class="row">${card("✔ المراجعة",ckl(v),"flex:1")}${card("📒 القيد",jeBox(v),"flex:1")}</div>`,
+   ()=>card("🕘 سندات الصرف للمورد",`<table class="mini"><tr><th>السند</th><th>التاريخ</th><th>البيان</th><th class="n">المبلغ</th><th class="n">الموزّع</th><th class="n">غير موزّع</th></tr>${VO.filter(x=>x.sup===v.sup&&x.st==="posted").map(x=>`<tr><td>${x.no}</td><td>${x.date}</td><td>${x.desc}</td><td class="n">${mf(x.amt)}</td><td class="n">${mf(sumAl(x))}</td><td class="n">${mf(unal(x))}</td></tr>`).join("")}${CR.filter(c=>c.sup===v.sup).map(c=>`<tr><td>${c.no}</td><td>${c.date}</td><td>${c.desc}</td><td class="n">${mf(c.amt)}</td><td class="n">${mf(c.used)}</td><td class="n">${mf(crLeft(c))}</td></tr>`).join("")}</table>`)];
+  return `<div class="scr">${header("سند صرف","📤")}${msgs()}<div class="stabs">${T.map((t,i)=>`<span class="${V.tab===i+1?'on':''}" data-tab="${i+1}">${t}${i===1&&sumAl(v)?` (${Object.values(v.al).filter(x=>+x>0).length})`:''}</span>`).join("")}</div>${P[V.tab-1]()}${end()}</div>`;}],
+["معالج خطوات (3 خطوات)","1) المورد والمبلغ ← 2) التوزيع ← 3) المراجعة والقيد والترحيل. مناسب لو اللي بيسجّل مش محاسب — كل خطوة بتتأكد قبل اللي بعدها.",
+ ()=>{const v=D(),S=["1 · المورد والمبلغ","2 · التوزيع على الفواتير","3 · المراجعة والترحيل"];
+  const P=[()=>card("📄 المورد والمبلغ",grid(FORM))+kpis(v),()=>card("🧾 وزّع المبلغ",abar(v)+alTable(v,{h:300})+`<div style="margin-top:8px">${sum3(v)}</div>`+advRow(v)),()=>`<div class="row">${card("✔ المراجعة",ckl(v),"flex:1")}${card("📒 القيد",jeBox(v),"flex:1")}</div>`];
+  return `<div class="scr">${header("سند صرف","📤")}${msgs()}<div class="steps">${S.map((s,i)=>`<span class="${V.step===i+1?'on':V.step>i+1?'dn':''}" data-step="${i+1}">${V.step>i+1?'✔ ':''}${s}</span>`).join("")}</div>${P[V.step-1]()}
+  <div class="abar" style="justify-content:space-between">${btn("السابق","→","w",'data-step="'+(V.step-1)+'"',V.step>1)}${V.step<3?btn("التالي","←","g",'data-step="'+(V.step+1)+'"'):btn("ترحيل","✔✔","b",'data-post="1"',ed())}</div>${end()}</div>`;}],
+["شاشة «تسوية الموردين» — الدفعات غير الموزّعة ↔ الفواتير","شاشة لوحدها للتوزيع <b>بعدين</b>: على اليمين كل الرصيد غير الموزّع للمورد (دفعات مقدمة · سندات اتوزّع جزء منها · مرتجع من غير فاتورة)، وعلى الشمال فواتيره المفتوحة ← تختار دفعة وتوزّعها ← «✔ تسوية». ممكن تتعمل مع أي نموذج تاني.",
+ ()=>{const v=D(),s=v.sup,L=[...CR.filter(c=>c.sup===s&&crLeft(c)>0).map(c=>({k:c.no,t:c.t==="ret"?"↩ مرتجع":"📤 سند",date:c.date,desc:c.desc+(c.prj?' · '+c.prj:''),left:crLeft(c)})),...VO.filter(x=>x.st==="posted"&&x.sup===s&&unal(x)>0).map(x=>({k:x.no,t:"📤 سند",date:x.date,desc:x.desc,left:unal(x)}))];
+  const cur=L.find(x=>x.k===V.cr);const cs=r2(Object.values(V.cal).reduce((a,x)=>a+(+x||0),0));const O=DOCS.filter(o=>o.sup===s&&o.cur==="EGP"&&remain(o,{al:{},sup:s})>0);
+  return `<div class="scr"><div class="wbar"><span>🔗 تسوية الموردين — A-H CODE</span><span class="x">— ❐ ✕</span></div><div class="body"><div class="hdr"><div><div class="ttl"><span class="ic">🔗</span>تسوية الموردين</div><div class="sub">توزيع الدفعات المقدمة والمرتجعات اللي مااتوزّعتش على الفواتير — من غير قيد</div></div></div>${msgs()}
+  <div class="card"><div class="grid4">${fl("المورد",lookup(`<select class="sl" data-h="sup">${SUP.map(x=>`<option value="${x[0]}" ${x[0]===s?'selected':''}>${x[0]} — ${x[1]}</option>`).join("")}</select>`))}${fl("رصيد المورد",ro(mf(supBal(s))))}${fl("الرصيد غير الموزّع",ro(mf(L.reduce((a,x)=>a+x.left,0))))}${fl("التاريخ",ro(TODAY))}</div></div>
+  <div class="row"><div class="card" style="width:380px;flex-shrink:0"><div class="secT">💰 الرصيد غير الموزّع</div>${L.map(x=>`<div class="crd ${V.cr===x.k?'on':''}" data-cr="${x.k}">${x.t} <b>${x.k}</b> · ${x.date}<br><span style="color:#64748B">${x.desc}</span><span style="float:left;color:#C2410C"><b>${mf(x.left)}</b></span></div>`).join("")||'<div class="empty" style="text-align:center">مفيش رصيد غير موزّع للمورد ده</div>'}</div>
+  <div class="card" style="flex:1"><div class="secT">🧾 الفواتير المفتوحة ${cur?`— وزّع <b dir="ltr">${mf(cur.left)}</b> من ${cur.k}`:'— اختار دفعة من اليمين الأول'}</div>
+  <table class="tbl"><tr><th>المستند</th><th>الاستحقاق</th><th>المتبقي</th><th class="rt">يتخصم</th><th>الباقي بعد</th></tr>${O.map(o=>{const rm=remain(o,{al:{},sup:s}),a=+V.cal[o.no]||0;return `<tr class="${a?'paid':''}"><td><b>${o.no}</b> ${TN[o.t]}${a>rm+0.004?'<span class="ln-e">✖ أكتر من المتبقي</span>':''}</td><td>${o.due}</td><td>${mf(rm)}</td><td><input class="in pay n" data-cal="${o.no}" value="${a||''}" ${cur?'':'disabled'}></td><td>${mf(rm-a)}</td></tr>`;}).join("")}</table>
+  <div class="tfoot"><span>اتوزّع ${mf(cs)} ${cur?`من ${mf(cur.left)}${cs>cur.left+0.004?' <span class="bad-l">✖ أكتر من الدفعة</span>':''}`:''}</span><span>${btn("وزّع الأقدم الأول","⚡","o",'data-cauto="1"',!!cur)} ${btn("تسوية","✔","g",'data-capply="1"',!!cur&&cs>0)}</span></div></div></div></div></div>`;}],
+["كروت الفواتير بشريط السداد","كل فاتورة مفتوحة كارت: شريط بيوضّح اتسدد قد إيه (أخضر) · المرتجع (برتقالي) · اللي هيتدفع دلوقتي (أصفر) — دوس «ادفع الباقي» أو اكتب مبلغ. الفورم والمراجعة فوق.",
+ ()=>{const v=D();const L=openDocs(v,V.showAll).sort((a,b)=>(a.due||a.date).localeCompare(b.due||b.date));
+  return `<div class="scr">${header("سند صرف","📤")}${msgs()}<div class="row">${card("📄 بيانات السند",grid(FORM,"grid4"),"flex:1")}</div>${sum3(v)}${advRow(v)}
+  <div class="abar">${btn("وزّع الأقدم الأول","⚡","g",'data-auto="1"',canAl())}${btn("صفّر","↺","w",'data-zero="1"',canAl())}<label class="ck"><input type="checkbox" data-sall="1" ${V.showAll?'checked':''}>اعرض المسددة</label><div class="lgd"><span><i style="background:var(--g)"></i>اتسدد قبل كده</span><span><i style="background:#C2410C"></i>مرتجع</span><span><i style="background:#F59E0B"></i>هيتدفع في السند ده</span></div></div>
+  <div class="cards">${L.map(o=>{const t=o.tot,a=+v.al[o.no]||0,rm=remain(o,v),pd=t-o.ret-rm,st=status(o,v),fx=o.cur!=="EGP";const w=x=>Math.max(0,Math.min(100,x/t*100)).toFixed(1)+'%';
+   return `<div class="ic2 ${st[0]==='od'?'ovd':''} ${fx?'fx':''} ${a?'on':''}"><div class="t"><span>${o.no}</span><span class="bdg ${st[0]}">${st[1]}</span></div><div class="kv"><span>${TN[o.t]} · ${o.date}</span><span>استحقاق ${o.due||'—'}</span></div>
+   <div class="pbar"><i class="p1" style="width:${w(pd)}"></i><i class="p3" style="width:${w(o.ret)}"></i><i class="p2" style="width:${w(a)}"></i></div>
+   <div class="kv"><span>الإجمالي</span><b>${mf(t)}${fx?' '+o.cur:''}</b></div><div class="kv"><span>المتبقي</span><b>${mf(rm)}</b></div>
+   ${fx?'<div class="ln-i">السداد بالدولار مع المرحلة 8</div>':`<div class="lkw" style="margin-top:6px"><input class="in pay n" data-al="${o.no}" value="${a||''}" placeholder="يدفع" ${canAl()?'':'disabled'}>${canAl()&&rm>0?`<span class="btn o" style="height:28px" data-full="${o.no}">ادفع الباقي</span>`:''}</div>${alErr(o,v)?`<span class="ln-e">✖ ${alErr(o,v)}</span>`:''}`}</div>`;}).join("")}</div>
+  <div class="row">${card("✔ المراجعة",ckl(v),"flex:1")}${card("📒 القيد",jeBox(v),"flex:1")}</div>${end()}</div>`;}],
+["لوحة المستحقات بالأعمار + السداد","فوق: كل الموردين وعليهم كام في كل فترة (لسه مااستحقش · 1–30 · 31–60 · 61–90 · +90 يوم متأخر) — دوس على مورد ← تحت بيظهر سند صرف جديد ليه بفواتيره. مناسب لو عايز تشوف مين لازم يتدفعله الأول.",
+ ()=>{const v=D();const B=s=>{const r=[0,0,0,0,0];DOCS.filter(o=>o.sup===s&&o.cur==="EGP").forEach(o=>{const rm=remain(o,{al:{},sup:s});if(rm<=0)return;const dd=o.due?days(o.due,TODAY):-1;r[dd<=0?0:dd<=30?1:dd<=60?2:dd<=90?3:4]+=rm;});return r;};
+  return `<div class="scr"><div class="wbar"><span>📊 مستحقات الموردين — A-H CODE</span><span class="x">— ❐ ✕</span></div><div class="body">${msgs()}
+  ${card("📊 مستحقات الموردين بالأعمار (لحد 28-11-2026 — بالجنيه)",`<table class="tbl age"><tr><th>المورد</th><th>لسه مااستحقش</th><th>1–30 يوم</th><th>31–60</th><th>61–90</th><th>+90</th><th>الإجمالي</th><th>غير موزّع</th><th>صافي علينا</th><th></th></tr>${SUP.filter(s=>s[2]==="EGP").map(s=>{const b=B(s[0]),t=b.reduce((a,x)=>a+x,0),u=r2(postedUnal(s[0])+CR.filter(c=>c.sup===s[0]).reduce((a,c)=>a+crLeft(c),0));
+   return `<tr class="${v.sup===s[0]?'on':''}" data-s8="${s[0]}" style="cursor:pointer"><td class="nm"><b>${s[0]}</b> ${s[1]}</td>${b.map((x,i)=>`<td class="${i&&x?'hot':''}">${x?mf(x):'—'}</td>`).join("")}<td><b>${mf(t)}</b></td><td>${u?mf(u):'—'}</td><td><b>${mf(t-u)}</b></td><td><span class="btn g" style="height:26px">💸 ادفع</span></td></tr>`;}).join("")}</table><div class="ln-i">المورد بالدولار (SUB-003) بيظهر مع فروق العملة في المرحلة 8 · الأعمار من التوزيع (مش من الرصيد بس)</div>`)}
+  <div class="tbar" style="border:none;padding:0">${btn("جديد","＋","g",'data-new="1"')}${btn("حفظ","💾","g",'data-save="1"',ed())}${btn("ترحيل","✔✔","b",'data-post="1"',ed())}${btn("إلغاء الترحيل","↩","b",'data-unpost="1"',!ed())}<span style="margin-right:8px">السند: <b>${v.no||'مسودة'}</b> ${stB(v)}</span></div>
+  <div class="row"><div class="card" style="flex:1"><div class="secT">📤 سند صرف — ${sup(v.sup)[1]}</div>${grid(["date","src","amt","desc"])}<div style="margin-top:8px">${abar(v)}${alTable(v,{h:240})}</div>${advRow(v)}</div>${side(v)}</div>${end()}</div>`;}],
+["بشكل الفاتورة السعودية (زي فاتورة الشراء)","نفس ترتيب «فاتورة الشراء» و«المرتجع» اللي اخترتهم: بيانات السند فوق ← جدول «الفواتير المدفوعة» والإجماليات يمين ← «إضافة فاتورة» تحت (تختار الفاتورة ← المتبقي بيظهر ← تكتب المبلغ ← إضافة).",
+ ()=>{const v=D(),L=DOCS.filter(o=>+v.al[o.no]>0),O=openDocs(v,0).filter(o=>o.cur==="EGP"&&!(+v.al[o.no]>0));const pk=V.pk.no&&doc(V.pk.no)?doc(V.pk.no):null;
+  return `<div class="scr">${header("سند صرف","📤")}${msgs()}<div class="row"><div class="card" style="flex:1"><div class="secT">📅 بيانات السند</div>${grid(FORM)}</div>
+  <div class="side"><div class="sr"><span>مبلغ السند</span><b>${mf(v.amt)}</b></div><div class="sr"><span>الموزّع على الفواتير</span><b>${mf(sumAl(v))}</b></div><div class="sr"><span>غير موزّع (دفعة مقدمة)</span><b style="color:#C2410C">${mf(unal(v))}</b></div>
+  <div class="net"><span>رصيد المورد بعد السند</span><b>${mf(v.st==="posted"?supBal(v.sup):supBal(v.sup)-(+v.amt||0))}</b></div></div></div>
+  <div class="row"><div class="card" style="flex:1"><div class="secT">☰ الفواتير المدفوعة في السند <span style="margin-right:auto;color:#6B7280;font-size:12px">${L.length} مستند</span></div>
+  <div class="tblw" style="min-height:160px"><table class="tbl"><tr><th>المستند</th><th>النوع</th><th>التاريخ</th><th>الاستحقاق</th><th>المتبقي قبل</th><th class="rt">يدفع</th><th>الباقي بعد</th><th></th></tr>${L.map(o=>`<tr class="paid"><td><b>${o.no}</b>${alErr(o,v)?`<span class="ln-e">✖ ${alErr(o,v)}</span>`:''}</td><td>${TN[o.t]}</td><td>${o.date}</td><td>${o.due||'—'}</td><td>${mf(remain(o,v))}</td><td><input class="in pay n" data-al="${o.no}" value="${v.al[o.no]}" ${canAl()?'':'disabled'}></td><td>${mf(remain(o,v)-v.al[o.no])}</td><td>${canAl()?`<span class="bad-l" style="cursor:pointer" data-rmal="${o.no}">🗑</span>`:''}</td></tr>`).join("")||'<tr><td colspan="8" class="empty">لسه مفيش — ضيف فاتورة من تحت</td></tr>'}</table></div>${advRow(v)}</div>${side(v)}</div>
+  ${card("＋ إضافة فاتورة",`<div class="add"><div class="fl it">${'<label>الفاتورة</label>'+sel('data-pk="no"',[["","— اختار فاتورة مفتوحة —"],...O.map(o=>[o.no,`${o.no} · ${TN[o.t]} · استحقاق ${o.due||'—'} · متبقي ${mf(remain(o,v))}`])],V.pk.no||"",!canAl())}</div>
+   ${fl("المتبقي",ro(pk?mf(remain(pk,v)):'—'),"m")}${fl("يدفع",`<input class="in n" data-pk="a" value="${esc(V.pk.a||'')}" ${canAl()?'':'disabled'}>`,"m")}${btn("إضافة","＋","g",'data-pkadd="1"',canAl())}${btn("وزّع الباقي الأقدم الأول","⚡","o",'data-auto="1"',canAl())}</div>`)}${end()}</div>`;}],
+["كشف حساب المورد بالتوزيع","كل حركات المورد ورا بعض زي كشف الحساب (فواتير · مرتجعات · سندات) بالرصيد الجاري، وجنب كل فاتورة حالتها وخانة «يدفع» للسند الحالي — بتشوف التاريخ كله وانت بتوزّع.",
+ ()=>{const v=D(),s=v.sup;const R=[];DOCS.filter(o=>o.sup===s&&o.cur==="EGP").forEach(o=>{R.push({d:o.date,k:"doc",o,txt:`${TN[o.t]} ${o.no}${o.ref!=='—'?' · مورد '+o.ref:''}`,cr:o.tot,dr:0});if(o.ret)R.push({d:o.date,k:"ret",txt:`مرتجع على ${o.no}`,cr:0,dr:o.ret});if(o.cash)R.push({d:o.date,k:"pv",txt:`صرف نقدي مع ${o.no}`,cr:0,dr:o.tot});else if(o.paid)R.push({d:o.date,k:"pv",txt:`سداد سابق على ${o.no}`,cr:0,dr:o.paid});});
+  CR.filter(c=>c.sup===s).forEach(c=>R.push({d:c.date,k:"cr",txt:`${c.no} ${c.desc} (غير موزّع ${mf(crLeft(c))})`,cr:0,dr:crLeft(c)}));VO.filter(x=>x.st==="posted"&&x.sup===s).forEach(x=>R.push({d:x.date,k:"pv",txt:`سند صرف ${x.no} — ${x.desc}`,cr:0,dr:x.amt}));
+  R.sort((a,b)=>a.d.localeCompare(b.d));let run=0;
+  return `<div class="scr">${header("سند صرف","📤")}${msgs()}${card("📄 بيانات السند",grid(FORM))}
+  <div class="row"><div class="card" style="flex:1"><div class="secT">📒 كشف حساب ${sup(s)[1]} (بالجنيه) ${btn("وزّع الأقدم الأول","⚡","o",'data-auto="1"',canAl())}</div><div class="tblw" style="max-height:360px"><table class="tbl stm"><tr><th>التاريخ</th><th>البيان</th><th>مدين (دفعنا)</th><th>دائن (علينا)</th><th>الرصيد</th><th>الحالة</th><th class="rt">يدفع في السند ده</th></tr>
+  ${R.map(r=>{run=r2(run+r.cr-r.dr);const o=r.o;let st='',pay='';if(o){const x=status(o,v);st=`<span class="bdg ${x[0]}">${x[1]}</span>`;const rm=remain(o,v);pay=rm>0||+v.al[o.no]?`<input class="in pay n" data-al="${o.no}" value="${v.al[o.no]||''}" placeholder="متبقي ${mf(rm)}" ${canAl()?'':'disabled'}>${alErr(o,v)?`<span class="ln-e">✖ ${alErr(o,v)}</span>`:''}`:'—';}
+   return `<tr><td>${r.d}</td><td class="nm">${r.txt}</td><td class="dr">${r.dr?mf(r.dr):''}</td><td class="cr">${r.cr?mf(r.cr):''}</td><td><b>${mf(run)}</b></td><td>${st}</td><td>${pay}</td></tr>`;}).join("")}
+  <tr><td>${v.date}</td><td class="nm"><b>⬅ السند الحالي ${v.no||'(مسودة)'}</b></td><td class="dr"><b>${mf(v.amt)}</b></td><td></td><td><b>${mf(run-(v.st==="posted"?0:+v.amt||0))}</b></td><td>${stB(v)}</td><td>موزّع ${mf(sumAl(v))}</td></tr></table></div>${sum3(v)}${advRow(v)}</div>${side(v)}</div>${end()}</div>`;}]
+];
+
+const NOTE=`<b>📌 الشاشة بتعمل إيه:</b> لما ندفع فلوس لمورد بـ <b>سند صرف</b>، البرنامج <b>يربط الدفعة بفواتير الشراء</b> اللي اتسددت (كلها أو جزء منها) ← كل فاتورة يبان عليها «اتسدد كام وباقي كام» (مفتوحة · مسددة جزئي · مسددة · متأخرة) ← واللي مااتوزّعش من السند يبقى <b>دفعة مقدمة</b> للمورد تتوزّع بعدين. <b>القيد مابيتغيّرش</b>: مدين المورد / دائن الخزنة أو البنك — التوزيع ده «مطابقة» بين الدفعات والفواتير، ومنه بعدين <b>أعمار الديون</b> وكشف «الفواتير المستحقة».
+<ul>
+<li><b>كانت إيه في الأكسس:</b> شاشة <span dir="ltr">SanadSup</span> «سندات الموردين» (جدول <span dir="ltr">sanadpaid</span> — 439 سند صرف أو قبض): المورد والمبلغ والنوع بس — <b>من غير ربط بالفواتير</b>، فمكانش ينفع تعرف أنهي فاتورة اتدفعت ولا المتأخر كام ولا الدفعة المقدمة فين؛ الرصيد بس كان بيطلع من استعلام.</li>
+<li><b>عندنا دلوقتي:</b> «سند صرف» للمورد شغال من المرحلة 5 (<span dir="ltr">PV-2026-00001</span> — مسودة ← ترحيل بقيد) من غير توزيع. البند ده بيضيفله جدول <span dir="ltr">cash.voucher_allocations</span> (السند · الفاتورة · المبلغ) + «الرصيد غير الموزّع».</li>
+<li><b>المتبقي على الفاتورة</b> = الإجمالي − المرتجع المربوط بيها (مرتجع المشتريات) − السداد المرحّل قبل كده. المسودات <b>مابتخصمش</b> من المتبقي — بس وقت الترحيل البرنامج بيقفل الفاتورة ويتأكد تاني (جهازين بيدفعوا نفس الفاتورة ← التاني يترفض لو عدّى المتبقي).</li>
+<li>جرّب: «⚡ وزّع الأقدم الأول» · اكتب مبلغ أكبر من المتبقي ← ✖ · كبّر مبلغ السند ← الباقي يبقى دفعة مقدمة · السند التاني مرحّل (التوزيع مقفول إلا بصلاحية) · السند التالت «مقدم على أمر توريد» · النموذج 6 بيوزّع الدفعات القديمة · والشريط الأصفر: 🔑 الصلاحيات و🔁 جهاز تاني.</li>
+</ul>`;
+const QS=`<b>❓ محتاج منك (وجنب كل سؤال اقتراحي — لو مارديتش هنفّذ بالاقتراح):</b>
+<ol>
+<li><b>رقم النموذج</b> (1–10) — أو خلط (مثلاً «1 + شاشة التسوية من 6»).</li>
+<li><b>نفس شاشة «سند الصرف» الموجودة ولا شاشة جديدة؟</b> اقتراحي: <b>نفس الشاشة</b> (النموذج 1) — سند واحد للمورد بيتوزّع، بدل شاشتين بيعملوا نفس القيد · وشاشة «تسوية الموردين» (النموذج 6) لوحدها للتوزيع بعدين.</li>
+<li><b>التوزيع: الأقدم الأول ولا يدوي؟</b> اقتراحي: <b>يدوي، وزرار «⚡ وزّع الأقدم الأول»</b> بيملاه في ثانية (بتاريخ الاستحقاق) وتقدر تغيّر فيه · ومش إجباري توزّع (سند من غير توزيع = دفعة مقدمة).</li>
+<li><b>الدفعة المقدمة (الباقي اللي مااتوزّعش):</b> اقتراحي زي قرار العملاء (السؤال 15): <b>بتفضل على حساب المورد 2101 «رصيد غير موزّع»</b> وتتوزّع بعدين على أي فاتورة — <b>أو</b> على أمر توريد معيّن · ولا حساب لوحده «1107 دفعات مقدمة للموردين» (أصل) والقيد بيتقسم؟ (جرّب الاتنين من الشريط الأصفر).</li>
+<li><b>فروق العملة:</b> فواتير المورد بالدولار <b>بتظهر بس</b> ومش بتتوزّع دلوقتي — السند بالجنيه، والسداد بالعملة وفروقها مع <b>المرحلة 8</b> زي ما اتأجّلت (اقتراحي).</li>
+<li><b>مرتجعات المشتريات:</b> المرتجع <b>المربوط بفاتورة بيقلّل المتبقي عليها لوحده</b> · والمرتجع من غير فاتورة (آجل) بيبقى «رصيد غير موزّع» زي الدفعة المقدمة ويتوزّع في التسوية (اقتراحي).</li>
+<li><b>رصيد أول المدة للمورد</b> (من «الأرصدة الافتتاحية») بيظهر سطر لوحده «رصيد أول المدة» ويتوزّع عليه زي الفاتورة (اقتراحي).</li>
+<li><b>تعديل التوزيع بعد الترحيل:</b> مسموح <b>بصلاحية «تعديل توزيع سند مرحّل»</b> من غير إلغاء ترحيل — لأنه مابيغيّرش القيد (اقتراحي) · وإلغاء ترحيل السند بيشيل توزيعه.</li>
+<li><b>الفاتورة النقدية</b> مسددة لوحدها مع الفاتورة (مابتظهرش في التوزيع إلا لو علّمت «اعرض المسددة») (اقتراحي).</li>
+<li><b>شيكات الموردين</b> (المرحلة 5): الشيك اللي بنكتبه للمورد يتوزّع على الفواتير بنفس الطريقة؟ اقتراحي: <b>أيوه</b>، نفس جدول التوزيع في شاشة الشيك (بعد ما تختار النموذج).</li>
+<li><b>المتأخر:</b> ⚠ لو فيه فاتورة متأخرة مااتسددتش والسند بيدفع أحدث منها — تحذير بس (اقتراحي).</li>
+<li><b>نقل الأكسس:</b> الـ 439 سند مش هيتنقلوا — أثرهم في أرصدة الموردين الافتتاحية (اقتراحي).</li>
+<li><b>المكان والصلاحيات:</b> «سند صرف» مكانه في «الخزينة» ← «السندات» زي ما هو + اختصار في «المشتريات» · و«تسوية الموردين» في «المشتريات» · صلاحيات: التوزيع جزء من «تعديل» السند + «تعديل توزيع سند مرحّل» + «تسوية الموردين» (اقتراحي).</li>
+<li><b>سند القبض للعملاء</b> هيتعمل له نفس التوزيع على فواتير المبيعات لما نوصل المرحلة 8 (نفس الجدول <span dir="ltr">cash.voucher_allocations</span>) (اقتراحي).</li>
+</ol>`;
+
+function render(){
+  document.getElementById("note").innerHTML=NOTE;document.getElementById("qs").innerHTML=QS;
+  document.getElementById("mnav").innerHTML=`<b>النموذج:</b>${M.map((m,i)=>`<span class="${V.m===i?'on':''}" data-m="${i}" title="${m[0].replace(/<[^>]+>/g,'')}">${i+1}</span>`).join("")}<div class="go"><span data-m="${Math.max(0,V.m-1)}">→ السابق</span><span data-m="${Math.min(M.length-1,V.m+1)}">التالي ←</span></div>`;
+  const m=M[V.m];
+  document.getElementById("page").innerHTML=`<h2 class="mh"><i>${V.m+1}</i>${m[0]}</h2><p class="md">${m[1]}</p>
+   <div class="demo">🧪 للتجربة بس (مش جزء من الشاشة): <span class="chip ${V.realloc?'on':''}" data-realloc="1">🔑 «تعديل توزيع سند مرحّل»: ${V.realloc?'عنده':'مالوش'}</span>
+   <span class="chip ${V.acc?'on':''}" data-acc="1">📒 الدفعة المقدمة: ${V.acc?'حساب لوحده 1107':'على حساب المورد 2101 (اقتراحي)'}</span>
+   <span class="chip bl" data-other="cf">🔁 جهاز تاني عدّل السند ده</span><span class="chip bl" data-other="pay">🔁 جهاز تاني رحّل سداد على نفس الفاتورة</span>
+   <span>السند: ${VO.map((x,i)=>`<span class="chip ${V.d===i?'on':''}" data-doc="${i}">${x.no||'مسودة '+(i+1)} · ${x.sup}</span>`).join(" ")}</span></div><div style="position:relative">${m[2]()}</div>`;
+}
+function say(t,k){V.msg=t;V.mt=k||"ok";}
+const sync=()=>{if(V.m===2&&ed())D().amt=sumAl(D());};
+function post(v){if(V.cf){say("✖ ماترحّلش: السند اتعدّل من جهاز تاني — اعمل «⟳ تحديث» وراجع","no");return;}
+  const e=checks(v).filter(x=>x[0]==="no");if(e.length){say("✖ ماترحّلش: "+e.map(x=>x[1]).join(" · "),"no");return;}
+  if(!v.no){SEQ++;v.no="PV-2026-"+String(SEQ).padStart(5,"0");}v.st="posted";
+  say(`✔✔ اترحّل ${v.no}: القيد اتعمل (مدين المورد / دائن ${src(v.src)[1]} ${mf(v.amt)}) · اتوزّع ${mf(sumAl(v))}${unal(v)>0?` · ${mf(unal(v))} دفعة مقدمة`:''} — الفواتير اتقفلت واتأكد المتبقي تاني وقت الترحيل`);}
+function unpost(v){v.st="draft";say(`↩ ${v.no} رجع مسودة برقمه — القيد اتمسح والتوزيع رجع يتحسب من غير ما يخصم من الفواتير`,"inf");}
+function other(k){const v=D();
+  if(k==="cf"){if(!ed()){say("السند المرحّل مايتعدّلش من جهاز تاني — جرّب على مسودة","inf");return;}V.cf=1;say("🔁 جهاز تاني حفظ تعديل على السند ده — جرّب «حفظ» أو «ترحيل»","inf");return;}
+  const n=Object.keys(v.al).find(x=>+v.al[x]>0)||(openDocs(v,0).find(o=>o.cur==="EGP")||{}).no;if(!n){say("مفيش فاتورة للتجربة","no");return;}
+  const o=doc(n),rm=remain(o,v);const take=r2(Math.max(1,rm-Math.max(0,(+v.al[n]||0)/2)));if(rm<=0){say("الفاتورة دي اتسددت خلاص","inf");return;}
+  SEQ++;VO.push({no:"PV-2026-"+String(SEQ).padStart(5,"0"),date:TODAY,sup:v.sup,src:"TRS-002",amt:take,desc:"من جهاز تاني",paper:"",prj:"",st:"posted",al:{[n]:take},adv:"gen"});
+  say(`🔁 جهاز تاني رحّل سند ${"PV-2026-"+String(SEQ).padStart(5,"0")} بـ ${mf(take)} على ${n} — «المتبقي» قل، جرّب «ترحيل» دلوقتي`,"inf");}
+function newV(){VO.push({no:"",date:TODAY,sup:V.m===7?V.s8:"SUB-001",src:"TRS-001",amt:V.m===2?0:20000,desc:"سداد مورد",paper:"",prj:"",st:"draft",al:{},adv:"gen"});V.d=VO.length-1;V.cf=0;V.step=1;V.tab=1;}
+document.addEventListener("change",e=>{const t=e.target,v=D();
+  if(t.dataset.h){const k=t.dataset.h,x=t.value;
+    if(V.m===5&&k==="sup"){v.sup=x;V.cr=-1;V.cal={};render();return;}
+    if(k==="sup"){if(!ed())return;v.sup=x;v.al={};say("المورد اتغيّر ← التوزيع اتصفّر (في الشاشة الحقيقية بيسأل الأول)","inf");}
+    else if(k==="amt"){v.amt=r2(+String(x).replace(/,/g,"")||0);V.msg="";}else{v[k]=x;V.msg="";}render();return;}
+  if(t.dataset.al){v.al[t.dataset.al]=r2(+String(t.value).replace(/,/g,"")||0);if(!v.al[t.dataset.al])delete v.al[t.dataset.al];sync();V.msg="";render();return;}
+  if(t.dataset.ck){const o=doc(t.dataset.ck);if(t.checked)v.al[o.no]=remain(o,v);else delete v.al[o.no];sync();V.msg="";render();return;}
+  if(t.dataset.ord){V.ord=t.value;render();return;}
+  if(t.dataset.sall){V.showAll=t.checked?1:0;render();return;}
+  if(t.dataset.cal){V.cal[t.dataset.cal]=r2(+t.value||0);if(!V.cal[t.dataset.cal])delete V.cal[t.dataset.cal];render();return;}
+  if(t.dataset.pk){V.pk[t.dataset.pk]=t.value;if(t.dataset.pk==="no"&&t.value){const o=doc(t.value);const left=Math.max(0,unal(v));V.pk.a=String(Math.min(remain(o,v),left||remain(o,v)));}render();return;}
+});
+document.addEventListener("keydown",e=>{const t=e.target;if(t.matches&&t.matches("input,select,textarea"))return;
+  if(e.key==="ArrowLeft"&&V.m<M.length-1)goM(V.m+1);if(e.key==="ArrowRight"&&V.m>0)goM(V.m-1);});
+function goM(i){V.m=i;V.msg="";V.modal=0;
+  if(i===2&&!ed()){const k=VO.findIndex(x=>x.st==="draft"&&x.sup==="SUB-001");if(k>=0)V.d=k;}
+  if(i===2&&ed()&&!sumAl(D())&&+D().amt>0&&D().adv!=="po")autoAl(D());
+  if(i===7)V.s8=D().sup;render();}
+document.addEventListener("click",e=>{if(e.target.matches("input,select,option"))return;
+  const g=s=>e.target.closest(s);const v=D();let x;
+  if(x=g("[data-m]")){goM(+x.dataset.m);window.scrollTo({top:document.getElementById("mnav").offsetTop-60,behavior:"smooth"});return;}
+  if(g("[data-realloc]")){V.realloc=V.realloc?0:1;V.msg="";render();return;}
+  if(g("[data-acc]")){V.acc=V.acc?0:1;render();return;}
+  if(x=g("[data-other]")){other(x.dataset.other);render();return;}
+  if(x=g("[data-doc]")){V.d=+x.dataset.doc;V.msg="";V.cf=0;V.modal=0;V.pk={};render();return;}
+  if(x=g("[data-tab]")){V.tab=+x.dataset.tab;render();return;}
+  if(x=g("[data-step]")){const s=+x.dataset.step;if(s<1||s>3)return;if(s>V.step&&V.step===1&&!(+v.amt>0)){say("✖ اكتب المبلغ الأول","no");render();return;}V.step=s;V.msg="";render();return;}
+  if(x=g("[data-s8]")){const s=x.dataset.s8;V.s8=s;const k=VO.findIndex(z=>z.st==="draft"&&z.sup===s);if(k>=0)V.d=k;else newV();say(`📤 سند صرف لـ «${sup(s)[1]}» — وزّع على فواتيره تحت`,"inf");render();return;}
+  if(x=g("[data-cr]")){V.cr=x.dataset.cr;V.cal={};render();return;}
+  if(g("[data-cauto]")){const s=v.sup,c=CR.find(z=>z.no===V.cr),p=VO.find(z=>z.no===V.cr);let left=c?crLeft(c):unal(p);V.cal={};
+    DOCS.filter(o=>o.sup===s&&o.cur==="EGP").sort((a,b)=>(a.due||a.date).localeCompare(b.due||b.date)).forEach(o=>{const rm=remain(o,{al:{},sup:s});if(left>0&&rm>0){const t=Math.min(left,rm);V.cal[o.no]=r2(t);left=r2(left-t);}});render();return;}
+  if(g("[data-capply]")){const s=v.sup,c=CR.find(z=>z.no===V.cr),p=VO.find(z=>z.no===V.cr);const left=c?crLeft(c):unal(p);const cs=r2(Object.values(V.cal).reduce((a,z)=>a+z,0));
+    const bad=Object.keys(V.cal).find(n=>V.cal[n]>remain(doc(n),{al:{},sup:s})+0.004);if(bad||cs>left+0.004){say("✖ التسوية اترفضت: "+(bad?`${bad} أكتر من المتبقي`:"الموزّع أكتر من الدفعة"),"no");render();return;}
+    Object.keys(V.cal).forEach(n=>{if(c)doc(n).paid=r2(doc(n).paid+V.cal[n]);else p.al[n]=r2((+p.al[n]||0)+V.cal[n]);});if(c)c.used=r2(c.used+cs);
+    say(`✔ اتسوّى ${mf(cs)} من ${V.cr} على ${Object.keys(V.cal).length} فاتورة — من غير قيد (القيد اتعمل مع السند/المرتجع)`);V.cal={};V.cr=-1;render();return;}
+  if(g("[data-mopen]")){V.modal=1;render();return;}
+  if(g("[data-mclose]")){V.modal=0;render();return;}
+  if(g("[data-auto]")){if(!canAl())return;if(!(+v.amt>0)){say("✖ اكتب مبلغ السند الأول","no");render();return;}const keep=V.m===8?{...v.al}:null;
+    if(keep){let left=r2(v.amt-sumAl(v));openDocs(v,0).filter(o=>o.cur==="EGP"&&!(+v.al[o.no]>0)).sort((a,b)=>(V.ord==="due"?(a.due||a.date).localeCompare(b.due||b.date):a.date.localeCompare(b.date))).forEach(o=>{const t=Math.min(left,remain(o,v));if(t>0){v.al[o.no]=r2(t);left=r2(left-t);}});}
+    else autoAl(v);say(`⚡ اتوزّع ${mf(sumAl(v))} على الأقدم الأول (${V.ord==="due"?"بالاستحقاق":"بتاريخ الفاتورة"})${unal(v)>0?` — فاضل ${mf(unal(v))} دفعة مقدمة`:''}`);render();return;}
+  if(g("[data-zero]")){if(!canAl())return;v.al={};sync();say("↺ التوزيع اتصفّر","inf");render();return;}
+  if(x=g("[data-full]")){const o=doc(x.dataset.full);v.al[o.no]=remain(o,v);sync();V.msg="";render();return;}
+  if(x=g("[data-rmal]")){delete v.al[x.dataset.rmal];render();return;}
+  if(g("[data-pkadd]")){const n=V.pk.no,a=r2(+V.pk.a||0);if(!n||!(a>0)){say("✖ اختار الفاتورة واكتب المبلغ","no");render();return;}v.al[n]=r2((+v.al[n]||0)+a);V.pk={};say(`✔ ${n} اتضافت بـ ${mf(a)}`);render();return;}
+  if(g("[data-ref]")){V.cf=0;say("⟳ اتحدّث من القاعدة — آخر إصدار للسند والمتبقي على الفواتير قدامك","inf");render();return;}
+  if(g("[data-save]")){if(V.cf&&ed())say("✖ ماتحفظش: السند اتعدّل من جهاز تاني — اعمل «⟳ تحديث» وراجع","no");else if(!ed()){const er=checks(v).filter(c=>c[0]==="no");say(er.length?"✖ "+er.map(c=>c[1]).join(" · "):"💾 التوزيع الجديد اتحفظ (بصلاحية «تعديل توزيع سند مرحّل») — القيد زي ما هو",er.length?"no":"ok");}else say("💾 اتحفظ مسودة بالتوزيع (من غير قيد — ومابيخصمش من الفواتير لحد الترحيل)");render();return;}
+  if(g("[data-edit]")){say(V.realloc?"المرحّل: تقدر تعدّل التوزيع بس (عندك الصلاحية) — المبلغ والخزنة محتاجين «إلغاء الترحيل»":"المرحّل مايتعدّلش — «إلغاء الترحيل» الأول (بصلاحية)، أو صلاحية «تعديل توزيع سند مرحّل» للتوزيع بس","inf");render();return;}
+  if(g("[data-new]")){newV();say("＋ سند صرف جديد (مسودة) — اختار المورد والمبلغ ووزّع","inf");render();return;}
+  if(g("[data-post]")){post(v);render();return;}
+  if(g("[data-unpost]")){unpost(v);render();return;}
+  if(g("[data-del]")){VO.splice(V.d,1);V.d=Math.max(0,Math.min(V.d,VO.length-1));if(!VO.length)newV();V.cf=0;say("🗑 المسودة اتمسحت","inf");render();return;}
+  if(g("[data-can]")){V.msg="";say("✕ اتلغى التعديل اللي ماتحفظش","inf");render();return;}
+});
+render();
+</script>
+</body>
+</html>

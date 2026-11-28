@@ -221,8 +221,21 @@ class StatementService:
         return rows
 
 
+def fc_note(ln: dict[str, Any]) -> str:
+    """السطر اللي أصله بعملة تانية: «4,104.00 USD × 55» — للعلم بس (طلب المستخدم 2026-11-28)؛
+    المدين والدائن والرصيد في الكشف **بالجنيه دايماً**."""
+    if not ln.get("currency_code") or ln.get("amount_fc") in (None, ""):
+        return ""
+    rate = format(Decimal(ln["fx_rate"]).normalize(), "f") if ln.get("fx_rate") is not None else "؟"
+    return f"{Decimal(ln['amount_fc']):,.2f} {ln['currency_code']} × {rate}"
+
+
 def _line(ln: dict[str, Any], prev: Decimal) -> dict[str, Any]:
-    return {"entry_date": ln["entry_date"], "doc_no": doc_label(ln), "description": ln["description"],
+    note = fc_note(ln)
+    description = ln["description"] or ""
+    return {"entry_date": ln["entry_date"], "doc_no": doc_label(ln),
+            "description": f"{description}  ({note})" if note else description,
+            "currency_code": ln.get("currency_code"), "fx_rate": ln.get("fx_rate"), "amount_fc": ln.get("amount_fc"),
             "debit": Decimal(ln["debit"]), "credit": Decimal(ln["credit"]),
             "balance": prev + Decimal(ln["run"]), "entry_id": int(ln["entry_id"]),
             "source_type": ln["source_type"], "doc_type_name": ln.get("doc_type_name"),

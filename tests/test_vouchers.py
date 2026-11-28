@@ -119,7 +119,9 @@ def test_database_rules(env):
                         "WHERE doc_type IN ('supplier_payment', 'customer_payment') ORDER BY sort_order") == [
         {"doc_type": "supplier_payment", "role": "payable", "side": "dr", "party_kind": "supplier"},
         {"doc_type": "supplier_payment", "role": "cash", "side": "cr", "party_kind": None},
-        {"doc_type": "supplier_payment", "role": "bank", "side": "cr", "party_kind": None}]
+        {"doc_type": "supplier_payment", "role": "bank", "side": "cr", "party_kind": None},
+        {"doc_type": "supplier_payment", "role": "fx_loss", "side": "dr", "party_kind": None},   # فروق العملة (0050)
+        {"doc_type": "supplier_payment", "role": "fx_gain", "side": "cr", "party_kind": None}]
     assert one(db, "SELECT to_regclass('cash.customer_payments')") is None    # «سند صرف العملاء» اتشال (0036)
 
     def ins(table="customer_receipts", **kw):

@@ -14,6 +14,13 @@
 ```
 * «حفظ مسودة» · «ترحيل» (وانت بتعدّل = حفظ + ترحيل) · «إلغاء الترحيل» بالصلاحية — زي القيود اليومية.
 * الرقم RV / PV بيتاخد مع أول ترحيل · الطباعة بعدين (رد المستخدم).
+
+**«سداد الموردين» (المرحلة 7 — 0050، ردود المستخدم 2026-11-28) — «سند الصرف» بس:**
+
+* **«عملة السند»** (بتتختار الأول) + سعر الصرف · «صرف من» بيعرض **الخزن / الحسابات البنكية اللي بنفس العملة بس**.
+* **أيقونة 🔍** جنب العملة والمورد / العميل والخزنة / البنك ← نافذة تختار منها (طلب المستخدم).
+* تبويب **«🧾 التوزيع على الفواتير»**: «📋 الفواتير» (نافذة بفواتير المورد المفتوحة **بعملة السند — بالتوتال**) ·
+  «⚡ وزّع الأقدم الأول» · تحت السند سطور اللي اتدفع عليه بس · اللي مااتوزّعش = دفعة مقدمة. والقيد في تبويب «📒 القيد».
 """
 
 from __future__ import annotations
@@ -29,6 +36,7 @@ from PySide6.QtWidgets import (
     QButtonGroup,
     QComboBox,
     QDateEdit,
+    QDialog,
     QFormLayout,
     QFrame,
     QGroupBox,
@@ -37,14 +45,17 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QPushButton,
+    QScrollArea,
     QTableWidget,
     QTableWidgetItem,
+    QTabWidget,
     QVBoxLayout,
     QWidget,
 )
 
 from app.services.voucher_service import KINDS, PAGE_SIZE, VoucherService, voucher_label
 from app.services.errors import BusinessError, ConcurrentEditError
+from app.services.journal_service import parse_money
 from app.ui.common import messages
 from app.ui.common.base_screen import EDITING, BaseScreen
 from app.ui.common.data_table import default_format
@@ -59,6 +70,18 @@ KPI_STYLE = ("QFrame#kpi {{ background:#FFFFFF; border:1px solid #E2E8F0; border
 VALUE_STYLE = "font-size:14px; font-weight:900; border:none;"
 WARN_STYLE = ("color:#9A3412; background:#FFF7ED; border:1px solid #FED7AA; border-radius:6px; padding:6px 10px; "
               "font-weight:900;")
+LOOKUP_STYLE = ("QPushButton { background:#137A38; color:#FFFFFF; border:none; border-radius:6px; font-weight:800; }"
+                "QPushButton:hover { background:#0F6B30; } QPushButton:disabled { background:#CBD5E1; }")
+ALLOC_BUTTON = ("QPushButton {{ background:{bg}; color:{fg}; border:1px solid {bd}; border-radius:6px; "
+                "padding:5px 12px; font-weight:800; }} QPushButton:hover {{ background:{hover}; }}"
+                "QPushButton:disabled {{ background:#EAECEF; color:#AEB6C0; border-color:#EAECEF; }}")
+GREEN_BUTTON = ALLOC_BUTTON.format(bg="#137A38", fg="#FFFFFF", bd="#137A38", hover="#0F6B30")
+OUTLINE_BUTTON = ALLOC_BUTTON.format(bg="#FFFFFF", fg="#137A38", bd="#137A38", hover="#E7F6EE")
+WHITE_BUTTON = ALLOC_BUTTON.format(bg="#FFFFFF", fg="#374151", bd="#CBD5E1", hover="#F3F4F6")
+PAY_BG = "#FFF7ED"
+ROW_HEIGHT = 32          # ارتفاع خانات الفورم
+ROW_GAP = 10             # المسافة بين سطور الفورم
+MID_LABEL = 74           # عرض عنوان الخانة التانية في السطر (سند الصرف)
 
 
 def _qdate(d: dt.date) -> QDate:
@@ -67,6 +90,51 @@ def _qdate(d: dt.date) -> QDate:
 
 def _pydate(q: QDate) -> dt.date:
     return dt.date(q.year(), q.month(), q.day())
+
+
+def amount_of(text: Any) -> Decimal:
+    """المبلغ المكتوب (الغلط أو الفاضي = صفر — للعرض بس)."""
+    try:
+        return parse_money(text, "المبلغ")
+    except BusinessError:
+        return Decimal("0")
+
+
+def rate_text(rate: Any) -> str:
+    """سعر الصرف من غير أصفار زيادة: 48.500000 ← 48.5."""
+    if rate in (None, ""):
+        return ""
+    text = format(Decimal(str(rate)).normalize(), "f")
+    return text if "." not in text else text.rstrip("0").rstrip(".") or "0"
+
+
+def _day(value: Any) -> str:
+    return f"{value:%d-%m-%Y}" if value else "—"
+
+
+def _num_item(text: str, *, bold: bool = False, color: str | None = None) -> QTableWidgetItem:
+    item = QTableWidgetItem(text)
+    item.setTextAlignment(Qt.AlignLeft | Qt.AlignAbsolute | Qt.AlignVCenter)
+    item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+    if bold:
+        font = item.font()
+        font.setBold(True)
+        item.setFont(font)
+    if color:
+        item.setForeground(QColor(color))
+    return item
+
+
+def _text_item(text: str, *, bold: bool = False, color: str | None = None) -> QTableWidgetItem:
+    item = QTableWidgetItem(text)
+    item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+    if bold:
+        font = item.font()
+        font.setBold(True)
+        item.setFont(font)
+    if color:
+        item.setForeground(QColor(color))
+    return item
 
 
 def signed(value: Decimal | None, natural: str = "مدين") -> str:
@@ -79,6 +147,238 @@ def signed(value: Decimal | None, natural: str = "مدين") -> str:
         return "0.00"
     other = "دائن" if natural == "مدين" else "مدين"
     return f"{ltr(money(abs(value)))} {natural if value > 0 else other}"
+
+
+class _ColumnLayout(QVBoxLayout):
+    """عمود الفورم جوه الـ QScrollArea: من غير «الارتفاع حسب العرض» — العناوين اللي بتلف سطرين كانت بتخلّي
+    الـ QScrollArea ياخد الارتفاع المفضّل كله ويطلّع سكرول والشاشة لسه فيها مكان."""
+
+    def hasHeightForWidth(self) -> bool:  # noqa: N802 - Qt
+        return False
+
+
+(A_NO, A_DUE, A_TOTAL, A_RETURNED, A_PAID, A_LEFT, A_PAY, A_AFTER, A_DROP) = range(9)
+ALLOC_HEADERS = ["الفاتورة", "الاستحقاق", "الإجمالي", "المرتجع", "مسدد قبل كده", "المتبقي", "يدفع", "الباقي بعد", ""]
+
+
+class InvoiceDuesDialog(QDialog):
+    """«📋 الفواتير» (طلب المستخدم 2026-11-28): فواتير المورد الآجلة المرحّلة اللي لسه عليها متبقي **بعملة السند** —
+    **بالتوتال بس** (الإجمالي − المرتجع − المسدد = المتبقي). ✔ = ادفع المتبقي كله (أو اللي فاضل من مبلغ السند) ·
+    أو اكتب في «يدفع» · الاختيار بيفضل محفوظ بين الصفحات · «⚡ وزّع الأقدم الأول» بيملاه لوحده."""
+
+    (C_CHECK, C_NO, C_DATE, C_DUE, C_SUP_NO, C_KIND, C_TOTAL, C_RETURNED, C_PAID, C_LEFT, C_PAY) = range(11)
+    HEADERS = ["✔", "رقم الفاتورة", "التاريخ", "الاستحقاق", "رقم فاتورة المورد", "النوع", "الإجمالي", "المرتجع",
+               "المسدد", "المتبقي", "يدفع"]
+
+    def __init__(self, service: VoucherService, parent: QWidget | None = None, *, supplier_id: int,
+                 supplier_name: str, currency_code: str, amount: Decimal, picks: dict[int, Decimal]) -> None:
+        super().__init__(parent)
+        self.service = service
+        self.supplier_id = supplier_id
+        self.currency = currency_code
+        self.amount = amount                             # مبلغ السند (صفر = لسه مااتكتبش ← السند = اللي هتختاره)
+        self.picks: dict[int, Decimal] = dict(picks)
+        self.result: list[dict[str, Any]] = []
+        self.page = 1
+        self._rows: list[dict] = []
+        self._loading = False
+        self.setWindowTitle("📋 فواتير المورد المفتوحة — اختار اللي هتتسدد")
+        self.setLayoutDirection(Qt.RightToLeft)
+        self.resize(1040, 560)
+        layout = QVBoxLayout(self)
+        top = QHBoxLayout()
+        title = QLabel(f"🏭 {supplier_name}")
+        title.setStyleSheet("font-weight:900; color:#137A38; font-size:14px;")
+        top.addWidget(title, 2)
+        cur_label = QLabel(f"عملة السند: {currency_code}")
+        cur_label.setStyleSheet("font-weight:900; color:#1D4ED8; font-size:13px;")
+        top.addWidget(cur_label)
+        self.keyword = QLineEdit()
+        self.keyword.setPlaceholderText("🔍 رقم الفاتورة أو رقمها عند المورد…")
+        self.keyword.setClearButtonEnabled(True)
+        top.addWidget(self.keyword, 1)
+        layout.addLayout(top)
+        note = QLabel(f"الفواتير الآجلة المرحّلة اللي عليها متبقي بعملة {currency_code} بس — كل فاتورة بتتسدد بعملتها "
+                      "(المرتجع بينقص من إجمالي الفاتورة).")
+        note.setStyleSheet(f"color:{MUTED}; font-weight:700;")
+        note.setWordWrap(True)
+        layout.addWidget(note)
+        self.table = QTableWidget(0, len(self.HEADERS))
+        self.table.setHorizontalHeaderLabels(self.HEADERS)
+        self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.table.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.table.setAlternatingRowColors(True)
+        self.table.verticalHeader().setVisible(False)
+        self.table.verticalHeader().setDefaultSectionSize(30)
+        header = self.table.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(self.C_NO, QHeaderView.Stretch)
+        self.table.itemChanged.connect(self._on_item)
+        layout.addWidget(self.table, 1)
+        pager = QHBoxLayout()
+        self.count = QLabel("")
+        self.count.setStyleSheet(f"color:{MUTED}; font-weight:800;")
+        pager.addWidget(self.count, 1)
+        self.prev_button = QPushButton("→ السابق")
+        self.next_button = QPushButton("التالي ←")
+        for b in (self.prev_button, self.next_button):
+            b.setStyleSheet(WHITE_BUTTON)
+            pager.addWidget(b)
+        layout.addLayout(pager)
+        self.summary = QLabel("")
+        self.summary.setWordWrap(True)
+        layout.addWidget(self.summary)
+        bottom = QHBoxLayout()
+        self.auto_button = QPushButton("⚡ وزّع الأقدم الأول")
+        self.auto_button.setStyleSheet(OUTLINE_BUTTON)
+        self.auto_button.setEnabled(amount > 0)
+        self.auto_button.setToolTip("مبلغ السند بيتوزّع على الفواتير بتاريخ الاستحقاق" if amount > 0
+                                    else "اكتب مبلغ السند الأول (أو علّم على الفواتير والمبلغ يتحسب لوحده)")
+        self.clear_button = QPushButton("↺ صفّر")
+        self.clear_button.setStyleSheet(WHITE_BUTTON)
+        self.ok_button = QPushButton("✔ تمام")
+        self.ok_button.setStyleSheet(GREEN_BUTTON)
+        close = QPushButton("إغلاق")
+        close.setStyleSheet(WHITE_BUTTON)
+        bottom.addWidget(self.auto_button)
+        bottom.addWidget(self.clear_button)
+        bottom.addStretch(1)
+        bottom.addWidget(self.ok_button)
+        bottom.addWidget(close)
+        layout.addLayout(bottom)
+        self.prev_button.clicked.connect(lambda: self._go(self.page - 1))
+        self.next_button.clicked.connect(lambda: self._go(self.page + 1))
+        self.keyword.textChanged.connect(lambda _t: self._go(1))
+        self.auto_button.clicked.connect(self.auto_allocate)
+        self.clear_button.clicked.connect(self.clear)
+        self.ok_button.clicked.connect(self.apply)
+        close.clicked.connect(self.reject)
+        self._go(1)
+
+    # ---- التحميل ---------------------------------------------------------------
+    def _go(self, page: int) -> None:
+        keyword = self.keyword.text().strip()
+        try:
+            counts = self.service.count_open_invoices(self.supplier_id, self.currency, keyword)
+            pages = max(1, -(-counts["total"] // PAGE_SIZE))
+            self.page = min(max(1, page), pages)
+            self._rows = self.service.open_invoices(self.supplier_id, self.currency, keyword, page=self.page)
+        except Exception as exc:  # noqa: BLE001
+            messages.show_error(self, "تعذّر تحميل الفواتير", exc)
+            counts, pages, self._rows = {"total": 0, "remaining": Decimal("0")}, 1, []
+        self.count.setText(f"{counts['total']} فاتورة مفتوحة · إجمالي المتبقي {ltr(money(counts['remaining']))} "
+                           f"{self.currency} · صفحة {self.page} من {pages}")
+        self.prev_button.setEnabled(self.page > 1)
+        self.next_button.setEnabled(self.page < pages)
+        self._fill()
+
+    def _fill(self) -> None:
+        self._loading = True
+        t = self.table
+        t.setRowCount(len(self._rows))
+        today = dt.date.today()
+        for r, row in enumerate(self._rows):
+            iid = int(row["invoice_id"])
+            pick = self.picks.get(iid)
+            check = QTableWidgetItem("")
+            check.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+            check.setCheckState(Qt.Checked if pick else Qt.Unchecked)
+            t.setItem(r, self.C_CHECK, check)
+            late = row["due_date"] is not None and row["due_date"] < today
+            t.setItem(r, self.C_NO, _text_item(row["invoice_no"], bold=True))
+            t.setItem(r, self.C_DATE, _text_item(_day(row["invoice_date"])))
+            due = _text_item(_day(row["due_date"]) + (f"  (متأخرة {(today - row['due_date']).days} يوم)" if late else ""),
+                             color=BAD if late else None)
+            t.setItem(r, self.C_DUE, due)
+            t.setItem(r, self.C_SUP_NO, _text_item(row["supplier_invoice_no"] or "—"))
+            kind = "فاتورة" if row["stock_kind"] == "invoice" else "بيان"
+            t.setItem(r, self.C_KIND, _text_item(kind + (" · متعددة العملات" if row["currency_mode"] == "multi" else "")))
+            t.setItem(r, self.C_TOTAL, _num_item(money(row["total_amount"])))
+            t.setItem(r, self.C_RETURNED, _num_item(money(row["returned_amount"]) if row["returned_amount"] else "—"))
+            t.setItem(r, self.C_PAID, _num_item(money(row["paid_amount"]) if row["paid_amount"] else "—"))
+            t.setItem(r, self.C_LEFT, _num_item(money(row["remaining_amount"]), bold=True))
+            pay = QTableWidgetItem(money(pick) if pick else "")
+            pay.setTextAlignment(Qt.AlignLeft | Qt.AlignAbsolute | Qt.AlignVCenter)
+            pay.setFlags(Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+            pay.setBackground(QColor(PAY_BG))
+            pay.setToolTip("المبلغ اللي هيتدفع على الفاتورة دي — الفاضي مع ✔ = المتبقي كله")
+            t.setItem(r, self.C_PAY, pay)
+        self._loading = False
+        self._update_summary()
+
+    # ---- الاختيار --------------------------------------------------------------
+    def _picked_total(self, without: int | None = None) -> Decimal:
+        return sum((v for k, v in self.picks.items() if k != without), Decimal("0"))
+
+    def _on_item(self, item: QTableWidgetItem) -> None:
+        if self._loading or not 0 <= item.row() < len(self._rows):
+            return
+        row = self._rows[item.row()]
+        iid = int(row["invoice_id"])
+        remaining = Decimal(row["remaining_amount"])
+        error = ""
+        if item.column() == self.C_CHECK:
+            if item.checkState() == Qt.Checked:
+                take = remaining
+                if self.amount > 0:                         # مايعدّيش اللي فاضل من مبلغ السند
+                    left = self.amount - self._picked_total(iid)
+                    take = min(remaining, left)
+                    if take <= 0:
+                        error = "مبلغ السند اتوزّع كله — كبّر المبلغ أو قلّل من فاتورة تانية."
+                if not error:
+                    self.picks[iid] = take
+            else:
+                self.picks.pop(iid, None)
+        elif item.column() == self.C_PAY:
+            value = amount_of(item.text())
+            if value <= 0:
+                self.picks.pop(iid, None)
+            elif value > remaining:
+                error = f"{row['invoice_no']}: المتبقي عليها {money(remaining)} {self.currency} بس."
+            else:
+                self.picks[iid] = value
+        else:
+            return
+        self._fill()
+        if error:
+            self.summary.setText(f"✖ {error}")
+            self.summary.setStyleSheet(f"color:{BAD}; font-weight:900;")
+
+    def _update_summary(self) -> None:
+        total = self._picked_total()
+        text = f"اتعلّم على {len(self.picks)} فاتورة · هيتدفع {ltr(money(total))} {self.currency}"
+        bad = False
+        if self.amount > 0:
+            rest = self.amount - total
+            text += f" · مبلغ السند {ltr(money(self.amount))}"
+            if rest < 0:
+                text += f" · ✖ أكتر من السند بـ {ltr(money(-rest))}"
+                bad = True
+            elif rest > 0:
+                text += f" · الباقي {ltr(money(rest))} دفعة مقدمة"
+        else:
+            text += " · مبلغ السند هيتحسب من اللي اخترته"
+        self.summary.setText(text)
+        self.summary.setStyleSheet(f"color:{BAD if bad else OK_COLOR}; font-weight:900;")
+        self.ok_button.setText(f"✔ تمام ({len(self.picks)})" if self.picks else "✔ تمام")
+        self.ok_button.setEnabled(not bad)
+
+    def auto_allocate(self) -> None:
+        try:
+            picks = self.service.auto_allocate(self.supplier_id, self.currency, self.amount)
+        except Exception as exc:  # noqa: BLE001
+            messages.show_error(self, "تعذّر التوزيع", exc)
+            return
+        self.picks = {int(p["purchase_invoice_id"]): Decimal(p["amount"]) for p in picks}
+        self._fill()
+
+    def clear(self) -> None:
+        self.picks = {}
+        self._fill()
+
+    def apply(self) -> None:
+        self.result = [{"purchase_invoice_id": k, "amount": v} for k, v in self.picks.items() if v > 0]
+        self.accept()
 
 
 class VoucherScreen(BaseScreen):
@@ -99,8 +399,12 @@ class VoucherScreen(BaseScreen):
         self.pages = 1
         self.status = "all"
         self._last_query: tuple | None = None
-        self._choices: dict[str, Any] = {"parties": [], "treasuries": [], "banks": [], "projects": []}
+        self._choices: dict[str, Any] = self._no_choices()
         self._filling = False
+        self.is_payment = self.KIND == "payment"
+        self._allocs: list[dict[str, Any]] = []        # توزيع سند الصرف على الفواتير (بالتفاصيل للعرض)
+        self._rate_touched = False                     # المستخدم كتب سعر الصرف بإيده
+        self._currency_touched = False                 # المستخدم اختار العملة بإيده
         today = dt.date.today()
         self._from = today.replace(day=1)
         self._to = (self._from + dt.timedelta(days=32)).replace(day=1) - dt.timedelta(days=1)
@@ -123,8 +427,10 @@ class VoucherScreen(BaseScreen):
         box.setStyleSheet(f"QGroupBox#formBox {{ border-top:3px solid {color}; }}"
                           f"QGroupBox#formBox::title {{ color:{color}; }}")
         form = QFormLayout(box)
-        form.setSpacing(7)
-        form.setContentsMargins(14, 18, 14, 10)
+        form.setHorizontalSpacing(10)
+        form.setVerticalSpacing(ROW_GAP)                  # المستخدم: «البنود لازقة في بعضها» ← مسافة واضحة بين السطور
+        form.setContentsMargins(14, 20, 14, 12)
+        # ---- الخانات ----
         self.number_edit = QLineEdit()
         self.number_edit.setReadOnly(True)
         self.number_edit.setToolTip(f"الرقم الرسمي ({self.kind.prefix}-2026-00001) بيتاخد مع أول ترحيل — "
@@ -135,53 +441,147 @@ class VoucherScreen(BaseScreen):
         self.date_edit.setLayoutDirection(Qt.LeftToRight)
         self.date_edit.setDate(_qdate(dt.date.today()))
         self.status_label = QLabel("")
-        top = QHBoxLayout()
-        top.addWidget(self.number_edit, 2)
-        top.addWidget(QLabel("التاريخ *"))
-        top.addWidget(self.date_edit, 1)
-        top.addWidget(QLabel("الحالة"))
-        top.addWidget(self.status_label)
-        form.addRow("رقم السند", top)
-
+        if self.is_payment:                                     # العملة الأول (طلب المستخدم) + سعر الصرف
+            self.currency_edit = LookupEdit("اختار عملة السند… *")
+            self.currency_edit.value_changed.connect(self._on_currency)
+            self.currency_find = self._lookup_button(self._find_currency, "اختار العملة من القايمة")
+            self.rate_edit = QLineEdit()
+            self.rate_edit.setLayoutDirection(Qt.LeftToRight)
+            self.rate_edit.setPlaceholderText("سعر الصرف")
+            self.rate_edit.setToolTip("سعر العملة بالجنيه بتاريخ السند (من جدول أسعار الصرف — وتقدر تعدّله)")
+            self.rate_edit.textEdited.connect(self._on_rate_edited)
+            self.rate_label = QLabel("السعر")
+            self.date_edit.dateChanged.connect(self._on_date)
         self.party_edit = LookupEdit(f"اكتب كود {self.kind.party_label} أو اسمه… *")
-        self.party_edit.value_changed.connect(self._changed)
-        form.addRow(f"{self.kind.party_verb} *", self.party_edit)
-
+        self.party_edit.value_changed.connect(self._on_party)
+        self.party_find = self._lookup_button(self._find_party, f"اختار {self.kind.party_label} من القايمة")
         self.source_kind = QComboBox()
         self.source_kind.addItem("💵 خزنة", "treasury")
         self.source_kind.addItem("🏦 بنك", "bank")
         self.source_kind.currentIndexChanged.connect(self._on_source_kind)
         self.source_edit = LookupEdit("اختار الخزنة… *")
         self.source_edit.value_changed.connect(self._changed)
-        src = QHBoxLayout()
-        src.addWidget(self.source_kind)
-        src.addWidget(self.source_edit, 1)
-        form.addRow(f"{self.kind.source_verb} *", src)
-
+        self.source_find = self._lookup_button(self._find_source, "اختار الخزنة أو الحساب البنكي من القايمة")
         self.amount_edit = QLineEdit()
         self.amount_edit.setLayoutDirection(Qt.LeftToRight)
         self.amount_edit.setPlaceholderText("0.00")
         self.amount_edit.textChanged.connect(self._changed)
-        form.addRow("المبلغ *", self.amount_edit)
         self.description = QLineEdit()
         self.description.setMaxLength(500)
         self.description.setPlaceholderText("السند ده عن إيه (زي: تحصيل دفعة من الحساب)" if self.KIND == "receipt"
                                             else "السند ده عن إيه (زي: سداد دفعة من حساب المورد)")
-        form.addRow("البيان *", self.description)
         self.paper_no = QLineEdit()
         self.paper_no.setMaxLength(30)
         self.paper_no.setPlaceholderText("اختياري")
         self.project_edit = LookupEdit("اختياري")
         self.project_edit.value_changed.connect(self._changed)
-        extra = QHBoxLayout()
-        extra.addWidget(self.paper_no, 1)
-        extra.addWidget(QLabel("أمر التوريد"))
-        extra.addWidget(self.project_edit, 2)
-        form.addRow("رقم الدفتر الورقي", extra)
         self.year_note = QLabel("")
         self.year_note.setWordWrap(True)
         self.year_note.hide()
+        # كل خانة بارتفاع ثابت — الفورم مايتضغطش لما الشاشة تبقى صغيرة (العمود كله بيتحرّك بسكرول).
+        for widget in (self.number_edit, self.date_edit, self.party_edit, self.source_kind, self.source_edit,
+                       self.amount_edit, self.description, self.paper_no, self.project_edit,
+                       *((self.currency_edit, self.rate_edit) if self.is_payment else ())):
+            widget.setMinimumHeight(ROW_HEIGHT)
+
+        # ---- الترتيب ----
+        def row(*items: Any) -> QHBoxLayout:
+            """سطر: ``(widget, stretch)`` أو widget أو نص (عنوان خانة)."""
+            lay = QHBoxLayout()
+            lay.setSpacing(8)
+            for it in items:
+                if isinstance(it, str):
+                    lay.addWidget(QLabel(it))
+                elif isinstance(it, tuple):
+                    lay.addWidget(it[0], it[1])
+                else:
+                    lay.addWidget(it)
+            return lay
+
+        def halves(right: QHBoxLayout, left: QHBoxLayout, title: str) -> QHBoxLayout:
+            """خانتين في السطر: النص اليمين (تبع عنوان السطر) + عنوان وخانة النص الشمال — النصّين بنفس العرض."""
+            label = QLabel(title)
+            label.setMinimumWidth(MID_LABEL)
+            label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)       # RTL: جنب خانته
+            left.insertWidget(0, label)
+            both = QHBoxLayout()
+            both.setSpacing(14)
+            both.addLayout(right, 10)
+            both.addLayout(left, 11)
+            return both
+
+        top = row((self.number_edit, 2), "التاريخ *", (self.date_edit, 1), "الحالة", self.status_label)
+        form.addRow("رقم السند", top)
+        party = row((self.party_edit, 1), self.party_find)
+        self.source_kind.setMaximumWidth(96)
+        src = row(self.source_kind, (self.source_edit, 1), self.source_find)
+        if self.is_payment:
+            # سند الصرف: خانتين في السطر عشان التوزيع والقيد يبانوا من غير سكرول (العملة ← المورد ← الخزنة / البنك).
+            self.rate_edit.setMaximumWidth(92)
+            cur = row((self.currency_edit, 1), self.currency_find, self.rate_label, self.rate_edit)
+            form.addRow("عملة السند *", halves(cur, party, f"{self.kind.party_verb} *"))
+            form.addRow(f"{self.kind.source_verb} *", halves(src, row((self.amount_edit, 1)), "المبلغ *"))
+            form.addRow("البيان *", halves(row((self.description, 1)),
+                                           row((self.paper_no, 2), "أمر التوريد", (self.project_edit, 3)),
+                                           "رقم الدفتر"))
+        else:
+            form.addRow(f"{self.kind.party_verb} *", party)
+            form.addRow(f"{self.kind.source_verb} *", src)
+            form.addRow("المبلغ *", row((self.amount_edit, 1), "البيان *", (self.description, 3)))
+            form.addRow("رقم الدفتر الورقي", row((self.paper_no, 1), "أمر التوريد", (self.project_edit, 2)))
         form.addRow(self.year_note)
+
+    def _lookup_button(self, slot, tip: str) -> QPushButton:
+        """أيقونة البحث 🔍 جنب خانة الاختيار — بتفتح نافذة تختار منها (طلب المستخدم 2026-11-28)."""
+        button = QPushButton("🔍")
+        button.setFixedSize(34, ROW_HEIGHT)
+        button.setCursor(Qt.PointingHandCursor)
+        button.setStyleSheet(LOOKUP_STYLE)
+        button.setToolTip(tip)
+        button.clicked.connect(slot)
+        return button
+
+    def _build_allocations(self) -> QWidget:
+        """تبويب «التوزيع على الفواتير» (سند الصرف): الأزرار + سطور الفواتير اللي اتدفع عليها + الملخص."""
+        box = QWidget()
+        col = QVBoxLayout(box)
+        col.setContentsMargins(8, 8, 8, 6)
+        col.setSpacing(6)
+        bar = QHBoxLayout()
+        bar.setSpacing(6)
+        self.alloc_pick_button = QPushButton("📋 الفواتير")
+        self.alloc_pick_button.setStyleSheet(GREEN_BUTTON)
+        self.alloc_pick_button.setToolTip("فواتير المورد المفتوحة بعملة السند (بالتوتال) — علّم واكتب المبلغ")
+        self.alloc_pick_button.clicked.connect(self.pick_invoices)
+        self.alloc_auto_button = QPushButton("⚡ وزّع الأقدم الأول")
+        self.alloc_auto_button.setStyleSheet(OUTLINE_BUTTON)
+        self.alloc_auto_button.setToolTip("مبلغ السند بيتوزّع على الفواتير بتاريخ الاستحقاق — وتقدر تعدّل بعده")
+        self.alloc_auto_button.clicked.connect(self.auto_allocate)
+        self.alloc_clear_button = QPushButton("↺ صفّر التوزيع")
+        self.alloc_clear_button.setStyleSheet(WHITE_BUTTON)
+        self.alloc_clear_button.clicked.connect(self.clear_allocations)
+        for b in (self.alloc_pick_button, self.alloc_auto_button, self.alloc_clear_button):
+            b.setCursor(Qt.PointingHandCursor)
+            bar.addWidget(b)
+        bar.addStretch(1)
+        col.addLayout(bar)
+        self.alloc_table = QTableWidget(0, len(ALLOC_HEADERS))
+        self.alloc_table.setHorizontalHeaderLabels(ALLOC_HEADERS)
+        self.alloc_table.verticalHeader().setVisible(False)
+        self.alloc_table.verticalHeader().setDefaultSectionSize(28)
+        self.alloc_table.setSelectionMode(QAbstractItemView.NoSelection)
+        self.alloc_table.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        header = self.alloc_table.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(A_NO, QHeaderView.Stretch)
+        self.alloc_table.setMinimumHeight(104)
+        self.alloc_table.itemChanged.connect(self._on_alloc_item)
+        self.alloc_table.cellClicked.connect(self._on_alloc_click)
+        col.addWidget(self.alloc_table, 1)
+        self.alloc_summary = QLabel("")
+        self.alloc_summary.setWordWrap(True)
+        col.addWidget(self.alloc_summary)
+        return box
 
     def _build_kpis(self) -> QWidget:
         bar = QWidget()
@@ -190,6 +590,7 @@ class VoucherScreen(BaseScreen):
         row.setSpacing(8)
         self.kpi_values: dict[str, QLabel] = {}
         self.kpi_captions: dict[str, QLabel] = {}
+        self.kpi_notes: dict[str, QLabel] = {}          # سند بعملة تانية: نفس الرقم بالعملة (للعلم — الأرصدة بالجنيه)
         cards = (("amount", "مبلغ السند", BLUE), ("party", f"رصيد {self.kind.party_label} ← بعد السند", "#7C3AED"),
                  ("source", "رصيد الخزنة ← بعد السند", OK_COLOR))
         for key, title, color in cards:
@@ -203,11 +604,16 @@ class VoucherScreen(BaseScreen):
             caption.setStyleSheet(f"color:{MUTED}; font-weight:800; border:none;")
             value = QLabel("—")
             value.setStyleSheet(VALUE_STYLE)
+            note = QLabel("")
+            note.setStyleSheet(f"color:{BLUE}; font-weight:700; font-size:11px; border:none;")
+            note.hide()
             col.addWidget(caption)
             col.addWidget(value)
+            col.addWidget(note)
             row.addWidget(card, 1 if key == "amount" else 2)
             self.kpi_values[key] = value
             self.kpi_captions[key] = caption
+            self.kpi_notes[key] = note
         return bar
 
     def _build_entry(self) -> QGroupBox:
@@ -218,6 +624,7 @@ class VoucherScreen(BaseScreen):
         self.entry_table = QTableWidget(0, 3)
         self.entry_table.setHorizontalHeaderLabels(["الحساب", "مدين", "دائن"])
         self.entry_table.verticalHeader().setVisible(False)
+        self.entry_table.verticalHeader().setDefaultSectionSize(26)
         self.entry_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.entry_table.setSelectionMode(QAbstractItemView.NoSelection)
         header = self.entry_table.horizontalHeader()
@@ -225,7 +632,8 @@ class VoucherScreen(BaseScreen):
         for c in (1, 2):
             self.entry_table.setColumnWidth(c, 130)
         self.entry_table.setMinimumHeight(110)
-        self.entry_table.setMaximumHeight(170)
+        if not self.is_payment:                                 # سند الصرف: القيد في تبويب لوحده وبياخد المساحة كلها
+            self.entry_table.setMaximumHeight(170)
         col.addWidget(self.entry_table)
         self.entry_label = QLabel("")
         self.entry_label.setWordWrap(True)
@@ -234,9 +642,9 @@ class VoucherScreen(BaseScreen):
 
     def arrange_content(self, content: QHBoxLayout, form_box: QGroupBox, list_box: QGroupBox) -> None:
         holder = QWidget()
-        right = QVBoxLayout(holder)
-        right.setContentsMargins(0, 0, 0, 0)
-        right.setSpacing(8)
+        right = _ColumnLayout(holder)
+        right.setContentsMargins(0, 0, 4, 0)
+        right.setSpacing(10)
         right.addWidget(form_box)
         right.addWidget(self._build_kpis())
         self.funds_label = QLabel("")
@@ -244,9 +652,25 @@ class VoucherScreen(BaseScreen):
         self.funds_label.setStyleSheet(WARN_STYLE)
         self.funds_label.hide()
         right.addWidget(self.funds_label)
-        right.addWidget(self._build_entry())
-        right.addStretch(1)
-        content.addWidget(holder, self.FORM_STRETCH)                # RTL: أول عنصر = يمين
+        if self.is_payment:
+            self.tabs = QTabWidget()
+            self.tabs.addTab(self._build_allocations(), "🧾 التوزيع على الفواتير")
+            self.tabs.addTab(self._build_entry(), "📒 القيد")
+            right.addWidget(self.tabs, 1)
+        else:
+            right.addWidget(self._build_entry())
+            right.addStretch(1)
+        scroll = QScrollArea()                                      # الشاشة الصغيرة: سكرول بدل ما البنود تتلزّق
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll.setStyleSheet("QScrollArea { background:transparent; }")
+        holder.setObjectName("voucherHolder")
+        holder.setStyleSheet("QWidget#voucherHolder { background:transparent; }")
+        scroll.setWidget(holder)
+        scroll.viewport().setAutoFillBackground(False)
+        self.form_scroll = scroll
+        content.addWidget(scroll, self.FORM_STRETCH)                # RTL: أول عنصر = يمين
         content.addWidget(list_box, self.LIST_STRETCH)
         self._load_choices()
 
@@ -308,24 +732,43 @@ class VoucherScreen(BaseScreen):
         self.paging.addStretch(1)
 
     # ---- الاختيارات -----------------------------------------------------------
+    @staticmethod
+    def _no_choices() -> dict[str, Any]:
+        return {"parties": [], "treasuries": [], "banks": [], "projects": [], "currencies": [], "base_currency": "EGP"}
+
     def _load_choices(self) -> None:
         """بتتحمّل من جديد مع «سند جديد» و«تعديل» (عشان اللي اتضاف من جهاز تاني يظهر)."""
         try:
             self._choices = self.service.choices()
         except Exception:  # noqa: BLE001 - الرسالة بتطلع مع تحميل القائمة
-            self._choices = {"parties": [], "treasuries": [], "banks": [], "projects": []}
+            self._choices = self._no_choices()
+
+    def _base(self) -> str:
+        return self._choices.get("base_currency") or "EGP"
+
+    def _currency(self) -> str:
+        """عملة السند (القبض = العملة الأساسية دايماً)."""
+        if self.is_payment and hasattr(self, "currency_edit"):
+            return self.currency_edit.currentData() or self._base()
+        return self._base()
+
+    def _currency_rows(self) -> list[tuple[str, str, str]]:
+        return [(c["code"], c["code"], f"{c['code']} — {c['name_ar']}") for c in self._choices["currencies"]
+                if c["is_active"]]
 
     def _party_rows(self) -> list[tuple[int, str, str]]:
         return [(c["id"], c["code"], f"{c['code']} — {c['name_ar']}") for c in self._choices["parties"]
                 if c["is_active"]]
 
     def _source_rows(self, kind: str) -> list[tuple[int, str, str]]:
+        """الخزن أو الحسابات البنكية **اللي بعملة السند بس** (البنك زي الخزنة بالظبط)."""
+        cur = self._currency()
         if kind == "treasury":
             return [(t["id"], t["code"], f"{t['code']} — {t['name_ar']}") for t in self._choices["treasuries"]
-                    if t["is_active"] and t["is_base_currency"]]
+                    if t["is_active"] and t["currency_code"] == cur]
         return [(b["id"], b["code"], f"{b['bank_name']} — {b['code']}" +
                  (f" ({b['account_number']})" if b.get("account_number") else ""))
-                for b in self._choices["banks"] if b["is_active"] and b["is_base_currency"]]
+                for b in self._choices["banks"] if b["is_active"] and b["currency_code"] == cur]
 
     def _project_rows(self) -> list[tuple[int, str, str]]:
         return [(p["id"], p["code"], f"{p['code']} — {p['name']}") for p in self._choices["projects"]
@@ -335,6 +778,11 @@ class VoucherScreen(BaseScreen):
         rec = record or {}
         self._filling = True
         try:
+            if self.is_payment:                                 # العملة الأول — «صرف من» بيتفلتر بيها
+                code = rec.get("currency_code") or self._base()
+                self.currency_edit.set_items(self._currency_rows(), code, code)
+                self.rate_edit.setText(rate_text(rec.get("fx_rate")) if rec.get("fx_rate") is not None else "1")
+                self._rate_touched = self._currency_touched = False
             self.party_edit.set_items(self._party_rows(), rec.get("party_id"),
                                       f"{rec.get('party_code', '')} — {rec.get('party_name', '')}")
             kind = rec.get("source_kind") or "treasury"
@@ -367,6 +815,282 @@ class VoucherScreen(BaseScreen):
         self.kpi_captions["source"].setText(f"رصيد {'الخزنة' if kind == 'treasury' else 'البنك'} ← بعد السند")
         self._changed()
 
+    # ---- أيقونات البحث 🔍 -------------------------------------------------------
+    def _pick_from(self, title: str, columns: list[tuple[str, str]], rows: list[dict]) -> Any:
+        from app.ui.dialogs.lookup_dialog import LookupDialog
+
+        dialog = LookupDialog(title, columns, rows, parent=self)
+        return dialog.selected_id if dialog.exec() and dialog.selected_id is not None else None
+
+    def _find_party(self) -> None:
+        if self.mode not in EDITING:
+            return
+        rows = [{"id": c["id"], "code": c["code"], "name_ar": c["name_ar"], "currency_code": c.get("currency_code", "")}
+                for c in self._choices["parties"] if c["is_active"]]
+        columns = [("code", "الكود"), ("name_ar", "الاسم")]
+        if self.is_payment:
+            columns.append(("currency_code", "العملة"))
+        picked = self._pick_from("الموردين" if self.is_payment else "العملاء", columns, rows)
+        if picked is not None:
+            self.party_edit.set_value(picked)
+
+    def _find_currency(self) -> None:
+        if self.mode not in EDITING:
+            return
+        rows = [{"id": c["code"], "code": c["code"], "name_ar": c["name_ar"],
+                 "kind": "الأساسية" if c["is_base"] else ""} for c in self._choices["currencies"] if c["is_active"]]
+        picked = self._pick_from("العملات", [("code", "الكود"), ("name_ar", "العملة"), ("kind", "")], rows)
+        if picked is not None:
+            self._currency_touched = True
+            self.currency_edit.set_value(picked)
+
+    def _find_source(self) -> None:
+        """الخزن والحسابات البنكية اللي بعملة السند في قايمة واحدة (البنك زي الخزنة)."""
+        if self.mode not in EDITING:
+            return
+        cur = self._currency()
+        rows = [{"id": f"treasury:{t['id']}", "kind": "💵 خزنة", "code": t["code"], "name": t["name_ar"],
+                 "currency_code": t["currency_code"]}
+                for t in self._choices["treasuries"] if t["is_active"] and t["currency_code"] == cur]
+        rows += [{"id": f"bank:{b['id']}", "kind": "🏦 بنك", "code": b["code"],
+                  "name": f"{b['bank_name']}" + (f" ({b['account_number']})" if b.get("account_number") else ""),
+                  "currency_code": b["currency_code"]}
+                 for b in self._choices["banks"] if b["is_active"] and b["currency_code"] == cur]
+        picked = self._pick_from(f"الخزن والبنوك ({cur})", [("kind", "النوع"), ("code", "الكود"), ("name", "الاسم"),
+                                                           ("currency_code", "العملة")], rows)
+        if picked is None:
+            return
+        kind, _sep, raw = str(picked).partition(":")
+        self._filling = True
+        try:
+            self.source_kind.setCurrentIndex(0 if kind == "treasury" else 1)
+            self._fill_source(kind)
+        finally:
+            self._filling = False
+        self.source_edit.set_value(int(raw))
+        self._changed()
+
+    # ---- العملة وسعر الصرف (سند الصرف) ---------------------------------------------
+    def _set_rate_from_table(self) -> None:
+        cur = self._currency()
+        if cur == self._base():
+            self.rate_edit.setText("1")
+        else:
+            try:
+                rate = self.service.rate_for(cur, _pydate(self.date_edit.date()))
+            except Exception:  # noqa: BLE001 - السعر بيتكتب بالإيد
+                rate = None
+            self.rate_edit.setText(rate_text(rate))
+        self._rate_touched = False
+        self._sync_rate_enabled()
+
+    def _sync_rate_enabled(self) -> None:
+        foreign = self._currency() != self._base()
+        self.rate_edit.setEnabled(self.mode in EDITING and foreign)
+        self.rate_edit.setVisible(foreign)
+        self.rate_label.setVisible(foreign)
+
+    def _on_rate_edited(self, *_args: Any) -> None:
+        self._rate_touched = True
+        self._changed()
+
+    def _on_date(self, *_args: Any) -> None:
+        if self._filling or self.mode not in EDITING:
+            return
+        if not self._rate_touched:                               # سعر اليوم الجديد (لو المستخدم ماكتبش سعر)
+            self._set_rate_from_table()
+        self._changed()
+
+    def _on_currency(self, *_args: Any) -> None:
+        """العملة اتغيّرت ← سعرها بتاريخ السند · «صرف من» بخزن / بنوك العملة دي · التوزيع بيتصفّر."""
+        if self._filling:
+            return
+        self._set_rate_from_table()
+        kind = self.source_kind.currentData()
+        rows = self._source_rows(kind)
+        if not rows:                                            # مفيش خزنة بالعملة دي ← جرّب البنوك (والعكس)
+            other = "bank" if kind == "treasury" else "treasury"
+            if self._source_rows(other):
+                kind, rows = other, self._source_rows(other)
+        self._filling = True
+        try:
+            self.source_kind.setCurrentIndex(0 if kind == "treasury" else 1)
+            self._fill_source(kind)
+        finally:
+            self._filling = False
+        if self.mode in EDITING and rows:
+            self.source_edit.set_value(rows[0][0])
+        if self._allocs:
+            self._allocs = []
+            self._note = f"العملة اتغيّرت ← التوزيع اتصفّر (الفواتير بتتسدد بعملتها بس — اختار فواتير {self._currency()})."
+        self._refresh_allocations()
+        self._changed()
+
+    def _on_party(self, *_args: Any) -> None:
+        if self._filling:
+            return
+        if self.is_payment and self.mode in EDITING:
+            if self._allocs:
+                self._allocs = []
+                self._note = "المورد اتغيّر ← التوزيع اتصفّر (السند بيتوزّع على فواتير مورده بس)."
+            party = next((c for c in self._choices["parties"] if c["id"] == self.party_edit.currentData()), None)
+            code = (party or {}).get("currency_code")
+            if (code and not self._currency_touched and code != self._currency()
+                    and any(r[0] == code for r in self._currency_rows())):
+                self.currency_edit.set_value(code)               # عملة المورد افتراضي (لحد ما تختار غيرها)
+            self._refresh_allocations()
+        self._changed()
+
+    # ---- التوزيع على الفواتير (سند الصرف) --------------------------------------------
+    _note = ""
+
+    def _alloc_payload(self) -> list[dict[str, Any]]:
+        return [{"purchase_invoice_id": a["purchase_invoice_id"], "amount": a["amount"]} for a in self._allocs]
+
+    def _set_allocations(self, picks: list[dict[str, Any]]) -> None:
+        """التوزيع الجديد (من نافذة الفواتير أو «وزّع الأقدم الأول») + بيانات فواتيره للعرض."""
+        try:
+            rows = self.service.allocation_details(self.party_edit.currentData(), self._currency(), picks)
+        except Exception as exc:  # noqa: BLE001
+            messages.show_error(self, "تعذّر تحميل الفواتير", exc)
+            return
+        self._allocs = [{**r, "amount": Decimal(str(r["amount"]))} for r in rows if Decimal(str(r["amount"] or 0)) > 0]
+        self._note = ""
+        self._refresh_allocations()
+        self._changed()
+
+    def _can_allocate(self) -> bool:
+        if self.party_edit.currentData() is None:
+            messages.warn(self, "التوزيع", "اختار المورد الأول.")
+            return False
+        return True
+
+    def pick_invoices(self) -> None:
+        """«📋 الفواتير»: فواتير المورد المفتوحة بعملة السند — بالتوتال (طلب المستخدم)."""
+        if self.mode not in EDITING or not self._can_allocate():
+            return
+        party = next((c for c in self._choices["parties"] if c["id"] == self.party_edit.currentData()), {})
+        dialog = InvoiceDuesDialog(self.service, self, supplier_id=int(self.party_edit.currentData()),
+                                   supplier_name=f"{party.get('code', '')} — {party.get('name_ar', '')}",
+                                   currency_code=self._currency(), amount=amount_of(self.amount_edit.text()),
+                                   picks={int(a["purchase_invoice_id"]): a["amount"] for a in self._allocs})
+        if not dialog.exec():
+            return
+        self._set_allocations(dialog.result)
+        total = sum((a["amount"] for a in self._allocs), Decimal("0"))
+        if total > 0 and amount_of(self.amount_edit.text()) == 0:   # ماكتبش مبلغ ← مبلغ السند = اللي اختاره
+            self.amount_edit.setText(money(total))
+
+    def auto_allocate(self) -> None:
+        if self.mode not in EDITING or not self._can_allocate():
+            return
+        amount = amount_of(self.amount_edit.text())
+        if amount <= 0:
+            messages.warn(self, "وزّع الأقدم الأول", "اكتب مبلغ السند الأول.")
+            return
+        try:
+            picks = self.service.auto_allocate(self.party_edit.currentData(), self._currency(), amount)
+        except Exception as exc:  # noqa: BLE001
+            messages.show_error(self, "تعذّر التوزيع", exc)
+            return
+        self._set_allocations(picks)
+        if not picks:
+            self._note = f"المورد مالوش فواتير مفتوحة بعملة {self._currency()} — المبلغ كله هيبقى دفعة مقدمة."
+            self._refresh_allocations()
+
+    def clear_allocations(self) -> None:
+        if self.mode not in EDITING:
+            return
+        self._allocs = []
+        self._note = ""
+        self._refresh_allocations()
+        self._changed()
+
+    def _refresh_allocations(self) -> None:
+        """سطور التوزيع + الملخص (مبلغ السند · الموزّع · غير الموزّع = دفعة مقدمة)."""
+        if not self.is_payment or not hasattr(self, "alloc_table"):
+            return
+        editing = self.mode in EDITING
+        cur = self._currency()
+        t = self.alloc_table
+        t.blockSignals(True)
+        t.setRowCount(len(self._allocs))
+        errors = 0
+        today = dt.date.today()
+        for r, a in enumerate(self._allocs):
+            amount = Decimal(a["amount"])
+            remaining = a.get("remaining_amount")
+            missing = bool(a.get("missing")) or remaining is None
+            over = not missing and amount > Decimal(remaining)
+            errors += 1 if (over or missing) else 0
+            late = a.get("due_date") is not None and a["due_date"] < today and not missing and Decimal(remaining) > 0
+            t.setItem(r, A_NO, _text_item(str(a.get("invoice_no") or "؟"), bold=True, color=BAD if missing else None))
+            t.setItem(r, A_DUE, _text_item(_day(a.get("due_date")), color=BAD if late else None))
+            for c, key in ((A_TOTAL, "total_amount"), (A_RETURNED, "returned_amount"), (A_PAID, "paid_amount"),
+                           (A_LEFT, "remaining_amount")):
+                value = a.get(key)
+                text = "—" if value is None or (key == "returned_amount" and not Decimal(value)) else money(value)
+                t.setItem(r, c, _num_item(text, bold=c == A_LEFT))
+            pay = QTableWidgetItem(money(amount))
+            pay.setTextAlignment(Qt.AlignLeft | Qt.AlignAbsolute | Qt.AlignVCenter)
+            pay.setFlags((Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable) if editing
+                         else (Qt.ItemIsEnabled | Qt.ItemIsSelectable))
+            pay.setBackground(QColor("#FEE2E2" if over else PAY_BG))
+            if over:
+                pay.setToolTip(f"أكتر من المتبقي على الفاتورة ({money(remaining)})")
+            t.setItem(r, A_PAY, pay)
+            t.setItem(r, A_AFTER, _num_item("—" if missing else money(Decimal(remaining) - amount),
+                                            color=BAD if over else None))
+            drop = _text_item("✕" if editing else "", color=BAD)
+            drop.setTextAlignment(Qt.AlignCenter)
+            drop.setToolTip("شيل الفاتورة من التوزيع" if editing else "")
+            t.setItem(r, A_DROP, drop)
+        t.blockSignals(False)
+        amount = amount_of(self.amount_edit.text())
+        allocated = sum((Decimal(a["amount"]) for a in self._allocs), Decimal("0"))
+        rest = amount - allocated
+        if hasattr(self, "tabs"):
+            self.tabs.setTabText(0, "🧾 التوزيع على الفواتير" + (f" ({len(self._allocs)})" if self._allocs else ""))
+        parts = [f"مبلغ السند {ltr(money(amount))} {cur}", f"الموزّع {ltr(money(allocated))}"]
+        if rest < 0:
+            parts.append(f"✖ الموزّع أكتر من السند بـ {ltr(money(-rest))}")
+        elif rest > 0:
+            parts.append(f"غير موزّع {ltr(money(rest))} ← دفعة مقدمة على حساب المورد ({cur})")
+        else:
+            parts.append("اتوزّع كله ✔" if allocated else "")
+        text = " · ".join(x for x in parts if x)
+        if errors:
+            text += " · ✖ فيه مبلغ أكتر من المتبقي على فاتورته"
+        if self._note:
+            text += f"\n💡 {self._note}"
+        bad = rest < 0 or errors
+        self.alloc_summary.setText(text)
+        self.alloc_summary.setStyleSheet(
+            f"color:{BAD if bad else OK_COLOR}; background:{'#FEE2E2' if bad else '#ECFDF3'}; "
+            f"border:1px solid {'#FECACA' if bad else '#B7E4C7'}; border-radius:6px; padding:5px 10px; font-weight:800;")
+        for b in (self.alloc_pick_button, self.alloc_auto_button, self.alloc_clear_button):
+            b.setEnabled(editing)
+        self.alloc_clear_button.setEnabled(editing and bool(self._allocs))
+
+    def _on_alloc_item(self, item: QTableWidgetItem) -> None:
+        """«يدفع» اتعدّل في السطر (صفر أو فاضي = شيل الفاتورة من التوزيع)."""
+        if item.column() != A_PAY or self.mode not in EDITING or not 0 <= item.row() < len(self._allocs):
+            return
+        value = amount_of(item.text())
+        if value <= 0:
+            del self._allocs[item.row()]
+        else:
+            self._allocs[item.row()]["amount"] = value
+        self._note = ""
+        self._refresh_allocations()
+        self._changed()
+
+    def _on_alloc_click(self, row: int, column: int) -> None:
+        if column == A_DROP and self.mode in EDITING and 0 <= row < len(self._allocs):
+            del self._allocs[row]
+            self._refresh_allocations()
+            self._changed()
+
     # ---- الكروت ومعاينة القيد -------------------------------------------------
     def _changed(self, *_args: Any) -> None:
         if not self._filling:
@@ -375,11 +1099,15 @@ class VoucherScreen(BaseScreen):
     def _data(self) -> dict[str, Any]:
         kind = self.source_kind.currentData()
         source = self.source_edit.currentData()
-        return {"voucher_date": _pydate(self.date_edit.date()), "party_id": self.party_edit.currentData(),
+        data = {"voucher_date": _pydate(self.date_edit.date()), "party_id": self.party_edit.currentData(),
                 "source_kind": kind, "treasury_id": source if kind == "treasury" else None,
                 "bank_account_id": source if kind == "bank" else None, "amount": self.amount_edit.text(),
                 "description": self.description.text() or self.kind.title, "paper_no": self.paper_no.text(),
                 "project_id": self.project_edit.currentData()}
+        if self.is_payment:
+            data.update(currency_code=self._currency(), fx_rate=self.rate_edit.text(),
+                        allocations=self._alloc_payload())
+        return data
 
     def _refresh_side(self) -> None:
         """الكروت (المبلغ · رصيد العميل / المورد · رصيد الخزنة / البنك قبل وبعد) + تحذير الخزنة + القيد."""
@@ -394,17 +1122,37 @@ class VoucherScreen(BaseScreen):
         kind = data["source_kind"]
         what = "الخزنة" if kind == "treasury" else "البنك"
         when = "دلوقتي (السند جوّاه)" if posted else "← بعد السند"
-        self.kpi_captions["source"].setText(f"رصيد {what} {when}")
-        self.kpi_captions["party"].setText(f"رصيد {self.kind.party_label} {when}")
+        cur = self._currency()
+        foreign = cur != self._base()
+        # الأرصدة **بالجنيه دايماً** — نفس أرقام كشف الحساب ودفتر الأستاذ (طلب المستخدم 2026-11-28).
+        tag = " بالجنيه" if foreign else ""
+        self.kpi_captions["source"].setText(f"رصيد {what}{tag} {when}")
+        self.kpi_captions["party"].setText(f"رصيد {self.kind.party_label}{tag} {when}")
+        if self.is_payment:
+            self._refresh_allocations()
+        # معاينة القيد الأول: منها اللي هيتقفل من حساب المورد بالجنيه بالظبط (التوزيع بسعر الفواتير).
+        preview, error = self._preview(data) if not posted else ([], "")
+        effect = None
+        if preview:
+            effect = sum((Decimal(ln["debit"]) - Decimal(ln["credit"]) for ln in preview
+                          if ln.get("role") == self.kind.party_role), Decimal("0"))
+            effect = -effect if self.kind.party == "customer" else effect
         try:
             b = self.service.balances(data["party_id"], kind, data["treasury_id"] or data["bank_account_id"],
-                                      data["amount"], posted=posted)
+                                      data["amount"], posted=posted, currency_code=cur,
+                                      fx_rate=data.get("fx_rate"), party_effect=effect)
         except Exception:  # noqa: BLE001 - الكروت للعرض بس
             b = None
         if b is None:
             self._clear_side(keep_entry=True)
         else:
-            self.kpi_values["amount"].setText(ltr(money(b["amount"])) if b["amount"] else "—")
+            self.kpi_values["amount"].setText(
+                ltr(money(b["amount_base"] if foreign else b["amount"])) if b["amount"] else "—")
+            self._kpi_note("amount", f"{ltr(money(b['amount']))} {cur} × {ltr(rate_text(data.get('fx_rate')) or '؟')}"
+                           if foreign and b["amount"] else "")
+            natural_fc = "مدين" if self.kind.party == "customer" else "دائن"
+            self._kpi_note("party", self._fc_pair(b["party_fc"], b["party_fc_after"], cur, natural_fc, posted))
+            self._kpi_note("source", self._fc_pair(b["source_fc"], b["source_fc_after"], cur, "مدين", posted))
             def pair(before: Decimal | None, after: Decimal | None, natural: str = "مدين") -> str:
                 if before is None:
                     return "—"
@@ -423,15 +1171,38 @@ class VoucherScreen(BaseScreen):
                      and b["available_after"] < 0 and b["amount"] > 0)
             if short:
                 what = "الخزنة" if kind == "treasury" else "الحساب البنكي"
-                self.funds_label.setText(f"⚠️ رصيد {what} «{b['source_name']}» مش هيكفي ({ltr(money(b['source']))}) — "
-                                         "تقدر ترحّل بس هيجيلك تحذير.")
+                self.funds_label.setText(f"⚠️ رصيد {what} «{b['source_name']}» مش هيكفي "
+                                         f"({ltr(money(b['source']))}) — تحذير بس.")
             self.funds_label.setVisible(short)
-        self._refresh_entry(data, posted)
+        self._refresh_entry(data, posted, preview, error)
+
+    def _preview(self, data: dict[str, Any]) -> tuple[list[dict[str, Any]], str]:
+        """سطور القيد اللي هيتعمل — أو رسالة الغلط."""
+        try:
+            return self.service.preview(data), ""
+        except BusinessError as exc:
+            return [], str(exc)
+        except Exception:  # noqa: BLE001
+            return [], "مش قادر أجهّز القيد دلوقتي."
+
+    def _kpi_note(self, key: str, text: str) -> None:
+        self.kpi_notes[key].setText(text)
+        self.kpi_notes[key].setVisible(bool(text))
+
+    @staticmethod
+    def _fc_pair(before: Decimal | None, after: Decimal | None, cur: str, natural: str, posted: bool) -> str:
+        """«بالدولار: 1,000.00 دائن ← 500.00 دائن» — للعلم بس (الرصيد اللي فوق بالجنيه)."""
+        if before is None:
+            return ""
+        if posted or after is None:
+            return f"منه بعملة {cur}: {signed(before, natural)}"
+        return f"منه بعملة {cur}: {signed(before, natural)}  ←  {signed(after, natural)}"
 
     def _clear_side(self, keep_entry: bool = False) -> None:
         for key in ("amount", "party", "source"):
             self.kpi_values[key].setText("—")
             self.kpi_values[key].setStyleSheet(VALUE_STYLE)
+            self._kpi_note(key, "")
         self.funds_label.hide()
         if not keep_entry:
             self.entry_table.setRowCount(0)
@@ -439,26 +1210,23 @@ class VoucherScreen(BaseScreen):
             self.entry_label.setStyleSheet("")
             self.entry_box.setTitle("القيد اللي هيتعمل لما يترحّل")
 
-    def _refresh_entry(self, data: dict[str, Any], posted: bool) -> None:
+    def _refresh_entry(self, data: dict[str, Any], posted: bool, preview: list[dict[str, Any]] | None = None,
+                       error: str = "") -> None:
         rows: list[dict[str, Any]] = []
-        error = ""
         if posted:
             self.entry_box.setTitle("القيد المرحّل")
             entry = self.service.entry_for(int(self.current_id)) if self.current_id is not None else None
             for line in (entry or {}).get("lines") or []:
                 party = f" — {line['party_name']}" if line.get("party_name") else ""
-                rows.append({"account": f"{line['account_code']} {line['account_name']}{party}",
+                rows.append({"account": f"{line['account_code']} {line['account_name']}{party}{self._fc_note(line)}",
                              "debit": line["debit"], "credit": line["credit"]})
         else:
             self.entry_box.setTitle("القيد اللي هيتعمل لما يترحّل")
-            try:
-                for line in self.service.preview(data):
-                    rows.append({"account": f"{line['account_code']} {line['account_name']}",
-                                 "debit": line["debit"], "credit": line["credit"]})
-            except BusinessError as exc:
-                error = str(exc)
-            except Exception:  # noqa: BLE001
-                error = "مش قادر أجهّز القيد دلوقتي."
+            if preview is None:
+                preview, error = self._preview(data)
+            for line in preview:
+                rows.append({"account": f"{line['account_code']} {line['account_name']}{self._fc_note(line)}",
+                             "debit": line["debit"], "credit": line["credit"]})
         self.entry_table.setRowCount(len(rows))
         for r, row in enumerate(rows):
             self.entry_table.setItem(r, 0, QTableWidgetItem(row["account"]))
@@ -479,6 +1247,13 @@ class VoucherScreen(BaseScreen):
             self.entry_label.setText("")
             self.entry_label.setStyleSheet("")
 
+    @staticmethod
+    def _fc_note(line: dict[str, Any]) -> str:
+        """السطر بعملة غير الأساسية: المبلغ بالعملة × السعر (القيد نفسه بالجنيه)."""
+        if not line.get("currency_code") or line.get("amount_fc") in (None, ""):
+            return ""
+        return f"  ({ltr(money(line['amount_fc']))} {line['currency_code']} × {ltr(rate_text(line.get('fx_rate')))})"
+
     def _paint_entry(self, ok: bool) -> None:
         fg, bg, bd = (OK_COLOR, "#ECFDF3", "#B7E4C7") if ok else (BAD, "#FEE2E2", "#FECACA")
         self.entry_label.setStyleSheet(f"color:{fg}; background:{bg}; border:1px solid {bd}; border-radius:6px; "
@@ -486,8 +1261,11 @@ class VoucherScreen(BaseScreen):
 
     # ---- الأوضاع ----------------------------------------------------------
     def editable_widgets(self) -> list[QWidget]:
-        return [self.date_edit, self.party_edit, self.source_kind, self.source_edit, self.amount_edit,
-                self.description, self.paper_no, self.project_edit]
+        widgets = [self.date_edit, self.party_edit, self.party_find, self.source_kind, self.source_edit,
+                   self.source_find, self.amount_edit, self.description, self.paper_no, self.project_edit]
+        if self.is_payment:
+            widgets += [self.currency_edit, self.currency_find, self.rate_edit]
+        return widgets
 
     def _is_editable_record(self) -> bool:
         rec = self.current_record or {}
@@ -506,6 +1284,9 @@ class VoucherScreen(BaseScreen):
         self.from_edit.setEnabled(not editing)
         self.to_edit.setEnabled(not editing)
         self._update_paging(editing)
+        if self.is_payment:
+            self._sync_rate_enabled()
+            self._refresh_allocations()
         if hasattr(self, "entry_table"):
             self._changed()
 
@@ -527,12 +1308,14 @@ class VoucherScreen(BaseScreen):
         self.date_edit.setDate(_qdate(dt.date.today()))
         self.number_edit.setText("بيتاخد مع الترحيل")
         self._show_status(None)
+        self._allocs = []
+        self._note = ""
         self._set_lookups()
         rows = self._source_rows("treasury")
         if rows:
             self.source_edit.set_value(rows[0][0])
         self.set_mode("new")
-        self.party_edit.setFocus()
+        (self.currency_edit if self.is_payment else self.party_edit).setFocus()
 
     def edit_record(self) -> None:
         if self.current_id is None or not self.can("edit"):
@@ -660,7 +1443,8 @@ class VoucherScreen(BaseScreen):
         if key == "voucher_no":
             return value or f"مسودة {row.get('draft_no')}"
         if key == "amount":
-            return money(value)
+            code = row.get("currency_code")
+            return money(value) + (f" {code}" if code and code != self._base() else "")
         if key == "status":
             return "مرحّل" if value == "posted" else "مسودة"
         return default_format(key, value, row)
@@ -721,7 +1505,12 @@ class VoucherScreen(BaseScreen):
             self._show_status(record)
         finally:
             self._filling = False
+        self._allocs = [{**a, "amount": Decimal(a["amount"])} for a in record.get("allocations") or []]
+        self._note = ""
         self._set_lookups(record)
+        if self.is_payment:
+            self._sync_rate_enabled()
+            self._refresh_allocations()
         self._changed()
 
     def clear_form(self) -> None:
@@ -735,14 +1524,23 @@ class VoucherScreen(BaseScreen):
             self.year_note.hide()
         finally:
             self._filling = False
+        self._allocs = []
+        self._note = ""
         self._set_lookups()
+        if self.is_payment:
+            self._sync_rate_enabled()
+            self._refresh_allocations()
         if hasattr(self, "entry_table"):
             self._clear_side()
 
     @staticmethod
     def _record_data(rec: dict[str, Any]) -> dict[str, Any]:
-        return {k: rec.get(k) for k in ("voucher_date", "party_id", "source_kind", "treasury_id",
-                                        "bank_account_id", "amount", "description", "paper_no", "project_id")}
+        data = {k: rec.get(k) for k in ("voucher_date", "party_id", "source_kind", "treasury_id",
+                                        "bank_account_id", "amount", "description", "paper_no", "project_id",
+                                        "currency_code", "fx_rate")}
+        data["allocations"] = [{"purchase_invoice_id": a["purchase_invoice_id"], "amount": a["amount"]}
+                               for a in rec.get("allocations") or []]
+        return data
 
     def collect(self) -> dict:
         data = self._data()
@@ -769,6 +1567,7 @@ class ReceiptsScreen(VoucherScreen):
 
 class PaymentsScreen(VoucherScreen):
     """سند صرف — للمورد."""
+    FORM_STRETCH, LIST_STRETCH = 15, 8
     TARGET = "supplier_payments"
     KIND = "payment"
     TITLE = "سند صرف"
